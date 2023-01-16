@@ -8,4 +8,6 @@ public class User : IdentityUser
     public DateTime? DateOfBirth { get; set; }
     public DateTime AccountCreatedDate { get; set; } = System.DateTime.Now;
     public List<Advert> Adverts { get; set; }
+    public bool IsBanned { get; set; }
+    public DateTime? BanEnd { get; set; }
 }

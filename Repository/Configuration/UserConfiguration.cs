@@ -14,5 +14,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.AccountCreatedDate).IsRequired();
         builder.Property(x => x.DateOfBirth).IsRequired(false).HasMaxLength(50);
         builder.Property(x => x.PasswordHash).IsRequired();
+        builder.Property(x => x.IsBanned).IsRequired().HasDefaultValue(false);
+        builder.Property(x => x.BanEnd).IsRequired(false);
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Npgsql;
 using Repository;
 using Service;
 using Service.Contracts;
@@ -36,8 +37,32 @@ public static class ServiceExtensions
     {
         services.AddDbContext<RepositoryContext>(opts =>
         {
-            opts.UseNpgsql("Server=localhost;Database=test;Port=5432;User Id=postgres;Password=kikimiki;").UseSnakeCaseNamingConvention();
+            opts.UseNpgsql("Server = localhost; Database = test; Port = 5432; User Id = postgres; Password = kikimiki").UseSnakeCaseNamingConvention();
         });
+    }
+    private static string GetConnectionString()
+    {
+
+        var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+        var databaseUri = new Uri(databaseUrl);
+        var userInfo = databaseUri.UserInfo.Split(':');
+
+        var builder = new NpgsqlConnectionStringBuilder
+        {
+            Host = databaseUri.Host,
+            Port = databaseUri.Port,
+            Username = userInfo[0],
+            Password = userInfo[1],
+            Database = databaseUri.LocalPath.TrimStart('/')
+            // Local testing
+            //Host = "localhost",
+            //Port = 15432,
+            //Username = "postgres",
+            //Password = "b3dfe7ef987752928499ef1e4e9e3f10a0e3f74c8eee1028",
+            //Database = "agencija108"
+        };
+
+        return builder.ToString();
     }
 
     public static void ConfigureIdentity(this IServiceCollection services)

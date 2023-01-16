@@ -5,6 +5,7 @@ using FluentValidation;
 using KeyNekretnine.Extensions;
 using MediatR;
 using NLog;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -19,9 +20,11 @@ builder.Services.AddControllers(config =>
 }).AddXmlDataContractSerializerFormatters()
   .AddApplicationPart(typeof(KeyNekretnine.Presentation.AssemblyReference).Assembly);
 
+builder.Services.ConfigureCors();
 builder.Services.AddMediatR(typeof(Application.AssemblyReference).Assembly);
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
 builder.Services.AddValidatorsFromAssembly(typeof(Application.AssemblyReference).Assembly);
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
@@ -42,11 +45,11 @@ app.ConfigureExceptionHandler(logger);
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
 
