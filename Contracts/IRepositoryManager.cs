@@ -7,4 +7,5 @@ public interface IRepositoryManager
     IAdvertTypeRepository AdvertType { get; }
     INeighborhoodRepository Neighborhood { get; }
     IAdvertRepository Advert { get; }
+    IUserRepository User { get; }
 }

@@ -44,8 +44,7 @@ internal class AuthenticationService : IAuthenticationService
         {
             return user;
         }
-        return null;
+        throw new UnauthorizedAccessException("Invalid Credentials");
     }
-
 
 }
