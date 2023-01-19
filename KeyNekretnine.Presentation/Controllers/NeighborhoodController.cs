@@ -1,4 +1,4 @@
-﻿using Application.Queries;
+﻿using Application.Queries.NeighborhoodsQueries;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

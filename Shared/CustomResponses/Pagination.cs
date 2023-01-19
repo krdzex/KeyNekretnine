@@ -1,11 +1,10 @@
-﻿using Shared.DataTransferObjects.Advert;
-using Shared.RequestFeatures;
+﻿using Shared.RequestFeatures;
 
 namespace Shared.CustomResponses
 {
-    public class Pagination
+    public class Pagination<T>
     {
-        public IEnumerable<MinimalInformationsAboutAdvertDto> Adverts { get; set; }
+        public IEnumerable<T> Data { get; set; }
         public MetaData MetaData { get; set; }
     }
 }

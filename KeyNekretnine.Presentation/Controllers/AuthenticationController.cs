@@ -1,4 +1,4 @@
-﻿using Application.Commands;
+﻿using Application.Commands.UserCommands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataTransferObjects.Auth;

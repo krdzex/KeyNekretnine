@@ -76,7 +76,7 @@ internal class AdvertRepository : IAdvertRepository
         return mapAdvert;
     }
 
-    public async Task<Pagination> GetAdverts(AdvertParameters advertParameters)
+    public async Task<Pagination<MinimalInformationsAboutAdvertDto>> GetAdverts(AdvertParameters advertParameters)
     {
         if (!advertParameters.ValidPriceRange)
         {
@@ -115,6 +115,6 @@ internal class AdvertRepository : IAdvertRepository
 
         var metadata = new PagedList<MinimalInformationsAboutAdvertDto>(adverts, count, advertParameters.PageNumber, advertParameters.PageSize);
 
-        return new Pagination { Adverts = adverts, MetaData = metadata.MetaData };
+        return new Pagination<MinimalInformationsAboutAdvertDto> { Data = adverts, MetaData = metadata.MetaData };
     }
 }
