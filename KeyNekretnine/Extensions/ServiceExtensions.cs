@@ -37,7 +37,7 @@ public static class ServiceExtensions
     {
         services.AddDbContext<RepositoryContext>(opts =>
         {
-            opts.UseNpgsql("Server = localhost; Database = test; Port = 5432; User Id = postgres; Password = kikimiki").UseSnakeCaseNamingConvention();
+            opts.UseNpgsql(GetConnectionString()).UseSnakeCaseNamingConvention();
         });
     }
     private static string GetConnectionString()

@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace KeyNekretnine.Migrations
 {
-    public partial class Initial : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -72,6 +72,8 @@ namespace KeyNekretnine.Migrations
                     last_name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     date_of_birth = table.Column<DateTime>(type: "timestamp with time zone", maxLength: 50, nullable: true),
                     account_created_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    is_banned = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    ban_end = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     user_name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     normalized_user_name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
@@ -321,9 +323,9 @@ namespace KeyNekretnine.Migrations
                 columns: new[] { "id", "concurrency_stamp", "name", "normalized_name" },
                 values: new object[,]
                 {
-                    { "0d790e50-4e3c-4f41-a882-73e72b467b73", "b7f4d043-bdb9-40a9-abaa-68313e3a87cc", "Administrator", "ADMINISTRATOR" },
-                    { "36ea0e0f-84ff-4863-8b64-2d4169cad474", "0d8ab276-47b2-4daa-a6d7-cd0dc5ddd89d", "User", "USER" },
-                    { "71d921b3-4203-4a94-bdd7-638204f85520", "972a03e0-3c1a-48dd-a7b9-239866f8128e", "Moderator", "MODERATOR" }
+                    { "94504e03-5dda-4852-ab5a-5174d05f2a7e", "1d74c002-0926-4313-9e5b-2d6625d0555d", "Administrator", "ADMINISTRATOR" },
+                    { "b867b188-9915-4746-a0e4-1d686291c164", "192221b8-5f4d-49f0-8cb9-8ed946f598b5", "Moderator", "MODERATOR" },
+                    { "d142d8a3-103d-4437-b810-f44085c3cb82", "4c35541b-dd43-47c8-ae98-8398fcf471b7", "User", "USER" }
                 });
 
             migrationBuilder.InsertData(

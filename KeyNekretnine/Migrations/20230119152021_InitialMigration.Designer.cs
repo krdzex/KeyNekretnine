@@ -12,8 +12,8 @@ using Repository;
 namespace KeyNekretnine.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20230116192339_AddBannedFetureInDatabase")]
-    partial class AddBannedFetureInDatabase
+    [Migration("20230119152021_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -8507,22 +8507,22 @@ namespace KeyNekretnine.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "0418feaf-769e-45db-b938-6cc14f6c1907",
-                            ConcurrencyStamp = "5d67edd4-6a24-49ba-b538-07f7247890d8",
+                            Id = "d142d8a3-103d-4437-b810-f44085c3cb82",
+                            ConcurrencyStamp = "4c35541b-dd43-47c8-ae98-8398fcf471b7",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "8761a132-f848-40d7-9864-63f1cc409573",
-                            ConcurrencyStamp = "2325990c-ba8c-4228-abb2-138d41f62582",
+                            Id = "94504e03-5dda-4852-ab5a-5174d05f2a7e",
+                            ConcurrencyStamp = "1d74c002-0926-4313-9e5b-2d6625d0555d",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "72d862df-3cf7-4a6b-a416-d14fe099f625",
-                            ConcurrencyStamp = "1e56d8dd-5453-4a0f-b835-2147ba1bc08b",
+                            Id = "b867b188-9915-4746-a0e4-1d686291c164",
+                            ConcurrencyStamp = "192221b8-5f4d-49f0-8cb9-8ed946f598b5",
                             Name = "Moderator",
                             NormalizedName = "MODERATOR"
                         });
