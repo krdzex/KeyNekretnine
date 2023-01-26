@@ -34,6 +34,7 @@ builder.Services.ConfigureJWT();
 builder.Services.AddAuthentication();
 builder.Services.ConfigureSqlContext();
 builder.Services.AddControllers();
+builder.Services.ConfigureDapperContext();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

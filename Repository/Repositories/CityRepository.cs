@@ -1,16 +1,15 @@
 ﻿using Contracts;
 using Dapper;
-using Microsoft.EntityFrameworkCore;
 using Repository.RawQuery;
 using Shared.DataTransferObjects.City;
 
 namespace Repository.Repositories;
 internal sealed class CityRepository : ICityRepository
 {
-    private readonly RepositoryContext _context;
-    public CityRepository(RepositoryContext context)
+    private readonly DapperContext _dapperContext;
+    public CityRepository(DapperContext dapperContext)
     {
-        _context = context;
+        _dapperContext = dapperContext;
     }
 
     public async Task<IEnumerable<ShowCityDto>> GetCities(CancellationToken token)
@@ -19,12 +18,13 @@ internal sealed class CityRepository : ICityRepository
 
         var cmd = new CommandDefinition(getCitiesQuery, cancellationToken: token);
 
-        var cities = await _context
-            .Database
-            .GetDbConnection()
-            .QueryAsync<ShowCityDto>(cmd);
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var cities = await connection.QueryAsync<ShowCityDto>(cmd);
 
-        return cities;
+            return cities;
+        }
+
     }
 }
 

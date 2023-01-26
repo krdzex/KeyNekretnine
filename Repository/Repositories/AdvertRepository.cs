@@ -1,6 +1,5 @@
 ﻿using Contracts;
 using Dapper;
-using Microsoft.EntityFrameworkCore;
 using Repository.RawQuery;
 using Shared.CustomResponses;
 using Shared.DataTransferObjects.Advert;
@@ -11,41 +10,44 @@ using System.Data;
 namespace Repository.Repositories;
 internal class AdvertRepository : IAdvertRepository
 {
-    private readonly RepositoryContext _context;
+    private readonly DapperContext _dapperContext;
 
-    public AdvertRepository(RepositoryContext context)
+    public AdvertRepository(DapperContext dapperContext)
     {
-        _context = context;
+        _dapperContext = dapperContext;
     }
 
     public async Task<AllInfomrationsAboutAdvertDto> GetAdvert(int advertId)
     {
         var advertMap = new Dictionary<int, AllInfomrationsAboutAdvertDto>();
         var singleAdvertQuery = AdvertQuery.SingleAdvertWithImages;
-        var adverts = await _context
-            .Database
-            .GetDbConnection()
-            .QueryAsync<AllInfomrationsAboutAdvertDto, ShowImageDto, AllInfomrationsAboutAdvertDto>(singleAdvertQuery,
-            map: (advert, image) =>
-            {
-                if (advertMap.TryGetValue(advertId, out AllInfomrationsAboutAdvertDto existingAdvert))
-                {
-                    advert = existingAdvert;
-                }
-                else
-                {
-                    advert.Images = new List<ShowImageDto>
-                    {
-                            new ShowImageDto {Url = advert.Cover_Image_Url }
-                    };
-                    advertMap.Add(advertId, advert);
-                }
-                advert.Images.Add(image);
-                return advert;
-            }, splitOn: "url",
-            param: new { Id = advertId });
 
-        return advertMap.Values.Single();
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var adverts = await connection
+                .QueryAsync<AllInfomrationsAboutAdvertDto, ShowImageDto, AllInfomrationsAboutAdvertDto>(singleAdvertQuery,
+                map: (advert, image) =>
+                {
+                    if (advertMap.TryGetValue(advertId, out AllInfomrationsAboutAdvertDto existingAdvert))
+                    {
+                        advert = existingAdvert;
+                    }
+                    else
+                    {
+                        advert.Images = new List<ShowImageDto>
+                        {
+                            new ShowImageDto {Url = advert.Cover_Image_Url }
+                        };
+                        advertMap.Add(advertId, advert);
+                    }
+                    advert.Images.Add(image);
+                    return advert;
+                }, splitOn: "url",
+                param: new { Id = advertId });
+
+            return advertMap.Values.Single();
+        }
+
     }
 
     public async Task<IEnumerable<ShowAdvertLocationOnMapDto>> GetMapPoints(CancellationToken cancellationToken)
@@ -54,12 +56,14 @@ internal class AdvertRepository : IAdvertRepository
 
         var cmd = new CommandDefinition(allAdvertMapPointsQuery, cancellationToken: cancellationToken);
 
-        var mapPoints = await _context
-            .Database
-            .GetDbConnection()
-            .QueryAsync<ShowAdvertLocationOnMapDto>(cmd);
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var mapPoints = await connection.QueryAsync<ShowAdvertLocationOnMapDto>(cmd);
 
-        return mapPoints;
+            return mapPoints;
+        }
+
+
     }
 
     public async Task<MinimalInformationsAboutAdvertDto> GetAdvertFromMapPoint(int id, CancellationToken cancellationToken)
@@ -68,12 +72,13 @@ internal class AdvertRepository : IAdvertRepository
 
         var cmd = new CommandDefinition(singleAdvertForMapPointQuery, new { id }, cancellationToken: cancellationToken);
 
-        var mapAdvert = await _context
-            .Database
-            .GetDbConnection()
-            .QuerySingleOrDefaultAsync<MinimalInformationsAboutAdvertDto>(cmd);
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var mapAdvert = await connection.QuerySingleOrDefaultAsync<MinimalInformationsAboutAdvertDto>(cmd);
 
-        return mapAdvert;
+            return mapAdvert;
+        }
+
     }
 
     public async Task<Pagination<MinimalInformationsAboutAdvertDto>> GetAdverts(AdvertParameters advertParameters)
@@ -97,6 +102,7 @@ internal class AdvertRepository : IAdvertRepository
         var skip = (advertParameters.PageNumber - 1) * advertParameters.PageSize;
 
         var param = new DynamicParameters();
+
         param.Add("skip", skip, DbType.Int32);
         param.Add("take", advertParameters.PageSize, DbType.Int32);
         param.Add("minPrice", advertParameters.MinPrice, DbType.Int32);
@@ -105,16 +111,19 @@ internal class AdvertRepository : IAdvertRepository
         param.Add("noOfBathrooms", advertParameters.NoOfBathrooms);
         param.Add("advertTypeIds", advertParameters.AdvertTypeIds);
         param.Add("advertPurposeIds", advertParameters.AdvertPurposeIds);
-        param.Add("cityId", advertParameters.CityId);
+        param.Add("cityId", advertParameters.CityId, DbType.Int32);
         param.Add("neighborhoodIds", advertParameters.NeighborhoodIds);
 
-        var multi = await _context.Database.GetDbConnection().QueryMultipleAsync(rawQuery, param);
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var multi = await connection.QueryMultipleAsync(rawQuery, param);
 
-        var count = await multi.ReadSingleAsync<int>();
-        var adverts = (await multi.ReadAsync<MinimalInformationsAboutAdvertDto>()).ToList();
+            var count = await multi.ReadSingleAsync<int>();
+            var adverts = (await multi.ReadAsync<MinimalInformationsAboutAdvertDto>()).ToList();
 
-        var metadata = new PagedList<MinimalInformationsAboutAdvertDto>(adverts, count, advertParameters.PageNumber, advertParameters.PageSize);
+            var metadata = new PagedList<MinimalInformationsAboutAdvertDto>(adverts, count, advertParameters.PageNumber, advertParameters.PageSize);
 
-        return new Pagination<MinimalInformationsAboutAdvertDto> { Data = adverts, MetaData = metadata.MetaData };
+            return new Pagination<MinimalInformationsAboutAdvertDto> { Data = adverts, MetaData = metadata.MetaData };
+        }
     }
 }

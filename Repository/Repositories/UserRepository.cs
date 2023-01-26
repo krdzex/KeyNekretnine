@@ -3,7 +3,6 @@ using Dapper;
 using Entities.Exceptions;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Repository.RawQuery;
 using Shared.CustomResponses;
 using Shared.DataTransferObjects.User;
@@ -13,11 +12,11 @@ using System.Data;
 namespace Repository.Repositories;
 internal sealed class UserRepository : IUserRepository
 {
-    private readonly RepositoryContext _context;
+    private readonly DapperContext _dapperContext;
     private readonly UserManager<User> _userManager;
-    public UserRepository(RepositoryContext context, UserManager<User> userManager)
+    public UserRepository(DapperContext dapperContext, UserManager<User> userManager)
     {
-        _context = context;
+        _dapperContext = dapperContext;
         _userManager = userManager;
     }
 
@@ -74,13 +73,16 @@ internal sealed class UserRepository : IUserRepository
         param.Add("take", userParameters.PageSize, DbType.Int32);
         param.Add("username", username);
 
-        var multi = await _context.Database.GetDbConnection().QueryMultipleAsync(rawQuery, param);
-        var count = await multi.ReadSingleAsync<int>();
-        var adverts = (await multi.ReadAsync<UserForListDto>()).ToList();
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var multi = await connection.QueryMultipleAsync(rawQuery, param);
+            var count = await multi.ReadSingleAsync<int>();
+            var adverts = (await multi.ReadAsync<UserForListDto>()).ToList();
 
-        var metadata = new PagedList<UserForListDto>(adverts, count, userParameters.PageNumber, userParameters.PageSize);
+            var metadata = new PagedList<UserForListDto>(adverts, count, userParameters.PageNumber, userParameters.PageSize);
 
-        return new Pagination<UserForListDto> { Data = adverts, MetaData = metadata.MetaData };
+            return new Pagination<UserForListDto> { Data = adverts, MetaData = metadata.MetaData };
+        }
     }
 
     public async Task<Pagination<UserForListDto>> GetBannedUsers(UserParameters userParameters)
@@ -95,14 +97,18 @@ internal sealed class UserRepository : IUserRepository
         var param = new DynamicParameters();
         param.Add("skip", skip, DbType.Int32);
         param.Add("take", userParameters.PageSize, DbType.Int32);
-        param.Add("username", username);
+        param.Add("username", username, DbType.String);
 
-        var multi = await _context.Database.GetDbConnection().QueryMultipleAsync(rawQuery, param);
-        var count = await multi.ReadSingleAsync<int>();
-        var adverts = (await multi.ReadAsync<UserForListDto>()).ToList();
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var multi = await connection.QueryMultipleAsync(rawQuery, param);
+            var count = await multi.ReadSingleAsync<int>();
+            var adverts = (await multi.ReadAsync<UserForListDto>()).ToList();
 
-        var metadata = new PagedList<UserForListDto>(adverts, count, userParameters.PageNumber, userParameters.PageSize);
+            var metadata = new PagedList<UserForListDto>(adverts, count, userParameters.PageNumber, userParameters.PageSize);
 
-        return new Pagination<UserForListDto> { Data = adverts, MetaData = metadata.MetaData };
+            return new Pagination<UserForListDto> { Data = adverts, MetaData = metadata.MetaData };
+        }
+
     }
 }

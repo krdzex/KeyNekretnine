@@ -1,16 +1,15 @@
 ﻿using Contracts;
 using Dapper;
-using Microsoft.EntityFrameworkCore;
 using Repository.RawQuery;
 using Shared.DataTransferObjects.AdvertPurpose;
 
 namespace Repository.Repositories;
 internal sealed class AdvertPurposeRepository : IAdvertPurposeRepository
 {
-    private readonly RepositoryContext _context;
-    public AdvertPurposeRepository(RepositoryContext context)
+    private readonly DapperContext _dapperContext;
+    public AdvertPurposeRepository(DapperContext dapperContext)
     {
-        _context = context;
+        _dapperContext = dapperContext;
     }
 
     public async Task<IEnumerable<ShowAdvertPurposeDto>> GetAdvertPurposes(CancellationToken token)
@@ -19,11 +18,13 @@ internal sealed class AdvertPurposeRepository : IAdvertPurposeRepository
 
         var cmd = new CommandDefinition(getPurposesQuery, cancellationToken: token);
 
-        var advertPurposes = await _context
-            .Database
-            .GetDbConnection()
-            .QueryAsync<ShowAdvertPurposeDto>(cmd);
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var advertPurposes = await connection.QueryAsync<ShowAdvertPurposeDto>(cmd);
 
-        return advertPurposes;
+            return advertPurposes;
+        }
+
+
     }
 };

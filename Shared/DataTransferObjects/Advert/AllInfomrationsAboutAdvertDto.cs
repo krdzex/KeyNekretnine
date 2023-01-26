@@ -4,7 +4,6 @@ namespace Shared.DataTransferObjects.Advert;
 public class AllInfomrationsAboutAdvertDto
 {
     public int Id { get; set; }
-    public string Location { get; set; }
     public double Price { get; set; }
     public string Description { get; set; }
     public IList<ShowImageDto> Images { get; set; }
@@ -28,4 +27,8 @@ public class AllInfomrationsAboutAdvertDto
     public string Street { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
+    public string City_Name { get; set; }
+    public int City_Id { get; set; }
+    public string Neighborhood_Name { get; set; }
+
 }

@@ -10,4 +10,6 @@ public class MinimalInformationsAboutAdvertDto
     public int No_Of_Bathrooms { get; set; }
     public int No_Of_Badrooms { get; set; }
     public double Floor_Space { get; set; }
+    public string Purpose_name { get; set; }
+    public string Street { get; set; }
 }

@@ -1,16 +1,15 @@
 ﻿using Contracts;
 using Dapper;
-using Microsoft.EntityFrameworkCore;
 using Repository.RawQuery;
 using Shared.DataTransferObjects.Neighborhood;
 
 namespace Repository.Repositories;
 internal sealed class NeighborhoodRepository : INeighborhoodRepository
 {
-    private readonly RepositoryContext _context;
-    public NeighborhoodRepository(RepositoryContext context)
+    private readonly DapperContext _dapperContext;
+    public NeighborhoodRepository(DapperContext dapperContext)
     {
-        _context = context;
+        _dapperContext = dapperContext;
     }
 
     public async Task<IEnumerable<ShowNeighborhoodDto>> GetNeighborhoods(int id, CancellationToken token)
@@ -19,11 +18,13 @@ internal sealed class NeighborhoodRepository : INeighborhoodRepository
 
         var cmd = new CommandDefinition(getNeighborhoodForCity, new { id }, cancellationToken: token);
 
-        var neighborhoods = await _context
-            .Database
-            .GetDbConnection()
-            .QueryAsync<ShowNeighborhoodDto>(cmd);
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var neighborhoods = await connection.QueryAsync<ShowNeighborhoodDto>(cmd);
 
-        return neighborhoods;
+            return neighborhoods;
+        }
+
+
     }
 }
