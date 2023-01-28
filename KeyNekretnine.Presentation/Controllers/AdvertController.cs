@@ -1,8 +1,12 @@
-﻿using Application.Queries.AdvertQuery;
+﻿using Application.Commands.AdvertCommands;
+using Application.Queries.AdvertQuery;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Shared.DataTransferObjects.Advert;
 using Shared.RequestFeatures;
+using System.Security.Claims;
 
 namespace KeyNekretnine.Presentation.Controllers;
 
@@ -48,4 +52,20 @@ public class AdvertController : ControllerBase
     {
         return Ok(await _sender.Send(new GetAdvertFromMapQuery(id)));
     }
+
+    [Authorize]
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Create([FromForm] AddAdvertDto newAdvert)
+    {
+
+        var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
+
+        await _sender.Send(new CreateAdvertCommand(newAdvert, email));
+
+        return Accepted();
+    }
+
 }

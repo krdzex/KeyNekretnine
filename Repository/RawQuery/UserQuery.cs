@@ -26,4 +26,9 @@ public class UserQuery
       AND (is_banned = true AND u.ban_end > now())
       ORDER BY u.User_name
       OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY";
+
+    public const string GetUserIdFromEmailQuery =
+    @"SELECT u.Id
+      FROM ""AspNetUsers"" AS u
+      WHERE email = @email";
 }

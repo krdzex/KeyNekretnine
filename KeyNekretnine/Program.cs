@@ -4,14 +4,15 @@ using Contracts;
 using FluentValidation;
 using KeyNekretnine.Extensions;
 using MediatR;
-using NLog;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(),
-"/nlog.config"));
+//LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(),
+//"/nlog.config"));
 
 builder.Services.AddControllers(config =>
 {
@@ -19,6 +20,18 @@ builder.Services.AddControllers(config =>
     config.ReturnHttpNotAcceptable = true;
 }).AddXmlDataContractSerializerFormatters()
   .AddApplicationPart(typeof(KeyNekretnine.Presentation.AssemblyReference).Assembly);
+
+builder.Services.Configure<FormOptions>(x =>
+{
+    x.ValueLengthLimit = int.MaxValue;
+    x.MultipartBodyLengthLimit = int.MaxValue;
+    x.MultipartHeadersLengthLimit = int.MaxValue;
+});
+
+builder.Services.Configure<KestrelServerOptions>(options =>
+{
+    options.Limits.MaxRequestBodySize = int.MaxValue;
+});
 
 builder.Services.ConfigureCors();
 builder.Services.AddMediatR(typeof(Application.AssemblyReference).Assembly);
@@ -29,8 +42,11 @@ builder.Services.AddValidatorsFromAssembly(typeof(Application.AssemblyReference)
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 builder.Services.ConfigureLoggerService();
+builder.Services.ConfigureChannel();
+builder.Services.ConfigureBackgroundWorker();
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT();
+builder.Services.SetupSwagger();
 builder.Services.AddAuthentication();
 builder.Services.ConfigureSqlContext();
 builder.Services.AddControllers();
@@ -48,7 +64,10 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 // Configure the HTTP request pipeline.
 
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(c =>
+{
+    c.DisplayRequestDuration();
+});
 
 app.UseCors("CorsPolicy");
 

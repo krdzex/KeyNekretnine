@@ -8,4 +8,5 @@ public interface IRepositoryManager
     INeighborhoodRepository Neighborhood { get; }
     IAdvertRepository Advert { get; }
     IUserRepository User { get; }
+    IImageRepository Image { get; }
 }

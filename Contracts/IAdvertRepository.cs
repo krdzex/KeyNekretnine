@@ -10,4 +10,6 @@ public interface IAdvertRepository
     Task<Pagination<MinimalInformationsAboutAdvertDto>> GetAdverts(AdvertParameters advertParameters);
     Task<IEnumerable<ShowAdvertLocationOnMapDto>> GetMapPoints(CancellationToken cancellationToken);
     Task<MinimalInformationsAboutAdvertDto> GetAdvertFromMapPoint(int id, CancellationToken cancellationToken);
+    Task CreateAdvert(AddAdvertDto newAdvert, string userId);
+    Task UpdateAdvertCoverImage(string imageUrl, int advertId);
 }

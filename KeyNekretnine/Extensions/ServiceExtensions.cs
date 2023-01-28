@@ -1,10 +1,12 @@
 ﻿using Contracts;
 using Entities.Models;
+using KeyNekretnine.BackgroundWorkers;
 using LoggerService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Npgsql;
 using Repository;
 using Service;
@@ -36,6 +38,13 @@ public static class ServiceExtensions
     public static void ConfigureDapperContext(this IServiceCollection services) =>
         services.AddSingleton<DapperContext>();
 
+    public static void ConfigureChannel(this IServiceCollection services) =>
+        services.AddSingleton<IProcessingChannel, ProcessingChannel>();
+
+    public static void ConfigureBackgroundWorker(this IServiceCollection services) =>
+        services.AddHostedService<ChannelBackgroundWorker>();
+
+
 
     public static void ConfigureSqlContext(this IServiceCollection services)
     {
@@ -44,26 +53,58 @@ public static class ServiceExtensions
             opts.UseNpgsql(GetConnectionString()).UseSnakeCaseNamingConvention();
         });
     }
+
+    public static void SetupSwagger(this IServiceCollection service)
+    {
+        service.AddSwaggerGen(s =>
+        {
+            s.SwaggerDoc("v1", new OpenApiInfo { Title = "Agencija108", Version = "v1" });
+            s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header,
+                Description = "Place to add JWT with bearer",
+                Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer"
+            });
+            s.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Name = "Bearer",
+                        },
+                        new List<string>()
+                    }
+                });
+        });
+    }
+
     private static string GetConnectionString()
     {
 
-        //var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-        //var databaseUri = new Uri(databaseUrl);
-        //var userInfo = databaseUri.UserInfo.Split(':');
+        var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+        var databaseUri = new Uri(databaseUrl);
+        var userInfo = databaseUri.UserInfo.Split(':');
 
         var builder = new NpgsqlConnectionStringBuilder
         {
-            //Host = databaseUri.Host,
-            //Port = databaseUri.Port,
-            //Username = userInfo[0],
-            //Password = userInfo[1],
-            //Database = databaseUri.LocalPath.TrimStart('/')
+            Host = databaseUri.Host,
+            Port = databaseUri.Port,
+            Username = userInfo[0],
+            Password = userInfo[1],
+            Database = databaseUri.LocalPath.TrimStart('/')
             // Local testing
-            Host = "localhost",
-            Port = 15432,
-            Username = "postgres",
-            Password = "b3dfe7ef987752928499ef1e4e9e3f10a0e3f74c8eee1028",
-            Database = "agencija108"
+            //Host = "localhost",
+            //Port = 15432,
+            //Username = "postgres",
+            //Password = "b3dfe7ef987752928499ef1e4e9e3f10a0e3f74c8eee1028",
+            //Database = "agencija108"
         };
 
         return builder.ToString();

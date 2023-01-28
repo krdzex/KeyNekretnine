@@ -111,4 +111,20 @@ internal sealed class UserRepository : IUserRepository
         }
 
     }
+
+    public async Task<string> GetUserIdFromEmail(string email)
+    {
+        var query = UserQuery.GetUserIdFromEmailQuery;
+
+        var param = new DynamicParameters();
+        param.Add("email", email, DbType.String);
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var userId = await connection.QueryFirstOrDefaultAsync<string>(query, param);
+
+            return userId;
+        }
+
+    }
 }

@@ -1,6 +1,8 @@
 ﻿using Contracts;
 using Dapper;
 using Repository.RawQuery;
+using Service.Contracts;
+using Shared;
 using Shared.CustomResponses;
 using Shared.DataTransferObjects.Advert;
 using Shared.DataTransferObjects.Image;
@@ -11,10 +13,55 @@ namespace Repository.Repositories;
 internal class AdvertRepository : IAdvertRepository
 {
     private readonly DapperContext _dapperContext;
+    private readonly IServiceManager _serviceManager;
+    private readonly IProcessingChannel _processingChannel;
 
-    public AdvertRepository(DapperContext dapperContext)
+    public AdvertRepository(DapperContext dapperContext, IServiceManager serviceManager, IProcessingChannel processingChannel)
     {
         _dapperContext = dapperContext;
+        _serviceManager = serviceManager;
+        _processingChannel = processingChannel;
+    }
+
+    public async Task CreateAdvert(AddAdvertDto newAdvert, string userId)
+    {
+
+        var addAdvertQuery = AdvertQuery.AddAdvertQuery;
+
+        var id = -1;
+
+        var param = new DynamicParameters();
+        param.Add("@price", newAdvert.Price, DbType.Double);
+        param.Add("@description", newAdvert.Description, DbType.String);
+        param.Add("@floor_space", newAdvert.FloorSpace, DbType.Double);
+        param.Add("@street", newAdvert.Street, DbType.String);
+        param.Add("@no_of_badrooms", newAdvert.NoOfBadrooms, DbType.Int16);
+        param.Add("@no_of_bathrooms", newAdvert.NoOfBathrooms, DbType.Int16);
+        param.Add("@has_elevator", newAdvert.HasElevator, DbType.Boolean);
+        param.Add("@has_garage", newAdvert.HasGarage, DbType.Boolean);
+        param.Add("@has_terrace", newAdvert.HasTerrace, DbType.Boolean);
+        param.Add("@latitude", newAdvert.Latitude, DbType.Double);
+        param.Add("@longitude", newAdvert.Longitude, DbType.Double);
+        param.Add("@has_wifi", newAdvert.HasWifi, DbType.Boolean);
+        param.Add("@is_furnished", newAdvert.IsFunished, DbType.Boolean);
+        param.Add("@created_date", DateTime.Now, DbType.DateTime);
+        param.Add("@year_of_building_created", newAdvert.YearOfBuildingCreated, DbType.Int16);
+        param.Add("@cover_image_url", "test", DbType.String);
+        param.Add("@neighborhood_id", newAdvert.NeighborhoodId, DbType.Int16);
+        param.Add("@building_floor", newAdvert.BuildingFloor, DbType.Int16);
+        param.Add("@advert_purpose_id", newAdvert.AdvertPurposeId, DbType.Int16);
+        param.Add("@advert_type_id", newAdvert.AdvertTypeId, DbType.Int16);
+        param.Add("@user_id", userId, DbType.String);
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            id = await connection.QuerySingleAsync<int>(addAdvertQuery, param);
+        }
+
+        var coverImagePath = await _serviceManager.ImageService.UploadSingleImageInTempFolder(newAdvert.CoverImage);
+        var imagePaths = await _serviceManager.ImageService.UploadMultipleImagesInTempFolder(newAdvert.ImageFiles);
+
+        await _processingChannel.AddQueueItemAsync(new QueueItem { AdvertId = id, CoverImagePath = coverImagePath, ImagePaths = imagePaths });
     }
 
     public async Task<AllInfomrationsAboutAdvertDto> GetAdvert(int advertId)
@@ -83,10 +130,6 @@ internal class AdvertRepository : IAdvertRepository
 
     public async Task<Pagination<MinimalInformationsAboutAdvertDto>> GetAdverts(AdvertParameters advertParameters)
     {
-        if (!advertParameters.ValidPriceRange)
-        {
-            throw new ArgumentException("Bad price range");
-        }
 
         var orderBy = OrderQueryBuilder.CreateOrderQuery<MinimalInformationsAboutAdvertDto>(advertParameters.OrderBy, 'a');
 
@@ -124,6 +167,21 @@ internal class AdvertRepository : IAdvertRepository
             var metadata = new PagedList<MinimalInformationsAboutAdvertDto>(adverts, count, advertParameters.PageNumber, advertParameters.PageSize);
 
             return new Pagination<MinimalInformationsAboutAdvertDto> { Data = adverts, MetaData = metadata.MetaData };
+        }
+    }
+
+    public async Task UpdateAdvertCoverImage(string imageUrl, int advertId)
+    {
+        var updateCoverImageQuery = AdvertQuery.UpdateCoverImageQuery;
+
+        var param = new DynamicParameters();
+
+        param.Add("coverImageUrl", imageUrl, DbType.String);
+        param.Add("advertId", advertId, DbType.Int32);
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            await connection.ExecuteAsync(updateCoverImageQuery, param);
         }
     }
 }

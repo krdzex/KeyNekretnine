@@ -16,7 +16,7 @@ internal sealed class GetAdvertsInPaginationHandler : IRequestHandler<GetAdverts
     }
     public async Task<Pagination<MinimalInformationsAboutAdvertDto>> Handle(GetAdvertsInPaginationQuery request, CancellationToken cancellationToken)
     {
-        if (!request.AdvertParameters.ValidPriceRange)
+        if (request.AdvertParameters.MaxPrice < request.AdvertParameters.MinPrice)
         {
             throw new BadPriceException();
         }

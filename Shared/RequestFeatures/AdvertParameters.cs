@@ -13,5 +13,4 @@ public class AdvertParameters : RequestParameters
     public int? CityId { get; set; }
     public IEnumerable<Int32> NeighborhoodIds { get; set; }
 
-    public bool ValidPriceRange => MaxPrice > MinPrice;
 }
