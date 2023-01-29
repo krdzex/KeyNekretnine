@@ -36,8 +36,8 @@ public class ChannelBackgroundWorker : BackgroundService
             var scopedServiceManager = scope.ServiceProvider.GetRequiredService<IServiceManager>();
             var scopedRepositoryManager = scope.ServiceProvider.GetRequiredService<IRepositoryManager>();
 
-            var coverImageUrl = await scopedServiceManager.ImageService.UploadImageOnCloudinary(item.CoverImagePath);
-            var imageUrls = await scopedServiceManager.ImageService.UploadMultipleImagesOnCloudinary(item.ImagePaths);
+            var coverImageUrl = await scopedServiceManager.ImageService.UploadImageOnCloudinary(item.CoverImageData);
+            var imageUrls = await scopedServiceManager.ImageService.UploadMultipleImagesOnCloudinary(item.ImagesData);
 
             await scopedRepositoryManager.Advert.UpdateAdvertCoverImage(coverImageUrl, item.AdvertId);
             await scopedRepositoryManager.Image.InsertImages(imageUrls, item.AdvertId);

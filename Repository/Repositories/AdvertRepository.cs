@@ -58,10 +58,10 @@ internal class AdvertRepository : IAdvertRepository
             id = await connection.QuerySingleAsync<int>(addAdvertQuery, param);
         }
 
-        var coverImagePath = await _serviceManager.ImageService.UploadSingleImageInTempFolder(newAdvert.CoverImage);
-        var imagePaths = await _serviceManager.ImageService.UploadMultipleImagesInTempFolder(newAdvert.ImageFiles);
+        var coverImageData = await _serviceManager.ImageService.UploadSingleImageInTempFolder(newAdvert.CoverImage);
+        var imagesData = await _serviceManager.ImageService.UploadMultipleImagesInTempFolder(newAdvert.ImageFiles);
 
-        await _processingChannel.AddQueueItemAsync(new QueueItem { AdvertId = id, CoverImagePath = coverImagePath, ImagePaths = imagePaths });
+        await _processingChannel.AddQueueItemAsync(new QueueItem { AdvertId = id, CoverImageData = coverImageData, ImagesData = imagesData });
     }
 
     public async Task<AllInfomrationsAboutAdvertDto> GetAdvert(int advertId)

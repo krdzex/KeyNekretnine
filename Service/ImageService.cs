@@ -1,13 +1,14 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.IO;
 using Service.Contracts;
-using System.Net.Http.Headers;
 
 namespace Service;
 public sealed class ImageService : IImageService
 {
     private readonly Cloudinary _cloudinary;
+    private static readonly RecyclableMemoryStreamManager manager = new RecyclableMemoryStreamManager(100 * 1024, 50 * 1024 * 1024);
 
     public ImageService()
     {
@@ -19,91 +20,70 @@ public sealed class ImageService : IImageService
            );
         _cloudinary = new Cloudinary(account);
     }
-    public async Task<IEnumerable<string>> UploadMultipleImagesInTempFolder(IFormFileCollection files)
-    {
-        var imageDataList = new List<string>();
-        foreach (var image in files)
-        {
-            var fileName = Guid.NewGuid().ToString() + ContentDispositionHeaderValue.Parse(image.ContentDisposition).FileName.Trim('"');
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "temp", fileName);
 
-            using (var stream = new FileStream(path, FileMode.Create))
+    public async Task<IEnumerable<byte[]>> UploadMultipleImagesInTempFolder(IFormFileCollection images)
+    {
+        var imageDataList = new List<byte[]>();
+        foreach (var image in images)
+        {
+            using (var memoryStream = manager.GetStream("test2"))
             {
-                using (var data = image.OpenReadStream())
-                {
-                    await data.CopyToAsync(stream);
-                    imageDataList.Add(path);
-                }
+                await image.CopyToAsync(memoryStream);
+                memoryStream.Position = 0;
+                var buffer = new byte[memoryStream.Length];
+                memoryStream.Read(buffer, 0, buffer.Length);
+                imageDataList.Add(buffer);
+
             }
         }
         return imageDataList.AsEnumerable();
     }
 
-    public async Task<string> UploadImageOnCloudinary(string imagePath)
+    public async Task<string> UploadImageOnCloudinary(byte[] imageData)
     {
-
-        var uploadResult = new ImageUploadResult();
-
-        using (var fileStream = new FileStream(imagePath, FileMode.Open))
+        using (var memoryStream = manager.GetStream("memory2", imageData, 0, imageData.Length))
         {
             var uploadParams = new ImageUploadParams()
             {
-                File = new FileDescription(@"fileName", fileStream),
+                File = new FileDescription(@"fileName", memoryStream),
                 Transformation = new Transformation().Quality(60),
                 Format = "WebP"
             };
-            uploadResult = await _cloudinary.UploadAsync(uploadParams);
-            File.Delete(imagePath);
+            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+            return uploadResult.Url.ToString();
         }
-        return uploadResult.Url.ToString();
     }
 
-    public async Task<IEnumerable<string>> UploadMultipleImagesOnCloudinary(IEnumerable<string> imagePaths)
+    public async Task<IEnumerable<string>> UploadMultipleImagesOnCloudinary(IEnumerable<byte[]> imagesData)
     {
         var imagesUrls = new List<string>();
-        foreach (var imagePath in imagePaths)
+        foreach (var imageData in imagesData)
         {
-            var uploadResult = new ImageUploadResult();
-
-            using (var fileStream = new FileStream(imagePath, FileMode.Open))
+            using (var memoryStream = manager.GetStream("memory3", imageData, 0, imageData.Length))
             {
                 var uploadParams = new ImageUploadParams()
                 {
-                    File = new FileDescription(@"fileName", fileStream),
+                    File = new FileDescription(@"fileName", memoryStream),
                     Transformation = new Transformation().Quality(60),
                     Format = "WebP"
                 };
-                uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                imagesUrls.Add(uploadResult.Url.ToString());
             }
-            imagesUrls.Add(uploadResult.Url.ToString());
-            File.Delete(imagePath);
         }
         return imagesUrls.AsEnumerable();
-
     }
 
 
-    public async Task<string> UploadSingleImageInTempFolder(IFormFile image)
+    public async Task<byte[]> UploadSingleImageInTempFolder(IFormFile image)
     {
-
-        var fileName = Guid.NewGuid().ToString() + ContentDispositionHeaderValue.Parse(image.ContentDisposition).FileName.Trim('"');
-
-        if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), "temp")))
+        using (var memoryStream = manager.GetStream("test"))
         {
-            Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "temp"));
+            await image.CopyToAsync(memoryStream);
+            memoryStream.Position = 0;
+            var buffer = new byte[memoryStream.Length];
+            memoryStream.Read(buffer, 0, buffer.Length);
+            return buffer;
         }
-
-        var path = Path.Combine(Directory.GetCurrentDirectory(), "temp", fileName);
-
-
-        using (var stream = new FileStream(path, FileMode.Create))
-        {
-            using (var data = image.OpenReadStream())
-            {
-                await data.CopyToAsync(stream);
-            }
-
-        }
-        return path;
     }
 }

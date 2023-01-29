@@ -3,10 +3,10 @@
 namespace Service.Contracts;
 public interface IImageService
 {
-    Task<IEnumerable<string>> UploadMultipleImagesInTempFolder(IFormFileCollection files);
-    Task<IEnumerable<string>> UploadMultipleImagesOnCloudinary(IEnumerable<string> imagePaths);
+    Task<IEnumerable<byte[]>> UploadMultipleImagesInTempFolder(IFormFileCollection files);
+    Task<IEnumerable<string>> UploadMultipleImagesOnCloudinary(IEnumerable<byte[]> imagePaths);
 
-    Task<string> UploadImageOnCloudinary(string imagePath);
-    Task<string> UploadSingleImageInTempFolder(IFormFile image);
+    Task<string> UploadImageOnCloudinary(byte[] imagePath);
+    Task<byte[]> UploadSingleImageInTempFolder(IFormFile image);
 }
 
