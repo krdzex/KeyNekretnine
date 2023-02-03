@@ -17,6 +17,7 @@ public sealed class RepositoryManager : IRepositoryManager
     private readonly Lazy<IUserRepository> _userRepository;
     private readonly Lazy<IImageRepository> _imageRepository;
     private readonly DapperContext _dapperContext;
+    private readonly Lazy<ITemporeryImageDataRepository> _temporeryImageDataRepository;
 
 
     public RepositoryManager(
@@ -36,6 +37,7 @@ public sealed class RepositoryManager : IRepositoryManager
         _advertRepository = new Lazy<IAdvertRepository>(() => new AdvertRepository(dapperContext, serviceManager, processingChannel));
         _userRepository = new Lazy<IUserRepository>(() => new UserRepository(dapperContext, userManager));
         _imageRepository = new Lazy<IImageRepository>(() => new ImageRepository(dapperContext));
+        _temporeryImageDataRepository = new Lazy<ITemporeryImageDataRepository>(() => new TemporeryImageDataRepository(dapperContext));
     }
 
     public ICityRepository City => _cityRepository.Value;
@@ -45,6 +47,7 @@ public sealed class RepositoryManager : IRepositoryManager
     public IAdvertRepository Advert => _advertRepository.Value;
     public IUserRepository User => _userRepository.Value;
     public IImageRepository Image => _imageRepository.Value;
+    public ITemporeryImageDataRepository TemporeryImageData => _temporeryImageDataRepository.Value;
 
 }
 

@@ -11,12 +11,13 @@ public class RepositoryContext : IdentityDbContext<User>
     }
 
     public DbSet<Image> Images { get; set; }
-    public DbSet<AdvertStatus> AdvertStatus { get; set; }
-    public DbSet<AdvertPurpose> AdvertPurpose { get; set; }
-    public DbSet<AdvertType> AdvertType { get; set; }
+    public DbSet<AdvertStatus> AdvertStatuses { get; set; }
+    public DbSet<AdvertPurpose> AdvertPurposes { get; set; }
+    public DbSet<AdvertType> AdvertTypes { get; set; }
     public DbSet<Advert> Adverts { get; set; }
     public DbSet<City> Cities { get; set; }
     public DbSet<Neighborhood> Neighborhoods { get; set; }
+    public DbSet<TemporeryImageData> TemporeryImagesData { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

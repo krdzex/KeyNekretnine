@@ -9,4 +9,5 @@ public interface IRepositoryManager
     IAdvertRepository Advert { get; }
     IUserRepository User { get; }
     IImageRepository Image { get; }
+    ITemporeryImageDataRepository TemporeryImageData { get; }
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Repository;
@@ -11,9 +12,10 @@ using Repository;
 namespace KeyNekretnine.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20230131230721_AddTemporeryImageDataTable")]
+    partial class AddTemporeryImageDataTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -177,9 +179,9 @@ namespace KeyNekretnine.Migrations
                         .HasColumnName("name");
 
                     b.HasKey("Id")
-                        .HasName("pk_advert_purposes");
+                        .HasName("pk_advert_purpose");
 
-                    b.ToTable("advert_purposes", (string)null);
+                    b.ToTable("advert_purpose", (string)null);
 
                     b.HasData(
                         new
@@ -215,9 +217,9 @@ namespace KeyNekretnine.Migrations
                         .HasColumnName("name");
 
                     b.HasKey("Id")
-                        .HasName("pk_advert_statuses");
+                        .HasName("pk_advert_status");
 
-                    b.ToTable("advert_statuses", (string)null);
+                    b.ToTable("advert_status", (string)null);
 
                     b.HasData(
                         new
@@ -253,9 +255,9 @@ namespace KeyNekretnine.Migrations
                         .HasColumnName("name");
 
                     b.HasKey("Id")
-                        .HasName("pk_advert_types");
+                        .HasName("pk_advert_type");
 
-                    b.ToTable("advert_types", (string)null);
+                    b.ToTable("advert_type", (string)null);
 
                     b.HasData(
                         new
@@ -8377,19 +8379,13 @@ namespace KeyNekretnine.Migrations
                         .HasColumnType("bytea")
                         .HasColumnName("image_data");
 
-                    b.Property<bool>("IsCover")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false)
-                        .HasColumnName("is_cover");
-
                     b.HasKey("Id")
-                        .HasName("pk_temporery_images_data");
+                        .HasName("pk_temporery_image_datas");
 
                     b.HasIndex("AdvertId")
-                        .HasDatabaseName("ix_temporery_images_data_advert_id");
+                        .HasDatabaseName("ix_temporery_image_datas_advert_id");
 
-                    b.ToTable("temporery_images_data", (string)null);
+                    b.ToTable("temporery_image_datas", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Models.User", b =>
@@ -8538,22 +8534,22 @@ namespace KeyNekretnine.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "8d260195-cdf8-4cf4-a56d-76fcef4ff5ec",
-                            ConcurrencyStamp = "1c141fba-aef9-41e4-b33c-c81d2c06bf40",
+                            Id = "04cb92f3-414a-4567-9a75-ec87fd795304",
+                            ConcurrencyStamp = "0f626c30-cf75-413f-8fbe-ccf205916733",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "50ccfd87-c2bc-4b69-b4e5-fa9b52cc49e5",
-                            ConcurrencyStamp = "33b59885-a778-4799-9fe1-6adc1308737a",
+                            Id = "ca56384b-4706-4432-8c5a-4bdb573d2b76",
+                            ConcurrencyStamp = "612c3afc-04fb-4a3b-8f6e-a4254a2e1662",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "0fc6df17-6347-42b2-8413-20af080e23fc",
-                            ConcurrencyStamp = "607822e5-0fa1-4f4e-a0c6-c642e190b189",
+                            Id = "fffd0651-1970-4a37-af7c-882c85849001",
+                            ConcurrencyStamp = "03adb671-21d9-49c5-8c62-bf321748aaa2",
                             Name = "Moderator",
                             NormalizedName = "MODERATOR"
                         });
@@ -8699,21 +8695,21 @@ namespace KeyNekretnine.Migrations
                         .HasForeignKey("AdvertPurposeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_adverts_advert_purposes_advert_purpose_id");
+                        .HasConstraintName("fk_adverts_advert_purpose_advert_purpose_id");
 
                     b.HasOne("Entities.Models.AdvertStatus", "AdvertStatus")
                         .WithMany("Adverts")
                         .HasForeignKey("AdvertStatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_adverts_advert_statuses_advert_status_id");
+                        .HasConstraintName("fk_adverts_advert_status_advert_status_id");
 
                     b.HasOne("Entities.Models.AdvertType", "AdvertType")
                         .WithMany("Adverts")
                         .HasForeignKey("AdvertTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_adverts_advert_types_advert_type_id");
+                        .HasConstraintName("fk_adverts_advert_type_advert_type_id");
 
                     b.HasOne("Entities.Models.Neighborhood", "Neighborhood")
                         .WithMany("Adverts")
@@ -8771,7 +8767,7 @@ namespace KeyNekretnine.Migrations
                         .HasForeignKey("AdvertId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_temporery_images_data_adverts_advert_id");
+                        .HasConstraintName("fk_temporery_image_datas_adverts_advert_id");
 
                     b.Navigation("Advert");
                 });

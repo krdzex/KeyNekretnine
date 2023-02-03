@@ -9,8 +9,8 @@ public static class AdvertQuery
             INNER JOIN images i ON i.advert_id = a.id
             INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
             INNER JOIN cities c on n.city_id = c.id
-            INNER JOIN advert_purpose p ON a.advert_purpose_id = p.id
-            INNER JOIN advert_type t ON a.advert_type_id = t.id
+            INNER JOIN advert_purposes p ON a.advert_purpose_id = p.id
+            INNER JOIN advert_types t ON a.advert_type_id = t.id
             INNER JOIN ""AspNetUsers"" u ON a.user_id = u.id
             WHERE a.id = @id";
 
@@ -26,7 +26,7 @@ public static class AdvertQuery
         var selectAdvertsQuery = new StringBuilder(
             @"SELECT a.id,a.price,a.description,a.floor_space,a.no_of_badrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name AS purpose_name,a.street
              FROM adverts a
-             INNER JOIN advert_purpose p ON a.advert_purpose_id = p.id
+             INNER JOIN advert_purposes p ON a.advert_purpose_id = p.id
              INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
              INNER JOIN cities c ON n.city_id = c.id"
             );
@@ -59,7 +59,7 @@ public static class AdvertQuery
     public const string SingleAdvertForMapPoint =
        @"SELECT a.id,a.price,a.description,a.floor_space,a.no_of_badrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name AS purpose_name,a.street
              FROM adverts a
-             INNER JOIN advert_purpose p ON a.advert_purpose_id = p.id
+             INNER JOIN advert_purposes p ON a.advert_purpose_id = p.id
              INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
              INNER JOIN cities c ON n.city_id = c.id
              WHERE a.id = @Id";

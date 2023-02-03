@@ -2,5 +2,5 @@
 public class AdvertPurposeQuery
 {
     public const string AllAdvertPurposesQuery =
-      @"SELECT * from advert_purpose";
+      @"SELECT * from advert_purposes";
 }

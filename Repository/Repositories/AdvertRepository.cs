@@ -2,7 +2,6 @@
 using Dapper;
 using Repository.RawQuery;
 using Service.Contracts;
-using Shared;
 using Shared.CustomResponses;
 using Shared.DataTransferObjects.Advert;
 using Shared.DataTransferObjects.Image;
@@ -23,7 +22,7 @@ internal class AdvertRepository : IAdvertRepository
         _processingChannel = processingChannel;
     }
 
-    public async Task CreateAdvert(AddAdvertDto newAdvert, string userId)
+    public async Task<int> CreateAdvert(AddAdvertDto newAdvert, string userId)
     {
 
         var addAdvertQuery = AdvertQuery.AddAdvertQuery;
@@ -56,12 +55,9 @@ internal class AdvertRepository : IAdvertRepository
         using (var connection = _dapperContext.CreateConnection())
         {
             id = await connection.QuerySingleAsync<int>(addAdvertQuery, param);
+
+            return id;
         }
-
-        var coverImageData = await _serviceManager.ImageService.UploadSingleImageInTempFolder(newAdvert.CoverImage);
-        var imagesData = await _serviceManager.ImageService.UploadMultipleImagesInTempFolder(newAdvert.ImageFiles);
-
-        await _processingChannel.AddQueueItemAsync(new QueueItem { AdvertId = id, CoverImageData = coverImageData, ImagesData = imagesData });
     }
 
     public async Task<AllInfomrationsAboutAdvertDto> GetAdvert(int advertId)
