@@ -19,10 +19,11 @@ internal sealed class CreateAdvertHandler : IRequestHandler<CreateAdvertCommand,
     {
         var userId = await _repository.User.GetUserIdFromEmail(request.UserEmail);
 
-        if (userId is null)
-        {
+        //if (userId is null)
+        //{
 
-        }
+        //}
+
         var advertId = await _repository.Advert.CreateAdvert(request.AdvertForCreating, userId);
 
         await _repository.TemporeryImageData.Insert(request.AdvertForCreating.CoverImage, advertId, true);

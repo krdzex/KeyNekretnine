@@ -4,7 +4,7 @@ using Shared;
 using System.Threading.Channels;
 
 namespace Service;
-public class ProcessingChannel : IProcessingChannel
+public sealed class ProcessingChannel : IProcessingChannel
 {
     private const int MaxMessagesInChannel = 100;
     private readonly Channel<QueueItem> _channel;

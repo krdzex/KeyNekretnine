@@ -9,7 +9,7 @@ using System.Security.Claims;
 using System.Text;
 
 namespace Service;
-public sealed class TokenService : ITokenService
+internal sealed class TokenService : ITokenService
 {
     private readonly UserManager<User> _userManager;
     private readonly IConfiguration _configuration;

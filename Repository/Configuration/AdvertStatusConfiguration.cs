@@ -24,6 +24,11 @@ public class AdvertStatusConfiguration : IEntityTypeConfiguration<AdvertStatus>
             {
                 Id = 3,
                 Name = "Odbijen"
+            },
+            new AdvertStatus
+            {
+                Id = 4,
+                Name = "Uploading"
             });
     }
 }

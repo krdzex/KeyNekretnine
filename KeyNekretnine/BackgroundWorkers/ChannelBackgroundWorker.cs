@@ -49,10 +49,11 @@ public class ChannelBackgroundWorker : BackgroundService
                 imagesUrls.Add(url);
             }
 
-            await scopedRepositoryManager.TemporeryImageData.DeleteAll(item.AdvertId);
-
             await scopedRepositoryManager.Advert.UpdateAdvertCoverImage(coverImageUrl, item.AdvertId);
             await scopedRepositoryManager.Image.InsertImages(imagesUrls, item.AdvertId);
+
+            await scopedRepositoryManager.TemporeryImageData.DeleteAll(item.AdvertId);
+            await scopedRepositoryManager.Advert.UpdateStatus(item.AdvertId);
         }
     }
 }

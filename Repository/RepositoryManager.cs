@@ -2,7 +2,6 @@
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Repository.Repositories;
-using Service.Contracts;
 
 namespace Repository;
 
@@ -20,13 +19,7 @@ public sealed class RepositoryManager : IRepositoryManager
     private readonly Lazy<ITemporeryImageDataRepository> _temporeryImageDataRepository;
 
 
-    public RepositoryManager(
-        RepositoryContext repositoryContext,
-        UserManager<User> userManager,
-        DapperContext dapperContext,
-        IServiceManager serviceManager,
-        IProcessingChannel processingChannel
-        )
+    public RepositoryManager(RepositoryContext repositoryContext, UserManager<User> userManager, DapperContext dapperContext)
     {
         _repositoryContext = repositoryContext;
         _dapperContext = dapperContext;
@@ -34,7 +27,7 @@ public sealed class RepositoryManager : IRepositoryManager
         _advertPurposeRepository = new Lazy<IAdvertPurposeRepository>(() => new AdvertPurposeRepository(dapperContext));
         _advertTypeRepository = new Lazy<IAdvertTypeRepository>(() => new AdvertTypeRepository(dapperContext));
         _neighborhoodRepository = new Lazy<INeighborhoodRepository>(() => new NeighborhoodRepository(dapperContext));
-        _advertRepository = new Lazy<IAdvertRepository>(() => new AdvertRepository(dapperContext, serviceManager, processingChannel));
+        _advertRepository = new Lazy<IAdvertRepository>(() => new AdvertRepository(dapperContext));
         _userRepository = new Lazy<IUserRepository>(() => new UserRepository(dapperContext, userManager));
         _imageRepository = new Lazy<IImageRepository>(() => new ImageRepository(dapperContext));
         _temporeryImageDataRepository = new Lazy<ITemporeryImageDataRepository>(() => new TemporeryImageDataRepository(dapperContext));

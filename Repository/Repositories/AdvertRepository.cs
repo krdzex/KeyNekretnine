@@ -1,7 +1,6 @@
 ﻿using Contracts;
 using Dapper;
 using Repository.RawQuery;
-using Service.Contracts;
 using Shared.CustomResponses;
 using Shared.DataTransferObjects.Advert;
 using Shared.DataTransferObjects.Image;
@@ -12,22 +11,16 @@ namespace Repository.Repositories;
 internal class AdvertRepository : IAdvertRepository
 {
     private readonly DapperContext _dapperContext;
-    private readonly IServiceManager _serviceManager;
-    private readonly IProcessingChannel _processingChannel;
 
-    public AdvertRepository(DapperContext dapperContext, IServiceManager serviceManager, IProcessingChannel processingChannel)
+    public AdvertRepository(DapperContext dapperContext)
     {
         _dapperContext = dapperContext;
-        _serviceManager = serviceManager;
-        _processingChannel = processingChannel;
     }
 
     public async Task<int> CreateAdvert(AddAdvertDto newAdvert, string userId)
     {
 
-        var addAdvertQuery = AdvertQuery.AddAdvertQuery;
-
-        var id = -1;
+        var query = AdvertQuery.AddAdvertQuery;
 
         var param = new DynamicParameters();
         param.Add("@price", newAdvert.Price, DbType.Double);
@@ -54,21 +47,21 @@ internal class AdvertRepository : IAdvertRepository
 
         using (var connection = _dapperContext.CreateConnection())
         {
-            id = await connection.QuerySingleAsync<int>(addAdvertQuery, param);
+            var advertId = await connection.QuerySingleAsync<int>(query, param);
 
-            return id;
+            return advertId;
         }
     }
 
     public async Task<AllInfomrationsAboutAdvertDto> GetAdvert(int advertId)
     {
         var advertMap = new Dictionary<int, AllInfomrationsAboutAdvertDto>();
-        var singleAdvertQuery = AdvertQuery.SingleAdvertWithImages;
+        var query = AdvertQuery.SingleAdvertWithImages;
 
         using (var connection = _dapperContext.CreateConnection())
         {
             var adverts = await connection
-                .QueryAsync<AllInfomrationsAboutAdvertDto, ShowImageDto, AllInfomrationsAboutAdvertDto>(singleAdvertQuery,
+                .QueryAsync<AllInfomrationsAboutAdvertDto, ShowImageDto, AllInfomrationsAboutAdvertDto>(query,
                 map: (advert, image) =>
                 {
                     if (advertMap.TryGetValue(advertId, out AllInfomrationsAboutAdvertDto existingAdvert))
@@ -95,9 +88,9 @@ internal class AdvertRepository : IAdvertRepository
 
     public async Task<IEnumerable<ShowAdvertLocationOnMapDto>> GetMapPoints(CancellationToken cancellationToken)
     {
-        var allAdvertMapPointsQuery = AdvertQuery.AllAdvertMapPoints;
+        var query = AdvertQuery.AllAdvertMapPoints;
 
-        var cmd = new CommandDefinition(allAdvertMapPointsQuery, cancellationToken: cancellationToken);
+        var cmd = new CommandDefinition(query, cancellationToken: cancellationToken);
 
         using (var connection = _dapperContext.CreateConnection())
         {
@@ -111,9 +104,13 @@ internal class AdvertRepository : IAdvertRepository
 
     public async Task<MinimalInformationsAboutAdvertDto> GetAdvertFromMapPoint(int id, CancellationToken cancellationToken)
     {
-        var singleAdvertForMapPointQuery = AdvertQuery.SingleAdvertForMapPoint;
+        var query = AdvertQuery.SingleAdvertForMapPoint;
 
-        var cmd = new CommandDefinition(singleAdvertForMapPointQuery, new { id }, cancellationToken: cancellationToken);
+        var param = new DynamicParameters();
+
+        param.Add("id", id, DbType.Int32);
+
+        var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
 
         using (var connection = _dapperContext.CreateConnection())
         {
@@ -129,14 +126,7 @@ internal class AdvertRepository : IAdvertRepository
 
         var orderBy = OrderQueryBuilder.CreateOrderQuery<MinimalInformationsAboutAdvertDto>(advertParameters.OrderBy, 'a');
 
-        var rawQuery = AdvertQuery.MakeGetAdvertQuery(
-            advertParameters.NoOfBadrooms,
-            advertParameters.NoOfBathrooms,
-            advertParameters.AdvertTypeIds,
-            advertParameters.AdvertPurposeIds,
-            orderBy, advertParameters.CityId,
-            advertParameters.NeighborhoodIds
-            );
+        var rawQuery = AdvertQuery.MakeGetAdvertQuery(advertParameters, orderBy);
 
         var skip = (advertParameters.PageNumber - 1) * advertParameters.PageSize;
 
@@ -152,6 +142,8 @@ internal class AdvertRepository : IAdvertRepository
         param.Add("advertPurposeIds", advertParameters.AdvertPurposeIds);
         param.Add("cityId", advertParameters.CityId, DbType.Int32);
         param.Add("neighborhoodIds", advertParameters.NeighborhoodIds);
+        param.Add("@minFloorSpace", advertParameters.MinFloorSpace, DbType.Int32);
+        param.Add("@maxFloorSpace", advertParameters.MaxFloorSpace, DbType.Int32);
 
         using (var connection = _dapperContext.CreateConnection())
         {
@@ -168,7 +160,7 @@ internal class AdvertRepository : IAdvertRepository
 
     public async Task UpdateAdvertCoverImage(string imageUrl, int advertId)
     {
-        var updateCoverImageQuery = AdvertQuery.UpdateCoverImageQuery;
+        var query = AdvertQuery.UpdateCoverImageQuery;
 
         var param = new DynamicParameters();
 
@@ -177,7 +169,21 @@ internal class AdvertRepository : IAdvertRepository
 
         using (var connection = _dapperContext.CreateConnection())
         {
-            await connection.ExecuteAsync(updateCoverImageQuery, param);
+            await connection.ExecuteAsync(query, param);
+        }
+    }
+
+    public async Task UpdateStatus(int advertId)
+    {
+        var query = AdvertQuery.UpdateAdvertStatus;
+
+        var param = new DynamicParameters();
+
+        param.Add("advertId", advertId, DbType.Int32);
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            await connection.ExecuteAsync(query, param);
         }
     }
 }

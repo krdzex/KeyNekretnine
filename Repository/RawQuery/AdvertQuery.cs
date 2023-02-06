@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Shared.RequestFeatures;
+using System.Text;
 
 namespace Repository.RawQuery;
 public static class AdvertQuery
@@ -14,12 +15,13 @@ public static class AdvertQuery
             INNER JOIN ""AspNetUsers"" u ON a.user_id = u.id
             WHERE a.id = @id";
 
-    public static string MakeGetAdvertQuery(IEnumerable<Int32> noOfBadrooms, IEnumerable<Int32> noOfBathrooms, IEnumerable<Int32> advertTypeIds, IEnumerable<Int32> advertPurposeIds, string orderBy, int? cityId, IEnumerable<Int32> neighborhoodIds)
+    public static string MakeGetAdvertQuery(AdvertParameters advertParameters, string orderBy)
     {
-        var countConditions = new StringBuilder("\t     WHERE a.price >= @minPrice AND a.price <= @maxPrice");
+        var countConditions = new StringBuilder("\t     WHERE a.price >= @minPrice AND a.price <= @maxPrice AND s.id <> 4 AND a.floor_space >= @minFloorSpace  AND a.floor_space <= @maxFloorSpace ");
         var countAdvertQuery = new StringBuilder(
             @"SELECT COUNT(a.id)
              FROM adverts a
+             INNER JOIN advert_statuses s ON s.id = a.advert_status_id
             "
             );
 
@@ -28,20 +30,21 @@ public static class AdvertQuery
              FROM adverts a
              INNER JOIN advert_purposes p ON a.advert_purpose_id = p.id
              INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
-             INNER JOIN cities c ON n.city_id = c.id"
+             INNER JOIN cities c ON n.city_id = c.id
+             INNER JOIN advert_statuses s ON s.id = a.advert_status_id"
             );
 
-        if (noOfBadrooms is not null) countConditions.AppendLine(" AND a.no_of_badrooms = ANY(@noOfBadrooms)");
-        if (noOfBathrooms is not null) countConditions.AppendLine(" AND a.no_of_bathrooms = ANY(@noOfBathrooms)");
-        if (advertTypeIds is not null) countConditions.AppendLine(" AND a.advert_type_id = ANY(@advertTypeIds)");
-        if (advertPurposeIds is not null) countConditions.AppendLine(" AND a.advert_purpose_id = ANY(@advertPurposeIds)");
+        if (advertParameters.NoOfBadrooms is not null) countConditions.AppendLine(" AND (a.no_of_badrooms = ANY(@noOfBadrooms) OR ((select get_max_value(@noOfBadrooms)) >= 4 AND a.no_of_badrooms >= 4))");
+        if (advertParameters.NoOfBathrooms is not null) countConditions.AppendLine(" AND (a.no_of_bathrooms = ANY(@noOfBathrooms) OR ((select get_max_value(@noOfBathrooms)) >= 4 AND a.no_of_bathrooms >= 4))");
+        if (advertParameters.AdvertTypeIds is not null) countConditions.AppendLine(" AND a.advert_type_id = ANY(@advertTypeIds)");
+        if (advertParameters.AdvertPurposeIds is not null) countConditions.AppendLine(" AND a.advert_purpose_id = ANY(@advertPurposeIds)");
 
-        if (cityId is not null)
+        if (advertParameters.CityId is not null)
         {
             countAdvertQuery.AppendLine(" INNER JOIN neighborhoods n ON a.neighborhood_id = n.id\r\t     INNER JOIN cities c ON n.city_id = c.id");
             countConditions.AppendLine(" AND c.id = @cityId");
         }
-        if (cityId is null && neighborhoodIds is not null)
+        if (advertParameters.CityId is null && advertParameters.NeighborhoodIds is not null)
         {
             countAdvertQuery.AppendLine(" INNER JOIN neighborhoods n ON a.neighborhood_id = n.id\n");
             countConditions.AppendLine(" AND a.neighborhood_id = ANY(@neighborhoodIds)");
@@ -54,7 +57,9 @@ public static class AdvertQuery
 
     public const string AllAdvertMapPoints =
         @"SELECT id,latitude,longitude
-              FROM adverts";
+              FROM adverts a
+              INNER JOIN advert_statuses s ON s.id = a.advert_status_id
+              WHERE s.id <> 4 ";
 
     public const string SingleAdvertForMapPoint =
        @"SELECT a.id,a.price,a.description,a.floor_space,a.no_of_badrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name AS purpose_name,a.street
@@ -67,12 +72,17 @@ public static class AdvertQuery
 
     public const string AddAdvertQuery =
        @"INSERT INTO adverts (price,description,floor_space,street,no_of_badrooms,no_of_bathrooms,has_elevator,has_garage,has_terrace,latitude,longitude,has_wifi,is_furnished,created_date,year_of_building_created,cover_image_url,neighborhood_id,building_floor,advert_purpose_id,advert_status_id,advert_type_id,user_id)
-            VALUES (@price,@description,@floor_space,@street,@no_of_badrooms,@no_of_bathrooms,@has_elevator,@has_garage,@has_terrace,@latitude,@longitude,@has_wifi,@is_furnished,@created_date,@year_of_building_created,@cover_image_url,@neighborhood_id,@building_floor,@advert_purpose_id,2,@advert_type_id,@user_id)
+            VALUES (@price,@description,@floor_space,@street,@no_of_badrooms,@no_of_bathrooms,@has_elevator,@has_garage,@has_terrace,@latitude,@longitude,@has_wifi,@is_furnished,@created_date,@year_of_building_created,@cover_image_url,@neighborhood_id,@building_floor,@advert_purpose_id,4,@advert_type_id,@user_id)
             RETURNING id";
 
     public const string UpdateCoverImageQuery =
        @"UPDATE adverts
             SET cover_image_url = @coverImageUrl
+            WHERE id = @advertId";
+
+    public const string UpdateAdvertStatus =
+       @"UPDATE adverts
+            SET advert_status_id = 2
             WHERE id = @advertId";
 
 

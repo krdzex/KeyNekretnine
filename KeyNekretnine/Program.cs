@@ -48,10 +48,9 @@ builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT();
 builder.Services.SetupSwagger();
 builder.Services.AddAuthentication();
-builder.Services.ConfigureSqlContext();
+builder.Services.ConfigurePgsqlContext();
 builder.Services.AddControllers();
 builder.Services.ConfigureDapperContext();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -61,7 +60,6 @@ var logger = app.Services.GetRequiredService<ILoggerManager>();
 app.ConfigureExceptionHandler(logger);
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-// Configure the HTTP request pipeline.
 
 app.UseSwagger();
 app.UseSwaggerUI(c =>

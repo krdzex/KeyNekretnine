@@ -46,7 +46,7 @@ public static class ServiceExtensions
 
 
 
-    public static void ConfigureSqlContext(this IServiceCollection services)
+    public static void ConfigurePgsqlContext(this IServiceCollection services)
     {
         services.AddDbContext<RepositoryContext>(opts =>
         {
@@ -99,12 +99,6 @@ public static class ServiceExtensions
             Username = userInfo[0],
             Password = userInfo[1],
             Database = databaseUri.LocalPath.TrimStart('/')
-            // Local testing
-            //Host = "localhost",
-            //Port = 15432,
-            //Username = "postgres",
-            //Password = "b3dfe7ef987752928499ef1e4e9e3f10a0e3f74c8eee1028",
-            //Database = "agencija108"
         };
 
         return builder.ToString();

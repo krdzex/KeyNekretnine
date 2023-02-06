@@ -11,4 +11,5 @@ public interface IAdvertRepository
     Task<MinimalInformationsAboutAdvertDto> GetAdvertFromMapPoint(int id, CancellationToken cancellationToken);
     Task<int> CreateAdvert(AddAdvertDto newAdvert, string userId);
     Task UpdateAdvertCoverImage(string imageUrl, int advertId);
+    Task UpdateStatus(int advertId);
 }

@@ -4,7 +4,7 @@ using Microsoft.IO;
 using Service.Contracts;
 
 namespace Service;
-public sealed class ImageService : IImageService
+internal sealed class ImageService : IImageService
 {
     private readonly Cloudinary _cloudinary;
     private static readonly RecyclableMemoryStreamManager manager = new RecyclableMemoryStreamManager(128 * 1024, 13 * 1024 * 1024);

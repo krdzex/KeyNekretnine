@@ -24,17 +24,6 @@ namespace Repository
                 Username = userInfo[0],
                 Password = userInfo[1],
                 Database = databaseUri.LocalPath.TrimStart('/')
-                // Local testing
-                //Host = "localhost",
-                //Port = 15432,
-                //Username = "postgres",
-                //Password = "b3dfe7ef987752928499ef1e4e9e3f10a0e3f74c8eee1028",
-                //Database = "agencija108"
-                //Host = "localhost",
-                //Port = 5432,
-                //Username = "postgres",
-                //Password = "kikimiki",
-                //Database = "test"
             };
 
             return builder.ToString();

@@ -20,6 +20,10 @@ internal sealed class GetAdvertsInPaginationHandler : IRequestHandler<GetAdverts
         {
             throw new BadPriceException();
         }
+        if (request.AdvertParameters.MaxFloorSpace < request.AdvertParameters.MinFloorSpace)
+        {
+            throw new BadFloorSpaceException();
+        }
         var adverts = await _repository.Advert.GetAdverts(request.AdvertParameters);
 
         return adverts;

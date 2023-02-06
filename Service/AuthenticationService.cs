@@ -6,7 +6,7 @@ using Service.Contracts;
 using Shared.DataTransferObjects.Auth;
 
 namespace Service;
-internal class AuthenticationService : IAuthenticationService
+internal sealed class AuthenticationService : IAuthenticationService
 {
     private readonly UserManager<User> _userManager;
     private readonly IMapper _mapper;

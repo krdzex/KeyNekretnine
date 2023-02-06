@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Contracts;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
