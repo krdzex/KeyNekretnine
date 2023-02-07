@@ -47,6 +47,7 @@ builder.Services.ConfigureBackgroundWorker();
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT();
 builder.Services.SetupSwagger();
+builder.Services.SetupSendGrid();
 builder.Services.AddAuthentication();
 builder.Services.ConfigurePgsqlContext();
 builder.Services.AddControllers();

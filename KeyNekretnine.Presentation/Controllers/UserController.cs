@@ -29,7 +29,7 @@ public class UserController : ControllerBase
         return Ok(await _sender.Send(new GetCurrentUserQuery(email)));
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpPut("{id:guid}/ban")]
     public async Task<IActionResult> Ban(Guid id, [Required] int days)
     {
@@ -38,7 +38,7 @@ public class UserController : ControllerBase
         return Ok();
     }
 
-    //[Authorize]
+    [Authorize]
     [HttpPut("{id:guid}/unban")]
     public async Task<IActionResult> Unban(Guid id)
     {
@@ -61,5 +61,13 @@ public class UserController : ControllerBase
         var bannedUsers = await _sender.Send(new GetBannedUsersQuery(userParameters));
 
         return Ok(bannedUsers);
+    }
+
+    [HttpGet("ConfirmEmail")]
+    public async Task<IActionResult> ConfirmEmail([FromQuery] string token, string email)
+    {
+        await _sender.Send(new ConfirmUserEmailQuery(token, email));
+
+        return Ok();
     }
 }

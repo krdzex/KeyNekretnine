@@ -56,7 +56,7 @@ public static class AdvertQuery
     }
 
     public const string AllAdvertMapPoints =
-        @"SELECT id,latitude,longitude
+        @"SELECT a.id,a.latitude,a.longitude
               FROM adverts a
               INNER JOIN advert_statuses s ON s.id = a.advert_status_id
               WHERE s.id <> 4 ";

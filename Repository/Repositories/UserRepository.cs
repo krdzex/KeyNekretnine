@@ -35,7 +35,7 @@ internal sealed class UserRepository : IUserRepository
 
         if (user == null)
         {
-            throw new UserNotFoundException(userId);
+            throw new UserNotFoundException();
         }
 
         user.IsBanned = true;
@@ -50,7 +50,7 @@ internal sealed class UserRepository : IUserRepository
 
         if (user == null)
         {
-            throw new UserNotFoundException(userId);
+            throw new UserNotFoundException();
         }
 
         user.IsBanned = false;
@@ -140,6 +140,22 @@ internal sealed class UserRepository : IUserRepository
             var userInformations = await connection.QueryFirstOrDefaultAsync<UserInformationDto>(query, param);
 
             return userInformations;
+        }
+    }
+
+    public async Task ConfrimUserEmail(string token, string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+
+        if (user == null)
+        {
+            throw new UserNotFoundException();
+        }
+
+        var result = await _userManager.ConfirmEmailAsync(user, token);
+        if (!result.Succeeded)
+        {
+            throw new ArgumentException("Error while confirming email");
         }
     }
 }

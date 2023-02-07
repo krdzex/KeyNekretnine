@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Npgsql;
 using Repository;
+using SendGrid.Extensions.DependencyInjection;
 using Service;
 using Service.Contracts;
 using System.Text;
@@ -44,7 +45,13 @@ public static class ServiceExtensions
     public static void ConfigureBackgroundWorker(this IServiceCollection services) =>
         services.AddHostedService<ChannelBackgroundWorker>();
 
-
+    public static void SetupSendGrid(this IServiceCollection services)
+    {
+        services.AddSendGrid(options =>
+        {
+            options.ApiKey = Environment.GetEnvironmentVariable("SEND_GRID_API_KEY");
+        });
+    }
 
     public static void ConfigurePgsqlContext(this IServiceCollection services)
     {
