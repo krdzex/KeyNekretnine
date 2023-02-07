@@ -125,6 +125,21 @@ internal sealed class UserRepository : IUserRepository
 
             return userId;
         }
+    }
 
+    public async Task<UserInformationDto> GetLoggedUserInformations(string email)
+    {
+
+        var query = UserQuery.GetLoggedUserInformations;
+
+        var param = new DynamicParameters();
+        param.Add("email", email, DbType.String);
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var userInformations = await connection.QueryFirstOrDefaultAsync<UserInformationDto>(query, param);
+
+            return userInformations;
+        }
     }
 }

@@ -31,4 +31,9 @@ public class UserQuery
     @"SELECT u.Id
       FROM ""AspNetUsers"" AS u
       WHERE email = @email";
+
+    public const string GetLoggedUserInformations =
+    @"SELECT u.email,u.first_name, u.last_name
+      FROM ""AspNetUsers"" AS u
+      WHERE email = @email";
 }

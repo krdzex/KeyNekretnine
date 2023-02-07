@@ -1,21 +1,21 @@
 ﻿using Application.Queries.UserQueries;
+using Contracts;
 using MediatR;
-using Service.Contracts;
 using Shared.DataTransferObjects.User;
 
 namespace Application.Handlers.UserHandlers
 {
     internal sealed class GetCurrentUserHandler : IRequestHandler<GetCurrentUserQuery, UserInformationDto>
     {
-        private readonly IServiceManager _service;
+        private readonly IRepositoryManager _repository;
 
-        public GetCurrentUserHandler(IServiceManager service)
+        public GetCurrentUserHandler(IRepositoryManager repository)
         {
-            _service = service;
+            _repository = repository;
         }
         public async Task<UserInformationDto> Handle(GetCurrentUserQuery request, CancellationToken cancellationToken)
         {
-            var user = await _service.UserService.GetCurrentUserInformations(request.Email);
+            var user = await _repository.User.GetLoggedUserInformations(request.Email);
 
             return user;
         }
