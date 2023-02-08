@@ -31,7 +31,7 @@ public class UserController : ControllerBase
         return Ok(await _sender.Send(new GetCurrentUserQuery(email)));
     }
 
-    [Authorize]
+    [Authorize(Roles = "Administrator")]
     [HttpPut("{id:guid}/ban")]
     public async Task<IActionResult> Ban(Guid id, [Required] int days)
     {
@@ -40,7 +40,7 @@ public class UserController : ControllerBase
         return Ok();
     }
 
-    [Authorize]
+    [Authorize(Roles = "Administrator")]
     [HttpPut("{id:guid}/unban")]
     public async Task<IActionResult> Unban(Guid id)
     {
@@ -49,6 +49,7 @@ public class UserController : ControllerBase
         return Ok();
     }
 
+    [Authorize(Roles = "Administrator")]
     [HttpGet("/api/users")]
     public async Task<IActionResult> GetUsers([FromQuery] UserParameters userParameters)
     {
@@ -57,6 +58,7 @@ public class UserController : ControllerBase
         return Ok(users);
     }
 
+    [Authorize(Roles = "Administrator")]
     [HttpGet("/api/users/banned")]
     public async Task<IActionResult> GetBannedUsers([FromQuery] UserParameters userParameters)
     {

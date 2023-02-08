@@ -1,4 +1,5 @@
 ﻿using Application.Commands.EmailCommands;
+using KeyNekretnine.Attributes;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,7 @@ namespace KeyNekretnine.Presentation.Controllers
         }
 
         [Authorize]
+        [ServiceFilter(typeof(BanUserChack))]
         [HttpPost]
         [Route("user/confirm")]
         public async Task<IActionResult> SendEmailConfirm()

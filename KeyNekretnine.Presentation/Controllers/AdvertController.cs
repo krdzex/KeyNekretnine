@@ -1,5 +1,6 @@
 ﻿using Application.Commands.AdvertCommands;
 using Application.Queries.AdvertQuery;
+using KeyNekretnine.Attributes;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -55,6 +56,7 @@ public class AdvertController : ControllerBase
 
     [Authorize]
     [HttpPost]
+    [ServiceFilter(typeof(BanUserChack))]
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
