@@ -158,4 +158,19 @@ internal sealed class UserRepository : IUserRepository
             throw new ArgumentException("Error while confirming email");
         }
     }
+
+    public async Task<bool> IsUserBanned(string email)
+    {
+        var query = UserQuery.IsUserBannedQuery;
+
+        var param = new DynamicParameters();
+        param.Add("email", email, DbType.String);
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var isBanned = await connection.QueryFirstOrDefaultAsync<bool>(query, param);
+
+            return isBanned;
+        }
+    }
 }

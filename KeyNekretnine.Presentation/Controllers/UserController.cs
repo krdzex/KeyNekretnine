@@ -1,5 +1,6 @@
 ﻿using Application.Commands.UserCommands;
 using Application.Queries.UserQueries;
+using KeyNekretnine.Attributes;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,7 @@ public class UserController : ControllerBase
     }
 
     [Authorize]
+    [ServiceFilter(typeof(BanUserChack))]
     [HttpGet("current")]
     public async Task<IActionResult> Information()
     {

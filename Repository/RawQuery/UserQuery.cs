@@ -36,4 +36,14 @@ public class UserQuery
     @"SELECT u.email,u.first_name, u.last_name
       FROM ""AspNetUsers"" AS u
       WHERE email = @email";
+
+    public const string IsUserBannedQuery =
+    @"SELECT 
+        CASE 
+            WHEN u.is_banned = false OR (u.is_banned = true AND u.ban_end < now()) THEN false
+            ELSE true
+        END AS is_banned
+      FROM ""public"".""AspNetUsers"" u
+      WHERE u.email = @email";
+
 }

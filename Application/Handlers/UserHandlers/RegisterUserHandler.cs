@@ -1,10 +1,9 @@
-﻿using Application.Commands.UserCommands;
+﻿using Application.Notifications;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Service.Contracts;
 
 namespace Application.Handlers.UserHandlers;
-internal sealed class RegisterUserHandler : IRequestHandler<RegisterUserCommand, IdentityResult>
+internal sealed class RegisterUserHandler : INotificationHandler<UserSignupNotification>
 {
     private readonly IServiceManager _service;
 
@@ -13,10 +12,8 @@ internal sealed class RegisterUserHandler : IRequestHandler<RegisterUserCommand,
         _service = service;
     }
 
-    public async Task<IdentityResult> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+    public async Task Handle(UserSignupNotification notification, CancellationToken cancellationToken)
     {
-        var result = await _service.AuthenticationService.RegisterUser(request.RegistrationUser);
-
-        return result;
+        await _service.AuthenticationService.RegisterUser(notification.RegistrationUser);
     }
 }

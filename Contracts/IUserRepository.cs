@@ -14,4 +14,5 @@ public interface IUserRepository
     Task<string> GetUserIdFromEmail(string email);
     Task<UserInformationDto> GetLoggedUserInformations(string email);
     Task ConfrimUserEmail(string token, string email);
+    Task<bool> IsUserBanned(string email);
 }

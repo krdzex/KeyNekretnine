@@ -1,4 +1,5 @@
 ﻿using Application.Commands.UserCommands;
+using Application.Notifications;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataTransferObjects.Auth;
@@ -9,16 +10,17 @@ namespace KeyNekretnine.Presentation.Controllers;
 public class AuthenticationController : ControllerBase
 {
     private readonly ISender _sender;
-
-    public AuthenticationController(ISender sender)
+    private readonly IPublisher _publisher;
+    public AuthenticationController(ISender sender, IPublisher publisher)
     {
         _sender = sender;
+        _publisher = publisher;
     }
 
     [HttpPost("registration")]
     public async Task<IActionResult> Register([FromBody] UserForRegistrationDto userForRegistration)
     {
-        await _sender.Send(new RegisterUserCommand(userForRegistration));
+        await _publisher.Publish(new UserSignupNotification(userForRegistration));
 
         return StatusCode(201);
     }

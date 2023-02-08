@@ -1,10 +1,10 @@
-﻿using Application.Commands.UserCommands;
+﻿using Application.Notifications;
 using FluentValidation;
 
 namespace Application.Validators
 {
     public sealed class RegisterUserCommandValidator :
-    AbstractValidator<RegisterUserCommand>
+    AbstractValidator<UserSignupNotification>
     {
         public RegisterUserCommandValidator()
         {

@@ -6,12 +6,10 @@ using Service.Contracts;
 namespace Service;
 internal sealed class EmailService : IEmailService
 {
-    private readonly ISendGridClient _sendGridClient;
     private readonly IConfiguration _configuration;
 
-    public EmailService(ISendGridClient sendGridClient, IConfiguration configuration)
+    public EmailService(IConfiguration configuration)
     {
-        _sendGridClient = sendGridClient;
         _configuration = configuration;
     }
 
@@ -25,6 +23,8 @@ internal sealed class EmailService : IEmailService
 
         var confirmationlink = "https://localhost:7000/api/user/ConfirmEmail?token=" + token + "&email=" + email;
 
+        var client = new SendGridClient(Environment.GetEnvironmentVariable("SEND_GRID_API_KEY"));
+
         var msg = new SendGridMessage
         {
             From = new EmailAddress(fromEmail, fromName),
@@ -35,9 +35,30 @@ internal sealed class EmailService : IEmailService
         msg.SetTemplateData(new { verifyEmailUrl = confirmationlink });
         msg.AddTo(email);
 
-        var response = await _sendGridClient.SendEmailAsync(msg);
+        var response = await client.SendEmailAsync(msg);
         return response.IsSuccessStatusCode;
     }
 
+    public async Task<bool> SendWelcomeEmail(string email)
+    {
+        var sendGridConfigSection = _configuration.GetSection("SendGridEmailSettings");
+
+        var fromEmail = sendGridConfigSection.GetSection("FromEmail").Value;
+        var fromName = sendGridConfigSection.GetSection("FromName").Value;
+
+        var client = new SendGridClient(Environment.GetEnvironmentVariable("SEND_GRID_API_KEY"));
+
+        var msg = new SendGridMessage
+        {
+            From = new EmailAddress(fromEmail, fromName),
+            Subject = "Welcome",
+            PlainTextContent = "Welcome email"
+        };
+
+        msg.AddTo(email);
+
+        var response = await client.SendEmailAsync(msg);
+        return response.IsSuccessStatusCode;
+    }
 }
 

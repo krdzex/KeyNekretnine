@@ -2,6 +2,7 @@ using Application.Behaviors;
 using CompanyEmployees.Extensions;
 using Contracts;
 using FluentValidation;
+using KeyNekretnine.Attributes;
 using KeyNekretnine.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Http.Features;
@@ -47,13 +48,14 @@ builder.Services.ConfigureBackgroundWorker();
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT();
 builder.Services.SetupSwagger();
-builder.Services.SetupSendGrid();
+builder.Services.AddScoped<BanUserChack>();
 builder.Services.AddAuthentication();
 builder.Services.ConfigurePgsqlContext();
 builder.Services.AddControllers();
 builder.Services.ConfigureDapperContext();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 
 var app = builder.Build();
 
