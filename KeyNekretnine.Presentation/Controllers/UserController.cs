@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.RequestFeatures;
 using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
 
 namespace KeyNekretnine.Presentation.Controllers;
 
@@ -26,9 +25,9 @@ public class UserController : ControllerBase
     [HttpGet("current")]
     public async Task<IActionResult> Information()
     {
-        var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
+        var userClaims = User.Claims;
 
-        return Ok(await _sender.Send(new GetCurrentUserQuery(email)));
+        return Ok(await _sender.Send(new GetCurrentUserQuery(userClaims)));
     }
 
     [Authorize(Roles = "Administrator")]

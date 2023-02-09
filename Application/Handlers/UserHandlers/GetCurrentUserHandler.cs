@@ -15,7 +15,7 @@ namespace Application.Handlers.UserHandlers
         }
         public async Task<UserInformationDto> Handle(GetCurrentUserQuery request, CancellationToken cancellationToken)
         {
-            var user = await _repository.User.GetLoggedUserInformations(request.Email);
+            var user = await _repository.User.GetLoggedUserInformations(request.UserClaims);
 
             return user;
         }

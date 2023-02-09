@@ -26,7 +26,7 @@ public static class AdvertQuery
             );
 
         var selectAdvertsQuery = new StringBuilder(
-            @"SELECT a.id,a.price,a.description,a.floor_space,a.no_of_badrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name AS purpose_name,a.street
+            @"SELECT a.id,a.price,a.description,a.floor_space,a.no_of_badrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name AS purpose_name,a.street,a.latitude,a.longitude
              FROM adverts a
              INNER JOIN advert_purposes p ON a.advert_purpose_id = p.id
              INNER JOIN neighborhoods n ON a.neighborhood_id = n.id

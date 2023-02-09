@@ -2,6 +2,7 @@
 using Shared.CustomResponses;
 using Shared.DataTransferObjects.User;
 using Shared.RequestFeatures;
+using System.Security.Claims;
 
 namespace Contracts;
 public interface IUserRepository
@@ -12,7 +13,7 @@ public interface IUserRepository
     Task<Pagination<UserForListDto>> GetUsers(UserParameters userParameters);
     Task<Pagination<UserForListDto>> GetBannedUsers(UserParameters userParameters);
     Task<string> GetUserIdFromEmail(string email);
-    Task<UserInformationDto> GetLoggedUserInformations(string email);
+    Task<UserInformationDto> GetLoggedUserInformations(IEnumerable<Claim> userClaims);
     Task ConfrimUserEmail(string token, string email);
     Task<bool> IsUserBanned(string email);
 }

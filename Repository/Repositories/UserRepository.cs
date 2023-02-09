@@ -8,6 +8,7 @@ using Shared.CustomResponses;
 using Shared.DataTransferObjects.User;
 using Shared.RequestFeatures;
 using System.Data;
+using System.Security.Claims;
 
 namespace Repository.Repositories;
 internal sealed class UserRepository : IUserRepository
@@ -127,10 +128,13 @@ internal sealed class UserRepository : IUserRepository
         }
     }
 
-    public async Task<UserInformationDto> GetLoggedUserInformations(string email)
+    public async Task<UserInformationDto> GetLoggedUserInformations(IEnumerable<Claim> userClaims)
     {
 
         var query = UserQuery.GetLoggedUserInformations;
+
+        var email = userClaims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
+        var roles = userClaims.Where(c => c.Type == ClaimTypes.Role).Select(x => x.Value);
 
         var param = new DynamicParameters();
         param.Add("email", email, DbType.String);
@@ -138,6 +142,7 @@ internal sealed class UserRepository : IUserRepository
         using (var connection = _dapperContext.CreateConnection())
         {
             var userInformations = await connection.QueryFirstOrDefaultAsync<UserInformationDto>(query, param);
+            userInformations.Roles = roles;
 
             return userInformations;
         }
