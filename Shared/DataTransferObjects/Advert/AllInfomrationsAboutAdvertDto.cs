@@ -11,7 +11,7 @@ public class AllInfomrationsAboutAdvertDto
     [System.Text.Json.Serialization.JsonIgnore]
     public string Cover_Image_Url { get; set; }
     public int No_Of_Bathrooms { get; set; }
-    public int No_Of_Badrooms { get; set; }
+    public int No_Of_Bedrooms { get; set; }
     public double Floor_Space { get; set; }
     public bool Has_Elevator { get; set; }
     public bool Has_Garage { get; set; }

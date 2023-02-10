@@ -8,7 +8,7 @@ public class MinimalInformationsAboutAdvertDto
     public string Cover_Image_Url { get; set; }
     public DateTime Created_Date { get; set; }
     public int No_Of_Bathrooms { get; set; }
-    public int No_Of_Badrooms { get; set; }
+    public int No_Of_Bedrooms { get; set; }
     public double Floor_Space { get; set; }
     public string Purpose_name { get; set; }
     public string Street { get; set; }
