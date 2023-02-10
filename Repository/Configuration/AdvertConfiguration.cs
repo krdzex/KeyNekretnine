@@ -11,13 +11,14 @@ public class AdvertConfiguration : IEntityTypeConfiguration<Advert>
         builder.Property(x => x.Price).IsRequired();
         builder.Property(x => x.UserId).IsRequired();
         builder.Property(x => x.Description).IsRequired().HasMaxLength(10000);
+        builder.Property(x => x.DescriptionEn).HasMaxLength(10000);
         builder.HasOne(x => x.AdvertPurpose).WithMany(x => x.Adverts).HasForeignKey(x => x.AdvertPurposeId).IsRequired();
         builder.Property(x => x.AdvertPurposeId).HasDefaultValue(1);
         builder.HasOne(x => x.AdvertStatus).WithMany(x => x.Adverts).HasForeignKey(x => x.AdvertStatusId).IsRequired();
         builder.Property(x => x.AdvertStatusId).HasDefaultValue(1);
         builder.HasOne(x => x.AdvertType).WithMany(x => x.Adverts).HasForeignKey(x => x.AdvertTypeId).IsRequired();
         builder.Property(x => x.AdvertTypeId).HasDefaultValue(1);
-        builder.Property(x => x.NoOfBadrooms).IsRequired().HasMaxLength(100);
+        builder.Property(x => x.NoOfBedrooms).IsRequired().HasMaxLength(100);
         builder.Property(x => x.NoOfBathrooms).IsRequired().HasMaxLength(100);
         builder.Property(x => x.FloorSpace).IsRequired().HasMaxLength(10000);
         builder.Property(x => x.HasElevator).IsRequired();

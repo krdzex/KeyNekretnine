@@ -36,7 +36,7 @@ namespace Application.Validators
                 .GreaterThanOrEqualTo(1)
                 .WithMessage("Floor space cant be lower then 1");
 
-            RuleFor(x => x.AdvertForCreating.IsFunished)
+            RuleFor(x => x.AdvertForCreating.IsFurnished)
                .NotEmpty()
                .WithMessage("Required field");
 
@@ -58,7 +58,7 @@ namespace Application.Validators
                 .GreaterThanOrEqualTo(1)
                 .WithMessage("Number of bathrooms cant be lower then 1");
 
-            RuleFor(x => x.AdvertForCreating.NoOfBadrooms)
+            RuleFor(x => x.AdvertForCreating.NoOfBedrooms)
                 .NotEmpty()
                 .WithMessage("Number of badrooms is required")
                 .GreaterThanOrEqualTo(1)

@@ -27,7 +27,7 @@ internal class AdvertRepository : IAdvertRepository
         param.Add("@description", newAdvert.Description, DbType.String);
         param.Add("@floor_space", newAdvert.FloorSpace, DbType.Double);
         param.Add("@street", newAdvert.Street, DbType.String);
-        param.Add("@no_of_badrooms", newAdvert.NoOfBadrooms, DbType.Int16);
+        param.Add("@no_of_bedrooms", newAdvert.NoOfBedrooms, DbType.Int16);
         param.Add("@no_of_bathrooms", newAdvert.NoOfBathrooms, DbType.Int16);
         param.Add("@has_elevator", newAdvert.HasElevator, DbType.Boolean);
         param.Add("@has_garage", newAdvert.HasGarage, DbType.Boolean);
@@ -35,7 +35,7 @@ internal class AdvertRepository : IAdvertRepository
         param.Add("@latitude", newAdvert.Latitude, DbType.Double);
         param.Add("@longitude", newAdvert.Longitude, DbType.Double);
         param.Add("@has_wifi", newAdvert.HasWifi, DbType.Boolean);
-        param.Add("@is_furnished", newAdvert.IsFunished, DbType.Boolean);
+        param.Add("@is_furnished", newAdvert.IsFurnished, DbType.Boolean);
         param.Add("@created_date", DateTime.Now, DbType.DateTime);
         param.Add("@year_of_building_created", newAdvert.YearOfBuildingCreated, DbType.Int16);
         param.Add("@cover_image_url", "test", DbType.String);

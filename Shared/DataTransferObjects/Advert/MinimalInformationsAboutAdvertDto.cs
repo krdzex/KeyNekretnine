@@ -12,6 +12,4 @@ public class MinimalInformationsAboutAdvertDto
     public double Floor_Space { get; set; }
     public string Purpose_name { get; set; }
     public string Street { get; set; }
-    public double Latitude { get; set; }
-    public double Longitude { get; set; }
 }

@@ -3,7 +3,9 @@ public class Advert : EntityBase
 {
     public double Price { get; set; }
     public string Description { get; set; }
-    public int NoOfBadrooms { get; set; }
+    public string DescriptionEn { get; set; }
+
+    public int NoOfBedrooms { get; set; }
     public double FloorSpace { get; set; }
     public int NoOfBathrooms { get; set; }
     public bool HasTerrace { get; set; }

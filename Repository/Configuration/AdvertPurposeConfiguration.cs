@@ -13,17 +13,20 @@ public class AdvertPurposeConfiguration : IEntityTypeConfiguration<AdvertPurpose
            new AdvertPurpose
            {
                Id = 1,
-               Name = "Rentiranje"
+               Name = "Rentiranje",
+               NameEn = "Rent"
            },
            new AdvertPurpose
            {
                Id = 2,
-               Name = "Prodaja"
+               Name = "Prodaja",
+               NameEn = "Sale"
            },
            new AdvertPurpose
            {
                Id = 3,
-               Name = "Stan na dan"
+               Name = "Stan na dan",
+               NameEn = "Short term rent"
            });
     }
 }

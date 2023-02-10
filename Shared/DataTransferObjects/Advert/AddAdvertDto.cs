@@ -5,12 +5,12 @@ public class AddAdvertDto
 {
     public double Price { get; set; }
     public string Description { get; set; }
-    public int NoOfBadrooms { get; set; }
+    public int NoOfBedrooms { get; set; }
     public double FloorSpace { get; set; }
     public int NoOfBathrooms { get; set; }
     public bool? HasTerrace { get; set; }
     public bool? HasGarage { get; set; }
-    public bool? IsFunished { get; set; }
+    public bool? IsFurnished { get; set; }
     public bool? HasWifi { get; set; }
     public bool? HasElevator { get; set; }
     public int BuildingFloor { get; set; }

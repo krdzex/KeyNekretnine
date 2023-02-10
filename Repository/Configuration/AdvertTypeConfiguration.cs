@@ -9,26 +9,32 @@ public class AdvertTypeConfiguration : IEntityTypeConfiguration<AdvertType>
     {
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Name).IsRequired().HasMaxLength(20);
+        builder.Property(x => x.NameEn).IsRequired().HasMaxLength(20);
         builder.HasData(
            new AdvertType
            {
                Id = 1,
-               Name = "Kuca"
+               Name = "Kuca",
+               NameEn = "House"
            },
            new AdvertType
            {
                Id = 2,
-               Name = "Stan"
+               Name = "Stan",
+               NameEn = "Apartman"
            },
            new AdvertType
            {
                Id = 3,
-               Name = "Poslovni prostor"
+               Name = "Poslovni prostor",
+               NameEn = "Office space"
+
            },
             new AdvertType
             {
                 Id = 4,
-                Name = "Vila"
+                Name = "Vila",
+                NameEn = "Villa"
             });
     }
 }
