@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Repository;
@@ -11,9 +12,10 @@ using Repository;
 namespace KeyNekretnine.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20230210200246_AddEmptyImageForCities")]
+    partial class AddEmptyImageForCities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -354,168 +356,168 @@ namespace KeyNekretnine.Migrations
                         {
                             Id = 1,
                             GeoId = "297983629",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
+                            ImageUrl = "",
                             Name = "Andrijevica"
                         },
                         new
                         {
                             Id = 2,
                             GeoId = "298324414",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
+                            ImageUrl = "",
                             Name = "Bar"
                         },
                         new
                         {
                             Id = 3,
                             GeoId = "298076995",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
+                            ImageUrl = "",
                             Name = "Žabljak"
                         },
                         new
                         {
                             Id = 4,
                             GeoId = "299079819",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
+                            ImageUrl = "",
                             Name = "Šavnik"
                         },
                         new
                         {
                             Id = 5,
                             GeoId = "297983360",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
+                            ImageUrl = "",
                             Name = "Berane"
                         },
                         new
                         {
                             Id = 6,
                             GeoId = "298008175",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
+                            ImageUrl = "",
                             Name = "Cetinje"
                         },
                         new
                         {
                             Id = 7,
                             GeoId = "298134912",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
+                            ImageUrl = "",
                             Name = "Danilovgrad"
                         },
                         new
                         {
                             Id = 8,
                             GeoId = "298246430",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
+                            ImageUrl = "",
                             Name = "Herceg Novi"
                         },
                         new
                         {
                             Id = 9,
                             GeoId = "298271503",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
+                            ImageUrl = "",
                             Name = "Kolašin"
                         },
                         new
                         {
                             Id = 10,
                             GeoId = "297988513",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
+                            ImageUrl = "",
                             Name = "Kotor"
                         },
                         new
                         {
                             Id = 11,
                             GeoId = "298230379",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
+                            ImageUrl = "",
                             Name = "Mojkovac"
                         },
                         new
                         {
                             Id = 12,
                             GeoId = "297979150",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
+                            ImageUrl = "",
                             Name = "Nikšić"
                         },
                         new
                         {
                             Id = 13,
                             GeoId = "297986966",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
+                            ImageUrl = "",
                             Name = "Plav"
                         },
                         new
                         {
                             Id = 14,
                             GeoId = "298438579",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
+                            ImageUrl = "",
                             Name = "Pljevlja"
                         },
                         new
                         {
                             Id = 15,
                             GeoId = "298163670",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
+                            ImageUrl = "",
                             Name = "Plužine"
                         },
                         new
                         {
                             Id = 16,
                             GeoId = "298233944",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
+                            ImageUrl = "",
                             Name = "Podgorica"
                         },
                         new
                         {
                             Id = 17,
                             GeoId = "297978984",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
+                            ImageUrl = "",
                             Name = "Rožaje"
                         },
                         new
                         {
                             Id = 18,
                             GeoId = "298016342",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
+                            ImageUrl = "",
                             Name = "Tivat"
                         },
                         new
                         {
                             Id = 19,
                             GeoId = "298023651",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
+                            ImageUrl = "",
                             Name = "Ulcinj"
                         },
                         new
                         {
                             Id = 20,
                             GeoId = "298265596",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
+                            ImageUrl = "",
                             Name = "Bijelo Polje"
                         },
                         new
                         {
                             Id = 21,
                             GeoId = "297988603",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
+                            ImageUrl = "",
                             Name = "Budva"
                         },
                         new
                         {
                             Id = 22,
                             GeoId = "298871101",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
+                            ImageUrl = "",
                             Name = "Tuzi"
                         },
                         new
                         {
                             Id = 23,
                             GeoId = "298605656",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
+                            ImageUrl = "",
                             Name = "Petnjica"
                         },
                         new
                         {
                             Id = 24,
                             GeoId = "299016015",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
+                            ImageUrl = "",
                             Name = "Gusinje"
                         });
                 });
@@ -8605,22 +8607,22 @@ namespace KeyNekretnine.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "548e52a6-485a-49a5-b204-8994eaa79a12",
-                            ConcurrencyStamp = "ff1bc08a-bbc1-4e2b-ae65-2604e4460663",
+                            Id = "007dd351-0f5b-4ea3-b83b-11d530bc37a5",
+                            ConcurrencyStamp = "2306fd87-1855-46f9-97e5-951eee91406d",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "62558fd6-61f6-42fe-8cb7-8bc5fea7fb93",
-                            ConcurrencyStamp = "0910e59c-8e6c-48d2-9879-11551171fb6d",
+                            Id = "5633f6db-66b0-4c20-ba14-1130d12a635d",
+                            ConcurrencyStamp = "80f40a74-9d3c-459d-afb4-26762232af2a",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "f78fff4a-06dc-4b5d-864c-d70cd9ced860",
-                            ConcurrencyStamp = "236e90b2-ca37-4e5a-922f-be2441ffbdae",
+                            Id = "71fb4e29-1775-41f6-b63d-97c7529dc285",
+                            ConcurrencyStamp = "606cf4bd-aa78-4c45-bbd7-fa8193247dc6",
                             Name = "Moderator",
                             NormalizedName = "MODERATOR"
                         });

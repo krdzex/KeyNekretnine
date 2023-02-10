@@ -5,7 +5,7 @@ namespace Repository.RawQuery;
 public static class AdvertQuery
 {
     public const string SingleAdvertWithImages =
-      @"SELECT a.Id,a.price,a.description,a.floor_space,a.street,a.no_of_bedrooms,no_of_bathrooms,a.has_elevator,a.has_garage,a.has_terrace,a.latitude,a.longitude,a.has_wifi,a.is_furnished,a.created_date,a.year_of_building_created,a.cover_image_url,n.name as neighborhood_name,c.name as city_name, c.id as city_id,p.name AS purpose_name,t.name AS type_name,CONCAT(u.first_name,' ', u.last_name) AS creator, i.url
+      @"SELECT a.Id,a.price,a.description,a.floor_space,a.street,a.no_of_bedrooms,a.no_of_bathrooms,a.building_floor,a.has_elevator,a.has_garage,a.has_terrace,a.latitude,a.longitude,a.has_wifi,a.is_furnished,a.created_date,a.year_of_building_created,a.cover_image_url,n.name as neighborhood_name,c.name as city_name, c.id as city_id,p.name AS purpose_name,t.name AS type_name,CONCAT(u.first_name,' ', u.last_name) AS creator, i.url
             FROM adverts a
             INNER JOIN images i ON i.advert_id = a.id
             INNER JOIN neighborhoods n ON a.neighborhood_id = n.id

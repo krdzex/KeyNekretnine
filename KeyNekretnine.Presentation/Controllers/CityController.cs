@@ -24,4 +24,12 @@ public class CityController : ControllerBase
     {
         return Ok(await _sender.Send(new GetCitiesQuery()));
     }
+
+    [HttpGet("popular")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ResponseCache(Duration = 120)]
+    public async Task<IActionResult> GetMostPopular()
+    {
+        return Ok(await _sender.Send(new GetMostPopularCitiesQuery()));
+    }
 }
