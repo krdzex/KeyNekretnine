@@ -34,7 +34,7 @@ public static class AdvertQuery
              INNER JOIN advert_statuses s ON s.id = a.advert_status_id"
             );
 
-        if (advertParameters.NoOfBadrooms is not null) countConditions.AppendLine(" AND (a.no_of_bedrooms = ANY(@noOfBadrooms) OR ((select get_max_value(@noOfBadrooms)) >= 4 AND a.no_of_bedrooms >= 4))");
+        if (advertParameters.NoOfBedrooms is not null) countConditions.AppendLine(" AND (a.no_of_bedrooms = ANY(@noOfBedrooms) OR ((select get_max_value(@noOfBedrooms)) >= 4 AND a.no_of_bedrooms >= 4))");
         if (advertParameters.NoOfBathrooms is not null) countConditions.AppendLine(" AND (a.no_of_bathrooms = ANY(@noOfBathrooms) OR ((select get_max_value(@noOfBathrooms)) >= 4 AND a.no_of_bathrooms >= 4))");
         if (advertParameters.AdvertTypeIds is not null) countConditions.AppendLine(" AND a.advert_type_id = ANY(@advertTypeIds)");
         if (advertParameters.AdvertPurposeIds is not null) countConditions.AppendLine(" AND a.advert_purpose_id = ANY(@advertPurposeIds)");

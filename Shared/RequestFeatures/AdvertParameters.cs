@@ -8,7 +8,7 @@ public class AdvertParameters : RequestParameters
     public int MinFloorSpace { get; set; } = 0;
     public int MaxFloorSpace { get; set; } = int.MaxValue;
 
-    public IEnumerable<Int32> NoOfBadrooms { get; set; }
+    public IEnumerable<Int32> NoOfBedrooms { get; set; }
     public IEnumerable<Int32> NoOfBathrooms { get; set; }
     public IEnumerable<Int32> AdvertTypeIds { get; set; }
     public IEnumerable<Int32> AdvertPurposeIds { get; set; }

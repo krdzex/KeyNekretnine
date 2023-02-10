@@ -136,7 +136,7 @@ internal class AdvertRepository : IAdvertRepository
         param.Add("take", advertParameters.PageSize, DbType.Int32);
         param.Add("minPrice", advertParameters.MinPrice, DbType.Int32);
         param.Add("maxPrice", advertParameters.MaxPrice, DbType.Int32);
-        param.Add("noOfBadrooms", advertParameters.NoOfBadrooms);
+        param.Add("noOfBedrooms", advertParameters.NoOfBedrooms);
         param.Add("noOfBathrooms", advertParameters.NoOfBathrooms);
         param.Add("advertTypeIds", advertParameters.AdvertTypeIds);
         param.Add("advertPurposeIds", advertParameters.AdvertPurposeIds);
