@@ -3,6 +3,7 @@ using Contracts;
 using MediatR;
 using Service.Contracts;
 using Shared;
+using System.Transactions;
 
 namespace Application.Handlers.AdvertHandlers;
 internal sealed class CreateAdvertHandler : IRequestHandler<CreateAdvertCommand, Unit>
@@ -17,24 +18,28 @@ internal sealed class CreateAdvertHandler : IRequestHandler<CreateAdvertCommand,
     }
     public async Task<Unit> Handle(CreateAdvertCommand request, CancellationToken cancellationToken)
     {
-        var userId = await _repository.User.GetUserIdFromEmail(request.UserEmail);
-
-        //if (userId is null)
-        //{
-
-        //}
-
-        var advertId = await _repository.Advert.CreateAdvert(request.AdvertForCreating, userId);
-
-        await _repository.TemporeryImageData.Insert(request.AdvertForCreating.CoverImage, advertId, true);
-
-        foreach (var image in request.AdvertForCreating.ImageFiles)
+        using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
         {
-            await _repository.TemporeryImageData.Insert(image, advertId, false);
+            var userId = await _repository.User.GetUserIdFromEmail(request.UserEmail);
+
+            //if (userId is null)
+            //{
+
+            //}
+
+            var advertId = await _repository.Advert.CreateAdvert(request.AdvertForCreating, userId);
+
+            await _repository.TemporeryImageData.Insert(request.AdvertForCreating.CoverImage, advertId, true);
+
+            foreach (var image in request.AdvertForCreating.ImageFiles)
+            {
+                await _repository.TemporeryImageData.Insert(image, advertId, false);
+            }
+
+            var addToChannel = await _channel.AddQueueItemAsync(new QueueItem { AdvertId = advertId });
+
+            scope.Complete();
         }
-
-        var addToChannel = await _channel.AddQueueItemAsync(new QueueItem { AdvertId = advertId });
-
         return Unit.Value;
     }
 }

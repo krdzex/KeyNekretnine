@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using Service.Contracts;
 using Shared;
+using System.Transactions;
 
 namespace KeyNekretnine.BackgroundWorkers;
 public class ChannelBackgroundWorker : BackgroundService
@@ -36,24 +37,27 @@ public class ChannelBackgroundWorker : BackgroundService
             var scopedServiceManager = scope.ServiceProvider.GetRequiredService<IServiceManager>();
             var scopedRepositoryManager = scope.ServiceProvider.GetRequiredService<IRepositoryManager>();
 
-            var coverImageData = await scopedRepositoryManager.TemporeryImageData.Get(item.AdvertId, true);
-            var advertImagesData = await scopedRepositoryManager.TemporeryImageData.Get(item.AdvertId, false);
-
-            var coverImageUrl = await scopedServiceManager.ImageService.UploadImageOnCloudinary(coverImageData.First());
-
-            var imagesUrls = new List<string>();
-
-            foreach (var imageData in advertImagesData)
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
-                var url = await scopedServiceManager.ImageService.UploadImageOnCloudinary(imageData);
-                imagesUrls.Add(url);
+                var coverImageData = await scopedRepositoryManager.TemporeryImageData.Get(item.AdvertId, true);
+                var advertImagesData = await scopedRepositoryManager.TemporeryImageData.Get(item.AdvertId, false);
+
+                var coverImageUrl = await scopedServiceManager.ImageService.UploadImageOnCloudinary(coverImageData.First());
+
+                var imagesUrls = new List<string>();
+
+                foreach (var imageData in advertImagesData)
+                {
+                    var url = await scopedServiceManager.ImageService.UploadImageOnCloudinary(imageData);
+                    imagesUrls.Add(url);
+                }
+
+                await scopedRepositoryManager.Advert.UpdateAdvertCoverImage(coverImageUrl, item.AdvertId);
+                await scopedRepositoryManager.Image.InsertImages(imagesUrls, item.AdvertId);
+
+                await scopedRepositoryManager.TemporeryImageData.DeleteAll(item.AdvertId);
+                await scopedRepositoryManager.Advert.UpdateStatus(item.AdvertId);
             }
-
-            await scopedRepositoryManager.Advert.UpdateAdvertCoverImage(coverImageUrl, item.AdvertId);
-            await scopedRepositoryManager.Image.InsertImages(imagesUrls, item.AdvertId);
-
-            await scopedRepositoryManager.TemporeryImageData.DeleteAll(item.AdvertId);
-            await scopedRepositoryManager.Advert.UpdateStatus(item.AdvertId);
         }
     }
 }
