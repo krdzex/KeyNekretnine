@@ -2,7 +2,7 @@
 public class Advert : EntityBase
 {
     public double Price { get; set; }
-    public string Description { get; set; }
+    public string DescriptionSr { get; set; }
     public string DescriptionEn { get; set; }
 
     public int NoOfBedrooms { get; set; }

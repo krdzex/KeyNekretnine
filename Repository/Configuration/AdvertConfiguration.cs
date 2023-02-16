@@ -10,7 +10,7 @@ public class AdvertConfiguration : IEntityTypeConfiguration<Advert>
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Price).IsRequired();
         builder.Property(x => x.UserId).IsRequired();
-        builder.Property(x => x.Description).IsRequired().HasMaxLength(10000);
+        builder.Property(x => x.DescriptionSr).IsRequired().HasMaxLength(10000);
         builder.Property(x => x.DescriptionEn).HasMaxLength(10000);
         builder.HasOne(x => x.AdvertPurpose).WithMany(x => x.Adverts).HasForeignKey(x => x.AdvertPurposeId).IsRequired();
         builder.Property(x => x.AdvertPurposeId).HasDefaultValue(1);
