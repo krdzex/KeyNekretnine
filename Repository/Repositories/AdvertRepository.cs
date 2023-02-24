@@ -24,7 +24,8 @@ internal class AdvertRepository : IAdvertRepository
 
         var param = new DynamicParameters();
         param.Add("@price", newAdvert.Price, DbType.Double);
-        param.Add("@description", newAdvert.Description, DbType.String);
+        param.Add("@description_sr", newAdvert.DescriptionSr, DbType.String);
+        param.Add("@description_en", newAdvert.DescriptionEn, DbType.String);
         param.Add("@floor_space", newAdvert.FloorSpace, DbType.Double);
         param.Add("@street", newAdvert.Street, DbType.String);
         param.Add("@no_of_bedrooms", newAdvert.NoOfBedrooms, DbType.Int16);

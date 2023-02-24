@@ -18,7 +18,9 @@ internal sealed class CreateAdvertHandler : IRequestHandler<CreateAdvertCommand,
     }
     public async Task<Unit> Handle(CreateAdvertCommand request, CancellationToken cancellationToken)
     {
-        using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+        var advertId = -1;
+
+        using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
         {
             var userId = await _repository.User.GetUserIdFromEmail(request.UserEmail);
 
@@ -27,7 +29,7 @@ internal sealed class CreateAdvertHandler : IRequestHandler<CreateAdvertCommand,
 
             //}
 
-            var advertId = await _repository.Advert.CreateAdvert(request.AdvertForCreating, userId);
+            advertId = await _repository.Advert.CreateAdvert(request.AdvertForCreating, userId);
 
             await _repository.TemporeryImageData.Insert(request.AdvertForCreating.CoverImage, advertId, true);
 
@@ -35,10 +37,12 @@ internal sealed class CreateAdvertHandler : IRequestHandler<CreateAdvertCommand,
             {
                 await _repository.TemporeryImageData.Insert(image, advertId, false);
             }
+            transaction.Complete();
+        }
 
-            var addToChannel = await _channel.AddQueueItemAsync(new QueueItem { AdvertId = advertId });
-
-            scope.Complete();
+        if (advertId != -1)
+        {
+            await _channel.AddQueueItemAsync(new QueueItem { AdvertId = advertId });
         }
         return Unit.Value;
     }

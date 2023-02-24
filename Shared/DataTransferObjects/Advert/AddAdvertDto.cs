@@ -4,7 +4,9 @@ namespace Shared.DataTransferObjects.Advert;
 public class AddAdvertDto
 {
     public double Price { get; set; }
-    public string Description { get; set; }
+    public string DescriptionSr { get; set; }
+    public string DescriptionEn { get; set; }
+
     public int NoOfBedrooms { get; set; }
     public double FloorSpace { get; set; }
     public int NoOfBathrooms { get; set; }

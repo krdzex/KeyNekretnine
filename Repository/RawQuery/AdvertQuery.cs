@@ -71,8 +71,8 @@ public static class AdvertQuery
 
 
     public const string AddAdvertQuery =
-       @"INSERT INTO adverts (price,description,floor_space,street,no_of_bedrooms,no_of_bathrooms,has_elevator,has_garage,has_terrace,latitude,longitude,has_wifi,is_furnished,created_date,year_of_building_created,cover_image_url,neighborhood_id,building_floor,advert_purpose_id,advert_status_id,advert_type_id,user_id)
-            VALUES (@price,@description,@floor_space,@street,@no_of_bedrooms,@no_of_bathrooms,@has_elevator,@has_garage,@has_terrace,@latitude,@longitude,@has_wifi,@is_furnished,@created_date,@year_of_building_created,@cover_image_url,@neighborhood_id,@building_floor,@advert_purpose_id,4,@advert_type_id,@user_id)
+       @"INSERT INTO adverts (price,description_sr,description_en,floor_space,street,no_of_bedrooms,no_of_bathrooms,has_elevator,has_garage,has_terrace,latitude,longitude,has_wifi,is_furnished,created_date,year_of_building_created,cover_image_url,neighborhood_id,building_floor,advert_purpose_id,advert_status_id,advert_type_id,user_id)
+            VALUES (@price,@description_sr,@description_en,@floor_space,@street,@no_of_bedrooms,@no_of_bathrooms,@has_elevator,@has_garage,@has_terrace,@latitude,@longitude,@has_wifi,@is_furnished,@created_date,@year_of_building_created,@cover_image_url,@neighborhood_id,@building_floor,@advert_purpose_id,4,@advert_type_id,@user_id)
             RETURNING id";
 
     public const string UpdateCoverImageQuery =

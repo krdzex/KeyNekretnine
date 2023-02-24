@@ -37,7 +37,9 @@ public class ChannelBackgroundWorker : BackgroundService
             var scopedServiceManager = scope.ServiceProvider.GetRequiredService<IServiceManager>();
             var scopedRepositoryManager = scope.ServiceProvider.GetRequiredService<IRepositoryManager>();
 
-            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            using (var transaction = new TransactionScope(TransactionScopeOption.Required,
+                new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted },
+                TransactionScopeAsyncFlowOption.Enabled))
             {
                 var coverImageData = await scopedRepositoryManager.TemporeryImageData.Get(item.AdvertId, true);
                 var advertImagesData = await scopedRepositoryManager.TemporeryImageData.Get(item.AdvertId, false);
@@ -57,6 +59,8 @@ public class ChannelBackgroundWorker : BackgroundService
 
                 await scopedRepositoryManager.TemporeryImageData.DeleteAll(item.AdvertId);
                 await scopedRepositoryManager.Advert.UpdateStatus(item.AdvertId);
+
+                transaction.Complete();
             }
         }
     }
