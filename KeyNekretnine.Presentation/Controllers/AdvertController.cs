@@ -27,7 +27,7 @@ public class AdvertController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Get(int id)
     {
-        return Ok(await _sender.Send(new GetAdvertQuery(id)));
+        return Ok(await _sender.Send(new GetAdvertQuery { Id = id, BypassCache = false }));
     }
 
     [HttpGet]
