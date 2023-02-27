@@ -85,5 +85,19 @@ public static class AdvertQuery
             SET advert_status_id = 2
             WHERE id = @advertId";
 
+    public const string AdvertExistQuery =
+        @"SELECT COUNT(*)
+          FROM adverts
+          WHERE id = @AdvertId";
+
+    public const string ApproveAdvertQuery =
+        @"UPDATE adverts
+          SET advert_status_id = 1
+          WHERE id = @AdvertId";
+
+    public const string DeclineAdvertQuery =
+        @"UPDATE adverts
+          SET advert_status_id = 3
+          WHERE id = @AdvertId";
 
 }

@@ -12,4 +12,7 @@ public interface IAdvertRepository
     Task<int> CreateAdvert(AddAdvertDto newAdvert, string userId);
     Task UpdateAdvertCoverImage(string imageUrl, int advertId);
     Task UpdateStatus(int advertId);
+    Task<bool> ChackIfAdvertExist(int advertId);
+    Task ApproveAdvert(int advertId);
+    Task DeclineAdvert(int advertId);
 }

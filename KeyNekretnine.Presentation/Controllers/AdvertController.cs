@@ -70,4 +70,29 @@ public class AdvertController : ControllerBase
         return Accepted();
     }
 
+    [Authorize(Roles = "Administrator")]
+    [HttpPut("{advertId}/approve")]
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Approve(int advertId)
+    {
+
+        await _sender.Send(new ApproveAdvertCommand(advertId));
+
+        return NoContent();
+    }
+
+    [Authorize(Roles = "Administrator")]
+    [HttpPut("{advertId}/decline")]
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Decline(int advertId)
+    {
+
+        await _sender.Send(new DeclineAdvertCommand(advertId));
+
+        return NoContent();
+    }
 }

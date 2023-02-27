@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using Dapper;
+using Entities.Exceptions;
 using Repository.RawQuery;
 using Shared.CustomResponses;
 using Shared.DataTransferObjects.Advert;
@@ -81,6 +82,11 @@ internal class AdvertRepository : IAdvertRepository
                     return advert;
                 }, splitOn: "url",
                 param: new { Id = advertId });
+
+            if (adverts.Count() < 1)
+            {
+                throw new AdvertNotFoundException(advertId);
+            }
 
             return advertMap.Values.Single();
         }
@@ -177,6 +183,49 @@ internal class AdvertRepository : IAdvertRepository
     public async Task UpdateStatus(int advertId)
     {
         var query = AdvertQuery.UpdateAdvertStatus;
+
+        var param = new DynamicParameters();
+
+        param.Add("advertId", advertId, DbType.Int32);
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            await connection.ExecuteAsync(query, param);
+        }
+    }
+
+    public async Task<bool> ChackIfAdvertExist(int advertId)
+    {
+        string query = AdvertQuery.AdvertExistQuery;
+
+        var param = new DynamicParameters();
+
+        param.Add("advertId", advertId, DbType.Int32);
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            int count = await connection.QueryFirstOrDefaultAsync<int>(query, param);
+            return count > 0;
+        }
+    }
+
+    public async Task ApproveAdvert(int advertId)
+    {
+        string query = AdvertQuery.ApproveAdvertQuery;
+
+        var param = new DynamicParameters();
+
+        param.Add("advertId", advertId, DbType.Int32);
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            await connection.ExecuteAsync(query, param);
+        }
+    }
+
+    public async Task DeclineAdvert(int advertId)
+    {
+        string query = AdvertQuery.DeclineAdvertQuery;
 
         var param = new DynamicParameters();
 
