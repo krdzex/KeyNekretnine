@@ -236,4 +236,33 @@ internal class AdvertRepository : IAdvertRepository
             await connection.ExecuteAsync(query, param);
         }
     }
+
+    public async Task<Pagination<AdminTableAdvertDto>> GetAdminAdverts(AdminAdvertParameters adminAdvertParameters)
+    {
+
+        var orderBy = OrderQueryBuilder.CreateOrderQuery<MinimalInformationsAboutAdvertDto>(adminAdvertParameters.OrderBy, 'a');
+
+        var rawQuery = AdvertQuery.MakeGetAdminAdvertQuery(adminAdvertParameters.AdvertStatusIds, orderBy);
+
+        var skip = (adminAdvertParameters.PageNumber - 1) * adminAdvertParameters.PageSize;
+
+        var param = new DynamicParameters();
+
+        param.Add("skip", skip, DbType.Int32);
+        param.Add("take", adminAdvertParameters.PageSize, DbType.Int32);
+        param.Add("advertStatusIds", adminAdvertParameters.AdvertStatusIds);
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var multi = await connection.QueryMultipleAsync(rawQuery, param);
+
+            var count = await multi.ReadSingleAsync<int>();
+            var adverts = (await multi.ReadAsync<AdminTableAdvertDto>()).ToList();
+
+            var metadata = new PagedList<AdminTableAdvertDto>(adverts, count, adminAdvertParameters.PageNumber, adminAdvertParameters.PageSize);
+
+            return new Pagination<AdminTableAdvertDto> { Data = adverts, MetaData = metadata.MetaData };
+        }
+    }
+
 }

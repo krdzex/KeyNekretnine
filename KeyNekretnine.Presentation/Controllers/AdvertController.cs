@@ -1,4 +1,5 @@
 ﻿using Application.Commands.AdvertCommands;
+using Application.Queries.AdvertQueries;
 using Application.Queries.AdvertQuery;
 using KeyNekretnine.Attributes;
 using MediatR;
@@ -35,7 +36,7 @@ public class AdvertController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetPaging([FromQuery] AdvertParameters advertParameters)
     {
-        return Ok(await _sender.Send(new GetAdvertsInPaginationQuery(advertParameters)));
+        return Ok(await _sender.Send(new GetAdvertsQuery(advertParameters)));
     }
 
     [HttpGet("map")]
@@ -72,7 +73,7 @@ public class AdvertController : ControllerBase
 
     [Authorize(Roles = "Administrator")]
     [HttpPut("{advertId}/approve")]
-    [ProducesResponseType(StatusCodes.Status202Accepted)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Approve(int advertId)
@@ -85,7 +86,7 @@ public class AdvertController : ControllerBase
 
     [Authorize(Roles = "Administrator")]
     [HttpPut("{advertId}/decline")]
-    [ProducesResponseType(StatusCodes.Status202Accepted)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Decline(int advertId)
@@ -94,5 +95,14 @@ public class AdvertController : ControllerBase
         await _sender.Send(new DeclineAdvertCommand(advertId));
 
         return NoContent();
+    }
+
+    //[Authorize(Roles = "Administrator")]
+    [HttpGet("/api/admin/adverts")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetAdminAdverts([FromQuery] AdminAdvertParameters adminAdvertParameters)
+    {
+        return Ok(await _sender.Send(new GetAdminAdvertsQuery(adminAdvertParameters)));
     }
 }

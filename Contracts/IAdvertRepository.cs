@@ -15,4 +15,5 @@ public interface IAdvertRepository
     Task<bool> ChackIfAdvertExist(int advertId);
     Task ApproveAdvert(int advertId);
     Task DeclineAdvert(int advertId);
+    Task<Pagination<AdminTableAdvertDto>> GetAdminAdverts(AdminAdvertParameters adminAdvertParameters);
 }

@@ -4,4 +4,4 @@ using Shared.DataTransferObjects.Advert;
 using Shared.RequestFeatures;
 
 namespace Application.Queries.AdvertQuery;
-public sealed record GetAdvertsInPaginationQuery(AdvertParameters AdvertParameters) : IRequest<Pagination<MinimalInformationsAboutAdvertDto>>;
+public sealed record GetAdvertsQuery(AdvertParameters AdvertParameters) : IRequest<Pagination<MinimalInformationsAboutAdvertDto>>;

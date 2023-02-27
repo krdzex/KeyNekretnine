@@ -6,15 +6,15 @@ using Shared.CustomResponses;
 using Shared.DataTransferObjects.Advert;
 
 namespace Application.Handlers.AdvertHandlers;
-internal sealed class GetAdvertsInPaginationHandler : IRequestHandler<GetAdvertsInPaginationQuery, Pagination<MinimalInformationsAboutAdvertDto>>
+internal sealed class GetAdvertsHandler : IRequestHandler<GetAdvertsQuery, Pagination<MinimalInformationsAboutAdvertDto>>
 {
     private readonly IRepositoryManager _repository;
 
-    public GetAdvertsInPaginationHandler(IRepositoryManager repository)
+    public GetAdvertsHandler(IRepositoryManager repository)
     {
         _repository = repository;
     }
-    public async Task<Pagination<MinimalInformationsAboutAdvertDto>> Handle(GetAdvertsInPaginationQuery request, CancellationToken cancellationToken)
+    public async Task<Pagination<MinimalInformationsAboutAdvertDto>> Handle(GetAdvertsQuery request, CancellationToken cancellationToken)
     {
         if (request.AdvertParameters.MaxPrice < request.AdvertParameters.MinPrice)
         {

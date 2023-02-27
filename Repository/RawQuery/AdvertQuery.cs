@@ -17,12 +17,10 @@ public static class AdvertQuery
 
     public static string MakeGetAdvertQuery(AdvertParameters advertParameters, string orderBy)
     {
-        var countConditions = new StringBuilder("\t     WHERE a.price >= @minPrice AND a.price <= @maxPrice AND s.id <> 4 AND a.floor_space >= @minFloorSpace  AND a.floor_space <= @maxFloorSpace ");
+        var countConditions = new StringBuilder("\t     WHERE a.price >= @minPrice AND a.price <= @maxPrice AND a.advert_status_id = 1 AND a.floor_space >= @minFloorSpace  AND a.floor_space <= @maxFloorSpace ");
         var countAdvertQuery = new StringBuilder(
             @"SELECT COUNT(a.id)
-             FROM adverts a
-             INNER JOIN advert_statuses s ON s.id = a.advert_status_id
-            "
+             FROM adverts a"
             );
 
         var selectAdvertsQuery = new StringBuilder(
@@ -30,8 +28,7 @@ public static class AdvertQuery
              FROM adverts a
              INNER JOIN advert_purposes p ON a.advert_purpose_id = p.id
              INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
-             INNER JOIN cities c ON n.city_id = c.id
-             INNER JOIN advert_statuses s ON s.id = a.advert_status_id"
+             INNER JOIN cities c ON n.city_id = c.id"
             );
 
         if (advertParameters.NoOfBedrooms is not null) countConditions.AppendLine(" AND (a.no_of_bedrooms = ANY(@noOfBedrooms) OR ((select get_max_value(@noOfBedrooms)) >= 4 AND a.no_of_bedrooms >= 4))");
@@ -59,7 +56,7 @@ public static class AdvertQuery
         @"SELECT a.id,a.latitude,a.longitude
               FROM adverts a
               INNER JOIN advert_statuses s ON s.id = a.advert_status_id
-              WHERE s.id <> 4 ";
+              WHERE s.id = 1";
 
     public const string SingleAdvertForMapPoint =
        @"SELECT a.id,a.price,a.floor_space,a.no_of_bedrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,a.street
@@ -100,4 +97,32 @@ public static class AdvertQuery
           SET advert_status_id = 3
           WHERE id = @AdvertId";
 
+    public const string PendingAdvertsQuery =
+        @"Select id 
+          from adverts
+          WHERE id = @AdvertId";
+
+    public static string MakeGetAdminAdvertQuery(IEnumerable<Int32> advertStatusIds, string orderBy)
+    {
+        var countConditions = new StringBuilder("");
+        var countAdvertQuery = new StringBuilder(
+            @"SELECT COUNT(a.id)
+             FROM adverts a"
+            );
+
+        var selectAdvertsQuery = new StringBuilder(
+            @"SELECT a.id,a.price,a.floor_space,a.no_of_bedrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,a.street
+             FROM adverts a
+             INNER JOIN advert_purposes p ON a.advert_purpose_id = p.id
+             INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
+             INNER JOIN cities c ON n.city_id = c.id"
+            );
+
+        if (advertStatusIds is not null) countConditions.AppendLine(" WHERE a.advert_status_id = ANY(@advertStatusIds)");
+
+        countAdvertQuery.Append(countConditions).Append(';');
+        selectAdvertsQuery.Append(countConditions).Append($" ORDER BY {orderBy} OFFSET @Skip FETCH NEXT @Take ROWS ONLY;");
+
+        return countAdvertQuery.ToString() + selectAdvertsQuery.ToString();
+    }
 }
