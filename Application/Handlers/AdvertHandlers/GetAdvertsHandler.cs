@@ -24,7 +24,7 @@ internal sealed class GetAdvertsHandler : IRequestHandler<GetAdvertsQuery, Pagin
         {
             throw new BadFloorSpaceException();
         }
-        var adverts = await _repository.Advert.GetAdverts(request.AdvertParameters);
+        var adverts = await _repository.Advert.GetAdverts(request.AdvertParameters, cancellationToken);
 
         return adverts;
     }

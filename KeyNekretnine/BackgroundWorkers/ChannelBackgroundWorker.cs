@@ -22,15 +22,15 @@ public class ChannelBackgroundWorker : BackgroundService
         await base.StopAsync(cancellationToken);
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        await foreach (var item in _checkoutProcessingChannel.ReadAllAsync(stoppingToken))
+        await foreach (var item in _checkoutProcessingChannel.ReadAllAsync(cancellationToken))
         {
-            await ProcessItemAsync(item);
+            await ProcessItemAsync(item, cancellationToken);
         }
     }
 
-    private async Task ProcessItemAsync(QueueItem item)
+    private async Task ProcessItemAsync(QueueItem item, CancellationToken cancellationToken)
     {
         using (var scope = _serviceProvider.CreateScope())
         {
@@ -54,11 +54,11 @@ public class ChannelBackgroundWorker : BackgroundService
                     imagesUrls.Add(url);
                 }
 
-                await scopedRepositoryManager.Advert.UpdateAdvertCoverImage(coverImageUrl, item.AdvertId);
+                await scopedRepositoryManager.Advert.UpdateAdvertCoverImage(coverImageUrl, item.AdvertId, cancellationToken);
                 await scopedRepositoryManager.Image.InsertImages(imagesUrls, item.AdvertId);
 
                 await scopedRepositoryManager.TemporeryImageData.DeleteAll(item.AdvertId);
-                await scopedRepositoryManager.Advert.UpdateStatus(item.AdvertId);
+                await scopedRepositoryManager.Advert.UpdateStatus(item.AdvertId, cancellationToken);
 
                 transaction.Complete();
             }

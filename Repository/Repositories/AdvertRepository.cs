@@ -18,7 +18,7 @@ internal class AdvertRepository : IAdvertRepository
         _dapperContext = dapperContext;
     }
 
-    public async Task<int> CreateAdvert(AddAdvertDto newAdvert, string userId)
+    public async Task<int> CreateAdvert(AddAdvertDto newAdvert, string userId, CancellationToken cancellationToken)
     {
 
         var query = AdvertQuery.AddAdvertQuery;
@@ -47,9 +47,11 @@ internal class AdvertRepository : IAdvertRepository
         param.Add("@advert_type_id", newAdvert.AdvertTypeId, DbType.Int16);
         param.Add("@user_id", userId, DbType.String);
 
+        var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
         using (var connection = _dapperContext.CreateConnection())
         {
-            var advertId = await connection.QuerySingleAsync<int>(query, param);
+            var advertId = await connection.QuerySingleAsync<int>(cmd);
 
             return advertId;
         }
@@ -164,12 +166,12 @@ internal class AdvertRepository : IAdvertRepository
 
     }
 
-    public async Task<Pagination<MinimalInformationsAboutAdvertDto>> GetAdverts(AdvertParameters advertParameters)
+    public async Task<Pagination<MinimalInformationsAboutAdvertDto>> GetAdverts(AdvertParameters advertParameters, CancellationToken cancellationToken)
     {
 
         var orderBy = OrderQueryBuilder.CreateOrderQuery<MinimalInformationsAboutAdvertDto>(advertParameters.OrderBy, 'a');
 
-        var rawQuery = AdvertQuery.MakeGetAdvertQuery(advertParameters, orderBy);
+        var query = AdvertQuery.MakeGetAdvertQuery(advertParameters, orderBy);
 
         var skip = (advertParameters.PageNumber - 1) * advertParameters.PageSize;
 
@@ -188,9 +190,11 @@ internal class AdvertRepository : IAdvertRepository
         param.Add("@minFloorSpace", advertParameters.MinFloorSpace, DbType.Int32);
         param.Add("@maxFloorSpace", advertParameters.MaxFloorSpace, DbType.Int32);
 
+        var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
         using (var connection = _dapperContext.CreateConnection())
         {
-            var multi = await connection.QueryMultipleAsync(rawQuery, param);
+            var multi = await connection.QueryMultipleAsync(cmd);
 
             var count = await multi.ReadSingleAsync<int>();
             var adverts = (await multi.ReadAsync<MinimalInformationsAboutAdvertDto>()).ToList();
@@ -201,7 +205,7 @@ internal class AdvertRepository : IAdvertRepository
         }
     }
 
-    public async Task UpdateAdvertCoverImage(string imageUrl, int advertId)
+    public async Task UpdateAdvertCoverImage(string imageUrl, int advertId, CancellationToken cancellationToken)
     {
         var query = AdvertQuery.UpdateCoverImageQuery;
 
@@ -210,13 +214,15 @@ internal class AdvertRepository : IAdvertRepository
         param.Add("coverImageUrl", imageUrl, DbType.String);
         param.Add("advertId", advertId, DbType.Int32);
 
+        var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
         using (var connection = _dapperContext.CreateConnection())
         {
-            await connection.ExecuteAsync(query, param);
+            await connection.ExecuteAsync(cmd);
         }
     }
 
-    public async Task UpdateStatus(int advertId)
+    public async Task UpdateStatus(int advertId, CancellationToken cancellationToken)
     {
         var query = AdvertQuery.UpdateAdvertStatus;
 
@@ -224,13 +230,15 @@ internal class AdvertRepository : IAdvertRepository
 
         param.Add("advertId", advertId, DbType.Int32);
 
+        var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
         using (var connection = _dapperContext.CreateConnection())
         {
-            await connection.ExecuteAsync(query, param);
+            await connection.ExecuteAsync(cmd);
         }
     }
 
-    public async Task<bool> ChackIfAdvertExist(int advertId)
+    public async Task<bool> ChackIfAdvertExist(int advertId, CancellationToken cancellationToken)
     {
         string query = AdvertQuery.AdvertExistQuery;
 
@@ -238,14 +246,16 @@ internal class AdvertRepository : IAdvertRepository
 
         param.Add("advertId", advertId, DbType.Int32);
 
+        var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
         using (var connection = _dapperContext.CreateConnection())
         {
-            int count = await connection.QueryFirstOrDefaultAsync<int>(query, param);
+            int count = await connection.QueryFirstOrDefaultAsync<int>(cmd);
             return count > 0;
         }
     }
 
-    public async Task ApproveAdvert(int advertId)
+    public async Task ApproveAdvert(int advertId, CancellationToken cancellationToken)
     {
         string query = AdvertQuery.ApproveAdvertQuery;
 
@@ -253,13 +263,15 @@ internal class AdvertRepository : IAdvertRepository
 
         param.Add("advertId", advertId, DbType.Int32);
 
+        var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
         using (var connection = _dapperContext.CreateConnection())
         {
-            await connection.ExecuteAsync(query, param);
+            await connection.ExecuteAsync(cmd);
         }
     }
 
-    public async Task DeclineAdvert(int advertId)
+    public async Task DeclineAdvert(int advertId, CancellationToken cancellationToken)
     {
         string query = AdvertQuery.DeclineAdvertQuery;
 
@@ -267,9 +279,11 @@ internal class AdvertRepository : IAdvertRepository
 
         param.Add("advertId", advertId, DbType.Int32);
 
+        var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
         using (var connection = _dapperContext.CreateConnection())
         {
-            await connection.ExecuteAsync(query, param);
+            await connection.ExecuteAsync(cmd);
         }
     }
 

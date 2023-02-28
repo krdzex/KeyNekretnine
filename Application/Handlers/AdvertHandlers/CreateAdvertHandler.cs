@@ -1,5 +1,6 @@
 ﻿using Application.Commands.AdvertCommands;
 using Contracts;
+using Entities.Exceptions;
 using MediatR;
 using Service.Contracts;
 using Shared;
@@ -24,12 +25,12 @@ internal sealed class CreateAdvertHandler : IRequestHandler<CreateAdvertCommand,
         {
             var userId = await _repository.User.GetUserIdFromEmail(request.UserEmail);
 
-            //if (userId is null)
-            //{
+            if (userId is null)
+            {
+                throw new UserNotFoundException();
+            }
 
-            //}
-
-            advertId = await _repository.Advert.CreateAdvert(request.AdvertForCreating, userId);
+            advertId = await _repository.Advert.CreateAdvert(request.AdvertForCreating, userId, cancellationToken);
 
             await _repository.TemporeryImageData.Insert(request.AdvertForCreating.CoverImage, advertId, true);
 

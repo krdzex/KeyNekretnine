@@ -16,14 +16,14 @@ internal sealed class ApproveAdvertHandler : IRequestHandler<ApproveAdvertComman
     public async Task<Unit> Handle(ApproveAdvertCommand request, CancellationToken cancellationToken)
     {
 
-        var advertExist = await _repository.Advert.ChackIfAdvertExist(request.AdvertId);
+        var advertExist = await _repository.Advert.ChackIfAdvertExist(request.AdvertId, cancellationToken);
 
         if (!advertExist)
         {
             throw new AdvertNotFoundException(request.AdvertId);
         }
 
-        await _repository.Advert.ApproveAdvert(request.AdvertId);
+        await _repository.Advert.ApproveAdvert(request.AdvertId, cancellationToken);
 
         return Unit.Value;
     }

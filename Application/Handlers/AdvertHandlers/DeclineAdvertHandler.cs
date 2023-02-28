@@ -15,14 +15,14 @@ internal sealed class DeclineAdvertHandler : IRequestHandler<DeclineAdvertComman
 
     public async Task<Unit> Handle(DeclineAdvertCommand request, CancellationToken cancellationToken)
     {
-        var advertExist = await _repository.Advert.ChackIfAdvertExist(request.AdvertId);
+        var advertExist = await _repository.Advert.ChackIfAdvertExist(request.AdvertId, cancellationToken);
 
         if (!advertExist)
         {
             throw new AdvertNotFoundException(request.AdvertId);
         }
 
-        await _repository.Advert.DeclineAdvert(request.AdvertId);
+        await _repository.Advert.DeclineAdvert(request.AdvertId, cancellationToken);
 
         return Unit.Value;
     }
