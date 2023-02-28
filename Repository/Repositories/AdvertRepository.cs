@@ -58,7 +58,7 @@ internal class AdvertRepository : IAdvertRepository
     public async Task<AllInfomrationsAboutAdvertDto> GetAdvert(int advertId)
     {
         var advertMap = new Dictionary<int, AllInfomrationsAboutAdvertDto>();
-        var query = AdvertQuery.SingleAdvertWithImages;
+        var query = AdvertQuery.SingleAdvertQuery;
 
         using (var connection = _dapperContext.CreateConnection())
         {

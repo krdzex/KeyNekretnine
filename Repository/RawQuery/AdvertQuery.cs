@@ -4,7 +4,7 @@ using System.Text;
 namespace Repository.RawQuery;
 public static class AdvertQuery
 {
-    public const string SingleAdvertWithImages =
+    public const string SingleAdvertQuery =
       @"SELECT a.Id,a.price,a.description_sr,a.description_en,a.floor_space,a.street,a.no_of_bedrooms,a.no_of_bathrooms,a.building_floor,a.has_elevator,a.has_garage,a.has_terrace,a.latitude,a.longitude,a.has_wifi,a.is_furnished,a.created_date,a.year_of_building_created,a.cover_image_url,n.name as neighborhood_name,c.name as city_name, c.id as city_id,p.name_sr AS purpose_name_sr,p.name_en AS purpose_name_en,t.name_sr AS type_name_sr,t.name_en AS type_name_en,CONCAT(u.first_name,' ', u.last_name) AS creator, i.url
             FROM adverts a
             INNER JOIN images i ON i.advert_id = a.id
@@ -15,6 +15,18 @@ public static class AdvertQuery
             INNER JOIN ""AspNetUsers"" u ON a.user_id = u.id
             WHERE a.id = @id
             AND a.advert_status_id = 1";
+
+    public const string SingleAdminAdvertQuery =
+        @"SELECT a.Id,a.price,a.description_sr,a.description_en,a.floor_space,a.street,a.no_of_bedrooms,a.no_of_bathrooms,a.building_floor,a.has_elevator,a.has_garage,a.has_terrace,a.latitude,a.longitude,a.has_wifi,a.is_furnished,a.created_date,a.year_of_building_created,a.cover_image_url,n.name as neighborhood_name,c.name as city_name, c.id as city_id,p.name_sr AS purpose_name_sr,p.name_en AS purpose_name_en,t.name_sr AS type_name_sr,t.name_en AS type_name_en,CONCAT(u.first_name,' ', u.last_name) AS creator, i.url,s.name_sr AS status_name_sr,s.name_en AS status_name_en
+            FROM adverts a
+            INNER JOIN images i ON i.advert_id = a.id
+            INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
+            INNER JOIN cities c on n.city_id = c.id
+            INNER JOIN advert_purposes p ON a.advert_purpose_id = p.id
+            INNER JOIN advert_types t ON a.advert_type_id = t.id
+            INNER JOIN ""AspNetUsers"" u ON a.user_id = u.id
+            INNER JOIN advert_statuses s ON a.advert_status_id = s.id 
+            WHERE a.id = @id";
 
     public static string MakeGetAdvertQuery(AdvertParameters advertParameters, string orderBy)
     {
