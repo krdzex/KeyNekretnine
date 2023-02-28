@@ -11,7 +11,6 @@ public interface IUserRepository
     Task BanUser(string userId, int noOfDays);
     Task UnbanUser(string userId);
     Task<Pagination<UserForListDto>> GetUsers(UserParameters userParameters);
-    Task<Pagination<UserForListDto>> GetBannedUsers(UserParameters userParameters);
     Task<string> GetUserIdFromEmail(string email);
     Task<UserInformationDto> GetLoggedUserInformations(IEnumerable<Claim> userClaims);
     Task ConfrimUserEmail(string token, string email);

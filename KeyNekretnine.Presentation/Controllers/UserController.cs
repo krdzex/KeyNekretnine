@@ -48,22 +48,13 @@ public class UserController : ControllerBase
         return Ok();
     }
 
-    [Authorize(Roles = "Administrator")]
+    //[Authorize(Roles = "Administrator")]
     [HttpGet("/api/users")]
     public async Task<IActionResult> GetUsers([FromQuery] UserParameters userParameters)
     {
         var users = await _sender.Send(new GetUsersQuery(userParameters));
 
         return Ok(users);
-    }
-
-    [Authorize(Roles = "Administrator")]
-    [HttpGet("/api/users/banned")]
-    public async Task<IActionResult> GetBannedUsers([FromQuery] UserParameters userParameters)
-    {
-        var bannedUsers = await _sender.Send(new GetBannedUsersQuery(userParameters));
-
-        return Ok(bannedUsers);
     }
 
     [HttpGet("ConfirmEmail")]

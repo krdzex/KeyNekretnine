@@ -62,7 +62,7 @@ internal sealed class UserRepository : IUserRepository
 
     public async Task<Pagination<UserForListDto>> GetUsers(UserParameters userParameters)
     {
-        var rawQuery = UserQuery.GetUsersQuery;
+        var rawQuery = UserQuery.MakeUsersQuery(userParameters.IsBanned);
 
         var username = !string.IsNullOrEmpty(userParameters.Username) ?
             userParameters.Username.Trim().ToLower() : string.Empty;
@@ -73,6 +73,7 @@ internal sealed class UserRepository : IUserRepository
         param.Add("skip", skip, DbType.Int32);
         param.Add("take", userParameters.PageSize, DbType.Int32);
         param.Add("username", username);
+        param.Add("isBanned", userParameters.IsBanned, DbType.Boolean);
 
         using (var connection = _dapperContext.CreateConnection())
         {
@@ -84,33 +85,6 @@ internal sealed class UserRepository : IUserRepository
 
             return new Pagination<UserForListDto> { Data = adverts, MetaData = metadata.MetaData };
         }
-    }
-
-    public async Task<Pagination<UserForListDto>> GetBannedUsers(UserParameters userParameters)
-    {
-        var rawQuery = UserQuery.GetBannedUsersQuery;
-
-        var username = !string.IsNullOrEmpty(userParameters.Username) ?
-            userParameters.Username.Trim().ToLower() : string.Empty;
-
-        var skip = (userParameters.PageNumber - 1) * userParameters.PageSize;
-
-        var param = new DynamicParameters();
-        param.Add("skip", skip, DbType.Int32);
-        param.Add("take", userParameters.PageSize, DbType.Int32);
-        param.Add("username", username, DbType.String);
-
-        using (var connection = _dapperContext.CreateConnection())
-        {
-            var multi = await connection.QueryMultipleAsync(rawQuery, param);
-            var count = await multi.ReadSingleAsync<int>();
-            var adverts = (await multi.ReadAsync<UserForListDto>()).ToList();
-
-            var metadata = new PagedList<UserForListDto>(adverts, count, userParameters.PageNumber, userParameters.PageSize);
-
-            return new Pagination<UserForListDto> { Data = adverts, MetaData = metadata.MetaData };
-        }
-
     }
 
     public async Task<string> GetUserIdFromEmail(string email)
