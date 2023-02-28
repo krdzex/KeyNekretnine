@@ -73,7 +73,6 @@ internal sealed class UserRepository : IUserRepository
         param.Add("skip", skip, DbType.Int32);
         param.Add("take", userParameters.PageSize, DbType.Int32);
         param.Add("username", username);
-        param.Add("isBanned", userParameters.IsBanned, DbType.Boolean);
 
         using (var connection = _dapperContext.CreateConnection())
         {
