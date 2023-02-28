@@ -25,6 +25,7 @@ public class AdvertController : ControllerBase
 
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Get(int id)
     {
@@ -49,6 +50,7 @@ public class AdvertController : ControllerBase
 
     [HttpGet("map/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAdvertFromMapPoint(int id)
     {
@@ -97,8 +99,8 @@ public class AdvertController : ControllerBase
         return NoContent();
     }
 
-    //[Authorize(Roles = "Administrator")]
-    [HttpGet("/api/admin/adverts")]
+    [Authorize(Roles = "Administrator")]
+    [HttpGet("/api/admin/advert")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAdminAdverts([FromQuery] AdminAdvertParameters adminAdvertParameters)

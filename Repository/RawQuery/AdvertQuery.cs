@@ -13,7 +13,8 @@ public static class AdvertQuery
             INNER JOIN advert_purposes p ON a.advert_purpose_id = p.id
             INNER JOIN advert_types t ON a.advert_type_id = t.id
             INNER JOIN ""AspNetUsers"" u ON a.user_id = u.id
-            WHERE a.id = @id";
+            WHERE a.id = @id
+            AND a.advert_status_id = 1";
 
     public static string MakeGetAdvertQuery(AdvertParameters advertParameters, string orderBy)
     {
@@ -55,8 +56,7 @@ public static class AdvertQuery
     public const string AllAdvertMapPoints =
         @"SELECT a.id,a.latitude,a.longitude
               FROM adverts a
-              INNER JOIN advert_statuses s ON s.id = a.advert_status_id
-              WHERE s.id = 1";
+              WHERE a.advert_status_id = 1";
 
     public const string SingleAdvertForMapPoint =
        @"SELECT a.id,a.price,a.floor_space,a.no_of_bedrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,a.street
@@ -64,7 +64,8 @@ public static class AdvertQuery
              INNER JOIN advert_purposes p ON a.advert_purpose_id = p.id
              INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
              INNER JOIN cities c ON n.city_id = c.id
-             WHERE a.id = @Id";
+             WHERE a.id = @Id
+             AND a.advert_status_id = 1";
 
 
     public const string AddAdvertQuery =
@@ -95,11 +96,6 @@ public static class AdvertQuery
     public const string DeclineAdvertQuery =
         @"UPDATE adverts
           SET advert_status_id = 3
-          WHERE id = @AdvertId";
-
-    public const string PendingAdvertsQuery =
-        @"Select id 
-          from adverts
           WHERE id = @AdvertId";
 
     public static string MakeGetAdminAdvertQuery(IEnumerable<Int32> advertStatusIds, string orderBy)
