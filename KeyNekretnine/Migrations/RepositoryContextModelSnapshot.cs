@@ -228,8 +228,8 @@ namespace KeyNekretnine.Migrations
 
                     b.Property<string>("NameSr")
                         .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("character varying(15)")
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)")
                         .HasColumnName("name_sr");
 
                     b.HasKey("Id")
@@ -247,7 +247,7 @@ namespace KeyNekretnine.Migrations
                         new
                         {
                             Id = 2,
-                            NameEn = "Pending",
+                            NameEn = "On Waiting",
                             NameSr = "Na cekanju"
                         },
                         new
@@ -260,7 +260,7 @@ namespace KeyNekretnine.Migrations
                         {
                             Id = 4,
                             NameEn = "Uploading",
-                            NameSr = "Dodavanje u toku"
+                            NameSr = "Uploading"
                         });
                 });
 
@@ -8606,21 +8606,21 @@ namespace KeyNekretnine.Migrations
                         new
                         {
                             Id = "548e52a6-485a-49a5-b204-8994eaa79a12",
-                            ConcurrencyStamp = "9e89778e-8e39-4c1c-a96d-d35762954d17",
+                            ConcurrencyStamp = "fd63f9e8-f914-453e-be99-0800e30f3567",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
                             Id = "62558fd6-61f6-42fe-8cb7-8bc5fea7fb93",
-                            ConcurrencyStamp = "f1922880-c8be-4a3e-b46c-654f7b64d888",
+                            ConcurrencyStamp = "41318f19-e587-41f4-9f0f-8a61cc26f48a",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
                             Id = "f78fff4a-06dc-4b5d-864c-d70cd9ced860",
-                            ConcurrencyStamp = "05222fe9-bc14-484a-8cd3-eb25280bfc8d",
+                            ConcurrencyStamp = "eb86db73-d5ad-4104-bd2d-75099a914939",
                             Name = "Moderator",
                             NormalizedName = "MODERATOR"
                         });

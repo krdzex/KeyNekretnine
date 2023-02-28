@@ -8,7 +8,7 @@ public class AdvertStatusConfiguration : IEntityTypeConfiguration<AdvertStatus>
     public void Configure(EntityTypeBuilder<AdvertStatus> builder)
     {
         builder.HasKey(x => x.Id);
-        builder.Property(x => x.NameSr).IsRequired().HasMaxLength(15);
+        builder.Property(x => x.NameSr).IsRequired().HasMaxLength(10);
         builder.Property(x => x.NameEn).IsRequired().HasMaxLength(10);
         builder.HasData(
             new AdvertStatus
@@ -21,7 +21,7 @@ public class AdvertStatusConfiguration : IEntityTypeConfiguration<AdvertStatus>
             {
                 Id = 2,
                 NameSr = "Na cekanju",
-                NameEn = "Pending"
+                NameEn = "On Waiting"
             },
             new AdvertStatus
             {
@@ -32,7 +32,7 @@ public class AdvertStatusConfiguration : IEntityTypeConfiguration<AdvertStatus>
             new AdvertStatus
             {
                 Id = 4,
-                NameSr = "Dodavanje u toku",
+                NameSr = "Uploading",
                 NameEn = "Uploading"
             });
     }
