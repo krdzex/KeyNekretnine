@@ -11,5 +11,8 @@ public class AdminTableAdvertDto
     public double Floor_Space { get; set; }
     private string Purpose_Name_Sr { get; set; }
     private string Purpose_Name_En { get; set; }
+    private string Status_Name_Sr { get; set; }
+    private string Status_Name_En { get; set; }
     public DifferentLanguagesDto Purpose_Name { get { return new DifferentLanguagesDto { Sr = Purpose_Name_Sr, En = Purpose_Name_En }; } }
+    public DifferentLanguagesDto Status_Name { get { return new DifferentLanguagesDto { Sr = Status_Name_Sr, En = Status_Name_En }; } }
 }

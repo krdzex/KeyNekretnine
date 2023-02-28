@@ -90,7 +90,43 @@ internal class AdvertRepository : IAdvertRepository
 
             return advertMap.Values.Single();
         }
+    }
 
+    public async Task<AllInfomrationsAboutAdvertDto> GetAdminAdvert(int advertId)
+    {
+        var advertMap = new Dictionary<int, AllInfomrationsAboutAdvertDto>();
+        var query = AdvertQuery.SingleAdminAdvertQuery;
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var adverts = await connection
+                .QueryAsync<AllInfomrationsAboutAdvertDto, ShowImageDto, AllInfomrationsAboutAdvertDto>(query,
+                map: (advert, image) =>
+                {
+                    if (advertMap.TryGetValue(advertId, out AllInfomrationsAboutAdvertDto existingAdvert))
+                    {
+                        advert = existingAdvert;
+                    }
+                    else
+                    {
+                        advert.Images = new List<ShowImageDto>
+                        {
+                            new ShowImageDto {Url = advert.Cover_Image_Url }
+                        };
+                        advertMap.Add(advertId, advert);
+                    }
+                    advert.Images.Add(image);
+                    return advert;
+                }, splitOn: "url",
+                param: new { Id = advertId });
+
+            if (adverts.Count() < 1)
+            {
+                throw new AdvertNotFoundException(advertId);
+            }
+
+            return advertMap.Values.Single();
+        }
     }
 
     public async Task<IEnumerable<ShowAdvertLocationOnMapDto>> GetMapPoints(CancellationToken cancellationToken)
@@ -237,12 +273,12 @@ internal class AdvertRepository : IAdvertRepository
         }
     }
 
-    public async Task<Pagination<AdminTableAdvertDto>> GetAdminAdverts(AdminAdvertParameters adminAdvertParameters)
+    public async Task<Pagination<AdminTableAdvertDto>> GetAdminAdverts(AdminAdvertParameters adminAdvertParameters, CancellationToken cancellationToken)
     {
 
         var orderBy = OrderQueryBuilder.CreateOrderQuery<MinimalInformationsAboutAdvertDto>(adminAdvertParameters.OrderBy, 'a');
 
-        var rawQuery = AdvertQuery.MakeGetAdminAdvertQuery(adminAdvertParameters.AdvertStatusIds, orderBy);
+        var query = AdvertQuery.MakeGetAdminAdvertQuery(adminAdvertParameters.AdvertStatusIds, orderBy);
 
         var skip = (adminAdvertParameters.PageNumber - 1) * adminAdvertParameters.PageSize;
 
@@ -252,9 +288,11 @@ internal class AdvertRepository : IAdvertRepository
         param.Add("take", adminAdvertParameters.PageSize, DbType.Int32);
         param.Add("advertStatusIds", adminAdvertParameters.AdvertStatusIds);
 
+        var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
         using (var connection = _dapperContext.CreateConnection())
         {
-            var multi = await connection.QueryMultipleAsync(rawQuery, param);
+            var multi = await connection.QueryMultipleAsync(cmd);
 
             var count = await multi.ReadSingleAsync<int>();
             var adverts = (await multi.ReadAsync<AdminTableAdvertDto>()).ToList();

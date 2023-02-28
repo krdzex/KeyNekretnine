@@ -16,7 +16,7 @@ internal sealed class GetAdminAdvertsHandler : IRequestHandler<GetAdminAdvertsQu
     public async Task<Pagination<AdminTableAdvertDto>> Handle(GetAdminAdvertsQuery request, CancellationToken cancellationToken)
     {
 
-        var adverts = await _repository.Advert.GetAdminAdverts(request.AdminAdvertParameters);
+        var adverts = await _repository.Advert.GetAdminAdverts(request.AdminAdvertParameters, cancellationToken);
 
         return adverts;
     }

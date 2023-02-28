@@ -26,17 +26,24 @@ public static class AdvertQuery
             INNER JOIN advert_types t ON a.advert_type_id = t.id
             INNER JOIN ""AspNetUsers"" u ON a.user_id = u.id
             INNER JOIN advert_statuses s ON a.advert_status_id = s.id 
-            WHERE a.id = @id";
+            WHERE a.id = @id
+            AND a.advert_status_id != 4";
 
     public static string MakeGetAdvertQuery(AdvertParameters advertParameters, string orderBy)
     {
-        var countConditions = new StringBuilder("\t     WHERE a.price >= @minPrice AND a.price <= @maxPrice AND a.advert_status_id = 1 AND a.floor_space >= @minFloorSpace  AND a.floor_space <= @maxFloorSpace ");
-        var countAdvertQuery = new StringBuilder(
+        var countConditions = new StringBuilder
+            (
+            "\t     WHERE a.price >= @minPrice AND a.price <= @maxPrice AND a.advert_status_id = 1 AND a.floor_space >= @minFloorSpace  AND a.floor_space <= @maxFloorSpace "
+            );
+
+        var countAdvertQuery = new StringBuilder
+            (
             @"SELECT COUNT(a.id)
              FROM adverts a"
             );
 
-        var selectAdvertsQuery = new StringBuilder(
+        var selectAdvertsQuery = new StringBuilder
+            (
             @"SELECT a.id,a.price,a.floor_space,a.no_of_bedrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,a.street
              FROM adverts a
              INNER JOIN advert_purposes p ON a.advert_purpose_id = p.id
@@ -113,17 +120,20 @@ public static class AdvertQuery
     public static string MakeGetAdminAdvertQuery(IEnumerable<Int32> advertStatusIds, string orderBy)
     {
         var countConditions = new StringBuilder("");
-        var countAdvertQuery = new StringBuilder(
+        var countAdvertQuery = new StringBuilder
+            (
             @"SELECT COUNT(a.id)
              FROM adverts a"
             );
 
-        var selectAdvertsQuery = new StringBuilder(
-            @"SELECT a.id,a.price,a.floor_space,a.no_of_bedrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,a.street
+        var selectAdvertsQuery = new StringBuilder
+            (
+            @"SELECT a.id,a.price,a.floor_space,a.no_of_bedrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,a.street,s.name_en AS status_name_en,s.name_sr AS status_name_sr
              FROM adverts a
              INNER JOIN advert_purposes p ON a.advert_purpose_id = p.id
              INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
-             INNER JOIN cities c ON n.city_id = c.id"
+             INNER JOIN cities c ON n.city_id = c.id
+             INNER JOIN advert_statuses s ON a.advert_status_id = s.id "
             );
 
         if (advertStatusIds is not null) countConditions.AppendLine(" WHERE a.advert_status_id = ANY(@advertStatusIds)");

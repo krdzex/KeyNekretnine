@@ -99,7 +99,7 @@ public class AdvertController : ControllerBase
         return NoContent();
     }
 
-    [Authorize(Roles = "Administrator")]
+    //[Authorize(Roles = "Administrator")]
     [HttpGet("/api/admin/advert")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
