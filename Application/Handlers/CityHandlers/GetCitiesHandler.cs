@@ -4,7 +4,6 @@ using MediatR;
 using Shared.DataTransferObjects.City;
 
 namespace Application.Handlers.CityHandlers;
-
 internal sealed class GetCitiesHandler : IRequestHandler<GetCitiesQuery, IEnumerable<ShowCityDto>>
 {
     private readonly IRepositoryManager _repository;

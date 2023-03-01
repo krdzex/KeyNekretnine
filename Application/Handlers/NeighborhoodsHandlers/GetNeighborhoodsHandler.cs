@@ -21,6 +21,7 @@ internal sealed class GetNeighborhoodsHandler : IRequestHandler<GetNeighborhoods
         {
             throw new NeighborhoodsNotFoundException(request.Id);
         }
+
         return neighborhoods;
     }
 }

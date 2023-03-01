@@ -3,7 +3,6 @@ using FluentValidation;
 using MediatR;
 
 namespace Application.Behaviors;
-
 public sealed class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {

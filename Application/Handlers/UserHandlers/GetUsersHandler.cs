@@ -5,7 +5,6 @@ using Shared.CustomResponses;
 using Shared.DataTransferObjects.User;
 
 namespace Application.Handlers.UserHandlers;
-
 internal sealed class GetUsersHandler : IRequestHandler<GetUsersQuery, Pagination<UserForListDto>>
 {
     private readonly IRepositoryManager _repository;
