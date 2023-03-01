@@ -74,27 +74,26 @@ public class AdvertController : ControllerBase
     }
 
     [Authorize(Roles = "Administrator")]
-    [HttpPut("{advertId}/approve")]
+    [HttpPut("{id}/approve")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Approve(int advertId)
+    public async Task<IActionResult> Approve(int id)
     {
 
-        await _sender.Send(new ApproveAdvertCommand(advertId));
+        await _sender.Send(new ApproveAdvertCommand(id));
 
         return NoContent();
     }
 
     [Authorize(Roles = "Administrator")]
-    [HttpPut("{advertId}/decline")]
+    [HttpPut("{id}/decline")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Decline(int advertId)
+    public async Task<IActionResult> Decline(int id)
     {
-
-        await _sender.Send(new DeclineAdvertCommand(advertId));
+        await _sender.Send(new DeclineAdvertCommand(id));
 
         return NoContent();
     }
@@ -106,5 +105,15 @@ public class AdvertController : ControllerBase
     public async Task<IActionResult> GetAdminAdverts([FromQuery] AdminAdvertParameters adminAdvertParameters)
     {
         return Ok(await _sender.Send(new GetAdminAdvertsQuery(adminAdvertParameters)));
+    }
+
+    //[Authorize(Roles = "Administrator")]
+    [HttpGet("/api/admin/advert/{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetAdminAdvert(int id)
+    {
+        return Ok(await _sender.Send(new GetAdminAdvertQuery(id)));
     }
 }

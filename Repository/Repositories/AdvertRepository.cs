@@ -94,18 +94,18 @@ internal class AdvertRepository : IAdvertRepository
         }
     }
 
-    public async Task<AllInfomrationsAboutAdvertDto> GetAdminAdvert(int advertId)
+    public async Task<AdminAllInformationsAboutAdvertDto> GetAdminAdvert(int advertId)
     {
-        var advertMap = new Dictionary<int, AllInfomrationsAboutAdvertDto>();
+        var advertMap = new Dictionary<int, AdminAllInformationsAboutAdvertDto>();
         var query = AdvertQuery.SingleAdminAdvertQuery;
 
         using (var connection = _dapperContext.CreateConnection())
         {
             var adverts = await connection
-                .QueryAsync<AllInfomrationsAboutAdvertDto, ShowImageDto, AllInfomrationsAboutAdvertDto>(query,
+                .QueryAsync<AdminAllInformationsAboutAdvertDto, ShowImageDto, AdminAllInformationsAboutAdvertDto>(query,
                 map: (advert, image) =>
                 {
-                    if (advertMap.TryGetValue(advertId, out AllInfomrationsAboutAdvertDto existingAdvert))
+                    if (advertMap.TryGetValue(advertId, out AdminAllInformationsAboutAdvertDto existingAdvert))
                     {
                         advert = existingAdvert;
                     }

@@ -6,7 +6,7 @@ namespace Contracts;
 public interface IAdvertRepository
 {
     Task<AllInfomrationsAboutAdvertDto> GetAdvert(int advertId);
-    Task<AllInfomrationsAboutAdvertDto> GetAdminAdvert(int advertId);
+    Task<AdminAllInformationsAboutAdvertDto> GetAdminAdvert(int advertId);
     Task<Pagination<MinimalInformationsAboutAdvertDto>> GetAdverts(AdvertParameters advertParameters, CancellationToken cancellationToken);
     Task<IEnumerable<ShowAdvertLocationOnMapDto>> GetMapPoints(CancellationToken cancellationToken);
     Task<MinimalInformationsAboutAdvertDto> GetAdvertFromMapPoint(int id, CancellationToken cancellationToken);
