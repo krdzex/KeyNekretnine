@@ -12,28 +12,28 @@ internal sealed class CityRepository : ICityRepository
         _dapperContext = dapperContext;
     }
 
-    public async Task<IEnumerable<ShowCityDto>> GetCities(CancellationToken token)
+    public async Task<IEnumerable<ShowCityDto>> GetCities(CancellationToken cancellationToken)
     {
         var query = CityQuery.AllCities;
 
-        var cmd = new CommandDefinition(query, cancellationToken: token);
-
         using (var connection = _dapperContext.CreateConnection())
         {
+            var cmd = new CommandDefinition(query, cancellationToken: cancellationToken);
+
             var cities = await connection.QueryAsync<ShowCityDto>(cmd);
 
             return cities;
         }
     }
 
-    public async Task<IEnumerable<PopularCitiesDto>> GetMostPopularCities(CancellationToken token)
+    public async Task<IEnumerable<PopularCitiesDto>> GetMostPopularCities(CancellationToken cancellationToken)
     {
         var query = CityQuery.CitiesWithMostAdverts;
 
-        var cmd = new CommandDefinition(query, cancellationToken: token);
-
         using (var connection = _dapperContext.CreateConnection())
         {
+            var cmd = new CommandDefinition(query, cancellationToken: cancellationToken);
+
             var cities = await connection.QueryAsync<PopularCitiesDto>(cmd);
 
             return cities;

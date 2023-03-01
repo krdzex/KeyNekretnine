@@ -41,8 +41,8 @@ public class ChannelBackgroundWorker : BackgroundService
                 new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted },
                 TransactionScopeAsyncFlowOption.Enabled))
             {
-                var coverImageData = await scopedRepositoryManager.TemporeryImageData.Get(item.AdvertId, true);
-                var advertImagesData = await scopedRepositoryManager.TemporeryImageData.Get(item.AdvertId, false);
+                var coverImageData = await scopedRepositoryManager.TemporeryImageData.Get(item.AdvertId, true, cancellationToken);
+                var advertImagesData = await scopedRepositoryManager.TemporeryImageData.Get(item.AdvertId, false, cancellationToken);
 
                 var coverImageUrl = await scopedServiceManager.ImageService.UploadImageOnCloudinary(coverImageData.First());
 
@@ -55,9 +55,9 @@ public class ChannelBackgroundWorker : BackgroundService
                 }
 
                 await scopedRepositoryManager.Advert.UpdateAdvertCoverImage(coverImageUrl, item.AdvertId, cancellationToken);
-                await scopedRepositoryManager.Image.InsertImages(imagesUrls, item.AdvertId);
+                await scopedRepositoryManager.Image.InsertImages(imagesUrls, item.AdvertId, cancellationToken);
 
-                await scopedRepositoryManager.TemporeryImageData.DeleteAll(item.AdvertId);
+                await scopedRepositoryManager.TemporeryImageData.DeleteAll(item.AdvertId, cancellationToken);
                 await scopedRepositoryManager.Advert.UpdateStatus(item.AdvertId, cancellationToken);
 
                 transaction.Complete();

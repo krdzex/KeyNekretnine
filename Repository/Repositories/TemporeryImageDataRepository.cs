@@ -16,7 +16,7 @@ internal class TemporeryImageDataRepository : ITemporeryImageDataRepository
         _dapperContext = dapperContext;
     }
 
-    public async Task<IEnumerable<byte[]>> Get(int advertId, bool isCover)
+    public async Task<IEnumerable<byte[]>> Get(int advertId, bool isCover, CancellationToken cancellationToken)
     {
         using (var connection = _dapperContext.CreateConnection())
         {
@@ -31,7 +31,7 @@ internal class TemporeryImageDataRepository : ITemporeryImageDataRepository
         }
     }
 
-    public async Task DeleteAll(int advertId)
+    public async Task DeleteAll(int advertId, CancellationToken cancellationToken)
     {
         using (var connection = _dapperContext.CreateConnection())
         {
@@ -44,7 +44,7 @@ internal class TemporeryImageDataRepository : ITemporeryImageDataRepository
         }
     }
 
-    public async Task Insert(IFormFile image, int advertId, bool is_cover)
+    public async Task Insert(IFormFile image, int advertId, bool is_cover, CancellationToken cancellationToken)
     {
 
         using (var memoryStream = manager.GetStream("test"))

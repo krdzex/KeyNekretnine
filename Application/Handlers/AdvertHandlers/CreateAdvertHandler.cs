@@ -32,11 +32,11 @@ internal sealed class CreateAdvertHandler : IRequestHandler<CreateAdvertCommand,
 
             advertId = await _repository.Advert.CreateAdvert(request.AdvertForCreating, userId, cancellationToken);
 
-            await _repository.TemporeryImageData.Insert(request.AdvertForCreating.CoverImage, advertId, true);
+            await _repository.TemporeryImageData.Insert(request.AdvertForCreating.CoverImage, advertId, true, cancellationToken);
 
             foreach (var image in request.AdvertForCreating.ImageFiles)
             {
-                await _repository.TemporeryImageData.Insert(image, advertId, false);
+                await _repository.TemporeryImageData.Insert(image, advertId, false, cancellationToken);
             }
             transaction.Complete();
         }

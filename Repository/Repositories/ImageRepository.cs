@@ -14,19 +14,21 @@ internal class ImageRepository : IImageRepository
         _dapperContext = dapperContext;
     }
 
-    public async Task InsertImages(IEnumerable<string> urls, int advertId)
+    public async Task InsertImages(IEnumerable<string> urls, int advertId, CancellationToken cancellationToken)
     {
         var query = ImageQuery.InsertImageQuery;
 
         foreach (var url in urls)
         {
-            var param = new DynamicParameters();
-            param.Add("@url", url, DbType.String);
-            param.Add("@advertId", advertId, DbType.Int32);
-
             using (var connection = _dapperContext.CreateConnection())
             {
-                await connection.ExecuteAsync(query, param);
+                var param = new DynamicParameters();
+                param.Add("@url", url, DbType.String);
+                param.Add("@advertId", advertId, DbType.Int32);
+
+                var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+                await connection.ExecuteAsync(cmd);
             }
         }
     }

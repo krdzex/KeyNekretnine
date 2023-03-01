@@ -12,14 +12,14 @@ internal sealed class AdvertPurposeRepository : IAdvertPurposeRepository
         _dapperContext = dapperContext;
     }
 
-    public async Task<IEnumerable<ShowAdvertPurposeDto>> GetAdvertPurposes(CancellationToken token)
+    public async Task<IEnumerable<ShowAdvertPurposeDto>> GetAdvertPurposes(CancellationToken cancellationToken)
     {
-        var getPurposesQuery = AdvertPurposeQuery.AllAdvertPurposesQuery;
-
-        var cmd = new CommandDefinition(getPurposesQuery, cancellationToken: token);
+        var query = AdvertPurposeQuery.AllAdvertPurposesQuery;
 
         using (var connection = _dapperContext.CreateConnection())
         {
+            var cmd = new CommandDefinition(query, cancellationToken: cancellationToken);
+
             var advertPurposes = await connection.QueryAsync<ShowAdvertPurposeDto>(cmd);
 
             return advertPurposes;

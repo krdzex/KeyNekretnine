@@ -23,34 +23,34 @@ internal class AdvertRepository : IAdvertRepository
 
         var query = AdvertQuery.AddAdvertQuery;
 
-        var param = new DynamicParameters();
-        param.Add("@price", newAdvert.Price, DbType.Double);
-        param.Add("@description_sr", newAdvert.DescriptionSr, DbType.String);
-        param.Add("@description_en", newAdvert.DescriptionEn, DbType.String);
-        param.Add("@floor_space", newAdvert.FloorSpace, DbType.Double);
-        param.Add("@street", newAdvert.Street, DbType.String);
-        param.Add("@no_of_bedrooms", newAdvert.NoOfBedrooms, DbType.Int16);
-        param.Add("@no_of_bathrooms", newAdvert.NoOfBathrooms, DbType.Int16);
-        param.Add("@has_elevator", newAdvert.HasElevator, DbType.Boolean);
-        param.Add("@has_garage", newAdvert.HasGarage, DbType.Boolean);
-        param.Add("@has_terrace", newAdvert.HasTerrace, DbType.Boolean);
-        param.Add("@latitude", newAdvert.Latitude, DbType.Double);
-        param.Add("@longitude", newAdvert.Longitude, DbType.Double);
-        param.Add("@has_wifi", newAdvert.HasWifi, DbType.Boolean);
-        param.Add("@is_furnished", newAdvert.IsFurnished, DbType.Boolean);
-        param.Add("@created_date", DateTime.Now, DbType.DateTime);
-        param.Add("@year_of_building_created", newAdvert.YearOfBuildingCreated, DbType.Int16);
-        param.Add("@cover_image_url", "test", DbType.String);
-        param.Add("@neighborhood_id", newAdvert.NeighborhoodId, DbType.Int16);
-        param.Add("@building_floor", newAdvert.BuildingFloor, DbType.Int16);
-        param.Add("@advert_purpose_id", newAdvert.AdvertPurposeId, DbType.Int16);
-        param.Add("@advert_type_id", newAdvert.AdvertTypeId, DbType.Int16);
-        param.Add("@user_id", userId, DbType.String);
-
-        var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
-
         using (var connection = _dapperContext.CreateConnection())
         {
+            var param = new DynamicParameters();
+            param.Add("@price", newAdvert.Price, DbType.Double);
+            param.Add("@description_sr", newAdvert.DescriptionSr, DbType.String);
+            param.Add("@description_en", newAdvert.DescriptionEn, DbType.String);
+            param.Add("@floor_space", newAdvert.FloorSpace, DbType.Double);
+            param.Add("@street", newAdvert.Street, DbType.String);
+            param.Add("@no_of_bedrooms", newAdvert.NoOfBedrooms, DbType.Int16);
+            param.Add("@no_of_bathrooms", newAdvert.NoOfBathrooms, DbType.Int16);
+            param.Add("@has_elevator", newAdvert.HasElevator, DbType.Boolean);
+            param.Add("@has_garage", newAdvert.HasGarage, DbType.Boolean);
+            param.Add("@has_terrace", newAdvert.HasTerrace, DbType.Boolean);
+            param.Add("@latitude", newAdvert.Latitude, DbType.Double);
+            param.Add("@longitude", newAdvert.Longitude, DbType.Double);
+            param.Add("@has_wifi", newAdvert.HasWifi, DbType.Boolean);
+            param.Add("@is_furnished", newAdvert.IsFurnished, DbType.Boolean);
+            param.Add("@created_date", DateTime.Now, DbType.DateTime);
+            param.Add("@year_of_building_created", newAdvert.YearOfBuildingCreated, DbType.Int16);
+            param.Add("@cover_image_url", "test", DbType.String);
+            param.Add("@neighborhood_id", newAdvert.NeighborhoodId, DbType.Int16);
+            param.Add("@building_floor", newAdvert.BuildingFloor, DbType.Int16);
+            param.Add("@advert_purpose_id", newAdvert.AdvertPurposeId, DbType.Int16);
+            param.Add("@advert_type_id", newAdvert.AdvertTypeId, DbType.Int16);
+            param.Add("@user_id", userId, DbType.String);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
             var advertId = await connection.QuerySingleAsync<int>(cmd);
 
             return advertId;
@@ -135,35 +135,32 @@ internal class AdvertRepository : IAdvertRepository
     {
         var query = AdvertQuery.AllAdvertMapPoints;
 
-        var cmd = new CommandDefinition(query, cancellationToken: cancellationToken);
-
         using (var connection = _dapperContext.CreateConnection())
         {
+            var cmd = new CommandDefinition(query, cancellationToken: cancellationToken);
+
             var mapPoints = await connection.QueryAsync<ShowAdvertLocationOnMapDto>(cmd);
 
             return mapPoints;
         }
-
-
     }
 
     public async Task<MinimalInformationsAboutAdvertDto> GetAdvertFromMapPoint(int id, CancellationToken cancellationToken)
     {
         var query = AdvertQuery.SingleAdvertForMapPoint;
 
-        var param = new DynamicParameters();
-
-        param.Add("id", id, DbType.Int32);
-
-        var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
-
         using (var connection = _dapperContext.CreateConnection())
         {
+            var param = new DynamicParameters();
+
+            param.Add("id", id, DbType.Int32);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
             var mapAdvert = await connection.QuerySingleOrDefaultAsync<MinimalInformationsAboutAdvertDto>(cmd);
 
             return mapAdvert;
         }
-
     }
 
     public async Task<Pagination<MinimalInformationsAboutAdvertDto>> GetAdverts(AdvertParameters advertParameters, CancellationToken cancellationToken)
@@ -175,25 +172,25 @@ internal class AdvertRepository : IAdvertRepository
 
         var skip = (advertParameters.PageNumber - 1) * advertParameters.PageSize;
 
-        var param = new DynamicParameters();
-
-        param.Add("skip", skip, DbType.Int32);
-        param.Add("take", advertParameters.PageSize, DbType.Int32);
-        param.Add("minPrice", advertParameters.MinPrice, DbType.Int32);
-        param.Add("maxPrice", advertParameters.MaxPrice, DbType.Int32);
-        param.Add("noOfBedrooms", advertParameters.NoOfBedrooms);
-        param.Add("noOfBathrooms", advertParameters.NoOfBathrooms);
-        param.Add("advertTypeIds", advertParameters.AdvertTypeIds);
-        param.Add("advertPurposeIds", advertParameters.AdvertPurposeIds);
-        param.Add("cityId", advertParameters.CityId, DbType.Int32);
-        param.Add("neighborhoodIds", advertParameters.NeighborhoodIds);
-        param.Add("@minFloorSpace", advertParameters.MinFloorSpace, DbType.Int32);
-        param.Add("@maxFloorSpace", advertParameters.MaxFloorSpace, DbType.Int32);
-
-        var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
-
         using (var connection = _dapperContext.CreateConnection())
         {
+            var param = new DynamicParameters();
+
+            param.Add("skip", skip, DbType.Int32);
+            param.Add("take", advertParameters.PageSize, DbType.Int32);
+            param.Add("minPrice", advertParameters.MinPrice, DbType.Int32);
+            param.Add("maxPrice", advertParameters.MaxPrice, DbType.Int32);
+            param.Add("noOfBedrooms", advertParameters.NoOfBedrooms);
+            param.Add("noOfBathrooms", advertParameters.NoOfBathrooms);
+            param.Add("advertTypeIds", advertParameters.AdvertTypeIds);
+            param.Add("advertPurposeIds", advertParameters.AdvertPurposeIds);
+            param.Add("cityId", advertParameters.CityId, DbType.Int32);
+            param.Add("neighborhoodIds", advertParameters.NeighborhoodIds);
+            param.Add("@minFloorSpace", advertParameters.MinFloorSpace, DbType.Int32);
+            param.Add("@maxFloorSpace", advertParameters.MaxFloorSpace, DbType.Int32);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
             var multi = await connection.QueryMultipleAsync(cmd);
 
             var count = await multi.ReadSingleAsync<int>();
@@ -209,15 +206,15 @@ internal class AdvertRepository : IAdvertRepository
     {
         var query = AdvertQuery.UpdateCoverImageQuery;
 
-        var param = new DynamicParameters();
-
-        param.Add("coverImageUrl", imageUrl, DbType.String);
-        param.Add("advertId", advertId, DbType.Int32);
-
-        var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
-
         using (var connection = _dapperContext.CreateConnection())
         {
+            var param = new DynamicParameters();
+
+            param.Add("coverImageUrl", imageUrl, DbType.String);
+            param.Add("advertId", advertId, DbType.Int32);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
             await connection.ExecuteAsync(cmd);
         }
     }
@@ -226,14 +223,14 @@ internal class AdvertRepository : IAdvertRepository
     {
         var query = AdvertQuery.UpdateAdvertStatus;
 
-        var param = new DynamicParameters();
-
-        param.Add("advertId", advertId, DbType.Int32);
-
-        var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
-
         using (var connection = _dapperContext.CreateConnection())
         {
+            var param = new DynamicParameters();
+
+            param.Add("advertId", advertId, DbType.Int32);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
             await connection.ExecuteAsync(cmd);
         }
     }
@@ -242,14 +239,14 @@ internal class AdvertRepository : IAdvertRepository
     {
         string query = AdvertQuery.AdvertExistQuery;
 
-        var param = new DynamicParameters();
-
-        param.Add("advertId", advertId, DbType.Int32);
-
-        var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
-
         using (var connection = _dapperContext.CreateConnection())
         {
+            var param = new DynamicParameters();
+
+            param.Add("advertId", advertId, DbType.Int32);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
             int count = await connection.QueryFirstOrDefaultAsync<int>(cmd);
             return count > 0;
         }
@@ -259,14 +256,14 @@ internal class AdvertRepository : IAdvertRepository
     {
         string query = AdvertQuery.ApproveAdvertQuery;
 
-        var param = new DynamicParameters();
-
-        param.Add("advertId", advertId, DbType.Int32);
-
-        var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
-
         using (var connection = _dapperContext.CreateConnection())
         {
+            var param = new DynamicParameters();
+
+            param.Add("advertId", advertId, DbType.Int32);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
             await connection.ExecuteAsync(cmd);
         }
     }
@@ -275,37 +272,36 @@ internal class AdvertRepository : IAdvertRepository
     {
         string query = AdvertQuery.DeclineAdvertQuery;
 
-        var param = new DynamicParameters();
-
-        param.Add("advertId", advertId, DbType.Int32);
-
-        var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
-
         using (var connection = _dapperContext.CreateConnection())
         {
+            var param = new DynamicParameters();
+
+            param.Add("advertId", advertId, DbType.Int32);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
             await connection.ExecuteAsync(cmd);
         }
     }
 
     public async Task<Pagination<AdminTableAdvertDto>> GetAdminAdverts(AdminAdvertParameters adminAdvertParameters, CancellationToken cancellationToken)
     {
-
         var orderBy = OrderQueryBuilder.CreateOrderQuery<MinimalInformationsAboutAdvertDto>(adminAdvertParameters.OrderBy, 'a');
 
         var query = AdvertQuery.MakeGetAdminAdvertQuery(adminAdvertParameters.AdvertStatusIds, orderBy);
 
         var skip = (adminAdvertParameters.PageNumber - 1) * adminAdvertParameters.PageSize;
 
-        var param = new DynamicParameters();
-
-        param.Add("skip", skip, DbType.Int32);
-        param.Add("take", adminAdvertParameters.PageSize, DbType.Int32);
-        param.Add("advertStatusIds", adminAdvertParameters.AdvertStatusIds);
-
-        var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
-
         using (var connection = _dapperContext.CreateConnection())
         {
+            var param = new DynamicParameters();
+
+            param.Add("skip", skip, DbType.Int32);
+            param.Add("take", adminAdvertParameters.PageSize, DbType.Int32);
+            param.Add("advertStatusIds", adminAdvertParameters.AdvertStatusIds);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
             var multi = await connection.QueryMultipleAsync(cmd);
 
             var count = await multi.ReadSingleAsync<int>();
@@ -316,5 +312,4 @@ internal class AdvertRepository : IAdvertRepository
             return new Pagination<AdminTableAdvertDto> { Data = adverts, MetaData = metadata.MetaData };
         }
     }
-
 }

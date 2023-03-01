@@ -14,12 +14,12 @@ internal sealed class NeighborhoodRepository : INeighborhoodRepository
 
     public async Task<IEnumerable<ShowNeighborhoodDto>> GetNeighborhoods(int id, CancellationToken token)
     {
-        var getNeighborhoodForCity = NeighborhoodQuery.NeighborhoodForCity;
-
-        var cmd = new CommandDefinition(getNeighborhoodForCity, new { id }, cancellationToken: token);
+        var query = NeighborhoodQuery.NeighborhoodForCity;
 
         using (var connection = _dapperContext.CreateConnection())
         {
+            var cmd = new CommandDefinition(query, new { id }, cancellationToken: token);
+
             var neighborhoods = await connection.QueryAsync<ShowNeighborhoodDto>(cmd);
 
             return neighborhoods;
