@@ -1,5 +1,4 @@
 ﻿namespace Contracts;
-
 public interface IRepositoryManager
 {
     ICityRepository City { get; }

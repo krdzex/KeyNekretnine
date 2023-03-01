@@ -6,4 +6,3 @@ public interface ICityRepository
     Task<IEnumerable<ShowCityDto>> GetCities(CancellationToken token);
     Task<IEnumerable<PopularCitiesDto>> GetMostPopularCities(CancellationToken token);
 }
-
