@@ -1,4 +1,5 @@
 ﻿using Shared.DataTransferObjects.Image;
+using System.Text.Json.Serialization;
 
 namespace Shared.DataTransferObjects.Advert;
 public class AllInfomrationsAboutAdvertDto
@@ -28,11 +29,9 @@ public class AllInfomrationsAboutAdvertDto
             Description_En = value.En;
         }
     }
-
-
     public IList<ShowImageDto> Images { get; set; }
 
-    [System.Text.Json.Serialization.JsonIgnore]
+    [JsonIgnore]
     public string Cover_Image_Url { get; set; }
     public int No_Of_Bathrooms { get; set; }
     public int No_Of_Bedrooms { get; set; }
@@ -100,5 +99,4 @@ public class AllInfomrationsAboutAdvertDto
     public string City_Name { get; set; }
     public int City_Id { get; set; }
     public string Neighborhood_Name { get; set; }
-
 }

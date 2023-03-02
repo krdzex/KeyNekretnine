@@ -5,4 +5,3 @@ public class ShowCityDto
     public string Name { get; set; }
     public string Geo_Id { get; set; }
 }
-

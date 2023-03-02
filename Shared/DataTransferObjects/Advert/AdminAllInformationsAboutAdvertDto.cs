@@ -1,4 +1,5 @@
 ﻿using Shared.DataTransferObjects.Image;
+using System.Text.Json.Serialization;
 
 namespace Shared.DataTransferObjects.Advert;
 public class AdminAllInformationsAboutAdvertDto
@@ -32,7 +33,7 @@ public class AdminAllInformationsAboutAdvertDto
 
     public IList<ShowImageDto> Images { get; set; }
 
-    [System.Text.Json.Serialization.JsonIgnore]
+    [JsonIgnore]
     public string Cover_Image_Url { get; set; }
     public int No_Of_Bathrooms { get; set; }
     public int No_Of_Bedrooms { get; set; }
