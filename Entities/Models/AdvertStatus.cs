@@ -5,4 +5,3 @@ public class AdvertStatus : EntityBase
     public string NameEn { get; set; }
     public List<Advert> Adverts { get; set; }
 }
-
