@@ -11,10 +11,10 @@ using Npgsql;
 using Repository;
 using Service;
 using Service.Contracts;
+using StackExchange.Redis;
 using System.Text;
 
 namespace CompanyEmployees.Extensions;
-
 public static class ServiceExtensions
 {
     public static void ConfigureCors(this IServiceCollection services) =>
@@ -43,7 +43,6 @@ public static class ServiceExtensions
 
     public static void ConfigureBackgroundWorker(this IServiceCollection services) =>
         services.AddHostedService<ChannelBackgroundWorker>();
-
 
     public static void ConfigurePgsqlContext(this IServiceCollection services)
     {
@@ -133,5 +132,23 @@ public static class ServiceExtensions
                     ValidateAudience = false
                 };
             });
+    }
+
+    public static void ConfigureRedis(this IServiceCollection services)
+    {
+        services.AddStackExchangeRedisCache(options =>
+        {
+            var redisUrl = Environment.GetEnvironmentVariable("REDIS_URL");
+            var tokens = redisUrl.Split(':', '@');
+
+            var configurationOptions = ConfigurationOptions.Parse(string.Format("{0}:{1},password={2}", tokens[3], tokens[4], tokens[2]));
+            configurationOptions.ConnectTimeout = 5000;
+            configurationOptions.ConnectRetry = 5;
+            configurationOptions.SyncTimeout = 5000;
+            configurationOptions.AbortOnConnectFail = false;
+            configurationOptions.Ssl = true;
+
+            options.ConfigurationOptions = configurationOptions;
+        });
     }
 }
