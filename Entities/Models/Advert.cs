@@ -4,7 +4,6 @@ public class Advert : EntityBase
     public double Price { get; set; }
     public string DescriptionSr { get; set; }
     public string DescriptionEn { get; set; }
-
     public int NoOfBedrooms { get; set; }
     public double FloorSpace { get; set; }
     public int NoOfBathrooms { get; set; }
@@ -30,11 +29,8 @@ public class Advert : EntityBase
     public User User { get; set; }
 
     public List<Image> Images { get; set; }
-
     public string CoverImageUrl { get; set; }
-
     public double Latitude { get; set; }
-
     public double Longitude { get; set; }
 
     public Neighborhood Neighborhood { get; set; }
@@ -42,6 +38,5 @@ public class Advert : EntityBase
 
     public int? YearOfBuildingCreated { get; set; }
     public string Street { get; set; }
-
     public List<TemporeryImageData> TemporeryImageDatas { get; set; }
 }

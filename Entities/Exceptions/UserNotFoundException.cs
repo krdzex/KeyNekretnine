@@ -6,4 +6,3 @@ public sealed class UserNotFoundException : NotFoundException
     {
     }
 }
-
