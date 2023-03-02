@@ -7,7 +7,6 @@ public class RepositoryContext : IdentityDbContext<User>
 {
     public RepositoryContext(DbContextOptions<RepositoryContext> options) : base(options)
     {
-
     }
 
     public DbSet<Image> Images { get; set; }

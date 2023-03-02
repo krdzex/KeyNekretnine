@@ -24,7 +24,5 @@ internal sealed class AdvertPurposeRepository : IAdvertPurposeRepository
 
             return advertPurposes;
         }
-
-
     }
 };

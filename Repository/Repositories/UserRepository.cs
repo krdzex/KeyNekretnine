@@ -23,7 +23,6 @@ internal sealed class UserRepository : IUserRepository
 
     public async Task UserBanExpired(User user, CancellationToken cancellationToken)
     {
-
         user.BanEnd = null;
         user.IsBanned = false;
 

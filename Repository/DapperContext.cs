@@ -1,32 +1,28 @@
 ﻿using Npgsql;
 using System.Data;
 
-namespace Repository
+namespace Repository;
+public class DapperContext
 {
-    public class DapperContext
+    public IDbConnection CreateConnection()
+        => new NpgsqlConnection(GetConnectionString());
+
+    private static string GetConnectionString()
     {
 
-        public IDbConnection CreateConnection()
-            => new NpgsqlConnection(GetConnectionString());
+        var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+        var databaseUri = new Uri(databaseUrl);
+        var userInfo = databaseUri.UserInfo.Split(':');
 
-
-        private static string GetConnectionString()
+        var builder = new NpgsqlConnectionStringBuilder
         {
+            Host = databaseUri.Host,
+            Port = databaseUri.Port,
+            Username = userInfo[0],
+            Password = userInfo[1],
+            Database = databaseUri.LocalPath.TrimStart('/')
+        };
 
-            var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-            var databaseUri = new Uri(databaseUrl);
-            var userInfo = databaseUri.UserInfo.Split(':');
-
-            var builder = new NpgsqlConnectionStringBuilder
-            {
-                Host = databaseUri.Host,
-                Port = databaseUri.Port,
-                Username = userInfo[0],
-                Password = userInfo[1],
-                Database = databaseUri.LocalPath.TrimStart('/')
-            };
-
-            return builder.ToString();
-        }
+        return builder.ToString();
     }
 }

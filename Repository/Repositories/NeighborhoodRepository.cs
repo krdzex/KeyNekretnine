@@ -24,7 +24,5 @@ internal sealed class NeighborhoodRepository : INeighborhoodRepository
 
             return neighborhoods;
         }
-
-
     }
 }

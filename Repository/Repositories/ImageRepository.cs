@@ -7,7 +7,6 @@ namespace Repository.Repositories;
 
 internal class ImageRepository : IImageRepository
 {
-
     private readonly DapperContext _dapperContext;
     public ImageRepository(DapperContext dapperContext)
     {

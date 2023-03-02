@@ -165,7 +165,6 @@ internal class AdvertRepository : IAdvertRepository
 
     public async Task<Pagination<MinimalInformationsAboutAdvertDto>> GetAdverts(AdvertParameters advertParameters, CancellationToken cancellationToken)
     {
-
         var orderBy = OrderQueryBuilder.CreateOrderQuery<MinimalInformationsAboutAdvertDto>(advertParameters.OrderBy, 'a');
 
         var query = AdvertQuery.MakeGetAdvertQuery(advertParameters, orderBy);

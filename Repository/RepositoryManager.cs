@@ -18,7 +18,6 @@ public sealed class RepositoryManager : IRepositoryManager
     private readonly DapperContext _dapperContext;
     private readonly Lazy<ITemporeryImageDataRepository> _temporeryImageDataRepository;
 
-
     public RepositoryManager(RepositoryContext repositoryContext, UserManager<User> userManager, DapperContext dapperContext)
     {
         _repositoryContext = repositoryContext;
@@ -41,6 +40,4 @@ public sealed class RepositoryManager : IRepositoryManager
     public IUserRepository User => _userRepository.Value;
     public IImageRepository Image => _imageRepository.Value;
     public ITemporeryImageDataRepository TemporeryImageData => _temporeryImageDataRepository.Value;
-
 }
-

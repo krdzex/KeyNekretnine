@@ -8,7 +8,6 @@ using System.Data;
 namespace Repository.Repositories;
 internal class TemporeryImageDataRepository : ITemporeryImageDataRepository
 {
-
     private readonly DapperContext _dapperContext;
     private static readonly RecyclableMemoryStreamManager manager = new RecyclableMemoryStreamManager(128 * 1024, 13 * 1024 * 1024);
     public TemporeryImageDataRepository(DapperContext dapperContext)

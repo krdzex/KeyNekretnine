@@ -40,4 +40,3 @@ internal sealed class CityRepository : ICityRepository
         }
     }
 }
-
