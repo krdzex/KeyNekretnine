@@ -9,7 +9,6 @@ namespace KeyNekretnine.Presentation.Controllers;
 [ApiController]
 public class CityController : ControllerBase
 {
-
     private readonly ISender _sender;
 
     public CityController(ISender sender)
@@ -27,6 +26,7 @@ public class CityController : ControllerBase
 
     [HttpGet("popular")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ResponseCache(Duration = 120)]
     public async Task<IActionResult> GetMostPopular()
     {

@@ -1,5 +1,6 @@
 ﻿using Application.Commands;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Shared.RequestFeatures;
 
@@ -16,6 +17,8 @@ public class TokenController : ControllerBase
     }
 
     [HttpPost("refresh")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Refresh([FromBody] TokenRequest request)
     {
         return Ok(await _sender.Send(new CreateAccessAndRefreshTokenCommand(request)));

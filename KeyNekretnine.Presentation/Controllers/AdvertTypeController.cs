@@ -18,6 +18,7 @@ public class AdvertTypeController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ResponseCache(Duration = 120)]
     public async Task<IActionResult> Get()
     {

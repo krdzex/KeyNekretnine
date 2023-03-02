@@ -65,7 +65,6 @@ public class AdvertController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Create([FromForm] AddAdvertDto newAdvert)
     {
-
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
 
         await _sender.Send(new CreateAdvertCommand(newAdvert, email));
@@ -98,7 +97,7 @@ public class AdvertController : ControllerBase
         return NoContent();
     }
 
-    //[Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Administrator")]
     [HttpGet("/api/admin/advert")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -107,7 +106,7 @@ public class AdvertController : ControllerBase
         return Ok(await _sender.Send(new GetAdminAdvertsQuery(adminAdvertParameters)));
     }
 
-    //[Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Administrator")]
     [HttpGet("/api/admin/advert/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

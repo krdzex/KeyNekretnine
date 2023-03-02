@@ -1,6 +1,7 @@
 ﻿using Application.Commands.UserCommands;
 using Application.Notifications;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataTransferObjects.Auth;
 
@@ -17,6 +18,9 @@ public class AuthenticationController : ControllerBase
         _publisher = publisher;
     }
 
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpPost("registration")]
     public async Task<IActionResult> Register([FromBody] UserForRegistrationDto userForRegistration)
     {
@@ -25,6 +29,9 @@ public class AuthenticationController : ControllerBase
         return StatusCode(201);
     }
 
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] UserForAuthenticationDto userForAuthenticationDto)
     {
@@ -33,4 +40,3 @@ public class AuthenticationController : ControllerBase
         return Accepted(tokens);
     }
 }
-

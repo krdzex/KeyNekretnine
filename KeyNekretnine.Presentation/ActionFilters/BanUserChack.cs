@@ -4,10 +4,8 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using System.Security.Claims;
 
 namespace KeyNekretnine.Attributes;
-
 public class BanUserChack : IAsyncActionFilter
 {
-
     private readonly IRepositoryManager _repositoryManager;
 
     public BanUserChack(IRepositoryManager repositoryManager)

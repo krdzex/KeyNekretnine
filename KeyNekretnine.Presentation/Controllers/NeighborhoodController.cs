@@ -9,7 +9,6 @@ namespace KeyNekretnine.Presentation.Controllers;
 [ApiController]
 public class NeighborhoodController : ControllerBase
 {
-
     private readonly ISender _sender;
 
     public NeighborhoodController(ISender sender)
@@ -20,6 +19,7 @@ public class NeighborhoodController : ControllerBase
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ResponseCache(Duration = 120)]
     public async Task<IActionResult> Get(int id)
     {
