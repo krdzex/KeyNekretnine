@@ -39,4 +39,5 @@ public class Advert : EntityBase
     public int? YearOfBuildingCreated { get; set; }
     public string Street { get; set; }
     public List<TemporeryImageData> TemporeryImageDatas { get; set; }
+    public string ReferenceId { get; set; }
 }
