@@ -61,4 +61,3 @@ internal sealed class EmailService : IEmailService
         return response.IsSuccessStatusCode;
     }
 }
-

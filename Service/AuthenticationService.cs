@@ -46,5 +46,4 @@ internal sealed class AuthenticationService : IAuthenticationService
         }
         throw new UnauthorizedAccessException("Invalid Credentials");
     }
-
 }

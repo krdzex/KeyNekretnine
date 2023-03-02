@@ -3,4 +3,3 @@ public interface IImageService
 {
     Task<string> UploadImageOnCloudinary(byte[] imagePath);
 }
-

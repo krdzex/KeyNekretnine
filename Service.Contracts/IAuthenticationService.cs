@@ -8,4 +8,3 @@ public interface IAuthenticationService
     Task<User> ValidateUser(UserForAuthenticationDto userForAuthentication);
     Task<IdentityResult> RegisterUser(UserForRegistrationDto userForRegistration);
 }
-
