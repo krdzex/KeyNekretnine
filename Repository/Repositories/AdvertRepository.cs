@@ -12,7 +12,6 @@ namespace Repository.Repositories;
 internal class AdvertRepository : IAdvertRepository
 {
     private readonly DapperContext _dapperContext;
-
     public AdvertRepository(DapperContext dapperContext)
     {
         _dapperContext = dapperContext;
@@ -20,11 +19,11 @@ internal class AdvertRepository : IAdvertRepository
 
     public async Task<int> CreateAdvert(AddAdvertDto newAdvert, string userId, CancellationToken cancellationToken)
     {
-
         var query = AdvertQuery.AddAdvertQuery;
 
         using (var connection = _dapperContext.CreateConnection())
         {
+            var referenceId = new Random().Next().ToString("x");
             var param = new DynamicParameters();
             param.Add("@price", newAdvert.Price, DbType.Double);
             param.Add("@description_sr", newAdvert.DescriptionSr, DbType.String);
@@ -48,6 +47,7 @@ internal class AdvertRepository : IAdvertRepository
             param.Add("@advert_purpose_id", newAdvert.AdvertPurposeId, DbType.Int16);
             param.Add("@advert_type_id", newAdvert.AdvertTypeId, DbType.Int16);
             param.Add("@user_id", userId, DbType.String);
+            param.Add("@reference_id", referenceId, DbType.String);
 
             var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
 
@@ -59,6 +59,8 @@ internal class AdvertRepository : IAdvertRepository
 
     public async Task<AllInfomrationsAboutAdvertDto> GetAdvert(int advertId)
     {
+        var referenceId = new Random().Next().ToString("x");
+
         var advertMap = new Dictionary<int, AllInfomrationsAboutAdvertDto>();
         var query = AdvertQuery.SingleAdvertQuery;
 
