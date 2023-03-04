@@ -54,7 +54,7 @@ public class UserQuery
             WHEN u.is_banned = false OR (u.is_banned = true AND u.ban_end < now()) THEN false
             ELSE true
         END AS is_banned
-      FROM ""public"".""AspNetUsers"" u
+      FROM ""AspNetUsers"" u
       WHERE u.email = @email";
 
     public const string GetUserById =
