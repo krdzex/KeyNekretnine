@@ -68,8 +68,8 @@ public class UserController : ControllerBase
     [HttpGet("{userId:guid}")]
     public async Task<IActionResult> GetUser(string userId)
     {
-        var user = await _sender.Send(new GetUsersQuery(userParameters));
+        var user = await _sender.Send(new GetUserQuery(userId));
 
-        return Ok();
+        return Ok(user);
     }
 }
