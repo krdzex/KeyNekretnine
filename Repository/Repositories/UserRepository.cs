@@ -150,4 +150,18 @@ internal sealed class UserRepository : IUserRepository
             return isBanned;
         }
     }
+
+    public async Task<UserDto> GetUser(string userId)
+    {
+        var query = UserQuery.GetUserById;
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var param = new DynamicParameters();
+            param.Add("id", userId, DbType.String);
+            var user = await connection.QueryFirstOrDefaultAsync<UserDto>(query, param);
+
+            return user;
+        }
+    }
 }

@@ -15,4 +15,5 @@ public interface IUserRepository
     Task<UserInformationDto> GetLoggedUserInformations(IEnumerable<Claim> userClaims);
     Task ConfrimUserEmail(string token, string email);
     Task<bool> IsUserBanned(string email);
+    Task<UserDto> GetUser(string userId);
 }

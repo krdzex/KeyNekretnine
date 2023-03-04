@@ -57,4 +57,9 @@ public class UserQuery
       FROM ""public"".""AspNetUsers"" u
       WHERE u.email = @email";
 
+    public const string GetUserById =
+    @"SELECT u.first_name,u.last_name,u.account_created_date,u.id, u.email
+      FROM ""AspNetUsers"" AS u
+      WHERE id = @id";
+
 }
