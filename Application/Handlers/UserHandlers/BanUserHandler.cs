@@ -3,6 +3,7 @@ using Contracts;
 using MediatR;
 
 namespace Application.Handlers.UserHandlers;
+
 internal sealed class BanUserHandler : IRequestHandler<BanUserCommand, Unit>
 {
     private readonly IRepositoryManager _repository;
