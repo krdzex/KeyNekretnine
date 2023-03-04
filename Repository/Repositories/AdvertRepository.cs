@@ -9,6 +9,7 @@ using Shared.RequestFeatures;
 using System.Data;
 
 namespace Repository.Repositories;
+
 internal class AdvertRepository : IAdvertRepository
 {
     private readonly DapperContext _dapperContext;
