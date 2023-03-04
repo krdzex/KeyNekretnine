@@ -48,7 +48,7 @@ public class UserController : ControllerBase
         return Ok();
     }
 
-    //[Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Administrator")]
     [HttpGet("/api/users")]
     public async Task<IActionResult> GetUsers([FromQuery] UserParameters userParameters)
     {
@@ -61,6 +61,14 @@ public class UserController : ControllerBase
     public async Task<IActionResult> ConfirmEmail([FromQuery] string token, string email)
     {
         await _sender.Send(new ConfirmUserEmailQuery(token, email));
+
+        return Ok();
+    }
+
+    [HttpGet("{userId:guid}")]
+    public async Task<IActionResult> GetUser(string userId)
+    {
+        var user = await _sender.Send(new GetUsersQuery(userParameters));
 
         return Ok();
     }
