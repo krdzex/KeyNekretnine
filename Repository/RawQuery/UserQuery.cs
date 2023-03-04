@@ -32,7 +32,7 @@ public class UserQuery
         }
 
         countAdvertQuery.Append(countConditions).Append(';');
-        selectAdvertsQuery.Append(countConditions).Append($" ORDER BY u.User_name OFFSET @Skip FETCH NEXT @Take ROWS ONLY;");
+        selectAdvertsQuery.Append(countConditions).Append($" OFFSET @Skip FETCH NEXT @Take ROWS ONLY;");
 
         return countAdvertQuery.ToString() + selectAdvertsQuery.ToString();
     }
