@@ -12,7 +12,7 @@ public class UserQuery
              FROM ""AspNetUsers"" AS u");
 
         var selectAdvertsQuery = new StringBuilder(
-            @"SELECT u.Id, u.Email, u.User_name,
+            @"SELECT u.Id, u.Email, u.User_name,u.account_created_date,
                     CASE
                         WHEN u.is_banned = true AND u.ban_end >= now() 
                             THEN true 
@@ -32,7 +32,7 @@ public class UserQuery
         }
 
         countAdvertQuery.Append(countConditions).Append(';');
-        selectAdvertsQuery.Append(countConditions).Append($" OFFSET @Skip FETCH NEXT @Take ROWS ONLY;");
+        selectAdvertsQuery.Append(countConditions).Append($"ORDER BY u.account_created_date DESC OFFSET @Skip FETCH NEXT @Take ROWS ONLY;");
 
         return countAdvertQuery.ToString() + selectAdvertsQuery.ToString();
     }
@@ -58,7 +58,12 @@ public class UserQuery
       WHERE u.email = @email";
 
     public const string GetUserById =
-    @"SELECT u.first_name,u.last_name,u.account_created_date,u.id, u.email
+    @"SELECT u.first_name,u.last_name,u.account_created_date,u.id, u.email,
+                    CASE
+                        WHEN u.is_banned = true AND u.ban_end >= now() 
+                            THEN true 
+                        ELSE false 
+                    END AS is_banned
       FROM ""AspNetUsers"" AS u
       WHERE id = @id";
 

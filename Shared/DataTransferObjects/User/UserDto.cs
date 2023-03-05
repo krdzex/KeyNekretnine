@@ -6,5 +6,6 @@ public class UserDto
     public string Last_Name { get; set; }
     public string Email { get; set; }
     public DateTime Account_Created_Date { get; set; }
+    public bool Is_Banned { get; set; }
 }
 
