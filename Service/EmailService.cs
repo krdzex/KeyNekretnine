@@ -60,4 +60,48 @@ internal sealed class EmailService : IEmailService
         var response = await client.SendEmailAsync(msg);
         return response.IsSuccessStatusCode;
     }
+
+    public async Task<bool> SendApproveAdvertEmail(string email, int advertId)
+    {
+        var sendGridConfigSection = _configuration.GetSection("SendGridEmailSettings");
+
+        var fromEmail = sendGridConfigSection.GetSection("FromEmail").Value;
+        var fromName = sendGridConfigSection.GetSection("FromName").Value;
+
+        var client = new SendGridClient(Environment.GetEnvironmentVariable("SEND_GRID_API_KEY"));
+
+        var msg = new SendGridMessage
+        {
+            From = new EmailAddress(fromEmail, fromName),
+            Subject = $"Approved advert {advertId}",
+            PlainTextContent = $"Your advert with id {advertId} is approved from admin"
+        };
+
+        msg.AddTo(email);
+
+        var response = await client.SendEmailAsync(msg);
+        return response.IsSuccessStatusCode;
+    }
+
+    public async Task<bool> SendDeclineAdvertEmail(string email, int advertId)
+    {
+        var sendGridConfigSection = _configuration.GetSection("SendGridEmailSettings");
+
+        var fromEmail = sendGridConfigSection.GetSection("FromEmail").Value;
+        var fromName = sendGridConfigSection.GetSection("FromName").Value;
+
+        var client = new SendGridClient(Environment.GetEnvironmentVariable("SEND_GRID_API_KEY"));
+
+        var msg = new SendGridMessage
+        {
+            From = new EmailAddress(fromEmail, fromName),
+            Subject = $"Declined advert {advertId}",
+            PlainTextContent = $"Your advert with id {advertId} is declined from admin"
+        };
+
+        msg.AddTo(email);
+
+        var response = await client.SendEmailAsync(msg);
+        return response.IsSuccessStatusCode;
+    }
 }

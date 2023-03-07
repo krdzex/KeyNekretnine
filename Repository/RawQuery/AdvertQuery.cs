@@ -144,4 +144,10 @@ public static class AdvertQuery
 
         return countAdvertQuery.ToString() + selectAdvertsQuery.ToString();
     }
+
+    public const string GetUserEmailFromAdvertIdQuery =
+        @"SELECT u.email
+         FROM adverts a
+         JOIN ""AspNetUsers"" u ON u.id = a.user_id
+         WHERE a.id = @advertId";
 }

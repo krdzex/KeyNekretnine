@@ -353,4 +353,20 @@ internal class AdvertRepository : IAdvertRepository
             return new Pagination<MinimalInformationsAboutAdvertDto> { Data = adverts, MetaData = metadata.MetaData };
         }
     }
+
+    public async Task<string> GetUserEmailFromAdvertId(int advertId, CancellationToken cancellationToken)
+    {
+        string query = AdvertQuery.GetUserEmailFromAdvertIdQuery;
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var param = new DynamicParameters();
+
+            param.Add("advertId", advertId, DbType.Int32);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            return await connection.QuerySingleOrDefaultAsync<string>(cmd);
+        }
+    }
 }

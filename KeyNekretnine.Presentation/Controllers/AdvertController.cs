@@ -17,10 +17,12 @@ namespace KeyNekretnine.Presentation.Controllers;
 public class AdvertController : ControllerBase
 {
     private readonly ISender _sender;
+    private readonly IPublisher _publisher;
 
-    public AdvertController(ISender sender)
+    public AdvertController(ISender sender, IPublisher publisher)
     {
         _sender = sender;
+        _publisher = publisher;
     }
 
     [HttpGet("{id}")]
@@ -80,7 +82,7 @@ public class AdvertController : ControllerBase
     public async Task<IActionResult> Approve(int id)
     {
 
-        await _sender.Send(new ApproveAdvertCommand(id));
+        await _publisher.Publish(new ApproveAdvertCommand(id));
 
         return NoContent();
     }
@@ -92,7 +94,7 @@ public class AdvertController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Decline(int id)
     {
-        await _sender.Send(new DeclineAdvertCommand(id));
+        await _publisher.Publish(new DeclineAdvertCommand(id));
 
         return NoContent();
     }

@@ -1,10 +1,10 @@
-﻿using Application.Commands.AdvertCommands;
+﻿using Application.Notifications;
 using Contracts;
 using Entities.Exceptions;
 using MediatR;
 
 namespace Application.Handlers.AdvertHandlers;
-internal sealed class ApproveAdvertHandler : IRequestHandler<ApproveAdvertCommand, Unit>
+internal sealed class ApproveAdvertHandler : INotificationHandler<ApproveAdvertNotification>
 {
     private readonly IRepositoryManager _repository;
 
@@ -13,19 +13,19 @@ internal sealed class ApproveAdvertHandler : IRequestHandler<ApproveAdvertComman
         _repository = repository;
     }
 
-    public async Task<Unit> Handle(ApproveAdvertCommand request, CancellationToken cancellationToken)
+    public async Task Handle(ApproveAdvertNotification notification, CancellationToken cancellationToken)
     {
 
-        var advertExist = await _repository.Advert.ChackIfAdvertExist(request.AdvertId, cancellationToken);
+        var advertExist = await _repository.Advert.ChackIfAdvertExist(notification.AdvertId, cancellationToken);
 
         if (!advertExist)
         {
-            throw new AdvertNotFoundException(request.AdvertId);
+            throw new AdvertNotFoundException(notification.AdvertId);
         }
 
-        await _repository.Advert.ApproveAdvert(request.AdvertId, cancellationToken);
+        await _repository.Advert.ApproveAdvert(notification.AdvertId, cancellationToken);
 
-        return Unit.Value;
+        await Task.CompletedTask;
     }
 }
 
