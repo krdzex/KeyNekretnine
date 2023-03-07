@@ -1,5 +1,5 @@
 ﻿using MediatR;
 
-namespace Application.Notifications;
+namespace Application.Notifications.AdvertNotifications;
 public sealed record DeclineAdvertNotification(int AdvertId) : INotification;
 

@@ -1,10 +1,10 @@
-﻿using Application.Commands.UserCommands;
+﻿using Application.Notifications.UserNotifications;
 using Contracts;
 using MediatR;
 
 namespace Application.Handlers.UserHandlers;
 
-internal sealed class BanUserHandler : IRequestHandler<BanUserCommand, Unit>
+internal sealed class BanUserHandler : INotificationHandler<BanUserNotification>
 {
     private readonly IRepositoryManager _repository;
 
@@ -12,10 +12,10 @@ internal sealed class BanUserHandler : IRequestHandler<BanUserCommand, Unit>
     {
         _repository = repository;
     }
-    public async Task<Unit> Handle(BanUserCommand request, CancellationToken cancellationToken)
+    public async Task Handle(BanUserNotification request, CancellationToken cancellationToken)
     {
         await _repository.User.BanUser(request.UserId, request.NoOfDays);
 
-        return Unit.Value;
+        await Task.CompletedTask;
     }
 }

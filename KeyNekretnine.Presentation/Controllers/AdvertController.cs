@@ -1,5 +1,5 @@
 ﻿using Application.Commands.AdvertCommands;
-using Application.Notifications;
+using Application.Notifications.AdvertNotifications;
 using Application.Queries.AdvertQueries;
 using Application.Queries.AdvertQuery;
 using KeyNekretnine.Attributes;

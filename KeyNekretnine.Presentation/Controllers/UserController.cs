@@ -1,4 +1,4 @@
-﻿using Application.Commands.UserCommands;
+﻿using Application.Notifications.UserNotifications;
 using Application.Queries.UserQueries;
 using KeyNekretnine.Attributes;
 using MediatR;
@@ -14,10 +14,12 @@ namespace KeyNekretnine.Presentation.Controllers;
 public class UserController : ControllerBase
 {
     private readonly ISender _sender;
+    private readonly IPublisher _publisher;
 
-    public UserController(ISender sender)
+    public UserController(ISender sender, IPublisher published)
     {
         _sender = sender;
+        _publisher = published;
     }
 
     [Authorize]
@@ -34,7 +36,7 @@ public class UserController : ControllerBase
     [HttpPut("{id:guid}/ban")]
     public async Task<IActionResult> Ban(Guid id, [Required] int days)
     {
-        await _sender.Send(new BanUserCommand(id.ToString(), days));
+        await _publisher.Publish(new BanUserNotification(id.ToString(), days));
 
         return Ok();
     }
@@ -43,7 +45,7 @@ public class UserController : ControllerBase
     [HttpPut("{id:guid}/unban")]
     public async Task<IActionResult> Unban(Guid id)
     {
-        await _sender.Send(new UnbanUserCommand(id.ToString()));
+        await _publisher.Publish(new UnbanUserNotification(id.ToString()));
 
         return Ok();
     }

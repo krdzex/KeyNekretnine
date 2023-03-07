@@ -1,4 +1,4 @@
 ﻿using MediatR;
 
-namespace Application.Notifications;
+namespace Application.Notifications.AdvertNotifications;
 public sealed record ApproveAdvertNotification(int AdvertId) : INotification;

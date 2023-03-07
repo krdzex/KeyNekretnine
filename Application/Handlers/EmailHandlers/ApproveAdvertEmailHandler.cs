@@ -1,4 +1,4 @@
-﻿using Application.Notifications;
+﻿using Application.Notifications.AdvertNotifications;
 using Contracts;
 using Entities.Exceptions;
 using MediatR;
