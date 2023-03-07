@@ -170,7 +170,7 @@ internal class AdvertRepository : IAdvertRepository
     {
         var orderBy = OrderQueryBuilder.CreateOrderQuery<MinimalInformationsAboutAdvertDto>(advertParameters.OrderBy, 'a');
 
-        var query = AdvertQuery.MakeGetAdvertQuery(advertParameters, orderBy);
+        var query = AdvertQuery.MakeGetAdvertQuery(advertParameters, orderBy, "");
 
         var skip = (advertParameters.PageNumber - 1) * advertParameters.PageSize;
 
@@ -312,6 +312,45 @@ internal class AdvertRepository : IAdvertRepository
             var metadata = new PagedList<AdminTableAdvertDto>(adverts, count, adminAdvertParameters.PageNumber, adminAdvertParameters.PageSize);
 
             return new Pagination<AdminTableAdvertDto> { Data = adverts, MetaData = metadata.MetaData };
+        }
+    }
+
+    public async Task<Pagination<MinimalInformationsAboutAdvertDto>> GetMyAdverts(AdvertParameters advertParameters, string userId, CancellationToken cancellationToken)
+    {
+        var orderBy = OrderQueryBuilder.CreateOrderQuery<MinimalInformationsAboutAdvertDto>(advertParameters.OrderBy, 'a');
+
+        var query = AdvertQuery.MakeGetAdvertQuery(advertParameters, orderBy, userId);
+
+        var skip = (advertParameters.PageNumber - 1) * advertParameters.PageSize;
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var param = new DynamicParameters();
+
+            param.Add("skip", skip, DbType.Int32);
+            param.Add("take", advertParameters.PageSize, DbType.Int32);
+            param.Add("minPrice", advertParameters.MinPrice, DbType.Int32);
+            param.Add("maxPrice", advertParameters.MaxPrice, DbType.Int32);
+            param.Add("noOfBedrooms", advertParameters.NoOfBedrooms);
+            param.Add("noOfBathrooms", advertParameters.NoOfBathrooms);
+            param.Add("advertTypeIds", advertParameters.AdvertTypeIds);
+            param.Add("advertPurposeIds", advertParameters.AdvertPurposeIds);
+            param.Add("cityId", advertParameters.CityId, DbType.Int32);
+            param.Add("neighborhoodIds", advertParameters.NeighborhoodIds);
+            param.Add("@minFloorSpace", advertParameters.MinFloorSpace, DbType.Int32);
+            param.Add("@maxFloorSpace", advertParameters.MaxFloorSpace, DbType.Int32);
+            param.Add("@userId", userId, DbType.String);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            var multi = await connection.QueryMultipleAsync(cmd);
+
+            var count = await multi.ReadSingleAsync<int>();
+            var adverts = (await multi.ReadAsync<MinimalInformationsAboutAdvertDto>()).ToList();
+
+            var metadata = new PagedList<MinimalInformationsAboutAdvertDto>(adverts, count, advertParameters.PageNumber, advertParameters.PageSize);
+
+            return new Pagination<MinimalInformationsAboutAdvertDto> { Data = adverts, MetaData = metadata.MetaData };
         }
     }
 }

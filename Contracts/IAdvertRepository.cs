@@ -17,4 +17,5 @@ public interface IAdvertRepository
     Task ApproveAdvert(int advertId, CancellationToken cancellationToken);
     Task DeclineAdvert(int advertId, CancellationToken cancellationToken);
     Task<Pagination<AdminTableAdvertDto>> GetAdminAdverts(AdminAdvertParameters adminAdvertParameters, CancellationToken cancellationToken);
+    Task<Pagination<MinimalInformationsAboutAdvertDto>> GetMyAdverts(AdvertParameters advertParameters, string userId, CancellationToken cancellationToken);
 }

@@ -1,5 +1,6 @@
 ﻿using Application.Queries.AdvertQueries;
 using Contracts;
+using Entities.Exceptions;
 using MediatR;
 using Shared.CustomResponses;
 using Shared.DataTransferObjects.Advert;
@@ -15,9 +16,14 @@ internal sealed class GetMyAdvertsHandler : IRequestHandler<GetMyAdvertsQuery, P
     }
     public async Task<Pagination<MinimalInformationsAboutAdvertDto>> Handle(GetMyAdvertsQuery request, CancellationToken cancellationToken)
     {
-        var userId = _repository.User.GetUserIdFromEmail(request.Email);
+        var userId = await _repository.User.GetUserIdFromEmail(request.Email);
 
-        var adverts = await _repository.Advert.GetAdverts(request.AdvertParameters, cancellationToken);
+        if (userId == null)
+        {
+            throw new UserNotFoundException();
+        }
+
+        var adverts = await _repository.Advert.GetMyAdverts(request.AdvertParameters, userId, cancellationToken);
 
         return adverts;
     }
