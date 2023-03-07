@@ -121,10 +121,10 @@ public class AdvertController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetMyAdverts(int id)
+    public async Task<IActionResult> GetMyAdverts()
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
 
-        return Ok(await _sender.Send(new GetAdminAdvertQuery(id)));
+        return Ok(await _sender.Send(new GetMyAdvertsQuery(email)));
     }
 }
