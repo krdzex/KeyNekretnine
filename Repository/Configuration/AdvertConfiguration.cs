@@ -12,12 +12,12 @@ public class AdvertConfiguration : IEntityTypeConfiguration<Advert>
         builder.Property(x => x.UserId).IsRequired();
         builder.Property(x => x.DescriptionSr).IsRequired().HasMaxLength(10000);
         builder.Property(x => x.DescriptionEn).HasMaxLength(10000);
-        builder.HasOne(x => x.AdvertPurpose).WithMany(x => x.Adverts).HasForeignKey(x => x.AdvertPurposeId).IsRequired();
-        builder.Property(x => x.AdvertPurposeId).HasDefaultValue(1);
-        builder.HasOne(x => x.AdvertStatus).WithMany(x => x.Adverts).HasForeignKey(x => x.AdvertStatusId).IsRequired();
-        builder.Property(x => x.AdvertStatusId).HasDefaultValue(1);
-        builder.HasOne(x => x.AdvertType).WithMany(x => x.Adverts).HasForeignKey(x => x.AdvertTypeId).IsRequired();
-        builder.Property(x => x.AdvertTypeId).HasDefaultValue(1);
+        builder.HasOne(x => x.Purpose).WithMany(x => x.Adverts).HasForeignKey(x => x.PurposeId).IsRequired();
+        builder.Property(x => x.PurposeId).HasDefaultValue(1);
+        builder.HasOne(x => x.Status).WithMany(x => x.Adverts).HasForeignKey(x => x.StatusId).IsRequired();
+        builder.Property(x => x.StatusId).HasDefaultValue(1);
+        builder.HasOne(x => x.Type).WithMany(x => x.Adverts).HasForeignKey(x => x.TypeId).IsRequired();
+        builder.Property(x => x.TypeId).HasDefaultValue(1);
         builder.Property(x => x.NoOfBedrooms).IsRequired().HasMaxLength(100);
         builder.Property(x => x.NoOfBathrooms).IsRequired().HasMaxLength(100);
         builder.Property(x => x.FloorSpace).IsRequired().HasMaxLength(10000);

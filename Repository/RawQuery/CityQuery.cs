@@ -14,7 +14,7 @@ public class CityQuery
           FROM adverts a
           INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
           INNER JOIN cities c ON c.id = n.city_id
-          WHERE a.advert_status_id = 1
+          WHERE a.status_id = 1
           GROUP BY c.name, c.image_url,c.id
         )
         SELECT 

@@ -14,14 +14,14 @@ public class Advert : EntityBase
     public bool HasElevator { get; set; }
     public int BuildingFloor { get; set; }
 
-    public int AdvertStatusId { get; set; } = 2;
-    public AdvertStatus AdvertStatus { get; set; }
+    public int StatusId { get; set; } = 2;
+    public AdvertStatus Status { get; set; }
 
-    public int AdvertPurposeId { get; set; }
-    public AdvertPurpose AdvertPurpose { get; set; }
+    public int PurposeId { get; set; }
+    public AdvertPurpose Purpose { get; set; }
 
-    public int AdvertTypeId { get; set; }
-    public AdvertType AdvertType { get; set; }
+    public int TypeId { get; set; }
+    public AdvertType Type { get; set; }
 
     public DateTime CreatedDate { get; set; } = DateTime.Now;
 

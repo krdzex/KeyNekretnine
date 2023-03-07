@@ -45,8 +45,8 @@ internal class AdvertRepository : IAdvertRepository
             param.Add("@cover_image_url", "test", DbType.String);
             param.Add("@neighborhood_id", newAdvert.NeighborhoodId, DbType.Int16);
             param.Add("@building_floor", newAdvert.BuildingFloor, DbType.Int16);
-            param.Add("@advert_purpose_id", newAdvert.AdvertPurposeId, DbType.Int16);
-            param.Add("@advert_type_id", newAdvert.AdvertTypeId, DbType.Int16);
+            param.Add("@purpose_id", newAdvert.AdvertPurposeId, DbType.Int16);
+            param.Add("@type_id", newAdvert.AdvertTypeId, DbType.Int16);
             param.Add("@user_id", userId, DbType.String);
             param.Add("@reference_id", referenceId, DbType.String);
 
@@ -184,8 +184,8 @@ internal class AdvertRepository : IAdvertRepository
             param.Add("maxPrice", advertParameters.MaxPrice, DbType.Int32);
             param.Add("noOfBedrooms", advertParameters.NoOfBedrooms);
             param.Add("noOfBathrooms", advertParameters.NoOfBathrooms);
-            param.Add("advertTypeIds", advertParameters.AdvertTypeIds);
-            param.Add("advertPurposeIds", advertParameters.AdvertPurposeIds);
+            param.Add("typeIds", advertParameters.AdvertTypeIds);
+            param.Add("purposeIds", advertParameters.AdvertPurposeIds);
             param.Add("cityId", advertParameters.CityId, DbType.Int32);
             param.Add("neighborhoodIds", advertParameters.NeighborhoodIds);
             param.Add("@minFloorSpace", advertParameters.MinFloorSpace, DbType.Int32);
@@ -333,8 +333,8 @@ internal class AdvertRepository : IAdvertRepository
             param.Add("maxPrice", advertParameters.MaxPrice, DbType.Int32);
             param.Add("noOfBedrooms", advertParameters.NoOfBedrooms);
             param.Add("noOfBathrooms", advertParameters.NoOfBathrooms);
-            param.Add("advertTypeIds", advertParameters.AdvertTypeIds);
-            param.Add("advertPurposeIds", advertParameters.AdvertPurposeIds);
+            param.Add("typeIds", advertParameters.AdvertTypeIds);
+            param.Add("purposeIds", advertParameters.AdvertPurposeIds);
             param.Add("cityId", advertParameters.CityId, DbType.Int32);
             param.Add("neighborhoodIds", advertParameters.NeighborhoodIds);
             param.Add("@minFloorSpace", advertParameters.MinFloorSpace, DbType.Int32);
