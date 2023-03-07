@@ -5,4 +5,6 @@ public interface IEmailService
     Task<bool> SendWelcomeEmail(string email);
     Task<bool> SendApproveAdvertEmail(string email, int advertId);
     Task<bool> SendDeclineAdvertEmail(string email, int advertId);
+    Task<bool> SendUserBanEmail(string email, DateTime banEnd);
+    Task<bool> SendUserUnbanEmail(string email);
 }

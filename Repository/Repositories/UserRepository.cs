@@ -159,9 +159,37 @@ internal sealed class UserRepository : IUserRepository
         {
             var param = new DynamicParameters();
             param.Add("id", userId, DbType.String);
+
             var user = await connection.QueryFirstOrDefaultAsync<UserDto>(query, param);
 
             return user;
+        }
+    }
+
+    public async Task<(string, DateTime)> GetEmailAndBanEndFromUserId(string userId)
+    {
+        var query = UserQuery.GetEmailAndBanEndDateFromUserId;
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var touple = new Tuple<string, DateTime>(userId, DateTime.UtcNow);
+            var param = new DynamicParameters();
+            param.Add("id", userId, DbType.String);
+
+            return await connection.QueryFirstOrDefaultAsync<(string, DateTime)>(query, param);
+        }
+    }
+
+    public async Task<string> GetEmailFromUserId(string userId)
+    {
+        var query = UserQuery.GetEmailFromUserId;
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var param = new DynamicParameters();
+            param.Add("id", userId, DbType.String);
+
+            return await connection.QueryFirstOrDefaultAsync<string>(query, param);
         }
     }
 }

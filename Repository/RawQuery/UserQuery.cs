@@ -67,4 +67,14 @@ public class UserQuery
       FROM ""AspNetUsers"" AS u
       WHERE id = @id";
 
+    public const string GetEmailAndBanEndDateFromUserId =
+    @"SELECT u.email, u.ban_end
+      FROM ""AspNetUsers"" AS u
+      WHERE id = @id";
+
+    public const string GetEmailFromUserId =
+    @"SELECT u.email
+      FROM ""AspNetUsers"" AS u
+      WHERE id = @id";
+
 }

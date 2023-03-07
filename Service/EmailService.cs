@@ -104,4 +104,48 @@ internal sealed class EmailService : IEmailService
         var response = await client.SendEmailAsync(msg);
         return response.IsSuccessStatusCode;
     }
+
+    public async Task<bool> SendUserBanEmail(string email, DateTime banEnd)
+    {
+        var sendGridConfigSection = _configuration.GetSection("SendGridEmailSettings");
+
+        var fromEmail = sendGridConfigSection.GetSection("FromEmail").Value;
+        var fromName = sendGridConfigSection.GetSection("FromName").Value;
+
+        var client = new SendGridClient(Environment.GetEnvironmentVariable("SEND_GRID_API_KEY"));
+
+        var msg = new SendGridMessage
+        {
+            From = new EmailAddress(fromEmail, fromName),
+            Subject = $"You are banned",
+            PlainTextContent = $"Your account is banned until {banEnd}"
+        };
+
+        msg.AddTo(email);
+
+        var response = await client.SendEmailAsync(msg);
+        return response.IsSuccessStatusCode;
+    }
+
+    public async Task<bool> SendUserUnbanEmail(string email)
+    {
+        var sendGridConfigSection = _configuration.GetSection("SendGridEmailSettings");
+
+        var fromEmail = sendGridConfigSection.GetSection("FromEmail").Value;
+        var fromName = sendGridConfigSection.GetSection("FromName").Value;
+
+        var client = new SendGridClient(Environment.GetEnvironmentVariable("SEND_GRID_API_KEY"));
+
+        var msg = new SendGridMessage
+        {
+            From = new EmailAddress(fromEmail, fromName),
+            Subject = $"You are unbanned",
+            PlainTextContent = $"Your account is unbanned"
+        };
+
+        msg.AddTo(email);
+
+        var response = await client.SendEmailAsync(msg);
+        return response.IsSuccessStatusCode;
+    }
 }
