@@ -1,10 +1,10 @@
-﻿using Application.Commands.AdvertCommands;
+﻿using Application.Notifications;
 using Contracts;
 using Entities.Exceptions;
 using MediatR;
 
 namespace Application.Handlers.AdvertHandlers;
-internal sealed class DeclineAdvertHandler : IRequestHandler<DeclineAdvertCommand, Unit>
+internal sealed class DeclineAdvertHandler : INotificationHandler<DeclineAdvertNotification>
 {
     private readonly IRepositoryManager _repository;
 
@@ -13,7 +13,7 @@ internal sealed class DeclineAdvertHandler : IRequestHandler<DeclineAdvertComman
         _repository = repository;
     }
 
-    public async Task<Unit> Handle(DeclineAdvertCommand request, CancellationToken cancellationToken)
+    public async Task Handle(DeclineAdvertNotification request, CancellationToken cancellationToken)
     {
         var advertExist = await _repository.Advert.ChackIfAdvertExist(request.AdvertId, cancellationToken);
 
@@ -24,6 +24,6 @@ internal sealed class DeclineAdvertHandler : IRequestHandler<DeclineAdvertComman
 
         await _repository.Advert.DeclineAdvert(request.AdvertId, cancellationToken);
 
-        return Unit.Value;
+        await Task.CompletedTask;
     }
 }

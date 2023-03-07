@@ -1,4 +1,5 @@
 ﻿using Application.Commands.AdvertCommands;
+using Application.Notifications;
 using Application.Queries.AdvertQueries;
 using Application.Queries.AdvertQuery;
 using KeyNekretnine.Attributes;
@@ -82,7 +83,7 @@ public class AdvertController : ControllerBase
     public async Task<IActionResult> Approve(int id)
     {
 
-        await _publisher.Publish(new ApproveAdvertCommand(id));
+        await _publisher.Publish(new ApproveAdvertNotification(id));
 
         return NoContent();
     }
@@ -94,7 +95,7 @@ public class AdvertController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Decline(int id)
     {
-        await _publisher.Publish(new DeclineAdvertCommand(id));
+        await _publisher.Publish(new DeclineAdvertNotification(id));
 
         return NoContent();
     }
