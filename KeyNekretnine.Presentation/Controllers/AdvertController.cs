@@ -115,4 +115,16 @@ public class AdvertController : ControllerBase
     {
         return Ok(await _sender.Send(new GetAdminAdvertQuery(id)));
     }
+
+    [Authorize]
+    [HttpGet("/api/advert/my-adverts")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetMyAdverts(int id)
+    {
+        var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
+
+        return Ok(await _sender.Send(new GetAdminAdvertQuery(id)));
+    }
 }
