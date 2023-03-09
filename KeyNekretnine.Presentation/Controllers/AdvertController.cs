@@ -130,4 +130,16 @@ public class AdvertController : ControllerBase
 
         return Ok(await _sender.Send(new GetMyAdvertsQuery(myAdvertParameters, email)));
     }
+
+    [Authorize]
+    [HttpPost("{advertId}/favorite")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> MakeAdvertFavorite(int advertId)
+    {
+        var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
+
+        return Ok(await _sender.Send(new MakeAdvertFavoriteCommand(advertId, email)));
+    }
 }
