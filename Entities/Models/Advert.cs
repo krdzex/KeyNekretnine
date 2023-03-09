@@ -40,4 +40,5 @@ public class Advert : EntityBase
     public string Street { get; set; }
     public List<TemporeryImageData> TemporeryImageDatas { get; set; }
     public string ReferenceId { get; set; }
+    public IEnumerable<UserAdvertFavorite> UserAdvertFavorites { get; set; }
 }
