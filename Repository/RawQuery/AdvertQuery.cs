@@ -29,7 +29,7 @@ public static class AdvertQuery
             WHERE a.id = @id
             AND a.status_id != 4";
 
-    public static string MakeGetAdvertQuery(AdvertParameters advertParameters, string orderBy, string userId)
+    public static string MakeGetAdvertQuery(AdvertParameters advertParameters, string orderBy)
     {
         var countConditions = new StringBuilder
             (
@@ -55,7 +55,6 @@ public static class AdvertQuery
         if (advertParameters.NoOfBathrooms is not null) countConditions.AppendLine(" AND (a.no_of_bathrooms = ANY(@noOfBathrooms) OR ((select get_max_value(@noOfBathrooms)) >= 4 AND a.no_of_bathrooms >= 4))");
         if (advertParameters.AdvertTypeIds is not null) countConditions.AppendLine(" AND a.type_id = ANY(@typeIds)");
         if (advertParameters.AdvertPurposeIds is not null) countConditions.AppendLine(" AND a.purpose_id = ANY(@purposeIds)");
-        if (!String.IsNullOrEmpty(userId)) countConditions.AppendLine(" AND a.user_id = @userId");
 
         if (advertParameters.CityId is not null)
         {
@@ -150,4 +149,49 @@ public static class AdvertQuery
          FROM adverts a
          JOIN ""AspNetUsers"" u ON u.id = a.user_id
          WHERE a.id = @advertId";
+
+    public static string MakeGetMyAdvertQuery(MyAdvertsParameters myAdvertParameters, string orderBy, string userId)
+    {
+        var countConditions = new StringBuilder
+            (
+            "\t     WHERE a.price >= @minPrice AND a.price <= @maxPrice AND a.status_id = 1 AND a.floor_space >= @minFloorSpace  AND a.floor_space <= @maxFloorSpace "
+            );
+
+        var countAdvertQuery = new StringBuilder
+            (
+            @"SELECT COUNT(a.id)
+             FROM adverts a"
+            );
+
+        var selectAdvertsQuery = new StringBuilder
+            (
+            @"SELECT a.id,a.price,a.floor_space,a.no_of_bedrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,a.street
+             FROM adverts a
+             INNER JOIN advert_purposes p ON a.purpose_id = p.id
+             INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
+             INNER JOIN cities c ON n.city_id = c.id"
+            );
+
+        if (myAdvertParameters.NoOfBedrooms is not null) countConditions.AppendLine(" AND (a.no_of_bedrooms = ANY(@noOfBedrooms) OR ((select get_max_value(@noOfBedrooms)) >= 4 AND a.no_of_bedrooms >= 4))");
+        if (myAdvertParameters.NoOfBathrooms is not null) countConditions.AppendLine(" AND (a.no_of_bathrooms = ANY(@noOfBathrooms) OR ((select get_max_value(@noOfBathrooms)) >= 4 AND a.no_of_bathrooms >= 4))");
+        if (myAdvertParameters.AdvertTypeIds is not null) countConditions.AppendLine(" AND a.type_id = ANY(@typeIds)");
+        if (myAdvertParameters.AdvertPurposeIds is not null) countConditions.AppendLine(" AND a.purpose_id = ANY(@purposeIds)");
+        if (myAdvertParameters.AdvertStatusIds is not null) countConditions.AppendLine(" WHERE a.status_id = ANY(@advertStatusIds) AND a.status_id NOT IN (4)");
+        if (!String.IsNullOrEmpty(userId)) countConditions.AppendLine(" AND a.user_id = @userId");
+
+        if (myAdvertParameters.CityId is not null)
+        {
+            countAdvertQuery.AppendLine(" INNER JOIN neighborhoods n ON a.neighborhood_id = n.id\r\t     INNER JOIN cities c ON n.city_id = c.id");
+            countConditions.AppendLine(" AND c.id = @cityId");
+        }
+        if (myAdvertParameters.CityId is null && myAdvertParameters.NeighborhoodIds is not null)
+        {
+            countAdvertQuery.AppendLine(" INNER JOIN neighborhoods n ON a.neighborhood_id = n.id\n");
+            countConditions.AppendLine(" AND a.neighborhood_id = ANY(@neighborhoodIds)");
+        }
+        countAdvertQuery.Append(countConditions).Append(';');
+        selectAdvertsQuery.Append(countConditions).Append($" ORDER BY {orderBy} OFFSET @Skip FETCH NEXT @Take ROWS ONLY;");
+
+        return countAdvertQuery.ToString() + selectAdvertsQuery.ToString();
+    }
 }

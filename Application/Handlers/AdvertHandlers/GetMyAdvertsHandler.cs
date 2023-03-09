@@ -23,7 +23,7 @@ internal sealed class GetMyAdvertsHandler : IRequestHandler<GetMyAdvertsQuery, P
             throw new UserNotFoundException();
         }
 
-        var adverts = await _repository.Advert.GetMyAdverts(request.AdvertParameters, userId, cancellationToken);
+        var adverts = await _repository.Advert.GetMyAdverts(request.MyAdvertParameters, userId, cancellationToken);
 
         return adverts;
     }

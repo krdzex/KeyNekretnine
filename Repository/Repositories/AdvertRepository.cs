@@ -26,29 +26,29 @@ internal class AdvertRepository : IAdvertRepository
         {
             var referenceId = new Random().Next().ToString("x");
             var param = new DynamicParameters();
-            param.Add("@price", newAdvert.Price, DbType.Double);
-            param.Add("@description_sr", newAdvert.DescriptionSr, DbType.String);
-            param.Add("@description_en", newAdvert.DescriptionEn, DbType.String);
-            param.Add("@floor_space", newAdvert.FloorSpace, DbType.Double);
-            param.Add("@street", newAdvert.Street, DbType.String);
-            param.Add("@no_of_bedrooms", newAdvert.NoOfBedrooms, DbType.Int16);
-            param.Add("@no_of_bathrooms", newAdvert.NoOfBathrooms, DbType.Int16);
-            param.Add("@has_elevator", newAdvert.HasElevator, DbType.Boolean);
-            param.Add("@has_garage", newAdvert.HasGarage, DbType.Boolean);
-            param.Add("@has_terrace", newAdvert.HasTerrace, DbType.Boolean);
-            param.Add("@latitude", newAdvert.Latitude, DbType.Double);
-            param.Add("@longitude", newAdvert.Longitude, DbType.Double);
-            param.Add("@has_wifi", newAdvert.HasWifi, DbType.Boolean);
-            param.Add("@is_furnished", newAdvert.IsFurnished, DbType.Boolean);
-            param.Add("@created_date", DateTime.Now, DbType.DateTime);
-            param.Add("@year_of_building_created", newAdvert.YearOfBuildingCreated, DbType.Int16);
-            param.Add("@cover_image_url", "test", DbType.String);
-            param.Add("@neighborhood_id", newAdvert.NeighborhoodId, DbType.Int16);
-            param.Add("@building_floor", newAdvert.BuildingFloor, DbType.Int16);
-            param.Add("@purpose_id", newAdvert.AdvertPurposeId, DbType.Int16);
-            param.Add("@type_id", newAdvert.AdvertTypeId, DbType.Int16);
-            param.Add("@user_id", userId, DbType.String);
-            param.Add("@reference_id", referenceId, DbType.String);
+            param.Add("price", newAdvert.Price, DbType.Double);
+            param.Add("description_sr", newAdvert.DescriptionSr, DbType.String);
+            param.Add("description_en", newAdvert.DescriptionEn, DbType.String);
+            param.Add("floor_space", newAdvert.FloorSpace, DbType.Double);
+            param.Add("street", newAdvert.Street, DbType.String);
+            param.Add("no_of_bedrooms", newAdvert.NoOfBedrooms, DbType.Int16);
+            param.Add("no_of_bathrooms", newAdvert.NoOfBathrooms, DbType.Int16);
+            param.Add("has_elevator", newAdvert.HasElevator, DbType.Boolean);
+            param.Add("has_garage", newAdvert.HasGarage, DbType.Boolean);
+            param.Add("has_terrace", newAdvert.HasTerrace, DbType.Boolean);
+            param.Add("latitude", newAdvert.Latitude, DbType.Double);
+            param.Add("longitude", newAdvert.Longitude, DbType.Double);
+            param.Add("has_wifi", newAdvert.HasWifi, DbType.Boolean);
+            param.Add("is_furnished", newAdvert.IsFurnished, DbType.Boolean);
+            param.Add("created_date", DateTime.Now, DbType.DateTime);
+            param.Add("year_of_building_created", newAdvert.YearOfBuildingCreated, DbType.Int16);
+            param.Add("cover_image_url", "test", DbType.String);
+            param.Add("neighborhood_id", newAdvert.NeighborhoodId, DbType.Int16);
+            param.Add("building_floor", newAdvert.BuildingFloor, DbType.Int16);
+            param.Add("purpose_id", newAdvert.AdvertPurposeId, DbType.Int16);
+            param.Add("type_id", newAdvert.AdvertTypeId, DbType.Int16);
+            param.Add("user_id", userId, DbType.String);
+            param.Add("reference_id", referenceId, DbType.String);
 
             var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
 
@@ -170,7 +170,7 @@ internal class AdvertRepository : IAdvertRepository
     {
         var orderBy = OrderQueryBuilder.CreateOrderQuery<MinimalInformationsAboutAdvertDto>(advertParameters.OrderBy, 'a');
 
-        var query = AdvertQuery.MakeGetAdvertQuery(advertParameters, orderBy, "");
+        var query = AdvertQuery.MakeGetAdvertQuery(advertParameters, orderBy);
 
         var skip = (advertParameters.PageNumber - 1) * advertParameters.PageSize;
 
@@ -188,8 +188,8 @@ internal class AdvertRepository : IAdvertRepository
             param.Add("purposeIds", advertParameters.AdvertPurposeIds);
             param.Add("cityId", advertParameters.CityId, DbType.Int32);
             param.Add("neighborhoodIds", advertParameters.NeighborhoodIds);
-            param.Add("@minFloorSpace", advertParameters.MinFloorSpace, DbType.Int32);
-            param.Add("@maxFloorSpace", advertParameters.MaxFloorSpace, DbType.Int32);
+            param.Add("minFloorSpace", advertParameters.MinFloorSpace, DbType.Int32);
+            param.Add("maxFloorSpace", advertParameters.MaxFloorSpace, DbType.Int32);
 
             var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
 
@@ -315,31 +315,32 @@ internal class AdvertRepository : IAdvertRepository
         }
     }
 
-    public async Task<Pagination<MinimalInformationsAboutAdvertDto>> GetMyAdverts(AdvertParameters advertParameters, string userId, CancellationToken cancellationToken)
+    public async Task<Pagination<MinimalInformationsAboutAdvertDto>> GetMyAdverts(MyAdvertsParameters myAdvertParameters, string userId, CancellationToken cancellationToken)
     {
-        var orderBy = OrderQueryBuilder.CreateOrderQuery<MinimalInformationsAboutAdvertDto>(advertParameters.OrderBy, 'a');
+        var orderBy = OrderQueryBuilder.CreateOrderQuery<MinimalInformationsAboutAdvertDto>(myAdvertParameters.OrderBy, 'a');
 
-        var query = AdvertQuery.MakeGetAdvertQuery(advertParameters, orderBy, userId);
+        var query = AdvertQuery.MakeGetMyAdvertQuery(myAdvertParameters, orderBy, userId);
 
-        var skip = (advertParameters.PageNumber - 1) * advertParameters.PageSize;
+        var skip = (myAdvertParameters.PageNumber - 1) * myAdvertParameters.PageSize;
 
         using (var connection = _dapperContext.CreateConnection())
         {
             var param = new DynamicParameters();
 
             param.Add("skip", skip, DbType.Int32);
-            param.Add("take", advertParameters.PageSize, DbType.Int32);
-            param.Add("minPrice", advertParameters.MinPrice, DbType.Int32);
-            param.Add("maxPrice", advertParameters.MaxPrice, DbType.Int32);
-            param.Add("noOfBedrooms", advertParameters.NoOfBedrooms);
-            param.Add("noOfBathrooms", advertParameters.NoOfBathrooms);
-            param.Add("typeIds", advertParameters.AdvertTypeIds);
-            param.Add("purposeIds", advertParameters.AdvertPurposeIds);
-            param.Add("cityId", advertParameters.CityId, DbType.Int32);
-            param.Add("neighborhoodIds", advertParameters.NeighborhoodIds);
-            param.Add("@minFloorSpace", advertParameters.MinFloorSpace, DbType.Int32);
-            param.Add("@maxFloorSpace", advertParameters.MaxFloorSpace, DbType.Int32);
-            param.Add("@userId", userId, DbType.String);
+            param.Add("take", myAdvertParameters.PageSize, DbType.Int32);
+            param.Add("minPrice", myAdvertParameters.MinPrice, DbType.Int32);
+            param.Add("maxPrice", myAdvertParameters.MaxPrice, DbType.Int32);
+            param.Add("noOfBedrooms", myAdvertParameters.NoOfBedrooms);
+            param.Add("noOfBathrooms", myAdvertParameters.NoOfBathrooms);
+            param.Add("typeIds", myAdvertParameters.AdvertTypeIds);
+            param.Add("purposeIds", myAdvertParameters.AdvertPurposeIds);
+            param.Add("cityId", myAdvertParameters.CityId, DbType.Int32);
+            param.Add("neighborhoodIds", myAdvertParameters.NeighborhoodIds);
+            param.Add("minFloorSpace", myAdvertParameters.MinFloorSpace, DbType.Int32);
+            param.Add("maxFloorSpace", myAdvertParameters.MaxFloorSpace, DbType.Int32);
+            param.Add("userId", userId, DbType.String);
+            param.Add("advertStatusIds", myAdvertParameters.AdvertStatusIds);
 
             var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
 
@@ -348,7 +349,7 @@ internal class AdvertRepository : IAdvertRepository
             var count = await multi.ReadSingleAsync<int>();
             var adverts = (await multi.ReadAsync<MinimalInformationsAboutAdvertDto>()).ToList();
 
-            var metadata = new PagedList<MinimalInformationsAboutAdvertDto>(adverts, count, advertParameters.PageNumber, advertParameters.PageSize);
+            var metadata = new PagedList<MinimalInformationsAboutAdvertDto>(adverts, count, myAdvertParameters.PageNumber, myAdvertParameters.PageSize);
 
             return new Pagination<MinimalInformationsAboutAdvertDto> { Data = adverts, MetaData = metadata.MetaData };
         }
