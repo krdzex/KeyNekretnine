@@ -39,7 +39,7 @@ public class UserController : ControllerBase
     {
         await _publisher.Publish(new BanUserNotification(id.ToString(), days));
 
-        return Ok();
+        return NoContent();
     }
 
     [Authorize(Roles = "Administrator")]
@@ -48,7 +48,7 @@ public class UserController : ControllerBase
     {
         await _publisher.Publish(new UnbanUserNotification(id.ToString()));
 
-        return Ok();
+        return NoContent();
     }
 
     [Authorize(Roles = "Administrator")]
@@ -65,7 +65,7 @@ public class UserController : ControllerBase
     {
         await _sender.Send(new ConfirmUserEmailQuery(token, email));
 
-        return Ok();
+        return NoContent();
     }
 
     [HttpGet("{userId:guid}")]
@@ -82,7 +82,7 @@ public class UserController : ControllerBase
     {
         await _publisher.Publish(new MultipleBanUserNotification(banUsers.UserIds, banUsers.Days));
 
-        return Ok();
+        return NoContent();
     }
 
     [Authorize(Roles = "Administrator")]
@@ -91,6 +91,6 @@ public class UserController : ControllerBase
     {
         await _publisher.Publish(new MultipleUnbanUserNotification(userIds));
 
-        return Ok();
+        return NoContent();
     }
 }
