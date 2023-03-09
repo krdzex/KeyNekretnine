@@ -4,6 +4,7 @@ using KeyNekretnine.Attributes;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shared.DataTransferObjects.User;
 using Shared.RequestFeatures;
 using System.ComponentModel.DataAnnotations;
 
@@ -73,5 +74,23 @@ public class UserController : ControllerBase
         var user = await _sender.Send(new GetUserQuery(userId));
 
         return Ok(user);
+    }
+
+    [Authorize(Roles = "Administrator")]
+    [HttpPut("multiple/ban")]
+    public async Task<IActionResult> MultipleBan([FromBody] BanUsersDto banUsers)
+    {
+        await _publisher.Publish(new MultipleBanUserNotification(banUsers.UserIds, banUsers.Days));
+
+        return Ok();
+    }
+
+    [Authorize(Roles = "Administrator")]
+    [HttpPut("multiple/unban")]
+    public async Task<IActionResult> MultipleUnban([FromBody] List<string> userIds)
+    {
+        await _publisher.Publish(new MultipleUnbanUserNotification(userIds));
+
+        return Ok();
     }
 }
