@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
+using Shared.CustomResponses;
+using Shared.DataTransferObjects.Advert;
+using Shared.RequestFeatures;
 
-namespace Application.Queries.AdvertQueries
-{
-    internal class GetFavoriteAdveRTSQuery
-    {
-    }
-}
+namespace Application.Queries.AdvertQueries;
+public sealed record GetFavoriteAdvertsQuery(FavoriteAdvertsParameters RequestParameters, string Email) : IRequest<Pagination<MinimalInformationsAboutAdvertDto>>;

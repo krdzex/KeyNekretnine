@@ -217,4 +217,19 @@ public static class AdvertQuery
           DELETE FROM user_advert_favorites
           WHERE user_id = @userId
           AND advert_id = @advertId";
+
+    public const string GetFavoriteAdverts = @"
+         SELECT COUNT(a.id)
+         FROM user_advert_favorites ua
+         INNER JOIN adverts a ON a.id = ua.advert_id
+         WHERE ua.user_id = @userId;
+
+         SELECT a.id,a.price,a.floor_space,a.no_of_bedrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,a.street
+         FROM user_advert_favorites ua
+         INNER JOIN adverts a ON a.id = ua.advert_id
+         INNER JOIN advert_purposes p ON a.purpose_id = p.id
+         INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
+         INNER JOIN cities c ON n.city_id = c.id
+         WHERE ua.user_id = @userId
+         ORDER BY @orderBy OFFSET @Skip FETCH NEXT @Take ROWS ONLY;";
 }

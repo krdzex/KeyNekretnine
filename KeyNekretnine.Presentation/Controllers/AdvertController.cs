@@ -168,12 +168,10 @@ public class AdvertController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> FavoriteAdverts(int advertId)
+    public async Task<IActionResult> FavoriteAdverts([FromQuery] FavoriteAdvertsParameters requestParameters)
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
 
-        await _sender.Send(new RemoveAdvertFromFavoriteCommand(advertId, email));
-
-        return NoContent();
+        return Ok(await _sender.Send(new GetFavoriteAdvertsQuery(requestParameters, email)));
     }
 }

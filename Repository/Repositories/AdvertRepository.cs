@@ -439,4 +439,35 @@ internal class AdvertRepository : IAdvertRepository
             await connection.ExecuteAsync(cmd);
         }
     }
+
+    public async Task<Pagination<MinimalInformationsAboutAdvertDto>> GetFavoriteAdverts(FavoriteAdvertsParameters requestParameters, string userId, CancellationToken cancellationToken)
+    {
+
+        var orderBy = OrderQueryBuilder.CreateOrderQuery<MinimalInformationsAboutAdvertDto>(requestParameters.OrderBy, 'a');
+
+        string query = AdvertQuery.GetFavoriteAdverts;
+
+        var skip = (requestParameters.PageNumber - 1) * requestParameters.PageSize;
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var param = new DynamicParameters();
+
+            param.Add("skip", skip, DbType.Int32);
+            param.Add("take", requestParameters.PageSize, DbType.Int32);
+            param.Add("orderBy", orderBy, DbType.String);
+            param.Add("userId", userId, DbType.String);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            var multi = await connection.QueryMultipleAsync(cmd);
+
+            var count = await multi.ReadSingleAsync<int>();
+            var adverts = (await multi.ReadAsync<MinimalInformationsAboutAdvertDto>()).ToList();
+
+            var metadata = new PagedList<MinimalInformationsAboutAdvertDto>(adverts, count, requestParameters.PageNumber, requestParameters.PageSize);
+
+            return new Pagination<MinimalInformationsAboutAdvertDto> { Data = adverts, MetaData = metadata.MetaData };
+        }
+    }
 }

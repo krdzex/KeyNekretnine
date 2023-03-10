@@ -23,4 +23,5 @@ public interface IAdvertRepository
     Task MakeAdvertFavorite(string userId, int advertId, CancellationToken cancellationToken);
     Task<bool> ChackIfAdvertIsFavorite(string userId, int advertId, CancellationToken cancellationToken);
     Task RemoveAdvertFromFavorite(string userId, int advertId, CancellationToken cancellationToken);
+    Task<Pagination<MinimalInformationsAboutAdvertDto>> GetFavoriteAdverts(FavoriteAdvertsParameters requestParameters, string userId, CancellationToken cancellationToken);
 }
