@@ -423,7 +423,7 @@ internal class AdvertRepository : IAdvertRepository
         }
     }
 
-    public async Task DeleteAdvertFromFavorite(string userId, int advertId, CancellationToken cancellationToken)
+    public async Task RemoveAdvertFromFavorite(string userId, int advertId, CancellationToken cancellationToken)
     {
         string query = AdvertQuery.DeleteAdvertFromFavoriteQuery;
 

@@ -23,9 +23,9 @@ internal sealed class MakeAdvertFavoriteHandler : IRequestHandler<MakeAdvertFavo
 
         var userId = await _repository.User.GetUserIdFromEmail(request.UserEmail);
 
-        var isFavoriteAlready = await _repository.Advert.ChackIfAdvertIsFavorite(userId, request.AdvertId, cancellationToken);
+        var isFavorite = await _repository.Advert.ChackIfAdvertIsFavorite(userId, request.AdvertId, cancellationToken);
 
-        if (isFavoriteAlready)
+        if (isFavorite)
         {
             throw new AdvertAlreadyFavoriteException();
         }

@@ -135,14 +135,29 @@ public class AdvertController : ControllerBase
     [Authorize]
     [HttpPost("{advertId}/favorite")]
     [ServiceFilter(typeof(BanUserChack))]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> MakeAdvertFavorite(int advertId)
+    public async Task<IActionResult> MakeAdvertToFavorite(int advertId)
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
 
         await _sender.Send(new MakeAdvertFavoriteCommand(advertId, email));
+
+        return NoContent();
+    }
+
+    [Authorize]
+    [HttpDelete("{advertId}/favorite")]
+    [ServiceFilter(typeof(BanUserChack))]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> RemoveAdvertFromFavorite(int advertId)
+    {
+        var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
+
+        await _sender.Send(new RemoveAdvertFromFavoriteCommand(advertId, email));
 
         return NoContent();
     }
