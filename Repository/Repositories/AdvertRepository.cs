@@ -370,4 +370,38 @@ internal class AdvertRepository : IAdvertRepository
             return await connection.QuerySingleOrDefaultAsync<string>(cmd);
         }
     }
+
+    public async Task MakeAdvertFavorite(string userId, int advertId, CancellationToken cancellationToken)
+    {
+        string query = AdvertQuery.MakeAdvertFavoriteQuery;
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var param = new DynamicParameters();
+
+            param.Add("@advertId", advertId, DbType.Int32);
+            param.Add("@userId", userId, DbType.String);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            await connection.ExecuteAsync(cmd);
+        }
+    }
+
+    public async Task<bool> ChackIfAdvertExistAndItsApproved(int advertId, CancellationToken cancellationToken)
+    {
+        string query = AdvertQuery.AdvertExistAndApprovedQuery;
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var param = new DynamicParameters();
+
+            param.Add("advertId", advertId, DbType.Int32);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            int count = await connection.QueryFirstOrDefaultAsync<int>(cmd);
+            return count > 0;
+        }
+    }
 }

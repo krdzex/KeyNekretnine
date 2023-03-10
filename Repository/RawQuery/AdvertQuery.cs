@@ -107,6 +107,13 @@ public static class AdvertQuery
           FROM adverts
           WHERE id = @AdvertId";
 
+
+    public const string AdvertExistAndApprovedQuery =
+        @"SELECT COUNT(*)
+          FROM adverts
+          WHERE id = @AdvertId
+          AND status_id = 1";
+
     public const string ApproveAdvertQuery =
         @"UPDATE adverts
           SET status_id = 1
@@ -194,4 +201,9 @@ public static class AdvertQuery
 
         return countAdvertQuery.ToString() + selectAdvertsQuery.ToString();
     }
+
+
+    public const string MakeAdvertFavoriteQuery =
+        @"INSERT INTO user_advert_favorites(user_id,advert_id)
+          VALUES(@userId,@advertId)";
 }

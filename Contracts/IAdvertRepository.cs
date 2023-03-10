@@ -14,9 +14,11 @@ public interface IAdvertRepository
     Task UpdateAdvertCoverImage(string imageUrl, int advertId, CancellationToken cancellationToken);
     Task UpdateStatus(int advertId, CancellationToken cancellationToken);
     Task<bool> ChackIfAdvertExist(int advertId, CancellationToken cancellationToken);
+    Task<bool> ChackIfAdvertExistAndItsApproved(int advertId, CancellationToken cancellationToken);
     Task ApproveAdvert(int advertId, CancellationToken cancellationToken);
     Task DeclineAdvert(int advertId, CancellationToken cancellationToken);
     Task<Pagination<AdminTableAdvertDto>> GetAdminAdverts(AdminAdvertParameters adminAdvertParameters, CancellationToken cancellationToken);
     Task<Pagination<MinimalInformationsAboutAdvertDto>> GetMyAdverts(MyAdvertsParameters MyAdvertParameters, string userId, CancellationToken cancellationToken);
     Task<string> GetUserEmailFromAdvertId(int advertId, CancellationToken cancellationToken);
+    Task MakeAdvertFavorite(string userId, int advertId, CancellationToken cancellationToken);
 }

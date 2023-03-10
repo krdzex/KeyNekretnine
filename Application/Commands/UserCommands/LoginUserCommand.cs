@@ -4,4 +4,3 @@ using Shared.RequestFeatures;
 
 namespace Application.Commands.UserCommands;
 public sealed record LoginUserCommand(UserForAuthenticationDto LoginUser) : IRequest<TokenRequest>;
-
