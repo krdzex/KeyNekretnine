@@ -203,7 +203,18 @@ public static class AdvertQuery
     }
 
 
-    public const string MakeAdvertFavoriteQuery =
-        @"INSERT INTO user_advert_favorites(user_id,advert_id)
+    public const string MakeAdvertFavoriteQuery = @"
+          INSERT INTO user_advert_favorites(user_id,advert_id)
           VALUES(@userId,@advertId)";
+
+    public const string ChackIfAdvertIsFavoriteQuery = @"
+          SELECT COUNT(*)
+          FROM user_advert_favorites
+          WHERE user_id = @userId
+          AND advert_id = @advertId";
+
+    public const string DeleteAdvertFromFavoriteQuery = @"
+          DELETE FROM user_advert_favorites
+          WHERE user_id = @userId
+          AND advert_id = @advertId";
 }

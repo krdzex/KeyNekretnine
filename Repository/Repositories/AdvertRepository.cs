@@ -404,4 +404,39 @@ internal class AdvertRepository : IAdvertRepository
             return count > 0;
         }
     }
+
+    public async Task<bool> ChackIfAdvertIsFavorite(string userId, int advertId, CancellationToken cancellationToken)
+    {
+        string query = AdvertQuery.ChackIfAdvertIsFavoriteQuery;
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var param = new DynamicParameters();
+
+            param.Add("@advertId", advertId, DbType.Int32);
+            param.Add("@userId", userId, DbType.String);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            int count = await connection.QueryFirstOrDefaultAsync<int>(cmd);
+            return count > 0;
+        }
+    }
+
+    public async Task DeleteAdvertFromFavorite(string userId, int advertId, CancellationToken cancellationToken)
+    {
+        string query = AdvertQuery.DeleteAdvertFromFavoriteQuery;
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var param = new DynamicParameters();
+
+            param.Add("@advertId", advertId, DbType.Int32);
+            param.Add("@userId", userId, DbType.String);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            await connection.ExecuteAsync(cmd);
+        }
+    }
 }
