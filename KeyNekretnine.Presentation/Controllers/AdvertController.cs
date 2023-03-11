@@ -32,8 +32,6 @@ public class AdvertController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Get(int id)
     {
-        var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email)?.Value;
-
         return Ok(await _sender.Send(new GetAdvertQuery { Id = id, BypassCache = false }));
     }
 
