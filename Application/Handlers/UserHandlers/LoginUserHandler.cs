@@ -26,7 +26,7 @@ internal sealed class LoginUserHandler : IRequestHandler<LoginUserCommand, Token
             {
                 throw new UnauthorizedAccessException($"Banned until {loggedUser.BanEnd}");
             }
-            await _repository.User.UserBanExpired(loggedUser, cancellationToken);
+            await _repository.User.UserBanExpired(loggedUser);
         }
 
         var accessToken = await _service.TokenService.CreateToken(loggedUser);
