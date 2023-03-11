@@ -34,8 +34,7 @@ public class AdvertController : ControllerBase
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email)?.Value;
 
-        //return Ok(await _sender.Send(new GetAdvertQuery { Id = id, BypassCache = false }));
-        return Ok(await _sender.Send(new GetAdvertQuery(id, email)));
+        return Ok(await _sender.Send(new GetAdvertQuery { Id = id, BypassCache = false }));
     }
 
     [HttpGet]
@@ -176,5 +175,18 @@ public class AdvertController : ControllerBase
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
 
         return Ok(await _sender.Send(new GetFavoriteAdvertsQuery(requestParameters, email)));
+    }
+
+    [Authorize]
+    [HttpGet("{advertId}/is-favorite")]
+    [ServiceFilter(typeof(BanUserChack))]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> IsAdvertFavorite(int advertId)
+    {
+        var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
+
+        return Ok(await _sender.Send(new GetIsFavoriteAdvertQuery(advertId, email)));
     }
 }
