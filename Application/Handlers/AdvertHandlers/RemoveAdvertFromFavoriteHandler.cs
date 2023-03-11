@@ -15,7 +15,7 @@ internal sealed class RemoveAdvertFromFavoriteHandler : IRequestHandler<RemoveAd
     public async Task<Unit> Handle(RemoveAdvertFromFavoriteCommand request, CancellationToken cancellationToken)
     {
 
-        var userId = await _repository.User.GetUserIdFromEmail(request.UserEmail);
+        var userId = await _repository.User.GetUserIdFromEmail(request.UserEmail, cancellationToken);
 
         var isFavorite = await _repository.Advert.ChackIfAdvertIsFavorite(userId, request.AdvertId, cancellationToken);
 

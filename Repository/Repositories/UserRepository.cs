@@ -29,7 +29,7 @@ internal sealed class UserRepository : IUserRepository
         await _userManager.UpdateAsync(user);
     }
 
-    public async Task BanUser(string userId, int noOfDays)
+    public async Task BanUser(string userId, int noOfDays, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByIdAsync(userId);
 
@@ -44,7 +44,7 @@ internal sealed class UserRepository : IUserRepository
         await _userManager.UpdateAsync(user);
     }
 
-    public async Task UnbanUser(string userId)
+    public async Task UnbanUser(string userId, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByIdAsync(userId);
 
@@ -59,7 +59,7 @@ internal sealed class UserRepository : IUserRepository
         await _userManager.UpdateAsync(user);
     }
 
-    public async Task<Pagination<UserForListDto>> GetUsers(UserParameters userParameters)
+    public async Task<Pagination<UserForListDto>> GetUsers(UserParameters userParameters, CancellationToken cancellationToken)
     {
         var rawQuery = UserQuery.MakeUsersQuery(userParameters.IsBanned);
 
@@ -85,7 +85,7 @@ internal sealed class UserRepository : IUserRepository
         }
     }
 
-    public async Task<string> GetUserIdFromEmail(string email)
+    public async Task<string> GetUserIdFromEmail(string email, CancellationToken cancellationToken)
     {
         var query = UserQuery.GetUserIdFromEmailQuery;
 
@@ -100,7 +100,7 @@ internal sealed class UserRepository : IUserRepository
         }
     }
 
-    public async Task<UserInformationDto> GetLoggedUserInformations(IEnumerable<Claim> userClaims)
+    public async Task<UserInformationDto> GetLoggedUserInformations(IEnumerable<Claim> userClaims, CancellationToken cancellationToken)
     {
 
         var query = UserQuery.GetLoggedUserInformations;
@@ -120,7 +120,7 @@ internal sealed class UserRepository : IUserRepository
         }
     }
 
-    public async Task ConfrimUserEmail(string token, string email)
+    public async Task ConfrimUserEmail(string token, string email, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByEmailAsync(email);
 
@@ -151,7 +151,7 @@ internal sealed class UserRepository : IUserRepository
         }
     }
 
-    public async Task<UserDto> GetUser(string userId)
+    public async Task<UserDto> GetUser(string userId, CancellationToken cancellationToken)
     {
         var query = UserQuery.GetUserById;
 
@@ -166,7 +166,7 @@ internal sealed class UserRepository : IUserRepository
         }
     }
 
-    public async Task<(string, DateTime)> GetEmailAndBanEndFromUserId(string userId)
+    public async Task<(string, DateTime)> GetEmailAndBanEndFromUserId(string userId, CancellationToken cancellationToken)
     {
         var query = UserQuery.GetEmailAndBanEndDateFromUserId;
 
@@ -180,7 +180,7 @@ internal sealed class UserRepository : IUserRepository
         }
     }
 
-    public async Task<string> GetEmailFromUserId(string userId)
+    public async Task<string> GetEmailFromUserId(string userId, CancellationToken cancellationToken)
     {
         var query = UserQuery.GetEmailFromUserId;
 

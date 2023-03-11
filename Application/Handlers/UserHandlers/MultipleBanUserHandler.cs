@@ -16,7 +16,7 @@ namespace Application.Handlers.UserHandlers
         {
             foreach (var userId in request.UserIds)
             {
-                await _repository.User.BanUser(userId, request.NoOfDays);
+                await _repository.User.BanUser(userId, request.NoOfDays, cancellationToken);
             }
 
             await Task.CompletedTask;

@@ -15,7 +15,7 @@ internal sealed class GetUserHandler : IRequestHandler<GetUserQuery, UserDto>
     }
     public async Task<UserDto> Handle(GetUserQuery request, CancellationToken cancellationToken)
     {
-        var user = await _repository.User.GetUser(request.UserId);
+        var user = await _repository.User.GetUser(request.UserId, cancellationToken);
 
         if (user == null)
         {

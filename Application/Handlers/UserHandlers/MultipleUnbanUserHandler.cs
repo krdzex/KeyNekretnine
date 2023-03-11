@@ -15,7 +15,7 @@ internal sealed class MultipleUnbanUserHandler : INotificationHandler<MultipleUn
     {
         foreach (var userId in request.UserIds)
         {
-            await _repository.User.UnbanUser(userId);
+            await _repository.User.UnbanUser(userId, cancellationToken);
         }
 
         await Task.CompletedTask;

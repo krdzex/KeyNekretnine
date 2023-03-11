@@ -21,7 +21,7 @@ internal sealed class MakeAdvertFavoriteHandler : IRequestHandler<MakeAdvertFavo
             throw new AdvertNotFoundException(request.AdvertId);
         }
 
-        var userId = await _repository.User.GetUserIdFromEmail(request.UserEmail);
+        var userId = await _repository.User.GetUserIdFromEmail(request.UserEmail, cancellationToken);
 
         var isFavorite = await _repository.Advert.ChackIfAdvertIsFavorite(userId, request.AdvertId, cancellationToken);
 

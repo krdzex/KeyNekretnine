@@ -15,7 +15,7 @@ internal sealed class GetUsersHandler : IRequestHandler<GetUsersQuery, Paginatio
     }
     public async Task<Pagination<UserForListDto>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
     {
-        var users = await _repository.User.GetUsers(request.UserParameters);
+        var users = await _repository.User.GetUsers(request.UserParameters, cancellationToken);
 
         return users;
     }

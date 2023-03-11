@@ -16,7 +16,7 @@ internal sealed class GetMyAdvertsHandler : IRequestHandler<GetMyAdvertsQuery, P
     }
     public async Task<Pagination<MinimalInformationsAboutAdvertDto>> Handle(GetMyAdvertsQuery request, CancellationToken cancellationToken)
     {
-        var userId = await _repository.User.GetUserIdFromEmail(request.Email);
+        var userId = await _repository.User.GetUserIdFromEmail(request.Email, cancellationToken);
 
         if (userId == null)
         {

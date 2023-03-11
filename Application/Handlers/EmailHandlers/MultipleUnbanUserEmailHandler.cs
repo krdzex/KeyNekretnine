@@ -19,7 +19,7 @@ internal sealed class MultipleUnbanUserEmailHandler : INotificationHandler<Multi
     {
         foreach (var userId in request.UserIds)
         {
-            var userEmail = await _repositoryManager.User.GetEmailFromUserId(userId);
+            var userEmail = await _repositoryManager.User.GetEmailFromUserId(userId, cancellationToken);
 
             var result = await _serviceManager.EmailService.SendUserUnbanEmail(userEmail);
 

@@ -13,7 +13,7 @@ internal sealed class ConfirmUserEmailHandler : IRequestHandler<ConfirmUserEmail
     }
     public async Task<Unit> Handle(ConfirmUserEmailQuery request, CancellationToken cancellationToken)
     {
-        await _repository.User.ConfrimUserEmail(request.Token, request.Email);
+        await _repository.User.ConfrimUserEmail(request.Token, request.Email, cancellationToken);
 
         return Unit.Value;
     }

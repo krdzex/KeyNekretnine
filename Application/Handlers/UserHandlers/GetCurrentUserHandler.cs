@@ -14,7 +14,7 @@ internal sealed class GetCurrentUserHandler : IRequestHandler<GetCurrentUserQuer
     }
     public async Task<UserInformationDto> Handle(GetCurrentUserQuery request, CancellationToken cancellationToken)
     {
-        var user = await _repository.User.GetLoggedUserInformations(request.UserClaims);
+        var user = await _repository.User.GetLoggedUserInformations(request.UserClaims, cancellationToken);
 
         return user;
     }

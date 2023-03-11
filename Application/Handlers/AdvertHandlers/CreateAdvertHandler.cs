@@ -23,7 +23,7 @@ internal sealed class CreateAdvertHandler : IRequestHandler<CreateAdvertCommand,
 
         using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
         {
-            var userId = await _repository.User.GetUserIdFromEmail(request.UserEmail);
+            var userId = await _repository.User.GetUserIdFromEmail(request.UserEmail, cancellationToken);
 
             if (userId is null)
             {

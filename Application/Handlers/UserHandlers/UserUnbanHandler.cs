@@ -13,7 +13,7 @@ internal sealed class UserUnbanHandler : INotificationHandler<UnbanUserNotificat
     }
     public async Task Handle(UnbanUserNotification request, CancellationToken cancellationToken)
     {
-        await _repository.User.UnbanUser(request.UserId);
+        await _repository.User.UnbanUser(request.UserId, cancellationToken);
 
         await Task.CompletedTask;
     }

@@ -17,7 +17,7 @@ internal sealed class UnbanUserEmailHandler : INotificationHandler<UnbanUserNoti
     }
     public async Task Handle(UnbanUserNotification request, CancellationToken cancellationToken)
     {
-        var userEmail = await _repositoryManager.User.GetEmailFromUserId(request.UserId);
+        var userEmail = await _repositoryManager.User.GetEmailFromUserId(request.UserId, cancellationToken);
 
         var result = await _serviceManager.EmailService.SendUserUnbanEmail(userEmail);
 

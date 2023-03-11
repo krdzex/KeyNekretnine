@@ -17,7 +17,7 @@ internal sealed class BanUserEmailHandler : INotificationHandler<BanUserNotifica
     }
     public async Task Handle(BanUserNotification request, CancellationToken cancellationToken)
     {
-        var userInformations = await _repositoryManager.User.GetEmailAndBanEndFromUserId(request.UserId);
+        var userInformations = await _repositoryManager.User.GetEmailAndBanEndFromUserId(request.UserId, cancellationToken);
 
         var result = await _serviceManager.EmailService.SendUserBanEmail(userInformations.Item1, userInformations.Item2);
 

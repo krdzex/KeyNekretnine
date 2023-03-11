@@ -19,7 +19,7 @@ internal sealed class MultipleBanUserEmailHandler : INotificationHandler<Multipl
     {
         foreach (var userId in request.UserIds)
         {
-            var userInformations = await _repositoryManager.User.GetEmailAndBanEndFromUserId(userId);
+            var userInformations = await _repositoryManager.User.GetEmailAndBanEndFromUserId(userId, cancellationToken);
 
             var result = await _serviceManager.EmailService.SendUserBanEmail(userInformations.Item1, userInformations.Item2);
 
