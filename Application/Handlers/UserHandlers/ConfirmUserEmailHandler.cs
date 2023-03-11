@@ -13,7 +13,12 @@ internal sealed class ConfirmUserEmailHandler : IRequestHandler<ConfirmUserEmail
     }
     public async Task<Unit> Handle(ConfirmUserEmailQuery request, CancellationToken cancellationToken)
     {
-        await _repository.User.ConfrimUserEmail(request.Token, request.Email, cancellationToken);
+        var result = await _repository.User.ConfrimUserEmail(request.Token, request.Email);
+
+        if (!result.Succeeded)
+        {
+            throw new ArgumentException("Error while confirming email");
+        }
 
         return Unit.Value;
     }

@@ -13,7 +13,7 @@ internal sealed class BanUserHandler : INotificationHandler<BanUserNotification>
     }
     public async Task Handle(BanUserNotification request, CancellationToken cancellationToken)
     {
-        await _repository.User.BanUser(request.UserId, request.NoOfDays, cancellationToken);
+        await _repository.User.BanUser(request.UserId, request.NoOfDays);
 
         await Task.CompletedTask;
     }

@@ -21,7 +21,7 @@ internal sealed class UserRepository : IUserRepository
         _userManager = userManager;
     }
 
-    public async Task UserBanExpired(User user, CancellationToken cancellationToken)
+    public async Task UserBanExpired(User user)
     {
         user.BanEnd = null;
         user.IsBanned = false;
@@ -29,7 +29,7 @@ internal sealed class UserRepository : IUserRepository
         await _userManager.UpdateAsync(user);
     }
 
-    public async Task BanUser(string userId, int noOfDays, CancellationToken cancellationToken)
+    public async Task BanUser(string userId, int noOfDays)
     {
         var user = await _userManager.FindByIdAsync(userId);
 
@@ -44,7 +44,7 @@ internal sealed class UserRepository : IUserRepository
         await _userManager.UpdateAsync(user);
     }
 
-    public async Task UnbanUser(string userId, CancellationToken cancellationToken)
+    public async Task UnbanUser(string userId)
     {
         var user = await _userManager.FindByIdAsync(userId);
 
@@ -61,7 +61,7 @@ internal sealed class UserRepository : IUserRepository
 
     public async Task<Pagination<UserForListDto>> GetUsers(UserParameters userParameters, CancellationToken cancellationToken)
     {
-        var rawQuery = UserQuery.MakeUsersQuery(userParameters.IsBanned);
+        var query = UserQuery.MakeUsersQuery(userParameters.IsBanned);
 
         var username = !string.IsNullOrEmpty(userParameters.Username) ?
             userParameters.Username.Trim().ToLower() : string.Empty;
@@ -75,7 +75,9 @@ internal sealed class UserRepository : IUserRepository
 
         using (var connection = _dapperContext.CreateConnection())
         {
-            var multi = await connection.QueryMultipleAsync(rawQuery, param);
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            var multi = await connection.QueryMultipleAsync(cmd);
             var count = await multi.ReadSingleAsync<int>();
             var adverts = (await multi.ReadAsync<UserForListDto>()).ToList();
 
@@ -89,12 +91,15 @@ internal sealed class UserRepository : IUserRepository
     {
         var query = UserQuery.GetUserIdFromEmailQuery;
 
-        var param = new DynamicParameters();
-        param.Add("email", email, DbType.String);
-
         using (var connection = _dapperContext.CreateConnection())
         {
-            var userId = await connection.QueryFirstOrDefaultAsync<string>(query, param);
+
+            var param = new DynamicParameters();
+            param.Add("email", email, DbType.String);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            var userId = await connection.QueryFirstOrDefaultAsync<string>(cmd);
 
             return userId;
         }
@@ -108,19 +113,21 @@ internal sealed class UserRepository : IUserRepository
         var email = userClaims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
         var roles = userClaims.Where(c => c.Type == ClaimTypes.Role).Select(x => x.Value);
 
-        var param = new DynamicParameters();
-        param.Add("email", email, DbType.String);
-
         using (var connection = _dapperContext.CreateConnection())
         {
-            var userInformations = await connection.QueryFirstOrDefaultAsync<UserInformationDto>(query, param);
+            var param = new DynamicParameters();
+            param.Add("email", email, DbType.String);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            var userInformations = await connection.QueryFirstOrDefaultAsync<UserInformationDto>(cmd);
             userInformations.Roles = roles;
 
             return userInformations;
         }
     }
 
-    public async Task ConfrimUserEmail(string token, string email, CancellationToken cancellationToken)
+    public async Task<IdentityResult> ConfrimUserEmail(string token, string email)
     {
         var user = await _userManager.FindByEmailAsync(email);
 
@@ -130,21 +137,19 @@ internal sealed class UserRepository : IUserRepository
         }
 
         var result = await _userManager.ConfirmEmailAsync(user, token);
-        if (!result.Succeeded)
-        {
-            throw new ArgumentException("Error while confirming email");
-        }
+
+        return result;
     }
 
     public async Task<bool> IsUserBanned(string email)
     {
         var query = UserQuery.IsUserBannedQuery;
 
-        var param = new DynamicParameters();
-        param.Add("email", email, DbType.String);
-
         using (var connection = _dapperContext.CreateConnection())
         {
+            var param = new DynamicParameters();
+            param.Add("email", email, DbType.String);
+
             var isBanned = await connection.QueryFirstOrDefaultAsync<bool>(query, param);
 
             return isBanned;
@@ -160,7 +165,9 @@ internal sealed class UserRepository : IUserRepository
             var param = new DynamicParameters();
             param.Add("id", userId, DbType.String);
 
-            var user = await connection.QueryFirstOrDefaultAsync<UserDto>(query, param);
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            var user = await connection.QueryFirstOrDefaultAsync<UserDto>(cmd);
 
             return user;
         }
@@ -172,11 +179,12 @@ internal sealed class UserRepository : IUserRepository
 
         using (var connection = _dapperContext.CreateConnection())
         {
-            var touple = new Tuple<string, DateTime>(userId, DateTime.UtcNow);
             var param = new DynamicParameters();
             param.Add("id", userId, DbType.String);
 
-            return await connection.QueryFirstOrDefaultAsync<(string, DateTime)>(query, param);
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            return await connection.QueryFirstOrDefaultAsync<(string, DateTime)>(cmd);
         }
     }
 
@@ -189,7 +197,9 @@ internal sealed class UserRepository : IUserRepository
             var param = new DynamicParameters();
             param.Add("id", userId, DbType.String);
 
-            return await connection.QueryFirstOrDefaultAsync<string>(query, param);
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            return await connection.QueryFirstOrDefaultAsync<string>(cmd);
         }
     }
 }
