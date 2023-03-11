@@ -20,9 +20,9 @@ internal sealed class GetAdvertHandler : IRequestHandler<GetAdvertQuery, AllInfo
         {
             var userId = await _repository.User.GetUserIdFromEmail(request.Email, cancellationToken);
 
-            advert.IsFavorite = await _repository.Advert.ChackIfAdvertIsFavorite(userId, advert.Id, cancellationToken);
+            advert.Is_Favorite = await _repository.Advert.ChackIfAdvertIsFavorite(userId, advert.Id, cancellationToken);
         }
-        //var nesto = await _repository.Advert.get
+
         return advert;
     }
 }

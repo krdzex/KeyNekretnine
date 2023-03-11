@@ -99,5 +99,5 @@ public class AllInfomrationsAboutAdvertDto
     public string City_Name { get; set; }
     public int City_Id { get; set; }
     public string Neighborhood_Name { get; set; }
-    public dynamic IsFavorite { get; set; }
+    public dynamic Is_Favorite { get; set; }
 }
