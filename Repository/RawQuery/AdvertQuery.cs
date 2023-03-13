@@ -205,7 +205,7 @@ public static class AdvertQuery
 
     public const string MakeAdvertFavoriteQuery = @"
           INSERT INTO user_advert_favorites(user_id,advert_id,created_favorite_date)
-          VALUES(@userId,@advertId,@created_favorite_date)";
+          VALUES(@userId,@advertId,@createdFavoriteDate)";
 
     public const string ChackIfAdvertIsFavoriteQuery = @"
           SELECT COUNT(*)
