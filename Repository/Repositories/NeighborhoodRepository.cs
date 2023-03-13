@@ -12,7 +12,7 @@ internal sealed class NeighborhoodRepository : INeighborhoodRepository
         _dapperContext = dapperContext;
     }
 
-    public async Task<IEnumerable<ShowNeighborhoodDto>> GetNeighborhoods(int id, CancellationToken token)
+    public async Task<IEnumerable<NeighborhoodDto>> GetNeighborhoods(int id, CancellationToken token)
     {
         var query = NeighborhoodQuery.NeighborhoodForCity;
 
@@ -20,7 +20,7 @@ internal sealed class NeighborhoodRepository : INeighborhoodRepository
         {
             var cmd = new CommandDefinition(query, new { id }, cancellationToken: token);
 
-            var neighborhoods = await connection.QueryAsync<ShowNeighborhoodDto>(cmd);
+            var neighborhoods = await connection.QueryAsync<NeighborhoodDto>(cmd);
 
             return neighborhoods;
         }

@@ -13,7 +13,7 @@ public class MappingProfile : Profile
         CreateMap<UserForRegistrationDto, User>();
         CreateMap<AddAdvertDto, Advert>();
         CreateMap<Advert, AllInfomrationsAboutAdvertDto>();
-        CreateMap<Image, ShowImageDto>();
+        CreateMap<Image, ImageDto>();
         CreateMap<User, UserInformationDto>()
             .ForMember(dest => dest.First_Name, opt => opt.MapFrom(src => src.FirstName))
             .ForMember(dest => dest.Last_Name, opt => opt.MapFrom(src => src.LastName));

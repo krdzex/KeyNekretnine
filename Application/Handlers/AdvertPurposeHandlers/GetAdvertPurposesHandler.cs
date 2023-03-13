@@ -5,7 +5,7 @@ using Shared.DataTransferObjects.AdvertPurpose;
 
 namespace Application.Handlers.AdvertPurposeHandlers;
 
-internal sealed class GetAdvertPurposesHandler : IRequestHandler<GetAdvertPurposesQuery, IEnumerable<ShowAdvertPurposeDto>>
+internal sealed class GetAdvertPurposesHandler : IRequestHandler<GetAdvertPurposesQuery, IEnumerable<AdvertPurposeDto>>
 {
     private readonly IRepositoryManager _repository;
 
@@ -13,7 +13,7 @@ internal sealed class GetAdvertPurposesHandler : IRequestHandler<GetAdvertPurpos
     {
         _repository = repository;
     }
-    public async Task<IEnumerable<ShowAdvertPurposeDto>> Handle(GetAdvertPurposesQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<AdvertPurposeDto>> Handle(GetAdvertPurposesQuery request, CancellationToken cancellationToken)
     {
         var advertPurposes = await _repository.AdvertPurpose.GetAdvertPurposes(cancellationToken);
 

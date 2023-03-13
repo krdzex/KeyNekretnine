@@ -68,7 +68,7 @@ internal class AdvertRepository : IAdvertRepository
         using (var connection = _dapperContext.CreateConnection())
         {
             var adverts = await connection
-                .QueryAsync<AllInfomrationsAboutAdvertDto, ShowImageDto, AllInfomrationsAboutAdvertDto>(query,
+                .QueryAsync<AllInfomrationsAboutAdvertDto, ImageDto, AllInfomrationsAboutAdvertDto>(query,
                 map: (advert, image) =>
                 {
                     if (advertMap.TryGetValue(advertId, out AllInfomrationsAboutAdvertDto existingAdvert))
@@ -77,9 +77,9 @@ internal class AdvertRepository : IAdvertRepository
                     }
                     else
                     {
-                        advert.Images = new List<ShowImageDto>
+                        advert.Images = new List<ImageDto>
                         {
-                            new ShowImageDto {Url = advert.Cover_Image_Url }
+                            new ImageDto {Url = advert.Cover_Image_Url }
                         };
                         advertMap.Add(advertId, advert);
                     }
@@ -105,7 +105,7 @@ internal class AdvertRepository : IAdvertRepository
         using (var connection = _dapperContext.CreateConnection())
         {
             var adverts = await connection
-                .QueryAsync<AdminAllInformationsAboutAdvertDto, ShowImageDto, AdminAllInformationsAboutAdvertDto>(query,
+                .QueryAsync<AdminAllInformationsAboutAdvertDto, ImageDto, AdminAllInformationsAboutAdvertDto>(query,
                 map: (advert, image) =>
                 {
                     if (advertMap.TryGetValue(advertId, out AdminAllInformationsAboutAdvertDto existingAdvert))
@@ -114,9 +114,9 @@ internal class AdvertRepository : IAdvertRepository
                     }
                     else
                     {
-                        advert.Images = new List<ShowImageDto>
+                        advert.Images = new List<ImageDto>
                         {
-                            new ShowImageDto {Url = advert.Cover_Image_Url }
+                            new ImageDto {Url = advert.Cover_Image_Url }
                         };
                         advertMap.Add(advertId, advert);
                     }

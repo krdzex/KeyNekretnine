@@ -29,7 +29,7 @@ public class AllInfomrationsAboutAdvertDto
             Description_En = value.En;
         }
     }
-    public IList<ShowImageDto> Images { get; set; }
+    public IList<ImageDto> Images { get; set; }
 
     [JsonIgnore]
     public string Cover_Image_Url { get; set; }

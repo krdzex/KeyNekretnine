@@ -3,5 +3,5 @@
 namespace Contracts;
 public interface IAdvertTypeRepository
 {
-    Task<IEnumerable<ShowAdvertTypeDto>> GetAdvertTypes(CancellationToken token);
+    Task<IEnumerable<AdvertTypeDto>> GetAdvertTypes(CancellationToken token);
 }

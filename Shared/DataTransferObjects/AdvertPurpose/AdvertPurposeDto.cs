@@ -1,5 +1,5 @@
 ﻿namespace Shared.DataTransferObjects.AdvertPurpose;
-public class ShowAdvertPurposeDto
+public class AdvertPurposeDto
 {
     public int Id { get; set; }
     private string Name_Sr { get; set; }

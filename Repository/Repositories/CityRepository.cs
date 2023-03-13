@@ -12,7 +12,7 @@ internal sealed class CityRepository : ICityRepository
         _dapperContext = dapperContext;
     }
 
-    public async Task<IEnumerable<ShowCityDto>> GetCities(CancellationToken cancellationToken)
+    public async Task<IEnumerable<CityDto>> GetCities(CancellationToken cancellationToken)
     {
         var query = CityQuery.AllCities;
 
@@ -20,7 +20,7 @@ internal sealed class CityRepository : ICityRepository
         {
             var cmd = new CommandDefinition(query, cancellationToken: cancellationToken);
 
-            var cities = await connection.QueryAsync<ShowCityDto>(cmd);
+            var cities = await connection.QueryAsync<CityDto>(cmd);
 
             return cities;
         }

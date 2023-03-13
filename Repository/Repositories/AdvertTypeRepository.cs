@@ -13,7 +13,7 @@ internal sealed class AdvertTypeRepository : IAdvertTypeRepository
         _dapperContext = dapperContext;
     }
 
-    public async Task<IEnumerable<ShowAdvertTypeDto>> GetAdvertTypes(CancellationToken cancellationToken)
+    public async Task<IEnumerable<AdvertTypeDto>> GetAdvertTypes(CancellationToken cancellationToken)
     {
         var query = AdvertTypeQuery.AllAdvertTypesQuery;
 
@@ -21,7 +21,7 @@ internal sealed class AdvertTypeRepository : IAdvertTypeRepository
         {
             var cmd = new CommandDefinition(query, cancellationToken: cancellationToken);
 
-            var advertTypes = await connection.QueryAsync<ShowAdvertTypeDto>(cmd);
+            var advertTypes = await connection.QueryAsync<AdvertTypeDto>(cmd);
 
             return advertTypes;
         }

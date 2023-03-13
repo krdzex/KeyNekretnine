@@ -1,6 +1,6 @@
 ﻿namespace Shared.DataTransferObjects.AdvertType;
 
-public class ShowAdvertTypeDto
+public class AdvertTypeDto
 {
     public int Id { get; set; }
     private string Name_Sr { get; set; }

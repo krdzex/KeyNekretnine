@@ -9,4 +9,5 @@ public interface IRepositoryManager
     IUserRepository User { get; }
     IImageRepository Image { get; }
     ITemporeryImageDataRepository TemporeryImageData { get; }
+    IRejectReasonRepository RejectReason { get; }
 }

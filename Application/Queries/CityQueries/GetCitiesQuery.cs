@@ -2,4 +2,4 @@
 using Shared.DataTransferObjects.City;
 
 namespace Application.Queries.CityQueries;
-public sealed record GetCitiesQuery() : IRequest<IEnumerable<ShowCityDto>>;
+public sealed record GetCitiesQuery() : IRequest<IEnumerable<CityDto>>;

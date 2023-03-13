@@ -6,5 +6,5 @@ public class UserAdvertReport
     public int AdvertId { get; set; }
     public Advert Advert { get; set; }
     public int RejectionReasonId { get; set; }
-    public RejectionReason RejectionReason { get; set; }
+    public RejectReason RejectionReason { get; set; }
 }

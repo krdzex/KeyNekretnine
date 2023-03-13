@@ -1,5 +1,5 @@
 ﻿namespace Entities.Models;
-public class RejectionReason : EntityBase
+public class RejectReason : EntityBase
 {
     public string ReasonSr { get; set; }
     public string ReasonEn { get; set; }

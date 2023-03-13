@@ -12,7 +12,7 @@ internal sealed class AdvertPurposeRepository : IAdvertPurposeRepository
         _dapperContext = dapperContext;
     }
 
-    public async Task<IEnumerable<ShowAdvertPurposeDto>> GetAdvertPurposes(CancellationToken cancellationToken)
+    public async Task<IEnumerable<AdvertPurposeDto>> GetAdvertPurposes(CancellationToken cancellationToken)
     {
         var query = AdvertPurposeQuery.AllAdvertPurposesQuery;
 
@@ -20,7 +20,7 @@ internal sealed class AdvertPurposeRepository : IAdvertPurposeRepository
         {
             var cmd = new CommandDefinition(query, cancellationToken: cancellationToken);
 
-            var advertPurposes = await connection.QueryAsync<ShowAdvertPurposeDto>(cmd);
+            var advertPurposes = await connection.QueryAsync<AdvertPurposeDto>(cmd);
 
             return advertPurposes;
         }

@@ -18,7 +18,7 @@ public class RepositoryContext : IdentityDbContext<User>
     public DbSet<Neighborhood> Neighborhoods { get; set; }
     public DbSet<TemporeryImageData> TemporeryImagesData { get; set; }
     public DbSet<UserAdvertFavorite> UserAdvertFavorites { get; set; }
-    public DbSet<RejectionReason> RejectionReasons { get; set; }
+    public DbSet<RejectReason> RejectReasons { get; set; }
     public DbSet<UserAdvertReport> UserAdvertReports { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
