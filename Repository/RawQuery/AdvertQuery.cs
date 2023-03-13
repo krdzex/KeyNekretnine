@@ -204,8 +204,8 @@ public static class AdvertQuery
 
 
     public const string MakeAdvertFavoriteQuery = @"
-          INSERT INTO user_advert_favorites(user_id,advert_id)
-          VALUES(@userId,@advertId)";
+          INSERT INTO user_advert_favorites(user_id,advert_id,created_favorite_date)
+          VALUES(@userId,@advertId,@created_favorite_date)";
 
     public const string ChackIfAdvertIsFavoriteQuery = @"
           SELECT COUNT(*)
@@ -231,5 +231,5 @@ public static class AdvertQuery
          INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
          INNER JOIN cities c ON n.city_id = c.id
          WHERE ua.user_id = @userId
-         ORDER BY @orderBy OFFSET @Skip FETCH NEXT @Take ROWS ONLY;";
+         ORDER BY created_favorite_date DESC OFFSET @Skip FETCH NEXT @Take ROWS ONLY;";
 }

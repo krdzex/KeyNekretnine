@@ -37,5 +37,6 @@ public class AdvertConfiguration : IEntityTypeConfiguration<Advert>
         builder.Property(x => x.NeighborhoodId).HasDefaultValue(1);
         builder.HasMany(x => x.TemporeryImageDatas).WithOne(t => t.Advert).HasForeignKey(x => x.AdvertId);
         builder.Property(x => x.ReferenceId).HasMaxLength(10);
+        builder.Property(x => x.CreatedDate).IsRequired();
     }
 }

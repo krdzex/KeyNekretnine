@@ -5,4 +5,5 @@ public class UserAdvertFavorite
     public User User { get; set; }
     public int AdvertId { get; set; }
     public Advert Advert { get; set; }
+    public DateTime CreatedFavoriteDate { get; set; }
 }

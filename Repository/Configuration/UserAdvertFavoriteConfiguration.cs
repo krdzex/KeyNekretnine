@@ -10,5 +10,6 @@ public class UserAdvertFavoriteConfiguration : IEntityTypeConfiguration<UserAdve
         builder.HasKey(x => new { x.UserId, x.AdvertId });
         builder.HasOne(x => x.Advert).WithMany(x => x.UserAdvertFavorites).HasForeignKey(x => x.AdvertId);
         builder.HasOne(x => x.User).WithMany(x => x.UserAdvertFavorites).HasForeignKey(x => x.UserId);
+        builder.Property(x => x.CreatedFavoriteDate).IsRequired();
     }
 }

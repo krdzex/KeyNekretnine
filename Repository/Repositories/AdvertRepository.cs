@@ -381,6 +381,7 @@ internal class AdvertRepository : IAdvertRepository
 
             param.Add("@advertId", advertId, DbType.Int32);
             param.Add("@userId", userId, DbType.String);
+            param.Add("createdFavoriteDate", DateTime.Now, DbType.DateTime);
 
             var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
 
@@ -413,8 +414,8 @@ internal class AdvertRepository : IAdvertRepository
         {
             var param = new DynamicParameters();
 
-            param.Add("@advertId", advertId, DbType.Int32);
-            param.Add("@userId", userId, DbType.String);
+            param.Add("advertId", advertId, DbType.Int32);
+            param.Add("userId", userId, DbType.String);
 
             var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
 
