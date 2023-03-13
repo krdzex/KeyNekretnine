@@ -11,4 +11,6 @@ public class User : IdentityUser
     public bool IsBanned { get; set; }
     public DateTime? BanEnd { get; set; }
     public IEnumerable<UserAdvertFavorite> UserAdvertFavorites { get; set; }
+    public IEnumerable<UserAdvertReport> UserAdvertReports { get; set; }
+
 }

@@ -41,4 +41,6 @@ public class Advert : EntityBase
     public List<TemporeryImageData> TemporeryImageDatas { get; set; }
     public string ReferenceId { get; set; }
     public IEnumerable<UserAdvertFavorite> UserAdvertFavorites { get; set; }
+    public IEnumerable<UserAdvertReport> UserAdvertReports { get; set; }
+
 }
