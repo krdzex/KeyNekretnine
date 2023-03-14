@@ -192,13 +192,15 @@ public class AdvertController : ControllerBase
     [Authorize]
     [HttpPost("{advertId}/report")]
     [ServiceFilter(typeof(BanUserChack))]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> ReportAdvert(int advertId, [FromBody] int rejectReasonId)
+    public async Task<IActionResult> ReportAdvert(int advertId, [FromBody] ReportAdvertDto reportAdvertDto)
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
 
-        return Ok(await _sender.Send(new ReportAdvertCommand(advertId, email, rejectReasonId)));
+        await _sender.Send(new ReportAdvertCommand(advertId, email, reportAdvertDto.RejectReasonId));
+
+        return NoContent();
     }
 }
