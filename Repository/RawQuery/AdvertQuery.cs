@@ -232,4 +232,13 @@ public static class AdvertQuery
          INNER JOIN cities c ON n.city_id = c.id
          WHERE ua.user_id = @userId
          ORDER BY created_favorite_date DESC OFFSET @Skip FETCH NEXT @Take ROWS ONLY;";
+
+    public const string ReportAdvertQuery = @"
+        INSERT INTO user_advert_reports (user_id,advert_id,reject_reason_id,created_report_date)
+        VALUES (@userId,@advertId,@rejectReasonId,@createdReportDate)";
+
+    public const string ChackIfAdvertIsAlreadyReportedQuery = @"
+        SELECT COUNT(*)
+        FROM user_advert_reports
+        WHERE user_id = @userId AND advert_id = @advertId AND reject_reason_id = @rejectReasonId;";
 }

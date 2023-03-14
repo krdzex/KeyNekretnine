@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Repository.Configuration;
-public class RejectionReasonConfiguration : IEntityTypeConfiguration<RejectReason>
+public class RejectReasonConfiguration : IEntityTypeConfiguration<RejectReason>
 {
     public void Configure(EntityTypeBuilder<RejectReason> builder)
     {

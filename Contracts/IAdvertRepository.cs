@@ -24,4 +24,6 @@ public interface IAdvertRepository
     Task<bool> ChackIfAdvertIsFavorite(string userId, int advertId, CancellationToken cancellationToken);
     Task RemoveAdvertFromFavorite(string userId, int advertId, CancellationToken cancellationToken);
     Task<Pagination<MinimalInformationsAboutAdvertDto>> GetFavoriteAdverts(FavoriteAdvertsParameters requestParameters, string userId, CancellationToken cancellationToken);
+    Task<bool> ChackIfAdvertWithThisReasonUserAlreadyReported(string userId, int advertId, int reasonId, CancellationToken cancellationToken);
+    Task ReportAdvert(string userId, int advertId, int reasonId, CancellationToken cancellationToken);
 }

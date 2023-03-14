@@ -189,8 +189,9 @@ public class AdvertController : ControllerBase
     }
 
 
-    //[Authorize]
+    [Authorize]
     [HttpPost("{advertId}/report")]
+    [ServiceFilter(typeof(BanUserChack))]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -198,6 +199,6 @@ public class AdvertController : ControllerBase
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
 
-        return Ok(await _sender.Send(new GetIsFavoriteAdvertQuery(advertId, email)));
+        return Ok(await _sender.Send(new ReportAdvertCommand(advertId, email, rejectReasonId)));
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Application.Commands.AdvertCommands;
 using Contracts;
+using Entities.Exceptions;
 using MediatR;
 
 namespace Application.Handlers.AdvertHandlers;
@@ -13,17 +14,23 @@ internal sealed class ReportAdvertHandler : IRequestHandler<ReportAdvertCommand,
     }
     public async Task<Unit> Handle(ReportAdvertCommand request, CancellationToken cancellationToken)
     {
-        //if (request.AdvertParameters.MaxPrice < request.AdvertParameters.MinPrice)
-        //{
-        //    throw new BadPriceException();
-        //}
+        var advertExist = await _repository.Advert.ChackIfAdvertExistAndItsApproved(request.AdvertId, cancellationToken);
 
-        //if (request.AdvertParameters.MaxFloorSpace < request.AdvertParameters.MinFloorSpace)
-        //{
-        //    throw new BadFloorSpaceException();
-        //}
+        if (!advertExist)
+        {
+            throw new AdvertNotFoundException(request.AdvertId);
+        }
 
-        //var adverts = await _repository.Advert.GetAdverts(request.AdvertParameters, cancellationToken);
+        var userId = await _repository.User.GetUserIdFromEmail(request.UserEmail, cancellationToken);
+
+        var isReported = await _repository.Advert.ChackIfAdvertWithThisReasonUserAlreadyReported(userId, request.AdvertId, request.RejectReasonId, cancellationToken);
+
+        if (isReported)
+        {
+            throw new AdvertAlreadyReportedException();
+        }
+
+        await _repository.Advert.ReportAdvert(userId, request.AdvertId, request.RejectReasonId, cancellationToken);
 
         return Unit.Value;
     }

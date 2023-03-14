@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Repository;
@@ -11,9 +12,10 @@ using Repository;
 namespace KeyNekretnine.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20230314193023_ChangeRejectionId")]
+    partial class ChangeRejectionId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -8657,10 +8659,6 @@ namespace KeyNekretnine.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("advert_id");
 
-                    b.Property<DateTime>("CreatedReportDate")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_report_date");
-
                     b.Property<int>("RejectReasonId")
                         .HasColumnType("integer")
                         .HasColumnName("reject_reason_id");
@@ -8711,21 +8709,21 @@ namespace KeyNekretnine.Migrations
                         new
                         {
                             Id = "548e52a6-485a-49a5-b204-8994eaa79a12",
-                            ConcurrencyStamp = "53a7f2d3-c572-4a11-92e6-b9b4c1fc701a",
+                            ConcurrencyStamp = "be4f402e-7eec-44f8-96aa-a56598495a5a",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
                             Id = "62558fd6-61f6-42fe-8cb7-8bc5fea7fb93",
-                            ConcurrencyStamp = "047219da-95a2-4886-9460-e7b892d60e22",
+                            ConcurrencyStamp = "5afe9407-5bc9-4d4e-bdbc-88b6bd9b94ec",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
                             Id = "f78fff4a-06dc-4b5d-864c-d70cd9ced860",
-                            ConcurrencyStamp = "ac56d57d-deb9-479c-9635-4bf45bdf9f25",
+                            ConcurrencyStamp = "35215852-1ad1-4e8b-8cb9-64f3b03a1ca4",
                             Name = "Moderator",
                             NormalizedName = "MODERATOR"
                         });

@@ -7,11 +7,11 @@ namespace KeyNekretnine.Presentation.Controllers;
 
 [Route("api/reject-reason")]
 [ApiController]
-public class RejectionReasonsController : ControllerBase
+public class RejectReasonsController : ControllerBase
 {
     private readonly ISender _sender;
 
-    public RejectionReasonsController(ISender sender)
+    public RejectReasonsController(ISender sender)
     {
         _sender = sender;
     }

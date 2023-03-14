@@ -471,4 +471,42 @@ internal class AdvertRepository : IAdvertRepository
             return new Pagination<MinimalInformationsAboutAdvertDto> { Data = adverts, MetaData = metadata.MetaData };
         }
     }
+
+    public async Task ReportAdvert(string userId, int advertId, int reasonId, CancellationToken cancellationToken)
+    {
+        string query = AdvertQuery.ReportAdvertQuery;
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var param = new DynamicParameters();
+
+            param.Add("advertId", advertId, DbType.Int32);
+            param.Add("userId", userId, DbType.String);
+            param.Add("rejectReasonId", reasonId, DbType.Int32);
+            param.Add("createdReportDate", DateTime.Now, DbType.DateTime);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            await connection.ExecuteAsync(cmd);
+        }
+    }
+
+    public async Task<bool> ChackIfAdvertWithThisReasonUserAlreadyReported(string userId, int advertId, int reasonId, CancellationToken cancellationToken)
+    {
+        string query = AdvertQuery.ChackIfAdvertIsAlreadyReportedQuery;
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var param = new DynamicParameters();
+
+            param.Add("advertId", advertId, DbType.Int32);
+            param.Add("userId", userId, DbType.String);
+            param.Add("rejectReasonId", reasonId, DbType.Int32);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            int count = await connection.QueryFirstOrDefaultAsync<int>(cmd);
+            return count > 0;
+        }
+    }
 }
