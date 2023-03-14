@@ -187,4 +187,19 @@ public class AdvertController : ControllerBase
 
         return Ok(await _sender.Send(new GetIsFavoriteAdvertQuery(advertId, email)));
     }
+
+
+    //[Authorize]
+    [HttpGet("{advertId}/report")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> ReportAdvert(int advertId, [FromBody] int rejectReasonId)
+    {
+        //var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
+
+        //return Ok(await _sender.Send(new GetIsFavoriteAdvertQuery(advertId, email)));
+        return Ok();
+
+    }
 }
