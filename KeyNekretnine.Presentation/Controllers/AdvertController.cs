@@ -207,7 +207,7 @@ public class AdvertController : ControllerBase
         return NoContent();
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet("report")]
     [ServiceFilter(typeof(BanUserChack))]
     [ProducesResponseType(StatusCodes.Status200OK)]
