@@ -137,6 +137,7 @@ public class AdvertController : ControllerBase
     [ServiceFilter(typeof(BanUserChack))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> MakeAdvertToFavorite(int advertId)
     {
@@ -180,6 +181,7 @@ public class AdvertController : ControllerBase
     [ServiceFilter(typeof(BanUserChack))]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> IsAdvertFavorite(int advertId)
     {
@@ -194,6 +196,7 @@ public class AdvertController : ControllerBase
     [ServiceFilter(typeof(BanUserChack))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> ReportAdvert(int advertId, [FromBody] ReportAdvertDto reportAdvertDto)
     {
