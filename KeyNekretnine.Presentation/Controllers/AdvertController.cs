@@ -207,8 +207,8 @@ public class AdvertController : ControllerBase
         return NoContent();
     }
 
-    //[Authorize]
     [HttpGet("report")]
+    [Authorize(Roles = "Administrator")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAdvertReports([FromQuery] ReportParameters reportParameters)
