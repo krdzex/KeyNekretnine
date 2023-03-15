@@ -18,7 +18,7 @@ public class CitiesData
                 new City{ Id = 9, Name = "Kolašin", GeoId = "2319531", ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp"},
                 new City{ Id = 10, Name = "Kotor", GeoId = "2319532", ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp"},
                 new City{ Id = 11, Name = "Mojkovac", GeoId = "2319533", ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp"},
-                new City{ Id = 12, Name = "Nikšić", GeoId = "2319533", ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp"},
+                new City{ Id = 12, Name = "Nikšić", GeoId = "2319534", ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp"},
                 new City{ Id = 13, Name = "Plav", GeoId = "2317882", ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp"},
                 new City{ Id = 14, Name = "Pljevlja", GeoId = "2319535", ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp"},
                 new City{ Id = 15, Name = "Plužine", GeoId = "2319536", ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp"},
