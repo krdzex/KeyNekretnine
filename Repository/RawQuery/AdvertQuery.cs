@@ -243,6 +243,9 @@ public static class AdvertQuery
         WHERE user_id = @userId AND advert_id = @advertId AND reject_reason_id = @rejectReasonId;";
 
     public const string GetReportsQuery = @"
+        SELECT COUNT(*)
+        FROM user_advert_reports;
+
         SELECT 
         advert_id,
         SUM(CASE WHEN reject_reason_id = 1 THEN 1 ELSE 0 END) AS repeating_advert,
@@ -250,6 +253,7 @@ public static class AdvertQuery
         SUM(CASE WHEN reject_reason_id = 3 THEN 1 ELSE 0 END) AS bad_informations,
         COUNT(advert_id) AS all_reports
         FROM user_advert_reports
-        GROUP BY advert_id;";
+        GROUP BY advert_id
+        ORDER BY COUNT(advert_id) DESC OFFSET @Skip FETCH NEXT @Take ROWS ONLY;";
 
 }

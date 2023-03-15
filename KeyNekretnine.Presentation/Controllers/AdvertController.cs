@@ -211,8 +211,8 @@ public class AdvertController : ControllerBase
     [HttpGet("report")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetAdvertReports()
+    public async Task<IActionResult> GetAdvertReports([FromQuery] ReportParameters reportParameters)
     {
-        return Ok(await _sender.Send(new GetAdvertReportsQuery()));
+        return Ok(await _sender.Send(new GetAdvertReportsQuery(reportParameters)));
     }
 }

@@ -1,10 +1,11 @@
 ﻿using Application.Queries.AdvertQueries;
 using Contracts;
 using MediatR;
+using Shared.CustomResponses;
 using Shared.DataTransferObjects.Advert;
 
 namespace Application.Handlers.AdvertHandlers;
-internal sealed class GetAdvertReportsHandler : IRequestHandler<GetAdvertReportsQuery, IEnumerable<AdvertReportsDto>>
+internal sealed class GetAdvertReportsHandler : IRequestHandler<GetAdvertReportsQuery, Pagination<AdvertReportsDto>>
 {
     private readonly IRepositoryManager _repository;
 
@@ -13,9 +14,9 @@ internal sealed class GetAdvertReportsHandler : IRequestHandler<GetAdvertReports
         _repository = repository;
     }
 
-    public async Task<IEnumerable<AdvertReportsDto>> Handle(GetAdvertReportsQuery request, CancellationToken cancellationToken)
+    public async Task<Pagination<AdvertReportsDto>> Handle(GetAdvertReportsQuery request, CancellationToken cancellationToken)
     {
-        var advertReports = await _repository.Advert.GetAdvertReports(cancellationToken);
+        var advertReports = await _repository.Advert.GetAdvertReports(request.ReportParameters, cancellationToken);
 
         return advertReports;
     }

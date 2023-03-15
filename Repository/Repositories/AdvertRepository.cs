@@ -510,17 +510,32 @@ internal class AdvertRepository : IAdvertRepository
         }
     }
 
-    public async Task<IEnumerable<AdvertReportsDto>> GetAdvertReports(CancellationToken cancellationToken)
+    public async Task<Pagination<AdvertReportsDto>> GetAdvertReports(ReportParameters reportParameters, CancellationToken cancellationToken)
     {
-        string query = AdvertQuery.GetReportsQuery;
+        var orderBy = OrderQueryBuilder.CreateOrderQuery<AdvertReportsDto>(reportParameters.OrderBy, 'a');
+
+        var query = AdvertQuery.GetReportsQuery;
+
+        var skip = (reportParameters.PageNumber - 1) * reportParameters.PageSize;
 
         using (var connection = _dapperContext.CreateConnection())
         {
-            var cmd = new CommandDefinition(query, cancellationToken: cancellationToken);
+            var param = new DynamicParameters();
 
-            var advertReports = await connection.QueryAsync<AdvertReportsDto>(cmd);
+            param.Add("skip", skip, DbType.Int32);
+            param.Add("take", reportParameters.PageSize, DbType.Int32);
+            param.Add("orderBy", orderBy, DbType.String);
 
-            return advertReports;
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            var multi = await connection.QueryMultipleAsync(cmd);
+
+            var count = await multi.ReadSingleAsync<int>();
+            var reports = (await multi.ReadAsync<AdvertReportsDto>()).ToList();
+
+            var metadata = new PagedList<AdvertReportsDto>(reports, count, reportParameters.PageNumber, reportParameters.PageSize);
+
+            return new Pagination<AdvertReportsDto> { Data = reports, MetaData = metadata.MetaData };
         }
     }
 }
