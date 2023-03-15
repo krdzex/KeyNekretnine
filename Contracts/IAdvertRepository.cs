@@ -26,4 +26,5 @@ public interface IAdvertRepository
     Task<Pagination<MinimalInformationsAboutAdvertDto>> GetFavoriteAdverts(FavoriteAdvertsParameters requestParameters, string userId, CancellationToken cancellationToken);
     Task<bool> ChackIfAdvertWithThisReasonUserAlreadyReported(string userId, int advertId, int reasonId, CancellationToken cancellationToken);
     Task ReportAdvert(string userId, int advertId, int reasonId, CancellationToken cancellationToken);
+    Task<IEnumerable<AdvertReportsDto>> GetAdvertReports(CancellationToken cancellationToken);
 }

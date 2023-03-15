@@ -209,7 +209,6 @@ public class AdvertController : ControllerBase
 
     //[Authorize]
     [HttpGet("report")]
-    [ServiceFilter(typeof(BanUserChack))]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAdvertReports()

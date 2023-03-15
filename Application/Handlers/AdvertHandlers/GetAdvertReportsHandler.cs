@@ -15,8 +15,8 @@ internal sealed class GetAdvertReportsHandler : IRequestHandler<GetAdvertReports
 
     public async Task<IEnumerable<AdvertReportsDto>> Handle(GetAdvertReportsQuery request, CancellationToken cancellationToken)
     {
-        var advert = await _repository.Advert.GetAdminAdvert(request.AdvertId);
+        var advertReports = await _repository.Advert.GetAdvertReports(cancellationToken);
 
-        return advert;
+        return advertReports;
     }
 }

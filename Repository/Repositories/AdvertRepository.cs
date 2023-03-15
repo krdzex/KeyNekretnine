@@ -509,4 +509,18 @@ internal class AdvertRepository : IAdvertRepository
             return count > 0;
         }
     }
+
+    public async Task<IEnumerable<AdvertReportsDto>> GetAdvertReports(CancellationToken cancellationToken)
+    {
+        string query = AdvertQuery.GetReportsQuery;
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var cmd = new CommandDefinition(query, cancellationToken: cancellationToken);
+
+            var advertReports = await connection.QueryAsync<AdvertReportsDto>(cmd);
+
+            return advertReports;
+        }
+    }
 }
