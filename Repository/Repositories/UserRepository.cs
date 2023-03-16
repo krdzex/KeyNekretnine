@@ -1,4 +1,5 @@
-﻿using Contracts;
+﻿using AutoMapper;
+using Contracts;
 using Dapper;
 using Entities.Exceptions;
 using Entities.Models;
@@ -15,10 +16,12 @@ internal sealed class UserRepository : IUserRepository
 {
     private readonly DapperContext _dapperContext;
     private readonly UserManager<User> _userManager;
-    public UserRepository(DapperContext dapperContext, UserManager<User> userManager)
+    private readonly IMapper _mapper;
+    public UserRepository(DapperContext dapperContext, UserManager<User> userManager, IMapper mapper)
     {
         _dapperContext = dapperContext;
         _userManager = userManager;
+        _mapper = mapper;
     }
 
     public async Task UserBanExpired(User user)
@@ -201,5 +204,19 @@ internal sealed class UserRepository : IUserRepository
 
             return await connection.QueryFirstOrDefaultAsync<string>(cmd);
         }
+    }
+
+    public async Task UpdateUser(UpdateUserDto updateUser, string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+
+        if (user == null)
+        {
+            throw new UserNotFoundException();
+        }
+
+        _mapper.Map(user, updateUser);
+
+        await _userManager.UpdateAsync(user);
     }
 }
