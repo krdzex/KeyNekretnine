@@ -1,4 +1,5 @@
-﻿using Application.Notifications.UserNotifications;
+﻿using Application.Commands.UserCommands;
+using Application.Notifications.UserNotifications;
 using Application.Queries.UserQueries;
 using KeyNekretnine.Attributes;
 using MediatR;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Shared.DataTransferObjects.User;
 using Shared.RequestFeatures;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace KeyNekretnine.Presentation.Controllers;
 
@@ -90,6 +92,18 @@ public class UserController : ControllerBase
     public async Task<IActionResult> MultipleUnban([FromBody] List<string> userIds)
     {
         await _publisher.Publish(new MultipleUnbanUserNotification(userIds));
+
+        return NoContent();
+    }
+
+    [Authorize]
+    [ServiceFilter(typeof(BanUserChack))]
+    [HttpPut("update")]
+    public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto updateUserDto)
+    {
+        var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
+
+        await _sender.Send(new UpdateUserCommand(updateUserDto, email));
 
         return NoContent();
     }

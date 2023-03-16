@@ -82,7 +82,6 @@ public class AdvertController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Approve(int id)
     {
-
         await _publisher.Publish(new ApproveAdvertNotification(id));
 
         return NoContent();

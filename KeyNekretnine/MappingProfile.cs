@@ -11,6 +11,7 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         CreateMap<UserForRegistrationDto, User>();
+        CreateMap<UpdateUserDto, User>();
         CreateMap<AddAdvertDto, Advert>();
         CreateMap<Advert, AllInfomrationsAboutAdvertDto>();
         CreateMap<Image, ImageDto>();

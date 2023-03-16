@@ -215,7 +215,7 @@ internal sealed class UserRepository : IUserRepository
             throw new UserNotFoundException();
         }
 
-        _mapper.Map(user, updateUser);
+        _mapper.Map(updateUser, user);
 
         await _userManager.UpdateAsync(user);
     }

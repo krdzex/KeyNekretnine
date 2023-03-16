@@ -1,4 +1,5 @@
-﻿using Contracts;
+﻿using AutoMapper;
+using Contracts;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Repository.Repositories;
@@ -19,7 +20,7 @@ public sealed class RepositoryManager : IRepositoryManager
     private readonly Lazy<ITemporeryImageDataRepository> _temporeryImageDataRepository;
     private readonly Lazy<IRejectReasonRepository> _rejectReasonRepository;
 
-    public RepositoryManager(RepositoryContext repositoryContext, UserManager<User> userManager, DapperContext dapperContext)
+    public RepositoryManager(IMapper mapper, RepositoryContext repositoryContext, UserManager<User> userManager, DapperContext dapperContext)
     {
         _repositoryContext = repositoryContext;
         _dapperContext = dapperContext;
@@ -28,7 +29,7 @@ public sealed class RepositoryManager : IRepositoryManager
         _advertTypeRepository = new Lazy<IAdvertTypeRepository>(() => new AdvertTypeRepository(dapperContext));
         _neighborhoodRepository = new Lazy<INeighborhoodRepository>(() => new NeighborhoodRepository(dapperContext));
         _advertRepository = new Lazy<IAdvertRepository>(() => new AdvertRepository(dapperContext));
-        _userRepository = new Lazy<IUserRepository>(() => new UserRepository(dapperContext, userManager));
+        _userRepository = new Lazy<IUserRepository>(() => new UserRepository(dapperContext, userManager, mapper));
         _imageRepository = new Lazy<IImageRepository>(() => new ImageRepository(dapperContext));
         _temporeryImageDataRepository = new Lazy<ITemporeryImageDataRepository>(() => new TemporeryImageDataRepository(dapperContext));
         _rejectReasonRepository = new Lazy<IRejectReasonRepository>(() => new RejectReasonRepository(dapperContext));

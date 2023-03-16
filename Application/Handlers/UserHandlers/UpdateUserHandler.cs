@@ -1,12 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Application.Commands.UserCommands;
+using Contracts;
+using MediatR;
 
-namespace Application.Handlers.UserHandlers
+namespace Application.Handlers.UserHandlers;
+internal sealed class UpdateUserHandler : IRequestHandler<UpdateUserCommand, Unit>
 {
-    internal class UpdateUserHandler
+    private readonly IRepositoryManager _repository;
+
+    public UpdateUserHandler(IRepositoryManager repository)
     {
+        _repository = repository;
+    }
+    public async Task<Unit> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+    {
+        await _repository.User.UpdateUser(request.UpdateUser, request.Email);
+
+        return Unit.Value;
     }
 }
