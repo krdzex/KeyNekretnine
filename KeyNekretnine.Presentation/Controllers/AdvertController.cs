@@ -214,4 +214,13 @@ public class AdvertController : ControllerBase
     {
         return Ok(await _sender.Send(new GetAdvertReportsQuery(reportParameters)));
     }
+
+
+    [HttpGet("compare/{firstAdvert}/{sacondAdvert}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetAdvertsCompare(int firstAdvert, int sacondAdvert)
+    {
+        return Ok(await _sender.Send(new GetAdvertsCompareQuery(firstAdvert, sacondAdvert)));
+    }
 }
