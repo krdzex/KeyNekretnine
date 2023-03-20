@@ -27,7 +27,7 @@ internal sealed class ReportAdvertHandler : IRequestHandler<ReportAdvertCommand,
 
         if (isReported)
         {
-            throw new AdvertAlreadyReportedException();
+            return Unit.Value;
         }
 
         await _repository.Advert.ReportAdvert(userId, request.AdvertId, request.RejectReasonId, cancellationToken);
