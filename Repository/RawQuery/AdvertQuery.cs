@@ -87,15 +87,15 @@ public static class AdvertQuery
              AND a.status_id = 1";
 
 
-    public const string AddAdvertQuery =
-       @"INSERT INTO adverts (price,description_sr,description_en,floor_space,street,no_of_bedrooms,no_of_bathrooms,has_elevator,has_garage,has_terrace,latitude,longitude,has_wifi,is_furnished,created_date,year_of_building_created,cover_image_url,neighborhood_id,building_floor,purpose_id,status_id,type_id,user_id,reference_id)
-            VALUES (@price,@description_sr,@description_en,@floor_space,@street,@no_of_bedrooms,@no_of_bathrooms,@has_elevator,@has_garage,@has_terrace,@latitude,@longitude,@has_wifi,@is_furnished,@created_date,@year_of_building_created,@cover_image_url,@neighborhood_id,@building_floor,@purpose_id,4,@type_id,@user_id,@reference_id)
-            RETURNING id";
+    public const string AddAdvertQuery = @"
+        INSERT INTO adverts (price,description_sr,description_en,floor_space,street,no_of_bedrooms,no_of_bathrooms,has_elevator,has_garage,has_terrace,latitude,longitude,has_wifi,is_furnished,created_date,year_of_building_created,cover_image_url,neighborhood_id,building_floor,purpose_id,status_id,type_id,user_id,reference_id)
+        VALUES (@price,@description_sr,@description_en,@floor_space,@street,@no_of_bedrooms,@no_of_bathrooms,@has_elevator,@has_garage,@has_terrace,@latitude,@longitude,@has_wifi,@is_furnished,@created_date,@year_of_building_created,@cover_image_url,@neighborhood_id,@building_floor,@purpose_id,4,@type_id,@user_id,@reference_id)
+        RETURNING id";
 
-    public const string UpdateCoverImageQuery =
-       @"UPDATE adverts
-            SET cover_image_url = @coverImageUrl
-            WHERE id = @advertId";
+    public const string UpdateCoverImageQuery = @"
+        UPDATE adverts
+        SET cover_image_url = @coverImageUrl
+        WHERE id = @advertId";
 
     public const string UpdateAdvertStatus =
        @"UPDATE adverts
@@ -267,4 +267,24 @@ public static class AdvertQuery
         INNER JOIN ""AspNetUsers"" u ON a.user_id = u.id
         WHERE a.id = ANY(@advertsId)
         AND a.status_id = 1";
+
+    public const string UpdateAdvertInformationsQuery = @"
+        UPDATE adverts a SET 
+        a.price = @price,
+        a.description_sr = @description_sr,
+        a.description_en = description_en,
+        a.floor_space = @floor_space,
+        a.no_of_bedrooms = @no_of_bedrooms,
+        a.no_of_bathrooms = @no_of_bathrooms,
+        a.building_floor = @building_floor,
+        a.has_elevator = @has_elevator,
+        a.has_garage = @has_garage,
+        a.has_terrace = @has_terrace,
+        a.has_wifi = @has_wifi,
+        a.is_furnished = @is_furnished,
+        a.year_of_building_created = @year_of_building_created,
+        a.floor_space = @floor_space,
+        a.purpose_id = @purpose_id,
+        a.type_id = @type_id
+        WHERE a.id = @advertId";
 }

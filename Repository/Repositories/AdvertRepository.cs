@@ -558,4 +558,35 @@ internal class AdvertRepository : IAdvertRepository
             return adverts;
         }
     }
+
+    public async Task UpdateAdvertInformations(UpdateAdvertInformationsDto updateAdvertInformationsDto, int advertId, CancellationToken cancellationToken)
+    {
+        var query = AdvertQuery.UpdateAdvertInformationsQuery;
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var param = new DynamicParameters();
+
+            param.Add("price", updateAdvertInformationsDto.Price, DbType.Double);
+            param.Add("description_sr", updateAdvertInformationsDto.DescriptionSr, DbType.String);
+            param.Add("description_en", updateAdvertInformationsDto.DescriptionEn, DbType.String);
+            param.Add("floor_space", updateAdvertInformationsDto.FloorSpace, DbType.Double);
+            param.Add("no_of_bedrooms", updateAdvertInformationsDto.NoOfBedrooms, DbType.Int16);
+            param.Add("no_of_bathrooms", updateAdvertInformationsDto.NoOfBathrooms, DbType.Int16);
+            param.Add("has_elevator", updateAdvertInformationsDto.HasElevator, DbType.Boolean);
+            param.Add("has_garage", updateAdvertInformationsDto.HasGarage, DbType.Boolean);
+            param.Add("has_terrace", updateAdvertInformationsDto.HasTerrace, DbType.Boolean);
+            param.Add("has_wifi", updateAdvertInformationsDto.HasWifi, DbType.Boolean);
+            param.Add("is_furnished", updateAdvertInformationsDto.IsFurnished, DbType.Boolean);
+            param.Add("year_of_building_created", updateAdvertInformationsDto.YearOfBuildingCreated, DbType.Int16);
+            param.Add("building_floor", updateAdvertInformationsDto.BuildingFloor, DbType.Int16);
+            param.Add("purpose_id", updateAdvertInformationsDto.AdvertPurposeId, DbType.Int16);
+            param.Add("type_id", updateAdvertInformationsDto.AdvertTypeId, DbType.Int16);
+            param.Add("advertId", advertId, DbType.Int16);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            await connection.ExecuteAsync(cmd);
+        }
+    }
 }
