@@ -538,4 +538,24 @@ internal class AdvertRepository : IAdvertRepository
             return new Pagination<AdvertReportsDto> { Data = reports, MetaData = metadata.MetaData };
         }
     }
+
+    public async Task<IEnumerable<AllInfomrationsAboutAdvertDto>> GetAdvertsCompare(int firstAdvert, int sacondAdvert, CancellationToken cancellationToken)
+    {
+        var query = AdvertQuery.GetCompareAdvertsQuery;
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var advertsId = new List<int> { firstAdvert, sacondAdvert };
+
+            var param = new DynamicParameters();
+
+            param.Add("@advertsId", advertsId);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            var adverts = await connection.QueryAsync<AllInfomrationsAboutAdvertDto>(cmd);
+
+            return adverts;
+        }
+    }
 }

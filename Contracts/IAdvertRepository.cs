@@ -27,4 +27,5 @@ public interface IAdvertRepository
     Task<bool> ChackIfAdvertWithThisReasonUserAlreadyReported(string userId, int advertId, int reasonId, CancellationToken cancellationToken);
     Task ReportAdvert(string userId, int advertId, int reasonId, CancellationToken cancellationToken);
     Task<Pagination<AdvertReportsDto>> GetAdvertReports(ReportParameters reportParameters, CancellationToken cancellationToken);
+    Task<IEnumerable<AllInfomrationsAboutAdvertDto>> GetAdvertsCompare(int firstAdvert, int sacondAdvert, CancellationToken cancellationToken);
 }

@@ -15,7 +15,7 @@ internal sealed class GetCompareAdvertsHandler : IRequestHandler<GetAdvertsCompa
 
     public async Task<IEnumerable<AllInfomrationsAboutAdvertDto>> Handle(GetAdvertsCompareQuery request, CancellationToken cancellationToken)
     {
-        var adverts = await _repository.Advert.GetAdminAdvert(request.AdvertId);
+        var adverts = await _repository.Advert.GetAdvertsCompare(request.FirstAdvert, request.SacondAdvert, cancellationToken);
 
         return adverts;
     }
