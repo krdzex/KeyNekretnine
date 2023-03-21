@@ -269,22 +269,21 @@ public static class AdvertQuery
         AND a.status_id = 1";
 
     public const string UpdateAdvertInformationsQuery = @"
-        UPDATE adverts a SET 
-        a.price = @price,
-        a.description_sr = @description_sr,
-        a.description_en = description_en,
-        a.floor_space = @floor_space,
-        a.no_of_bedrooms = @no_of_bedrooms,
-        a.no_of_bathrooms = @no_of_bathrooms,
-        a.building_floor = @building_floor,
-        a.has_elevator = @has_elevator,
-        a.has_garage = @has_garage,
-        a.has_terrace = @has_terrace,
-        a.has_wifi = @has_wifi,
-        a.is_furnished = @is_furnished,
-        a.year_of_building_created = @year_of_building_created,
-        a.floor_space = @floor_space,
-        a.purpose_id = @purpose_id,
-        a.type_id = @type_id
-        WHERE a.id = @advertId";
+        UPDATE adverts SET 
+        price = @price,
+        description_sr = @description_sr,
+        description_en = @description_en,
+        floor_space = @floor_space,
+        no_of_bedrooms = @no_of_bedrooms,
+        no_of_bathrooms = @no_of_bathrooms,
+        building_floor = @building_floor,
+        has_elevator = @has_elevator,
+        has_garage = @has_garage,
+        has_terrace = @has_terrace,
+        has_wifi = @has_wifi,
+        is_furnished = @is_furnished,
+        year_of_building_created = @year_of_building_created,
+        purpose_id = @purpose_id,
+        type_id = @type_id
+        WHERE id = @advertId";
 }
