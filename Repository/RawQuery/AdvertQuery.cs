@@ -285,10 +285,11 @@ public static class AdvertQuery
         year_of_building_created = @year_of_building_created,
         purpose_id = @purpose_id,
         type_id = @type_id
-        WHERE id = @advertId";
+        WHERE id = @advertId
+        AND a.status_id = 1";
 
     public const string ChackIfUserIsAdvertOwnerQuery = @"
-        SELECT (*)
+        SELECT COUNT(*)
         FROM adverts a
         INNER JOIN ""AspNetUsers"" u ON a.user_id = u.id
         WHERE a.id = @advertId and u.email = @email";

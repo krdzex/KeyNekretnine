@@ -3,6 +3,7 @@ using Application.Notifications.AdvertNotifications;
 using Application.Queries.AdvertQueries;
 using Application.Queries.AdvertQuery;
 using KeyNekretnine.Attributes;
+using KeyNekretnine.Presentation.ActionFilters;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -225,6 +226,8 @@ public class AdvertController : ControllerBase
     }
 
     [HttpPut("{advertId}/update")]
+    [Authorize]
+    [ServiceFilter(typeof(OwnerAdvertChack))]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateInformations([FromBody] UpdateAdvertInformationsDto updateAdvertInformationsDto, int advertId)

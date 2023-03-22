@@ -589,4 +589,22 @@ internal class AdvertRepository : IAdvertRepository
             await connection.ExecuteAsync(cmd);
         }
     }
+
+    public async Task<bool> ChackIfUserIsAdvertOwner(int advertId, string email)
+    {
+        string query = AdvertQuery.ChackIfUserIsAdvertOwnerQuery;
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var param = new DynamicParameters();
+
+            param.Add("email", email, DbType.String);
+            param.Add("advertId", advertId, DbType.Int32);
+
+            var cmd = new CommandDefinition(query, param);
+
+            int count = await connection.QueryFirstOrDefaultAsync<int>(cmd);
+            return count > 0;
+        }
+    }
 }
