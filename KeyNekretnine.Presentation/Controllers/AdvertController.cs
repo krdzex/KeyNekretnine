@@ -225,12 +225,24 @@ public class AdvertController : ControllerBase
         return Ok(await _sender.Send(new GetAdvertsCompareQuery(firstAdvert, sacondAdvert)));
     }
 
-    [HttpPut("{advertId}/update")]
+    [HttpPut("{advertId}/update/informations")]
     [Authorize]
     [ServiceFilter(typeof(OwnerAdvertChack))]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateInformations([FromBody] UpdateAdvertInformationsDto updateAdvertInformationsDto, int advertId)
+    {
+        await _sender.Send(new UpdateAdvertCommand(updateAdvertInformationsDto, advertId));
+
+        return NoContent();
+    }
+
+    [HttpPut("{advertId}/update/location")]
+    [Authorize]
+    [ServiceFilter(typeof(OwnerAdvertChack))]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> UpdateLocation([FromBody] UpdateAdvertInformationsDto updateAdvertInformationsDto, int advertId)
     {
         await _sender.Send(new UpdateAdvertCommand(updateAdvertInformationsDto, advertId));
 
