@@ -286,4 +286,10 @@ public static class AdvertQuery
         purpose_id = @purpose_id,
         type_id = @type_id
         WHERE id = @advertId";
+
+    public const string ChackIfUserIsAdvertOwnerQuery = @"
+        SELECT (*)
+        FROM adverts a
+        INNER JOIN ""AspNetUsers"" u ON a.user_id = u.id
+        WHERE a.id = @advertId and u.email = @email";
 }
