@@ -242,9 +242,9 @@ public class AdvertController : ControllerBase
     [ServiceFilter(typeof(OwnerAdvertChack))]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateLocation([FromBody] UpdateAdvertInformationsDto updateAdvertInformationsDto, int advertId)
+    public async Task<IActionResult> UpdateLocation([FromBody] UpdateAdvertLocationDto updateAdvertLocationDto, int advertId)
     {
-        await _sender.Send(new UpdateAdvertCommand(updateAdvertInformationsDto, advertId));
+        await _sender.Send(new UpdateAdvertLocationCommand(updateAdvertLocationDto, advertId));
 
         return NoContent();
     }
