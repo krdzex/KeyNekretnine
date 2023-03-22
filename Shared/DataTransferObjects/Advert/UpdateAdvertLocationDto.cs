@@ -1,5 +1,5 @@
 ﻿namespace Shared.DataTransferObjects.Advert;
-public class UpdateAdvertLocation
+public class UpdateAdvertLocationDto
 {
     public double Latitude { get; set; }
     public double Longitude { get; set; }
