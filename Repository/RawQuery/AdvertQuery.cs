@@ -299,7 +299,7 @@ public static class AdvertQuery
         latitude = @latitude,
         longitude = @longitude,
         street = @street,
-        neighborhood_id = @neighborhoodId,
+        neighborhood_id = @neighborhoodId
         WHERE id = @advertId
-        AND a.status_id = 1";
+        AND status_id = 1";
 }

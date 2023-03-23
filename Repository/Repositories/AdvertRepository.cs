@@ -610,16 +610,16 @@ internal class AdvertRepository : IAdvertRepository
 
     public async Task UpdateAdvertLocation(UpdateAdvertLocationDto updateAdvertLocationDto, int advertId, CancellationToken cancellationToken)
     {
-        var query = AdvertQuery.UpdateAdvertInformationsQuery;
+        var query = AdvertQuery.UpdateAdvertLocationQuery;
 
         using (var connection = _dapperContext.CreateConnection())
         {
             var param = new DynamicParameters();
 
             param.Add("latitude", updateAdvertLocationDto.Latitude, DbType.Double);
-            param.Add("longitude", updateAdvertLocationDto.Longitude, DbType.String);
+            param.Add("longitude", updateAdvertLocationDto.Longitude, DbType.Double);
             param.Add("street", updateAdvertLocationDto.Street, DbType.String);
-            param.Add("neighborhoodId", updateAdvertLocationDto.NeighborhoodId, DbType.Double);
+            param.Add("neighborhoodId", updateAdvertLocationDto.NeighborhoodId, DbType.Int32);
             param.Add("advertId", advertId, DbType.Int16);
 
             var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
