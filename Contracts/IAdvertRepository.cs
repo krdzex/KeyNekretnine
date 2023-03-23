@@ -30,4 +30,5 @@ public interface IAdvertRepository
     Task<IEnumerable<AllInfomrationsAboutAdvertDto>> GetAdvertsCompare(int firstAdvert, int sacondAdvert, CancellationToken cancellationToken);
     Task UpdateAdvertInformations(UpdateAdvertInformationsDto updateAdvertInformationsDto, int advertId, CancellationToken cancellationToken);
     Task<bool> ChackIfUserIsAdvertOwner(int advertId, string email);
+    Task UpdateAdvertLocation(UpdateAdvertLocationDto updateAdvertLocationDto, int advertId, CancellationToken cancellationToken);
 }

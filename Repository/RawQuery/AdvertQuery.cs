@@ -293,4 +293,13 @@ public static class AdvertQuery
         FROM adverts a
         INNER JOIN ""AspNetUsers"" u ON a.user_id = u.id
         WHERE a.id = @advertId and u.email = @email";
+
+    public const string UpdateAdvertLocationQuery = @"
+        UPDATE adverts SET 
+        latitude = @latitude,
+        longitude = @longitude,
+        street = @street,
+        neighborhood_id = @neighborhoodId,
+        WHERE id = @advertId
+        AND a.status_id = 1";
 }
