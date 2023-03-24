@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Repository;
@@ -11,9 +12,10 @@ using Repository;
 namespace KeyNekretnine.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20230324184540_AddAdvertFeaturesTable")]
+    partial class AddAdvertFeaturesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -191,12 +193,12 @@ namespace KeyNekretnine.Migrations
                         .HasColumnName("name");
 
                     b.HasKey("Id")
-                        .HasName("pk_advert_features");
+                        .HasName("pk_advert_feature");
 
                     b.HasIndex("AdvertId")
-                        .HasDatabaseName("ix_advert_features_advert_id");
+                        .HasDatabaseName("ix_advert_feature_advert_id");
 
-                    b.ToTable("advert_features", (string)null);
+                    b.ToTable("advert_feature", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Models.AdvertPurpose", b =>
@@ -8749,21 +8751,21 @@ namespace KeyNekretnine.Migrations
                         new
                         {
                             Id = "548e52a6-485a-49a5-b204-8994eaa79a12",
-                            ConcurrencyStamp = "1fbbfb78-e8e0-4e45-b602-1ac73e540145",
+                            ConcurrencyStamp = "cccddb32-1a06-487d-ba90-cb659d06089b",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
                             Id = "62558fd6-61f6-42fe-8cb7-8bc5fea7fb93",
-                            ConcurrencyStamp = "c44c8277-b72b-47e9-aa11-6a6cff2a989b",
+                            ConcurrencyStamp = "d0c656dd-ab38-4318-98ea-579216debd3a",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
                             Id = "f78fff4a-06dc-4b5d-864c-d70cd9ced860",
-                            ConcurrencyStamp = "baec8fef-0d43-40c9-9f47-36ec3941c1d3",
+                            ConcurrencyStamp = "65ab4204-0337-4e8f-85e3-961d8204ed9d",
                             Name = "Moderator",
                             NormalizedName = "MODERATOR"
                         });
@@ -8957,7 +8959,7 @@ namespace KeyNekretnine.Migrations
                         .HasForeignKey("AdvertId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_advert_features_adverts_advert_id");
+                        .HasConstraintName("fk_advert_feature_adverts_advert_id");
 
                     b.Navigation("Advert");
                 });

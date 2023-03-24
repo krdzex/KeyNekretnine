@@ -20,6 +20,7 @@ public class RepositoryContext : IdentityDbContext<User>
     public DbSet<UserAdvertFavorite> UserAdvertFavorites { get; set; }
     public DbSet<RejectReason> RejectReasons { get; set; }
     public DbSet<UserAdvertReport> UserAdvertReports { get; set; }
+    public DbSet<AdvertFeature> AdvertFeatures { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
