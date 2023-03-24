@@ -1,5 +1,5 @@
 ﻿namespace Entities.Models;
-public class AdvertFeature
+public class AdvertFeature : EntityBase
 {
     public string Name { get; set; }
     public int AdvertId { get; set; }

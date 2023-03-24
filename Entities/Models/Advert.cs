@@ -42,5 +42,5 @@ public class Advert : EntityBase
     public string ReferenceId { get; set; }
     public IEnumerable<UserAdvertFavorite> UserAdvertFavorites { get; set; }
     public IEnumerable<UserAdvertReport> UserAdvertReports { get; set; }
-
+    public List<AdvertFeature> Features { get; set; }
 }
