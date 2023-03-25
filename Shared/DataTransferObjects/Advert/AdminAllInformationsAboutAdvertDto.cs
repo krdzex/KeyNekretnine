@@ -1,4 +1,5 @@
-﻿using Shared.DataTransferObjects.Image;
+﻿using Shared.DataTransferObjects.AdvertFeature;
+using Shared.DataTransferObjects.Image;
 using System.Text.Json.Serialization;
 
 namespace Shared.DataTransferObjects.Advert;
@@ -125,4 +126,6 @@ public class AdminAllInformationsAboutAdvertDto
             Status_Name_En = value.En;
         }
     }
+    public IList<FeatureDto> Features { get; set; }
+
 }

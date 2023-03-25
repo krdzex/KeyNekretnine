@@ -1,6 +1,5 @@
 ﻿using Contracts;
 using Dapper;
-using Entities.Exceptions;
 using Repository.RawQuery;
 using Shared.CustomResponses;
 using Shared.DataTransferObjects.Advert;
@@ -88,40 +87,31 @@ internal class AdvertRepository : IAdvertRepository
         }
     }
 
-    public async Task<AdminAllInformationsAboutAdvertDto> GetAdminAdvert(int advertId)
+    public async Task<AdminAllInformationsAboutAdvertDto> GetAdminAdvert(int advertId, CancellationToken cancellationToken)
     {
-        var advertMap = new Dictionary<int, AdminAllInformationsAboutAdvertDto>();
         var query = AdvertQuery.SingleAdminAdvertQuery;
 
         using (var connection = _dapperContext.CreateConnection())
         {
-            var adverts = await connection
-                .QueryAsync<AdminAllInformationsAboutAdvertDto, ImageDto, AdminAllInformationsAboutAdvertDto>(query,
-                map: (advert, image) =>
-                {
-                    if (advertMap.TryGetValue(advertId, out AdminAllInformationsAboutAdvertDto existingAdvert))
-                    {
-                        advert = existingAdvert;
-                    }
-                    else
-                    {
-                        advert.Images = new List<ImageDto>
-                        {
-                            new ImageDto {Url = advert.Cover_Image_Url }
-                        };
-                        advertMap.Add(advertId, advert);
-                    }
-                    advert.Images.Add(image);
-                    return advert;
-                }, splitOn: "url",
-                param: new { Id = advertId });
+            var param = new DynamicParameters();
 
-            if (adverts.Count() < 1)
+            param.Add("id", advertId, DbType.Int32);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            var multi = await connection.QueryMultipleAsync(cmd);
+
+            var advert = await multi.ReadSingleOrDefaultAsync<AdminAllInformationsAboutAdvertDto>();
+
+            if (advert != null)
             {
-                throw new AdvertNotFoundException(advertId);
+                advert.Images = (await multi.ReadAsync<ImageDto>()).ToList();
+                advert.Images.Insert(0, new ImageDto { Url = advert.Cover_Image_Url });
+
+                advert.Features = (await multi.ReadAsync<FeatureDto>()).ToList();
             }
 
-            return advertMap.Values.Single();
+            return advert;
         }
     }
 

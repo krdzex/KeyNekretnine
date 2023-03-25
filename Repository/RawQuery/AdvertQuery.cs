@@ -4,18 +4,6 @@ using System.Text;
 namespace Repository.RawQuery;
 public static class AdvertQuery
 {
-    //public const string SingleAdvertQuery =
-    //  @"SELECT a.Id,a.price,a.description_sr,a.description_en,a.floor_space,a.street,a.no_of_bedrooms,a.no_of_bathrooms,a.building_floor,a.has_elevator,a.has_garage,a.has_terrace,a.latitude,a.longitude,a.has_wifi,a.is_furnished,a.created_date,a.year_of_building_created,a.cover_image_url,n.name as neighborhood_name,c.name as city_name, c.id as city_id,p.name_sr AS purpose_name_sr,p.name_en AS purpose_name_en,t.name_sr AS type_name_sr,t.name_en AS type_name_en,CONCAT(u.first_name,' ', u.last_name) AS creator, i.url
-    //        FROM adverts a
-    //        INNER JOIN images i ON i.advert_id = a.id
-    //        INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
-    //        INNER JOIN cities c on n.city_id = c.id
-    //        INNER JOIN advert_purposes p ON a.purpose_id = p.id
-    //        INNER JOIN advert_types t ON a.type_id = t.id
-    //        INNER JOIN ""AspNetUsers"" u ON a.user_id = u.id
-    //        WHERE a.id = @id
-    //        AND a.status_id = 1";
-
     public const string SingleAdvertQuery = @"
         SELECT a.Id,a.price,a.description_sr,a.description_en,a.floor_space,a.street,a.no_of_bedrooms,a.no_of_bathrooms,a.building_floor,a.has_elevator,a.has_garage,a.has_terrace,a.latitude,a.longitude,a.has_wifi,a.is_furnished,a.created_date,a.year_of_building_created,a.cover_image_url,n.name as neighborhood_name,c.name as city_name, c.id as city_id,p.name_sr AS purpose_name_sr,p.name_en AS purpose_name_en,t.name_sr AS type_name_sr,t.name_en AS type_name_en,CONCAT(u.first_name,' ', u.last_name) AS creator
         FROM adverts a
@@ -32,7 +20,7 @@ public static class AdvertQuery
         SELECT af.id,af.name FROM advert_features af WHERE af.advert_id = @id";
 
     public const string SingleAdminAdvertQuery = @"
-        SELECT a.Id,a.price,a.description_sr,a.description_en,a.floor_space,a.street,a.no_of_bedrooms,a.no_of_bathrooms,a.building_floor,a.has_elevator,a.has_garage,a.has_terrace,a.latitude,a.longitude,a.has_wifi,a.is_furnished,a.created_date,a.year_of_building_created,a.cover_image_url,n.name as neighborhood_name,c.name as city_name, c.id as city_id,p.name_sr AS purpose_name_sr,p.name_en AS purpose_name_en,t.name_sr AS type_name_sr,t.name_en AS type_name_en,s.name_sr AS status_name_sr,s.name_en AS status_name_en,CONCAT(u.first_name,' ', u.last_name) AS creator, i.url
+        SELECT a.Id,a.price,a.description_sr,a.description_en,a.floor_space,a.street,a.no_of_bedrooms,a.no_of_bathrooms,a.building_floor,a.has_elevator,a.has_garage,a.has_terrace,a.latitude,a.longitude,a.has_wifi,a.is_furnished,a.created_date,a.year_of_building_created,a.cover_image_url,n.name as neighborhood_name,c.name as city_name, c.id as city_id,p.name_sr AS purpose_name_sr,p.name_en AS purpose_name_en,t.name_sr AS type_name_sr,t.name_en AS type_name_en,s.name_sr AS status_name_sr,s.name_en AS status_name_en,CONCAT(u.first_name,' ', u.last_name) AS creator
         FROM adverts a
         INNER JOIN images i ON i.advert_id = a.id
         INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
@@ -42,7 +30,11 @@ public static class AdvertQuery
         INNER JOIN ""AspNetUsers"" u ON a.user_id = u.id
         INNER JOIN advert_statuses s ON a.status_id = s.id 
         WHERE a.id = @id
-        AND a.status_id != 4";
+        AND a.status_id != 4;
+
+        SELECT url FROM images i WHERE  i.advert_id = @id;
+
+        SELECT af.id,af.name FROM advert_features af WHERE af.advert_id = @id";
 
     public static string MakeGetAdvertQuery(AdvertParameters advertParameters, string orderBy)
     {
@@ -87,19 +79,19 @@ public static class AdvertQuery
         return countAdvertQuery.ToString() + selectAdvertsQuery.ToString();
     }
 
-    public const string AllAdvertMapPoints =
-        @"SELECT a.id,a.latitude,a.longitude
-              FROM adverts a
-              WHERE a.status_id = 1";
+    public const string AllAdvertMapPoints = @"
+        SELECT a.id,a.latitude,a.longitude
+        FROM adverts a
+        WHERE a.status_id = 1";
 
-    public const string SingleAdvertForMapPoint =
-       @"SELECT a.id,a.price,a.floor_space,a.no_of_bedrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,a.street
-             FROM adverts a
-             INNER JOIN advert_purposes p ON a.purpose_id = p.id
-             INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
-             INNER JOIN cities c ON n.city_id = c.id
-             WHERE a.id = @Id
-             AND a.status_id = 1";
+    public const string SingleAdvertForMapPoint = @"
+        SELECT a.id,a.price,a.floor_space,a.no_of_bedrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,a.street
+        FROM adverts a
+        INNER JOIN advert_purposes p ON a.purpose_id = p.id
+        INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
+        INNER JOIN cities c ON n.city_id = c.id
+        WHERE a.id = @Id
+        AND a.status_id = 1";
 
 
     public const string AddAdvertQuery = @"
