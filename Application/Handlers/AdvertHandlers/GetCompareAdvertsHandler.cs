@@ -4,7 +4,7 @@ using MediatR;
 using Shared.DataTransferObjects.Advert;
 
 namespace Application.Handlers.AdvertHandlers;
-internal sealed class GetCompareAdvertsHandler : IRequestHandler<GetAdvertsCompareQuery, IEnumerable<AllInfomrationsAboutAdvertDto>>
+internal sealed class GetCompareAdvertsHandler : IRequestHandler<GetAdvertsCompareQuery, IEnumerable<CompareAdvertDto>>
 {
     private readonly IRepositoryManager _repository;
 
@@ -13,7 +13,7 @@ internal sealed class GetCompareAdvertsHandler : IRequestHandler<GetAdvertsCompa
         _repository = repository;
     }
 
-    public async Task<IEnumerable<AllInfomrationsAboutAdvertDto>> Handle(GetAdvertsCompareQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<CompareAdvertDto>> Handle(GetAdvertsCompareQuery request, CancellationToken cancellationToken)
     {
         var adverts = await _repository.Advert.GetAdvertsCompare(request.FirstAdvert, request.SacondAdvert, cancellationToken);
 

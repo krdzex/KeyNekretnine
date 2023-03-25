@@ -264,9 +264,8 @@ public static class AdvertQuery
         ORDER BY COUNT(advert_id) DESC OFFSET @Skip FETCH NEXT @Take ROWS ONLY;";
 
     public const string GetCompareAdvertsQuery = @"
-        SELECT a.Id,a.price,a.description_sr,a.description_en,a.floor_space,a.street,a.no_of_bedrooms,a.no_of_bathrooms,a.building_floor,a.has_elevator,a.has_garage,a.has_terrace,a.latitude,a.longitude,a.has_wifi,a.is_furnished,a.created_date,a.year_of_building_created,a.cover_image_url,n.name as neighborhood_name,c.name as city_name, c.id as city_id,p.name_sr AS purpose_name_sr,p.name_en AS purpose_name_en,t.name_sr AS type_name_sr,t.name_en AS type_name_en,CONCAT(u.first_name,' ', u.last_name) AS creator, i.url
+        SELECT a.Id,a.price,a.description_sr,a.description_en,a.floor_space,a.street,a.no_of_bedrooms,a.no_of_bathrooms,a.building_floor,a.has_elevator,a.has_garage,a.has_terrace,a.latitude,a.longitude,a.has_wifi,a.is_furnished,a.created_date,a.year_of_building_created,a.cover_image_url,n.name as neighborhood_name,c.name as city_name, c.id as city_id,p.name_sr AS purpose_name_sr,p.name_en AS purpose_name_en,t.name_sr AS type_name_sr,t.name_en AS type_name_en,CONCAT(u.first_name,' ', u.last_name) AS creator
         FROM adverts a
-        INNER JOIN images i ON i.advert_id = a.id
         INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
         INNER JOIN cities c on n.city_id = c.id
         INNER JOIN advert_purposes p ON a.purpose_id = p.id

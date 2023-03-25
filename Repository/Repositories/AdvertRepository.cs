@@ -520,7 +520,7 @@ internal class AdvertRepository : IAdvertRepository
         }
     }
 
-    public async Task<IEnumerable<AllInfomrationsAboutAdvertDto>> GetAdvertsCompare(int firstAdvert, int sacondAdvert, CancellationToken cancellationToken)
+    public async Task<IEnumerable<CompareAdvertDto>> GetAdvertsCompare(int firstAdvert, int sacondAdvert, CancellationToken cancellationToken)
     {
         var query = AdvertQuery.GetCompareAdvertsQuery;
 
@@ -534,7 +534,7 @@ internal class AdvertRepository : IAdvertRepository
 
             var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
 
-            var adverts = await connection.QueryAsync<AllInfomrationsAboutAdvertDto>(cmd);
+            var adverts = await connection.QueryAsync<CompareAdvertDto>(cmd);
 
             return adverts;
         }
