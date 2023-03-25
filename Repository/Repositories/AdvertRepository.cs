@@ -4,6 +4,7 @@ using Entities.Exceptions;
 using Repository.RawQuery;
 using Shared.CustomResponses;
 using Shared.DataTransferObjects.Advert;
+using Shared.DataTransferObjects.AdvertFeature;
 using Shared.DataTransferObjects.Image;
 using Shared.RequestFeatures;
 using System.Data;
@@ -26,6 +27,7 @@ internal class AdvertRepository : IAdvertRepository
         {
             var referenceId = new Random().Next().ToString("x");
             var param = new DynamicParameters();
+
             param.Add("price", newAdvert.Price, DbType.Double);
             param.Add("description_sr", newAdvert.DescriptionSr, DbType.String);
             param.Add("description_en", newAdvert.DescriptionEn, DbType.String);
@@ -58,42 +60,31 @@ internal class AdvertRepository : IAdvertRepository
         }
     }
 
-    public async Task<AllInfomrationsAboutAdvertDto> GetAdvert(int advertId)
+    public async Task<AllInfomrationsAboutAdvertDto> GetAdvert(int advertId, CancellationToken cancellationToken)
     {
-        var referenceId = new Random().Next().ToString("x");
-
-        var advertMap = new Dictionary<int, AllInfomrationsAboutAdvertDto>();
         var query = AdvertQuery.SingleAdvertQuery;
 
         using (var connection = _dapperContext.CreateConnection())
         {
-            var adverts = await connection
-                .QueryAsync<AllInfomrationsAboutAdvertDto, ImageDto, AllInfomrationsAboutAdvertDto>(query,
-                map: (advert, image) =>
-                {
-                    if (advertMap.TryGetValue(advertId, out AllInfomrationsAboutAdvertDto existingAdvert))
-                    {
-                        advert = existingAdvert;
-                    }
-                    else
-                    {
-                        advert.Images = new List<ImageDto>
-                        {
-                            new ImageDto {Url = advert.Cover_Image_Url }
-                        };
-                        advertMap.Add(advertId, advert);
-                    }
-                    advert.Images.Add(image);
-                    return advert;
-                }, splitOn: "url",
-                param: new { Id = advertId });
+            var param = new DynamicParameters();
 
-            if (adverts.Count() < 1)
+            param.Add("id", advertId, DbType.Int32);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            var multi = await connection.QueryMultipleAsync(cmd);
+
+            var advert = await multi.ReadSingleOrDefaultAsync<AllInfomrationsAboutAdvertDto>();
+
+            if (advert != null)
             {
-                throw new AdvertNotFoundException(advertId);
+                advert.Images = (await multi.ReadAsync<ImageDto>()).ToList();
+                advert.Images.Insert(0, new ImageDto { Url = advert.Cover_Image_Url });
+
+                advert.Features = (await multi.ReadAsync<FeatureDto>()).ToList();
             }
 
-            return advertMap.Values.Single();
+            return advert;
         }
     }
 

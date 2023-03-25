@@ -5,7 +5,7 @@ using Shared.RequestFeatures;
 namespace Contracts;
 public interface IAdvertRepository
 {
-    Task<AllInfomrationsAboutAdvertDto> GetAdvert(int advertId);
+    Task<AllInfomrationsAboutAdvertDto> GetAdvert(int advertId, CancellationToken cancellationToken);
     Task<AdminAllInformationsAboutAdvertDto> GetAdminAdvert(int advertId);
     Task<Pagination<MinimalInformationsAboutAdvertDto>> GetAdverts(AdvertParameters advertParameters, CancellationToken cancellationToken);
     Task<IEnumerable<ShowAdvertLocationOnMapDto>> GetMapPoints(CancellationToken cancellationToken);

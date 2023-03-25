@@ -1,4 +1,5 @@
-﻿using Shared.DataTransferObjects.Image;
+﻿using Shared.DataTransferObjects.AdvertFeature;
+using Shared.DataTransferObjects.Image;
 using System.Text.Json.Serialization;
 
 namespace Shared.DataTransferObjects.Advert;
@@ -99,4 +100,5 @@ public class AllInfomrationsAboutAdvertDto
     public string City_Name { get; set; }
     public int City_Id { get; set; }
     public string Neighborhood_Name { get; set; }
+    public IList<FeatureDto> Features { get; set; }
 }

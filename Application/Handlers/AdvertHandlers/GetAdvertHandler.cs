@@ -1,5 +1,6 @@
 ﻿using Application.Queries.AdvertQuery;
 using Contracts;
+using Entities.Exceptions;
 using MediatR;
 using Shared.DataTransferObjects.Advert;
 
@@ -14,7 +15,12 @@ internal sealed class GetAdvertHandler : IRequestHandler<GetAdvertQuery, AllInfo
     }
     public async Task<AllInfomrationsAboutAdvertDto> Handle(GetAdvertQuery request, CancellationToken cancellationToken)
     {
-        var advert = await _repository.Advert.GetAdvert(request.Id);
+        var advert = await _repository.Advert.GetAdvert(request.Id, cancellationToken);
+
+        if (advert is null)
+        {
+            throw new AdvertNotFoundException(request.Id);
+        }
 
         return advert;
     }
