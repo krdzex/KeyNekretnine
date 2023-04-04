@@ -9,5 +9,7 @@ public class ImageConfiguration : IEntityTypeConfiguration<Image>
     {
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Url).IsRequired().HasMaxLength(200);
+        builder.Property(x => x.BlurUrl).HasMaxLength(250);
+
     }
 }
