@@ -292,7 +292,7 @@ public static class AdvertQuery
         purpose_id = @purpose_id,
         type_id = @type_id
         WHERE id = @advertId
-        AND a.status_id = 1";
+        AND status_id = 1";
 
     public const string ChackIfUserIsAdvertOwnerQuery = @"
         SELECT COUNT(*)
