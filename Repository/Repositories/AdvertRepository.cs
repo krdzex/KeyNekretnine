@@ -296,11 +296,11 @@ internal class AdvertRepository : IAdvertRepository
         }
     }
 
-    public async Task<Pagination<MinimalInformationsAboutAdvertDto>> GetMyAdverts(MyAdvertsParameters myAdvertParameters, string userId, CancellationToken cancellationToken)
+    public async Task<Pagination<GetMyAdvertsDto>> GetMyAdverts(MyAdvertsParameters myAdvertParameters, string userId, CancellationToken cancellationToken)
     {
-        var orderBy = OrderQueryBuilder.CreateOrderQuery<MinimalInformationsAboutAdvertDto>(myAdvertParameters.OrderBy, 'a');
+        var orderBy = OrderQueryBuilder.CreateOrderQuery<GetMyAdvertsDto>(myAdvertParameters.OrderBy, 'a');
 
-        var query = AdvertQuery.MakeGetMyAdvertQuery(myAdvertParameters, orderBy, userId);
+        var query = AdvertQuery.MakeGetMyAdvertsQuery(myAdvertParameters, orderBy, userId);
 
         var skip = (myAdvertParameters.PageNumber - 1) * myAdvertParameters.PageSize;
 
@@ -328,11 +328,11 @@ internal class AdvertRepository : IAdvertRepository
             var multi = await connection.QueryMultipleAsync(cmd);
 
             var count = await multi.ReadSingleAsync<int>();
-            var adverts = (await multi.ReadAsync<MinimalInformationsAboutAdvertDto>()).ToList();
+            var adverts = (await multi.ReadAsync<GetMyAdvertsDto>()).ToList();
 
-            var metadata = new PagedList<MinimalInformationsAboutAdvertDto>(adverts, count, myAdvertParameters.PageNumber, myAdvertParameters.PageSize);
+            var metadata = new PagedList<GetMyAdvertsDto>(adverts, count, myAdvertParameters.PageNumber, myAdvertParameters.PageSize);
 
-            return new Pagination<MinimalInformationsAboutAdvertDto> { Data = adverts, MetaData = metadata.MetaData };
+            return new Pagination<GetMyAdvertsDto> { Data = adverts, MetaData = metadata.MetaData };
         }
     }
 

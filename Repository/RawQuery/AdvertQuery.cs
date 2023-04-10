@@ -5,7 +5,7 @@ namespace Repository.RawQuery;
 public static class AdvertQuery
 {
     public const string SingleAdvertQuery = @"
-        SELECT a.Id,a.price,a.description_sr,a.description_en,a.floor_space,a.street,a.no_of_bedrooms,a.no_of_bathrooms,a.building_floor,a.has_elevator,a.has_garage,a.has_terrace,a.latitude,a.longitude,a.has_wifi,a.is_furnished,a.created_date,a.year_of_building_created,a.cover_image_url,n.name as neighborhood_name,c.name as city_name, c.id as city_id,p.name_sr AS purpose_name_sr,p.name_en AS purpose_name_en,t.name_sr AS type_name_sr,t.name_en AS type_name_en,CONCAT(u.first_name,' ', u.last_name) AS creator
+        SELECT a.Id,a.price,a.description_sr,a.description_en,a.floor_space,a.street,a.no_of_bedrooms,a.no_of_bathrooms,a.building_floor,a.has_elevator,a.has_garage,a.has_terrace,a.latitude,a.longitude,a.has_wifi,a.is_furnished,a.created_date,a.year_of_building_created,a.cover_image_url,a.cover_image_blur_url,n.name as neighborhood_name,c.name as city_name, c.id as city_id,p.name_sr AS purpose_name_sr,p.name_en AS purpose_name_en,t.name_sr AS type_name_sr,t.name_en AS type_name_en,CONCAT(u.first_name,' ', u.last_name) AS creator
         FROM adverts a
         INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
         INNER JOIN cities c on n.city_id = c.id
@@ -15,7 +15,7 @@ public static class AdvertQuery
         WHERE a.id = @id
         AND a.status_id = 1;
         
-        SELECT url FROM images i WHERE  i.advert_id = @id;
+        SELECT url,blur_url FROM images i WHERE  i.advert_id = @id;
 
         SELECT af.id AS feature_id,af.name FROM advert_features af WHERE af.advert_id = @id";
 
@@ -32,7 +32,7 @@ public static class AdvertQuery
         WHERE a.id = @id
         AND a.status_id != 4;
 
-        SELECT url FROM images i WHERE  i.advert_id = @id;
+        SELECT url,blur_url FROM images i WHERE  i.advert_id = @id;
 
         SELECT af.id AS feature_id,af.name FROM advert_features af WHERE af.advert_id = @id";
 
@@ -164,7 +164,7 @@ public static class AdvertQuery
          JOIN ""AspNetUsers"" u ON u.id = a.user_id
          WHERE a.id = @advertId";
 
-    public static string MakeGetMyAdvertQuery(MyAdvertsParameters myAdvertParameters, string orderBy, string userId)
+    public static string MakeGetMyAdvertsQuery(MyAdvertsParameters myAdvertParameters, string orderBy, string userId)
     {
         var countConditions = new StringBuilder
             (
@@ -179,9 +179,10 @@ public static class AdvertQuery
 
         var selectAdvertsQuery = new StringBuilder
             (
-            @"SELECT a.id,a.price,a.floor_space,a.no_of_bedrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,a.street
+            @"SELECT a.id,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,t.name_en AS type_name_en,t.name_sr AS type_name_sr,a.description_sr,a.description_en
              FROM adverts a
              INNER JOIN advert_purposes p ON a.purpose_id = p.id
+             INNER JOIN advert_types t ON a.type_id = t.id
              INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
              INNER JOIN cities c ON n.city_id = c.id"
             );
@@ -231,7 +232,7 @@ public static class AdvertQuery
          INNER JOIN adverts a ON a.id = ua.advert_id
          WHERE ua.user_id = @userId;
 
-         SELECT a.id,a.price,a.floor_space,a.no_of_bedrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,a.street
+         SELECT a.id,a.price,a.floor_space,a.no_of_bedrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,a.cover_image_blur_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,a.street
          FROM user_advert_favorites ua
          INNER JOIN adverts a ON a.id = ua.advert_id
          INNER JOIN advert_purposes p ON a.purpose_id = p.id

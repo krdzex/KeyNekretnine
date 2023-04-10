@@ -30,6 +30,8 @@ public class Advert : EntityBase
 
     public List<Image> Images { get; set; }
     public string CoverImageUrl { get; set; }
+    public string CoverImageBlurUrl { get; set; }
+
     public double Latitude { get; set; }
     public double Longitude { get; set; }
 

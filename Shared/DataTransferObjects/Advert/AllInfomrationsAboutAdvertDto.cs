@@ -3,33 +3,9 @@ using Shared.DataTransferObjects.Image;
 using System.Text.Json.Serialization;
 
 namespace Shared.DataTransferObjects.Advert;
-public class AllInfomrationsAboutAdvertDto
+public class AllInfomrationsAboutAdvertDto : BaseAdvertDto
 {
-    public int Id { get; set; }
     public double Price { get; set; }
-    private string Description_Sr { get; set; }
-    private string Description_En { get; set; }
-
-    public DifferentLanguagesDto Description
-    {
-        get
-        {
-            if (string.IsNullOrEmpty(Description_Sr) && string.IsNullOrEmpty(Description_En))
-            {
-                return Description;
-            }
-            else
-            {
-                return new DifferentLanguagesDto { Sr = Description_Sr, En = Description_En };
-            }
-
-        }
-        set
-        {
-            Description_Sr = value.Sr;
-            Description_En = value.En;
-        }
-    }
     public IList<ImageDto> Images { get; set; }
 
     [JsonIgnore]
@@ -42,57 +18,8 @@ public class AllInfomrationsAboutAdvertDto
     public bool Has_Terrace { get; set; }
     public bool Has_Wifi { get; set; }
     public bool Is_Funished { get; set; }
-    public DateTime Created_Date { get; set; }
     public int Year_Of_Building_Created { get; set; }
     public int Building_Floor { get; set; }
-    private string Purpose_Name_Sr { get; set; }
-    private string Purpose_Name_En { get; set; }
-
-    public DifferentLanguagesDto Purpose_Name
-    {
-        get
-        {
-            if (string.IsNullOrEmpty(Purpose_Name_Sr) && string.IsNullOrEmpty(Purpose_Name_En))
-            {
-                return Purpose_Name;
-            }
-            else
-            {
-                return new DifferentLanguagesDto { Sr = Purpose_Name_Sr, En = Purpose_Name_En };
-            }
-
-        }
-        set
-        {
-            Purpose_Name_Sr = value.Sr;
-            Purpose_Name_En = value.En;
-        }
-    }
-
-    private string Type_Name_Sr { get; set; }
-    private string Type_Name_En { get; set; }
-
-    public DifferentLanguagesDto Type_Name
-    {
-        get
-        {
-            if (string.IsNullOrEmpty(Type_Name_Sr) && string.IsNullOrEmpty(Type_Name_En))
-            {
-                return Type_Name;
-            }
-            else
-            {
-                return new DifferentLanguagesDto { Sr = Type_Name_Sr, En = Type_Name_En };
-            }
-
-        }
-        set
-        {
-            Type_Name_Sr = value.Sr;
-            Type_Name_En = value.En;
-        }
-    }
-
     public string Creator { get; set; }
     public string Street { get; set; }
     public double Latitude { get; set; }
