@@ -6,7 +6,7 @@ using Shared.CustomResponses;
 using Shared.DataTransferObjects.Advert;
 
 namespace Application.Handlers.AdvertHandlers;
-internal sealed class GetMyAdvertsHandler : IRequestHandler<GetMyAdvertsQuery, Pagination<GetMyAdvertsDto>>
+internal sealed class GetMyAdvertsHandler : IRequestHandler<GetMyAdvertsQuery, Pagination<MyAdvertsDto>>
 {
     private readonly IRepositoryManager _repository;
 
@@ -14,7 +14,7 @@ internal sealed class GetMyAdvertsHandler : IRequestHandler<GetMyAdvertsQuery, P
     {
         _repository = repository;
     }
-    public async Task<Pagination<GetMyAdvertsDto>> Handle(GetMyAdvertsQuery request, CancellationToken cancellationToken)
+    public async Task<Pagination<MyAdvertsDto>> Handle(GetMyAdvertsQuery request, CancellationToken cancellationToken)
     {
         var userId = await _repository.User.GetUserIdFromEmail(request.Email, cancellationToken);
 

@@ -18,7 +18,7 @@ public interface IAdvertRepository
     Task ApproveAdvert(int advertId, CancellationToken cancellationToken);
     Task DeclineAdvert(int advertId, CancellationToken cancellationToken);
     Task<Pagination<AdminTableAdvertDto>> GetAdminAdverts(AdminAdvertParameters adminAdvertParameters, CancellationToken cancellationToken);
-    Task<Pagination<GetMyAdvertsDto>> GetMyAdverts(MyAdvertsParameters MyAdvertParameters, string userId, CancellationToken cancellationToken);
+    Task<Pagination<MyAdvertsDto>> GetMyAdverts(MyAdvertsParameters MyAdvertParameters, string userId, CancellationToken cancellationToken);
     Task<string> GetUserEmailFromAdvertId(int advertId, CancellationToken cancellationToken);
     Task MakeAdvertFavorite(string userId, int advertId, CancellationToken cancellationToken);
     Task<bool> ChackIfAdvertIsFavorite(string userId, int advertId, CancellationToken cancellationToken);

@@ -296,11 +296,11 @@ internal class AdvertRepository : IAdvertRepository
         }
     }
 
-    public async Task<Pagination<GetMyAdvertsDto>> GetMyAdverts(MyAdvertsParameters myAdvertParameters, string userId, CancellationToken cancellationToken)
+    public async Task<Pagination<MyAdvertsDto>> GetMyAdverts(MyAdvertsParameters myAdvertParameters, string userId, CancellationToken cancellationToken)
     {
-        var orderBy = OrderQueryBuilder.CreateOrderQuery<GetMyAdvertsDto>(myAdvertParameters.OrderBy, 'a');
+        var orderBy = OrderQueryBuilder.CreateOrderQuery<MyAdvertsDto>(myAdvertParameters.OrderBy, 'a');
 
-        var query = AdvertQuery.MakeGetMyAdvertsQuery(myAdvertParameters, orderBy, userId);
+        var query = AdvertQuery.GetMyAdverts(orderBy);
 
         var skip = (myAdvertParameters.PageNumber - 1) * myAdvertParameters.PageSize;
 
@@ -310,29 +310,19 @@ internal class AdvertRepository : IAdvertRepository
 
             param.Add("skip", skip, DbType.Int32);
             param.Add("take", myAdvertParameters.PageSize, DbType.Int32);
-            param.Add("minPrice", myAdvertParameters.MinPrice, DbType.Int32);
-            param.Add("maxPrice", myAdvertParameters.MaxPrice, DbType.Int32);
-            param.Add("noOfBedrooms", myAdvertParameters.NoOfBedrooms);
-            param.Add("noOfBathrooms", myAdvertParameters.NoOfBathrooms);
-            param.Add("typeIds", myAdvertParameters.AdvertTypeIds);
-            param.Add("purposeIds", myAdvertParameters.AdvertPurposeIds);
-            param.Add("cityId", myAdvertParameters.CityId, DbType.Int32);
-            param.Add("neighborhoodIds", myAdvertParameters.NeighborhoodIds);
-            param.Add("minFloorSpace", myAdvertParameters.MinFloorSpace, DbType.Int32);
-            param.Add("maxFloorSpace", myAdvertParameters.MaxFloorSpace, DbType.Int32);
+            param.Add("orderBy", orderBy, DbType.String);
             param.Add("userId", userId, DbType.String);
-            param.Add("advertStatusIds", myAdvertParameters.AdvertStatusIds);
 
             var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
 
             var multi = await connection.QueryMultipleAsync(cmd);
 
             var count = await multi.ReadSingleAsync<int>();
-            var adverts = (await multi.ReadAsync<GetMyAdvertsDto>()).ToList();
+            var adverts = (await multi.ReadAsync<MyAdvertsDto>()).ToList();
 
-            var metadata = new PagedList<GetMyAdvertsDto>(adverts, count, myAdvertParameters.PageNumber, myAdvertParameters.PageSize);
+            var metadata = new PagedList<MyAdvertsDto>(adverts, count, myAdvertParameters.PageNumber, myAdvertParameters.PageSize);
 
-            return new Pagination<GetMyAdvertsDto> { Data = adverts, MetaData = metadata.MetaData };
+            return new Pagination<MyAdvertsDto> { Data = adverts, MetaData = metadata.MetaData };
         }
     }
 

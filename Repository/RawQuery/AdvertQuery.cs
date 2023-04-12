@@ -158,58 +158,26 @@ public static class AdvertQuery
         return countAdvertQuery.ToString() + selectAdvertsQuery.ToString();
     }
 
-    public const string GetUserEmailFromAdvertIdQuery =
-        @"SELECT u.email
-         FROM adverts a
-         JOIN ""AspNetUsers"" u ON u.id = a.user_id
-         WHERE a.id = @advertId";
+    public const string GetUserEmailFromAdvertIdQuery = @"
+        SELECT u.email
+        FROM adverts a
+        JOIN ""AspNetUsers"" u ON u.id = a.user_id
+        WHERE a.id = @advertId";
 
-    public static string MakeGetMyAdvertsQuery(MyAdvertsParameters myAdvertParameters, string orderBy, string userId)
-    {
-        var countConditions = new StringBuilder
-            (
-            "\t     WHERE a.price >= @minPrice AND a.price <= @maxPrice AND a.status_id = 1 AND a.floor_space >= @minFloorSpace  AND a.floor_space <= @maxFloorSpace "
-            );
 
-        var countAdvertQuery = new StringBuilder
-            (
-            @"SELECT COUNT(a.id)
-             FROM adverts a"
-            );
+    public static string GetMyAdverts(string orderBy) => @$"
+        SELECT COUNT(a.id)
+        FROM adverts a
+        WHERE a.user_id = @userId AND a.status_id != 4;
 
-        var selectAdvertsQuery = new StringBuilder
-            (
-            @"SELECT a.id,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,t.name_en AS type_name_en,t.name_sr AS type_name_sr,a.description_sr,a.description_en
-             FROM adverts a
-             INNER JOIN advert_purposes p ON a.purpose_id = p.id
-             INNER JOIN advert_types t ON a.type_id = t.id
-             INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
-             INNER JOIN cities c ON n.city_id = c.id"
-            );
-
-        if (myAdvertParameters.NoOfBedrooms is not null) countConditions.AppendLine(" AND (a.no_of_bedrooms = ANY(@noOfBedrooms) OR ((select get_max_value(@noOfBedrooms)) >= 4 AND a.no_of_bedrooms >= 4))");
-        if (myAdvertParameters.NoOfBathrooms is not null) countConditions.AppendLine(" AND (a.no_of_bathrooms = ANY(@noOfBathrooms) OR ((select get_max_value(@noOfBathrooms)) >= 4 AND a.no_of_bathrooms >= 4))");
-        if (myAdvertParameters.AdvertTypeIds is not null) countConditions.AppendLine(" AND a.type_id = ANY(@typeIds)");
-        if (myAdvertParameters.AdvertPurposeIds is not null) countConditions.AppendLine(" AND a.purpose_id = ANY(@purposeIds)");
-        if (myAdvertParameters.AdvertStatusIds is not null) countConditions.AppendLine(" WHERE a.status_id = ANY(@advertStatusIds) AND a.status_id NOT IN (4)");
-        if (!String.IsNullOrEmpty(userId)) countConditions.AppendLine(" AND a.user_id = @userId");
-
-        if (myAdvertParameters.CityId is not null)
-        {
-            countAdvertQuery.AppendLine(" INNER JOIN neighborhoods n ON a.neighborhood_id = n.id\r\t     INNER JOIN cities c ON n.city_id = c.id");
-            countConditions.AppendLine(" AND c.id = @cityId");
-        }
-        if (myAdvertParameters.CityId is null && myAdvertParameters.NeighborhoodIds is not null)
-        {
-            countAdvertQuery.AppendLine(" INNER JOIN neighborhoods n ON a.neighborhood_id = n.id\n");
-            countConditions.AppendLine(" AND a.neighborhood_id = ANY(@neighborhoodIds)");
-        }
-        countAdvertQuery.Append(countConditions).Append(';');
-        selectAdvertsQuery.Append(countConditions).Append($" ORDER BY {orderBy} OFFSET @Skip FETCH NEXT @Take ROWS ONLY;");
-
-        return countAdvertQuery.ToString() + selectAdvertsQuery.ToString();
-    }
-
+        SELECT a.id,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,t.name_en AS type_name_en,t.name_sr AS type_name_sr,a.description_sr,a.description_en
+        FROM adverts a
+        INNER JOIN advert_purposes p ON a.purpose_id = p.id
+        INNER JOIN advert_types t ON a.type_id = t.id
+        INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
+        INNER JOIN cities c ON n.city_id = c.id
+        WHERE a.user_id = @userId AND a.status_id != 4
+        ORDER BY {orderBy} OFFSET @Skip FETCH NEXT @Take ROWS ONLY;";
 
     public const string MakeAdvertFavoriteQuery = @"
           INSERT INTO user_advert_favorites(user_id,advert_id,created_favorite_date)
