@@ -19,7 +19,7 @@ namespace KeyNekretnine.Presentation.Controllers
 
         [HttpPost]
         [Authorize]
-        [Route("user/confirm")]
+        [Route("/api/user/confirm")]
         [ServiceFilter(typeof(BanUserChack))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

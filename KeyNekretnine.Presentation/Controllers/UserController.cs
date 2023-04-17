@@ -67,7 +67,7 @@ public class UserController : ControllerBase
     {
         await _sender.Send(new ConfirmUserEmailQuery(token, email));
 
-        return NoContent();
+        return RedirectToPage("https://keynekretnine-dev.vercel.app");
     }
 
     [HttpGet("{userId:guid}")]

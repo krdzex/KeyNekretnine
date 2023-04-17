@@ -598,4 +598,33 @@ internal class AdvertRepository : IAdvertRepository
             await connection.ExecuteAsync(cmd);
         }
     }
+
+    public async Task<MyAdvertDto> GetMyAdvert(int advertId, string userId, CancellationToken cancellationToken)
+    {
+        var query = AdvertQuery.MyAdvertQuery;
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var param = new DynamicParameters();
+
+            param.Add("id", advertId, DbType.Int32);
+            param.Add("userId", userId, DbType.String);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            var multi = await connection.QueryMultipleAsync(cmd);
+
+            var advert = await multi.ReadSingleOrDefaultAsync<MyAdvertDto>();
+
+            if (advert != null)
+            {
+                advert.Images = (await multi.ReadAsync<ImageDto>()).ToList();
+                advert.Images.Insert(0, new ImageDto { Url = advert.Cover_Image_Url });
+
+                advert.Features = (await multi.ReadAsync<FeatureDto>()).ToList();
+            }
+
+            return advert;
+        }
+    }
 }

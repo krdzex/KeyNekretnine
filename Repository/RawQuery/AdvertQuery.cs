@@ -259,9 +259,14 @@ public static class AdvertQuery
         is_furnished = @is_furnished,
         year_of_building_created = @year_of_building_created,
         purpose_id = @purpose_id,
-        type_id = @type_id
+        type_id = @type_id,
+        status_id = 
+            CASE 
+                WHEN status_id = 3 THEN 2
+                ELSE status_id
+            END
         WHERE id = @advertId
-        AND status_id = 1";
+        AND status_id != 4";
 
     public const string ChackIfUserIsAdvertOwnerQuery = @"
         SELECT COUNT(*)
@@ -274,7 +279,27 @@ public static class AdvertQuery
         latitude = @latitude,
         longitude = @longitude,
         street = @street,
-        neighborhood_id = @neighborhoodId
+        neighborhood_id = @neighborhoodId,
+        status_id = 
+            CASE  
+                WHEN status_id = 3 THEN 2
+                ELSE status_id
+            END
         WHERE id = @advertId
-        AND status_id = 1";
+        AND status_id != 4";
+
+    public const string MyAdvertQuery = @"
+        SELECT a.Id,a.price,a.description_sr,a.description_en,a.floor_space,a.street,a.no_of_bedrooms,a.no_of_bathrooms,a.building_floor,a.has_elevator,a.has_garage,a.has_terrace,a.latitude,a.longitude,a.has_wifi,a.is_furnished,a.created_date,a.year_of_building_created,a.cover_image_url,a.cover_image_blur_url,n.name as neighborhood_name,c.name as city_name, c.id as city_id,a.neighborhood_id,p.name_sr AS purpose_name_sr,p.name_en AS purpose_name_en,t.name_sr AS type_name_sr,t.name_en AS type_name_en,CONCAT(u.first_name,' ', u.last_name) AS creator, s.name_sr AS status_name_sr,s.name_en AS status_name_en
+        FROM adverts a
+        INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
+        INNER JOIN cities c on n.city_id = c.id
+        INNER JOIN advert_purposes p ON a.purpose_id = p.id
+        INNER JOIN advert_types t ON a.type_id = t.id
+        INNER JOIN ""AspNetUsers"" u ON a.user_id = u.id
+        INNER JOIN advert_statuses s ON a.status_id = s.id
+        WHERE a.id = @id AND a.user_id = @userId AND a.status_id != 4;
+        
+        SELECT url,blur_url FROM images i WHERE  i.advert_id = @id;
+
+        SELECT af.id AS feature_id,af.name FROM advert_features af WHERE af.advert_id = @id";
 }

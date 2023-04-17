@@ -133,6 +133,20 @@ public class AdvertController : ControllerBase
     }
 
     [Authorize]
+    [HttpGet("/api/advert/my-adverts/{advertId}")]
+    [ServiceFilter(typeof(BanUserChack))]
+    [ServiceFilter(typeof(OwnerAdvertChack))]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetMyAdverts(int advertId)
+    {
+        var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
+
+        return Ok(await _sender.Send(new GetMyAdvertQuery(advertId, email)));
+    }
+
+    [Authorize]
     [HttpPost("{advertId}/favorite")]
     [ServiceFilter(typeof(BanUserChack))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -227,6 +241,7 @@ public class AdvertController : ControllerBase
 
     [HttpPut("{advertId}/update/informations")]
     [Authorize]
+    [ServiceFilter(typeof(BanUserChack))]
     [ServiceFilter(typeof(OwnerAdvertChack))]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -239,6 +254,7 @@ public class AdvertController : ControllerBase
 
     [HttpPut("{advertId}/update/location")]
     [Authorize]
+    [ServiceFilter(typeof(BanUserChack))]
     [ServiceFilter(typeof(OwnerAdvertChack))]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]

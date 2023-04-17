@@ -31,4 +31,5 @@ public interface IAdvertRepository
     Task UpdateAdvertInformations(UpdateAdvertInformationsDto updateAdvertInformationsDto, int advertId, CancellationToken cancellationToken);
     Task<bool> ChackIfUserIsAdvertOwner(int advertId, string email);
     Task UpdateAdvertLocation(UpdateAdvertLocationDto updateAdvertLocationDto, int advertId, CancellationToken cancellationToken);
+    Task<MyAdvertDto> GetMyAdvert(int advertId, string userId, CancellationToken cancellationToken);
 }
