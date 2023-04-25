@@ -21,7 +21,7 @@ internal sealed class ImageService : IImageService
     }
 
 
-    public async Task<string> UploadImageOnCloudinary(byte[] item)
+    public async Task<string> UploadImageOnCloudinary(byte[] item, string folderName)
     {
         using (var memoryStream = manager.GetStream("memory", item, 0, item.Length))
         {
@@ -29,7 +29,8 @@ internal sealed class ImageService : IImageService
             {
                 File = new FileDescription(@"fileName", memoryStream),
                 Transformation = new Transformation().Quality(60),
-                Format = "WebP"
+                Format = "WebP",
+                Folder = folderName
             };
             var uploadResult = await _cloudinary.UploadAsync(uploadParams);
             return uploadResult.Url.ToString();

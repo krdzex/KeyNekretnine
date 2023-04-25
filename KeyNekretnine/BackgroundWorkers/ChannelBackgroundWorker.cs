@@ -44,13 +44,13 @@ public class ChannelBackgroundWorker : BackgroundService
                 var coverImageData = await scopedRepositoryManager.TemporeryImageData.Get(item.AdvertId, true, cancellationToken);
                 var advertImagesData = await scopedRepositoryManager.TemporeryImageData.Get(item.AdvertId, false, cancellationToken);
 
-                var coverImageUrl = await scopedServiceManager.ImageService.UploadImageOnCloudinary(coverImageData.First());
+                var coverImageUrl = await scopedServiceManager.ImageService.UploadImageOnCloudinary(coverImageData.First(), $"advert-{item.AdvertId}");
 
                 var imagesUrls = new List<string>();
 
                 foreach (var imageData in advertImagesData)
                 {
-                    var url = await scopedServiceManager.ImageService.UploadImageOnCloudinary(imageData);
+                    var url = await scopedServiceManager.ImageService.UploadImageOnCloudinary(imageData, $"advert-{item.AdvertId}");
                     imagesUrls.Add(url);
                 }
 

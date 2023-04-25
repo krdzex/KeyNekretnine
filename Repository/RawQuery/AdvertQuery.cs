@@ -11,7 +11,7 @@ public static class AdvertQuery
         INNER JOIN cities c on n.city_id = c.id
         INNER JOIN advert_purposes p ON a.purpose_id = p.id
         INNER JOIN advert_types t ON a.type_id = t.id
-        INNER JOIN ""AspNetUsers"" u ON a.user_id = u.id
+        INNER JOIN asp_net_users u ON a.user_id = u.id
         WHERE a.id = @id
         AND a.status_id = 1;
         
@@ -27,7 +27,7 @@ public static class AdvertQuery
         INNER JOIN cities c on n.city_id = c.id
         INNER JOIN advert_purposes p ON a.purpose_id = p.id
         INNER JOIN advert_types t ON a.type_id = t.id
-        INNER JOIN ""AspNetUsers"" u ON a.user_id = u.id
+        INNER JOIN asp_net_users u ON a.user_id = u.id
         INNER JOIN advert_statuses s ON a.status_id = s.id 
         WHERE a.id = @id
         AND a.status_id != 4;
@@ -161,7 +161,7 @@ public static class AdvertQuery
     public const string GetUserEmailFromAdvertIdQuery = @"
         SELECT u.email
         FROM adverts a
-        JOIN ""AspNetUsers"" u ON u.id = a.user_id
+        JOIN asp_net_users u ON u.id = a.user_id
         WHERE a.id = @advertId";
 
 
@@ -239,7 +239,7 @@ public static class AdvertQuery
         INNER JOIN cities c on n.city_id = c.id
         INNER JOIN advert_purposes p ON a.purpose_id = p.id
         INNER JOIN advert_types t ON a.type_id = t.id
-        INNER JOIN ""AspNetUsers"" u ON a.user_id = u.id
+        INNER JOIN asp_net_users u ON a.user_id = u.id
         WHERE a.id = ANY(@advertsId)
         AND a.status_id = 1";
 
@@ -271,7 +271,7 @@ public static class AdvertQuery
     public const string ChackIfUserIsAdvertOwnerQuery = @"
         SELECT COUNT(*)
         FROM adverts a
-        INNER JOIN ""AspNetUsers"" u ON a.user_id = u.id
+        INNER JOIN asp_net_users u ON a.user_id = u.id
         WHERE a.id = @advertId and u.email = @email";
 
     public const string UpdateAdvertLocationQuery = @"
@@ -295,7 +295,7 @@ public static class AdvertQuery
         INNER JOIN cities c on n.city_id = c.id
         INNER JOIN advert_purposes p ON a.purpose_id = p.id
         INNER JOIN advert_types t ON a.type_id = t.id
-        INNER JOIN ""AspNetUsers"" u ON a.user_id = u.id
+        INNER JOIN asp_net_users u ON a.user_id = u.id
         INNER JOIN advert_statuses s ON a.status_id = s.id
         WHERE a.id = @id AND a.user_id = @userId AND a.status_id != 4;
         
