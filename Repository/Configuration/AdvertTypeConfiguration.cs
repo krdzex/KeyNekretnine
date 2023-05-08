@@ -33,8 +33,8 @@ public class AdvertTypeConfiguration : IEntityTypeConfiguration<AdvertType>
             new AdvertType
             {
                 Id = 4,
-                NameSr = "Vila",
-                NameEn = "Villa"
+                NameSr = "Zemljiste",
+                NameEn = "Land lot"
             });
     }
 }

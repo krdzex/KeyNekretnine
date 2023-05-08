@@ -78,6 +78,7 @@ public class AdvertController : ControllerBase
 
     [Authorize(Roles = "Administrator")]
     [HttpPut("{id}/approve")]
+    [ServiceFilter(typeof(BanUserChack))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

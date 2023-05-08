@@ -26,4 +26,7 @@ public class AddAdvertDto
     public double Longitude { get; set; }
     public string Street { get; set; }
     public int NeighborhoodId { get; set; }
+    public IEnumerable<string> Features { get; set; }
+    public bool IsEmergency { get; set; }
+    public bool IsUnderConstruction { get; set; }
 }

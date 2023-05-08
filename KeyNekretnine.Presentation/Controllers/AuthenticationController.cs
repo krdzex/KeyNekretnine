@@ -18,10 +18,11 @@ public class AuthenticationController : ControllerBase
         _publisher = publisher;
     }
 
+    [HttpPost("registration")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [HttpPost("registration")]
+
     public async Task<IActionResult> Register([FromBody] UserForRegistrationDto userForRegistration)
     {
         await _publisher.Publish(new UserSignupNotification(userForRegistration));

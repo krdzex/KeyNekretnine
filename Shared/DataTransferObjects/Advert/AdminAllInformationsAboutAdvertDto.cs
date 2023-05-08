@@ -18,7 +18,6 @@ public class AdminAllInformationsAboutAdvertDto : BaseAdvertDto
     public bool Has_Garage { get; set; }
     public bool Has_Terrace { get; set; }
     public bool Has_Wifi { get; set; }
-    public bool Is_Funished { get; set; }
     public int Year_Of_Building_Created { get; set; }
     public int Building_Floor { get; set; }
 
@@ -33,7 +32,7 @@ public class AdminAllInformationsAboutAdvertDto : BaseAdvertDto
     [JsonIgnore]
     public string Status_Name_Sr { get; set; }
     [JsonIgnore]
-    private string Status_Name_En { get; set; }
+    public string Status_Name_En { get; set; }
 
     public DifferentLanguagesDto Status_Name
     {
@@ -42,6 +41,20 @@ public class AdminAllInformationsAboutAdvertDto : BaseAdvertDto
             return new DifferentLanguagesDto { Sr = Status_Name_Sr, En = Status_Name_En };
         }
     }
+
+    [JsonIgnore]
+    public string Description_Sr { get; set; }
+    [JsonIgnore]
+    public string Description_En { get; set; }
+
+    public DifferentLanguagesDto Description
+    {
+        get
+        {
+            return new DifferentLanguagesDto { Sr = Description_Sr, En = Description_En };
+        }
+    }
+
     public IList<FeatureDto> Features { get; set; }
 
 }

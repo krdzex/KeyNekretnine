@@ -36,6 +36,7 @@ public class UserController : ControllerBase
     }
 
     [Authorize(Roles = "Administrator")]
+    [ServiceFilter(typeof(BanUserChack))]
     [HttpPut("{id:guid}/ban")]
     public async Task<IActionResult> Ban(Guid id, [Required] int days)
     {
@@ -45,6 +46,7 @@ public class UserController : ControllerBase
     }
 
     [Authorize(Roles = "Administrator")]
+    [ServiceFilter(typeof(BanUserChack))]
     [HttpPut("{id:guid}/unban")]
     public async Task<IActionResult> Unban(Guid id)
     {
@@ -79,6 +81,7 @@ public class UserController : ControllerBase
     }
 
     [Authorize(Roles = "Administrator")]
+    [ServiceFilter(typeof(BanUserChack))]
     [HttpPut("multiple/ban")]
     public async Task<IActionResult> MultipleBan([FromBody] BanUsersDto banUsers)
     {
@@ -88,6 +91,7 @@ public class UserController : ControllerBase
     }
 
     [Authorize(Roles = "Administrator")]
+    [ServiceFilter(typeof(BanUserChack))]
     [HttpPut("multiple/unban")]
     public async Task<IActionResult> MultipleUnban([FromBody] List<string> userIds)
     {

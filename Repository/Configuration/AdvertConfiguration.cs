@@ -25,10 +25,11 @@ public class AdvertConfiguration : IEntityTypeConfiguration<Advert>
         builder.Property(x => x.HasGarage).IsRequired();
         builder.Property(x => x.HasTerrace).IsRequired();
         builder.Property(x => x.HasWifi).IsRequired();
+        builder.Property(x => x.IsEmergency).IsRequired();
+        builder.Property(x => x.IsUnderConstruction).IsRequired();
         builder.Property(x => x.IsFurnished).IsRequired();
         builder.Property(x => x.YearOfBuildingCreated).HasMaxLength(3000);
         builder.Property(x => x.CoverImageUrl).IsRequired().HasMaxLength(150);
-        builder.Property(x => x.CoverImageBlurUrl).HasMaxLength(250);
         builder.Property(x => x.Street).IsRequired().HasMaxLength(300);
         builder.Property(x => x.Latitude).IsRequired().HasMaxLength(91);
         builder.Property(x => x.Longitude).IsRequired().HasMaxLength(181);

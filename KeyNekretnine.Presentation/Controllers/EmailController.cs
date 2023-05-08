@@ -6,30 +6,31 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace KeyNekretnine.Presentation.Controllers
+namespace KeyNekretnine.Presentation.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class EmailController : ControllerBase
 {
-    public class EmailController : ControllerBase
+    private readonly ISender _sender;
+
+    public EmailController(ISender sender)
     {
-        private readonly ISender _sender;
+        _sender = sender;
+    }
 
-        public EmailController(ISender sender)
-        {
-            _sender = sender;
-        }
+    [HttpPost]
+    [Authorize]
+    [Route("/api/user/confirm")]
+    [ServiceFilter(typeof(BanUserChack))]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> SendEmailConfirm()
+    {
+        var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
 
-        [HttpPost]
-        [Authorize]
-        [Route("/api/user/confirm")]
-        [ServiceFilter(typeof(BanUserChack))]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> SendEmailConfirm()
-        {
-            var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
+        await _sender.Send(new SendConfirmEmailCommand(email));
 
-            await _sender.Send(new SendConfirmEmailCommand(email));
-
-            return Ok();
-        }
+        return Ok();
     }
 }

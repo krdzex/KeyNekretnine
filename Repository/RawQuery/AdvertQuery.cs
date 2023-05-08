@@ -5,7 +5,7 @@ namespace Repository.RawQuery;
 public static class AdvertQuery
 {
     public const string SingleAdvertQuery = @"
-        SELECT a.Id,a.price,a.description_sr,a.description_en,a.floor_space,a.street,a.no_of_bedrooms,a.no_of_bathrooms,a.building_floor,a.has_elevator,a.has_garage,a.has_terrace,a.latitude,a.longitude,a.has_wifi,a.is_furnished,a.created_date,a.year_of_building_created,a.cover_image_url,a.cover_image_blur_url,n.name as neighborhood_name,c.name as city_name, c.id as city_id,p.name_sr AS purpose_name_sr,p.name_en AS purpose_name_en,t.name_sr AS type_name_sr,t.name_en AS type_name_en,CONCAT(u.first_name,' ', u.last_name) AS creator
+        SELECT a.Id,a.price,a.description_sr,a.description_en,a.floor_space,a.street,a.no_of_bedrooms,a.no_of_bathrooms,a.building_floor,a.has_elevator,a.has_garage,a.has_terrace,a.latitude,a.longitude,a.has_wifi,a.is_furnished,a.created_date,a.year_of_building_created,a.cover_image_url,n.name as neighborhood_name,c.name as city_name, c.id as city_id,p.name_sr AS purpose_name_sr,p.name_en AS purpose_name_en,t.name_sr AS type_name_sr,t.name_en AS type_name_en,CONCAT(u.first_name,' ', u.last_name) AS creator,a.is_emergency,a.is_under_construction
         FROM adverts a
         INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
         INNER JOIN cities c on n.city_id = c.id
@@ -15,14 +15,13 @@ public static class AdvertQuery
         WHERE a.id = @id
         AND a.status_id = 1;
         
-        SELECT url,blur_url FROM images i WHERE  i.advert_id = @id;
+        SELECT url FROM images i WHERE  i.advert_id = @id;
 
         SELECT af.id AS feature_id,af.name FROM advert_features af WHERE af.advert_id = @id";
 
     public const string SingleAdminAdvertQuery = @"
-        SELECT a.Id,a.price,a.description_sr,a.description_en,a.floor_space,a.street,a.no_of_bedrooms,a.no_of_bathrooms,a.building_floor,a.has_elevator,a.has_garage,a.has_terrace,a.latitude,a.longitude,a.has_wifi,a.is_furnished,a.created_date,a.year_of_building_created,a.cover_image_url,n.name as neighborhood_name,c.name as city_name, c.id as city_id,p.name_sr AS purpose_name_sr,p.name_en AS purpose_name_en,t.name_sr AS type_name_sr,t.name_en AS type_name_en,s.name_sr AS status_name_sr,s.name_en AS status_name_en,CONCAT(u.first_name,' ', u.last_name) AS creator
+        SELECT a.id,a.price,a.description_sr,a.description_en,a.floor_space,a.street,a.no_of_bedrooms,a.no_of_bathrooms,a.building_floor,a.has_elevator,a.has_garage,a.has_terrace,a.latitude,a.longitude,a.has_wifi,a.is_furnished,a.created_date,a.year_of_building_created,a.cover_image_url,n.name as neighborhood_name,c.name as city_name, c.id as city_id,p.name_sr AS purpose_name_sr,p.name_en AS purpose_name_en,t.name_sr AS type_name_sr,t.name_en AS type_name_en,s.name_sr AS status_name_sr,s.name_en AS status_name_en,CONCAT(u.first_name,' ', u.last_name) AS creator,a.is_emergency,a.is_under_construction
         FROM adverts a
-        INNER JOIN images i ON i.advert_id = a.id
         INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
         INNER JOIN cities c on n.city_id = c.id
         INNER JOIN advert_purposes p ON a.purpose_id = p.id
@@ -32,9 +31,9 @@ public static class AdvertQuery
         WHERE a.id = @id
         AND a.status_id != 4;
 
-        SELECT url,blur_url FROM images i WHERE  i.advert_id = @id;
+        SELECT url FROM images i WHERE  i.advert_id = @id;
 
-        SELECT af.id AS feature_id,af.name FROM advert_features af WHERE af.advert_id = @id";
+        SELECT af.id AS feature_id, af.name FROM advert_features af WHERE af.advert_id = @id";
 
     public static string MakeGetAdvertQuery(AdvertParameters advertParameters, string orderBy)
     {
@@ -51,13 +50,16 @@ public static class AdvertQuery
 
         var selectAdvertsQuery = new StringBuilder
             (
-            @"SELECT a.id,a.price,a.floor_space,a.no_of_bedrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,a.street
+            @"SELECT a.id,a.price,a.floor_space,a.no_of_bedrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,t.name_sr AS type_name_sr,t.name_en AS type_name_en,a.street,a.is_emergency,a.is_under_construction,a.is_furnished
              FROM adverts a
+             INNER JOIN advert_types t ON a.type_id = t.id
              INNER JOIN advert_purposes p ON a.purpose_id = p.id
              INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
              INNER JOIN cities c ON n.city_id = c.id"
             );
-
+        if (advertParameters.IsEmergency) countConditions.AppendLine(" AND a.is_emergency = true");
+        if (advertParameters.IsUnderConstruction) countConditions.AppendLine("AND a.is_emergency = true");
+        if (advertParameters.IsFurnished) countConditions.AppendLine(" AND a.is_furnished = true");
         if (advertParameters.NoOfBedrooms is not null) countConditions.AppendLine(" AND (a.no_of_bedrooms = ANY(@noOfBedrooms) OR ((select get_max_value(@noOfBedrooms)) >= 4 AND a.no_of_bedrooms >= 4))");
         if (advertParameters.NoOfBathrooms is not null) countConditions.AppendLine(" AND (a.no_of_bathrooms = ANY(@noOfBathrooms) OR ((select get_max_value(@noOfBathrooms)) >= 4 AND a.no_of_bathrooms >= 4))");
         if (advertParameters.AdvertTypeIds is not null) countConditions.AppendLine(" AND a.type_id = ANY(@typeIds)");
@@ -85,8 +87,9 @@ public static class AdvertQuery
         WHERE a.status_id = 1";
 
     public const string SingleAdvertForMapPoint = @"
-        SELECT a.id,a.price,a.floor_space,a.no_of_bedrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,a.street
+        SELECT a.id,a.price,a.floor_space,a.no_of_bedrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,t.name_sr AS type_name_sr,t.name_en AS type_name_en,a.street,a.is_emergency,a.is_under_construction,a.is_furnished
         FROM adverts a
+        INNER JOIN advert_types t ON a.type_id = t.id
         INNER JOIN advert_purposes p ON a.purpose_id = p.id
         INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
         INNER JOIN cities c ON n.city_id = c.id
@@ -95,8 +98,8 @@ public static class AdvertQuery
 
 
     public const string AddAdvertQuery = @"
-        INSERT INTO adverts (price,description_sr,description_en,floor_space,street,no_of_bedrooms,no_of_bathrooms,has_elevator,has_garage,has_terrace,latitude,longitude,has_wifi,is_furnished,created_date,year_of_building_created,cover_image_url,neighborhood_id,building_floor,purpose_id,status_id,type_id,user_id,reference_id)
-        VALUES (@price,@description_sr,@description_en,@floor_space,@street,@no_of_bedrooms,@no_of_bathrooms,@has_elevator,@has_garage,@has_terrace,@latitude,@longitude,@has_wifi,@is_furnished,@created_date,@year_of_building_created,@cover_image_url,@neighborhood_id,@building_floor,@purpose_id,4,@type_id,@user_id,@reference_id)
+        INSERT INTO adverts (price,description_sr,description_en,floor_space,street,no_of_bedrooms,no_of_bathrooms,has_elevator,has_garage,has_terrace,latitude,longitude,has_wifi,is_furnished,created_date,year_of_building_created,cover_image_url,neighborhood_id,building_floor,purpose_id,status_id,type_id,user_id,reference_id,is_emergency,is_under_construction)
+        VALUES (@price,@description_sr,@description_en,@floor_space,@street,@no_of_bedrooms,@no_of_bathrooms,@has_elevator,@has_garage,@has_terrace,@latitude,@longitude,@has_wifi,@is_furnished,@created_date,@year_of_building_created,@cover_image_url,@neighborhood_id,@building_floor,@purpose_id,4,@type_id,@user_id,@reference_id,@isEmergency,@isUnderConstruction)
         RETURNING id";
 
     public const string UpdateCoverImageQuery = @"
@@ -110,13 +113,13 @@ public static class AdvertQuery
             WHERE id = @advertId";
 
     public const string AdvertExistQuery =
-        @"SELECT COUNT(*)
+        @"SELECT COUNT(id)
           FROM adverts
           WHERE id = @AdvertId";
 
 
     public const string AdvertExistAndApprovedQuery =
-        @"SELECT COUNT(*)
+        @"SELECT COUNT(id)
           FROM adverts
           WHERE id = @AdvertId
           AND status_id = 1";
@@ -142,7 +145,7 @@ public static class AdvertQuery
 
         var selectAdvertsQuery = new StringBuilder
             (
-            @"SELECT a.id,a.price,a.floor_space,a.no_of_bedrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,a.street,s.name_en AS status_name_en,s.name_sr AS status_name_sr
+            @"SELECT a.id,a.price,a.floor_space,a.no_of_bedrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,a.street,s.name_en AS status_name_en,s.name_sr AS status_name_sr,a.is_emergency,a.is_under_construction,a.is_furnished
              FROM adverts a
              INNER JOIN advert_purposes p ON a.purpose_id = p.id
              INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
@@ -170,7 +173,7 @@ public static class AdvertQuery
         FROM adverts a
         WHERE a.user_id = @userId AND a.status_id != 4;
 
-        SELECT a.id,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,t.name_en AS type_name_en,t.name_sr AS type_name_sr,a.description_sr,a.description_en
+        SELECT a.id,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,t.name_en AS type_name_en,t.name_sr AS type_name_sr,a.description_sr,a.description_en,a.is_emergency,a.is_under_construction,a.is_furnished
         FROM adverts a
         INNER JOIN advert_purposes p ON a.purpose_id = p.id
         INNER JOIN advert_types t ON a.type_id = t.id
@@ -200,9 +203,10 @@ public static class AdvertQuery
          INNER JOIN adverts a ON a.id = ua.advert_id
          WHERE ua.user_id = @userId;
 
-         SELECT a.id,a.price,a.floor_space,a.no_of_bedrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,a.cover_image_blur_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,a.street
+         SELECT a.id,a.price,a.floor_space,a.no_of_bedrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,t.name_en AS type_name_en,t.name_sr AS type_name_sr,a.street,a.is_emergency,a.is_under_construction,a.is_furnished
          FROM user_advert_favorites ua
          INNER JOIN adverts a ON a.id = ua.advert_id
+         INNER JOIN advert_types t ON a.type_id = t.id
          INNER JOIN advert_purposes p ON a.purpose_id = p.id
          INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
          INNER JOIN cities c ON n.city_id = c.id
@@ -233,7 +237,7 @@ public static class AdvertQuery
         ORDER BY COUNT(advert_id) DESC OFFSET @Skip FETCH NEXT @Take ROWS ONLY;";
 
     public const string GetCompareAdvertsQuery = @"
-        SELECT a.Id,a.price,a.description_sr,a.description_en,a.floor_space,a.street,a.no_of_bedrooms,a.no_of_bathrooms,a.building_floor,a.has_elevator,a.has_garage,a.has_terrace,a.latitude,a.longitude,a.has_wifi,a.is_furnished,a.created_date,a.year_of_building_created,a.cover_image_url,n.name as neighborhood_name,c.name as city_name, c.id as city_id,p.name_sr AS purpose_name_sr,p.name_en AS purpose_name_en,t.name_sr AS type_name_sr,t.name_en AS type_name_en,CONCAT(u.first_name,' ', u.last_name) AS creator
+        SELECT a.Id,a.price,a.floor_space,a.street,a.no_of_bedrooms,a.no_of_bathrooms,a.building_floor,a.has_elevator,a.has_garage,a.has_terrace,a.latitude,a.longitude,a.has_wifi,a.is_furnished,a.created_date,a.year_of_building_created,a.cover_image_url,n.name as neighborhood_name,c.name as city_name, c.id as city_id,p.name_sr AS purpose_name_sr,p.name_en AS purpose_name_en,t.name_sr AS type_name_sr,t.name_en AS type_name_en,CONCAT(u.first_name,' ', u.last_name) AS creator,a.is_emergency,a.is_under_construction
         FROM adverts a
         INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
         INNER JOIN cities c on n.city_id = c.id
@@ -269,7 +273,7 @@ public static class AdvertQuery
         AND status_id != 4";
 
     public const string ChackIfUserIsAdvertOwnerQuery = @"
-        SELECT COUNT(*)
+        SELECT COUNT(a.id)
         FROM adverts a
         INNER JOIN asp_net_users u ON a.user_id = u.id
         WHERE a.id = @advertId and u.email = @email";
@@ -289,7 +293,7 @@ public static class AdvertQuery
         AND status_id != 4";
 
     public const string MyAdvertQuery = @"
-        SELECT a.Id,a.price,a.description_sr,a.description_en,a.floor_space,a.street,a.no_of_bedrooms,a.no_of_bathrooms,a.building_floor,a.has_elevator,a.has_garage,a.has_terrace,a.latitude,a.longitude,a.has_wifi,a.is_furnished,a.created_date,a.year_of_building_created,a.cover_image_url,a.cover_image_blur_url,n.name as neighborhood_name,c.name as city_name, c.id as city_id,a.neighborhood_id,p.name_sr AS purpose_name_sr,p.name_en AS purpose_name_en,t.name_sr AS type_name_sr,t.name_en AS type_name_en,CONCAT(u.first_name,' ', u.last_name) AS creator, s.name_sr AS status_name_sr,s.name_en AS status_name_en
+        SELECT a.Id,a.price,a.description_sr,a.description_en,a.floor_space,a.street,a.no_of_bedrooms,a.no_of_bathrooms,a.building_floor,a.has_elevator,a.has_garage,a.has_terrace,a.latitude,a.longitude,a.has_wifi,a.is_furnished,a.created_date,a.year_of_building_created,a.cover_image_url,n.name as neighborhood_name,c.name as city_name, c.id as city_id,a.neighborhood_id,p.name_sr AS purpose_name_sr,p.name_en AS purpose_name_en,t.name_sr AS type_name_sr,t.name_en AS type_name_en,CONCAT(u.first_name,' ', u.last_name) AS creator, s.name_sr AS status_name_sr,s.name_en AS status_name_en,a.is_emergency,a.is_under_construction
         FROM adverts a
         INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
         INNER JOIN cities c on n.city_id = c.id
@@ -299,7 +303,7 @@ public static class AdvertQuery
         INNER JOIN advert_statuses s ON a.status_id = s.id
         WHERE a.id = @id AND a.user_id = @userId AND a.status_id != 4;
         
-        SELECT url,blur_url FROM images i WHERE  i.advert_id = @id;
+        SELECT url FROM images i WHERE  i.advert_id = @id;
 
         SELECT af.id AS feature_id,af.name FROM advert_features af WHERE af.advert_id = @id";
 }

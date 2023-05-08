@@ -64,7 +64,9 @@ internal sealed class UserRepository : IUserRepository
 
     public async Task<Pagination<UserForListDto>> GetUsers(UserParameters userParameters, CancellationToken cancellationToken)
     {
-        var query = UserQuery.MakeUsersQuery(userParameters.IsBanned);
+        var orderBy = OrderQueryBuilder.CreateOrderQuery<UserForListDto>(userParameters.OrderBy, 'u');
+
+        var query = UserQuery.MakeUsersQuery(userParameters.IsBanned, orderBy);
 
         var username = !string.IsNullOrEmpty(userParameters.Username) ?
             userParameters.Username.Trim().ToLower() : string.Empty;

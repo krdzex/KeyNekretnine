@@ -10,7 +10,6 @@ public class CompareAdvertDto : BaseAdvertDto
     public bool Has_Garage { get; set; }
     public bool Has_Terrace { get; set; }
     public bool Has_Wifi { get; set; }
-    public bool Is_Funished { get; set; }
     public int Year_Of_Building_Created { get; set; }
     public int Building_Floor { get; set; }
     public string Creator { get; set; }

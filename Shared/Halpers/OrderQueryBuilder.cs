@@ -27,8 +27,17 @@ public static class OrderQueryBuilder
 
             var direction = orderParams[i].EndsWith(" asc") ? "asc" : "desc";
 
-            orderQueryBuilder
-            .Append($"{alias}.{objectProperty.Name.ToLower().ToString()} {direction}, ");
+            if (propertyFromQueryName.ToLower() == "num_adverts")
+            {
+                orderQueryBuilder
+                    .Append($"{objectProperty.Name.ToLower().ToString()} {direction}, ");
+            }
+            else
+            {
+                orderQueryBuilder
+                    .Append($"{alias}.{objectProperty.Name.ToLower().ToString()} {direction}, ");
+            }
+
         }
         var orderQuery = orderQueryBuilder.ToString().TrimEnd(',', ' ');
 

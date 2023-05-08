@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Repository;
@@ -11,9 +12,10 @@ using Repository;
 namespace KeyNekretnine.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20230507140625_AddIsEmergencyAndIsUnderConstruction")]
+    partial class AddIsEmergencyAndIsUnderConstruction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -353,8 +355,8 @@ namespace KeyNekretnine.Migrations
                         new
                         {
                             Id = 4,
-                            NameEn = "Land lot",
-                            NameSr = "Zemljiste"
+                            NameEn = "Villa",
+                            NameSr = "Vila"
                         });
                 });
 
@@ -402,7 +404,7 @@ namespace KeyNekretnine.Migrations
                         {
                             Id = 2,
                             GeoId = "2319526",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1683584242/Cities/bar_e1p0d8.webp",
+                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
                             Name = "Bar"
                         },
                         new
@@ -451,14 +453,14 @@ namespace KeyNekretnine.Migrations
                         {
                             Id = 9,
                             GeoId = "2319531",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1683584242/Cities/kolasin_jejcpn.webp",
+                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
                             Name = "Kolašin"
                         },
                         new
                         {
                             Id = 10,
                             GeoId = "2319532",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1683584242/Cities/kotor_vgtdaz.webp",
+                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
                             Name = "Kotor"
                         },
                         new
@@ -472,7 +474,7 @@ namespace KeyNekretnine.Migrations
                         {
                             Id = 12,
                             GeoId = "2319534",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1683584242/Cities/niksic_hbkxzq.webp",
+                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
                             Name = "Nikšić"
                         },
                         new
@@ -500,7 +502,7 @@ namespace KeyNekretnine.Migrations
                         {
                             Id = 16,
                             GeoId = "2319360",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1683584242/Cities/podgorica_qs4sij.webp",
+                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
                             Name = "Podgorica"
                         },
                         new
@@ -535,7 +537,7 @@ namespace KeyNekretnine.Migrations
                         {
                             Id = 21,
                             GeoId = "2319528",
-                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1683584242/Cities/budva_kyvacy.webp",
+                            ImageUrl = "https://res.cloudinary.com/agencija108/image/upload/v1675218057/l9upr2bcojm038khjak8.webp",
                             Name = "Budva"
                         },
                         new
@@ -8752,21 +8754,21 @@ namespace KeyNekretnine.Migrations
                         new
                         {
                             Id = "548e52a6-485a-49a5-b204-8994eaa79a12",
-                            ConcurrencyStamp = "971cc8be-a8a6-476d-8a76-698770c71eec",
+                            ConcurrencyStamp = "dac64113-8eff-411a-b415-3af0226f89e5",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
                             Id = "62558fd6-61f6-42fe-8cb7-8bc5fea7fb93",
-                            ConcurrencyStamp = "582bc224-287a-4d07-b337-9152635af129",
+                            ConcurrencyStamp = "6be3363a-92c3-49a7-889a-d4d10ed7ad5f",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
                             Id = "f78fff4a-06dc-4b5d-864c-d70cd9ced860",
-                            ConcurrencyStamp = "71648bfb-e289-4d11-a93a-b86717aef9b2",
+                            ConcurrencyStamp = "2180eb63-e669-49ec-b6c4-740ea7416f61",
                             Name = "Moderator",
                             NormalizedName = "MODERATOR"
                         });

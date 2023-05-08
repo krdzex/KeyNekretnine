@@ -17,7 +17,6 @@ public class AllInfomrationsAboutAdvertDto : BaseAdvertDto
     public bool Has_Garage { get; set; }
     public bool Has_Terrace { get; set; }
     public bool Has_Wifi { get; set; }
-    public bool Is_Funished { get; set; }
     public int Year_Of_Building_Created { get; set; }
     public int Building_Floor { get; set; }
     public string Creator { get; set; }
@@ -28,4 +27,17 @@ public class AllInfomrationsAboutAdvertDto : BaseAdvertDto
     public int City_Id { get; set; }
     public string Neighborhood_Name { get; set; }
     public IList<FeatureDto> Features { get; set; }
+
+    [JsonIgnore]
+    public string Description_Sr { get; set; }
+    [JsonIgnore]
+    public string Description_En { get; set; }
+
+    public DifferentLanguagesDto Description
+    {
+        get
+        {
+            return new DifferentLanguagesDto { Sr = Description_Sr, En = Description_En };
+        }
+    }
 }

@@ -49,6 +49,8 @@ internal class AdvertRepository : IAdvertRepository
             param.Add("purpose_id", newAdvert.AdvertPurposeId, DbType.Int16);
             param.Add("type_id", newAdvert.AdvertTypeId, DbType.Int16);
             param.Add("user_id", userId, DbType.String);
+            param.Add("isEmergency", newAdvert.IsEmergency, DbType.Boolean);
+            param.Add("isUnderConstruction", newAdvert.IsUnderConstruction, DbType.Boolean);
             param.Add("reference_id", referenceId, DbType.String);
 
             var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);

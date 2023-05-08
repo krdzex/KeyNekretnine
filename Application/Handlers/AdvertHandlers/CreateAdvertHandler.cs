@@ -38,6 +38,12 @@ internal sealed class CreateAdvertHandler : IRequestHandler<CreateAdvertCommand,
             {
                 await _repository.TemporeryImageData.Insert(image, advertId, false, cancellationToken);
             }
+
+            foreach (var feature in request.AdvertForCreating.Features)
+            {
+                await _repository.AdvertFeature.InsertFeature(feature, advertId, cancellationToken);
+            }
+
             transaction.Complete();
         }
 

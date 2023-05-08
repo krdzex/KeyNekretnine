@@ -24,5 +24,5 @@ public class CityQuery
             image_url
         FROM cte
         ORDER BY adverts_count DESC
-        LIMIT 8";
+        LIMIT 5";
 }

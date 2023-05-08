@@ -13,5 +13,8 @@ public class AdvertParameters : RequestParameters
     public IEnumerable<Int32> AdvertPurposeIds { get; set; }
     public int? CityId { get; set; }
     public IEnumerable<Int32> NeighborhoodIds { get; set; }
+    public bool IsEmergency { get; set; }
+    public bool IsUnderConstruction { get; set; }
+    public bool IsFurnished { get; set; }
 
 }

@@ -10,4 +10,6 @@ public interface IRepositoryManager
     IImageRepository Image { get; }
     ITemporeryImageDataRepository TemporeryImageData { get; }
     IRejectReasonRepository RejectReason { get; }
+    IAdvertFeatureRepository AdvertFeature { get; }
+    IAdvertStatusRepository AdvertStatus { get; }
 }

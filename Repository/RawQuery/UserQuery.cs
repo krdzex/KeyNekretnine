@@ -3,7 +3,7 @@
 namespace Repository.RawQuery;
 public class UserQuery
 {
-    public static string MakeUsersQuery(bool? isBanned)
+    public static string MakeUsersQuery(bool? isBanned, string orderBy)
     {
 
         var countConditions = new StringBuilder("\t    WHERE(@username = '' OR LOWER(u.User_name) LIKE '%' || LOWER(@username) || '%') ");
@@ -11,14 +11,21 @@ public class UserQuery
             SELECT COUNT(u.id)
             FROM asp_net_users AS u");
 
-        var selectAdvertsQuery = new StringBuilder(
-            @"SELECT u.Id, u.Email, u.User_name,u.account_created_date,
-                    CASE
-                        WHEN u.is_banned = true AND u.ban_end >= now() 
-                            THEN true 
-                        ELSE false 
-                    END AS is_banned
-             FROM asp_net_users AS u");
+        var selectAdvertsQuery = new StringBuilder(@"
+            SELECT u.Id, u.Email, u.User_name, u.account_created_date,
+                CASE
+                    WHEN u.is_banned = true AND u.ban_end >= now() 
+                        THEN true 
+                    ELSE false 
+                END AS is_banned,
+            COALESCE(a.num_adverts, 0) AS num_adverts
+            FROM asp_net_users AS u
+            LEFT JOIN (
+            SELECT user_id, COUNT(*) AS num_adverts
+            FROM adverts
+            GROUP BY user_id
+            ) AS a ON u.Id = a.user_id");
+
         if (isBanned != null)
         {
             if (isBanned == true)
@@ -32,7 +39,7 @@ public class UserQuery
         }
 
         countAdvertQuery.Append(countConditions).Append(';');
-        selectAdvertsQuery.Append(countConditions).Append($"ORDER BY u.account_created_date DESC OFFSET @Skip FETCH NEXT @Take ROWS ONLY;");
+        selectAdvertsQuery.Append(countConditions).Append($"ORDER BY {orderBy} OFFSET @Skip FETCH NEXT @Take ROWS ONLY;");
 
         return countAdvertQuery.ToString() + selectAdvertsQuery.ToString();
     }
