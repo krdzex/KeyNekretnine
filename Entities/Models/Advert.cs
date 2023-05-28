@@ -28,6 +28,10 @@ public class Advert : EntityBase
     public string UserId { get; set; }
     public User User { get; set; }
 
+
+    public int? ImaginaryAgentId { get; set; }
+    public ImaginaryAgent ImaginaryAgent { get; set; }
+
     public List<Image> Images { get; set; }
     public string CoverImageUrl { get; set; }
     public double Latitude { get; set; }

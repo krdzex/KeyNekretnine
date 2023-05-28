@@ -9,7 +9,6 @@ public class AdvertConfiguration : IEntityTypeConfiguration<Advert>
     {
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Price).IsRequired();
-        builder.Property(x => x.UserId).IsRequired();
         builder.Property(x => x.DescriptionSr).IsRequired().HasMaxLength(10000);
         builder.Property(x => x.DescriptionEn).HasMaxLength(10000);
         builder.HasOne(x => x.Purpose).WithMany(x => x.Adverts).HasForeignKey(x => x.PurposeId).IsRequired();
@@ -33,7 +32,8 @@ public class AdvertConfiguration : IEntityTypeConfiguration<Advert>
         builder.Property(x => x.Street).IsRequired().HasMaxLength(300);
         builder.Property(x => x.Latitude).IsRequired().HasMaxLength(91);
         builder.Property(x => x.Longitude).IsRequired().HasMaxLength(181);
-        builder.HasOne(a => a.User).WithMany(u => u.Adverts).HasForeignKey(x => x.UserId).IsRequired();
+        builder.HasOne(a => a.User).WithMany(u => u.Adverts).HasForeignKey(x => x.UserId);
+        builder.HasOne(a => a.ImaginaryAgent).WithMany(u => u.Adverts).HasForeignKey(x => x.ImaginaryAgentId);
         builder.HasMany(a => a.Images).WithOne(i => i.Advert).HasForeignKey(x => x.AdvertId);
         builder.HasOne(x => x.Neighborhood).WithMany(x => x.Adverts).HasForeignKey(x => x.NeighborhoodId).IsRequired();
         builder.Property(x => x.NeighborhoodId).HasDefaultValue(1);

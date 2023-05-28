@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Repository;
@@ -11,9 +12,10 @@ using Repository;
 namespace KeyNekretnine.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20230528231132_AddingAgenciesTable")]
+    partial class AddingAgenciesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,10 +78,6 @@ namespace KeyNekretnine.Migrations
                     b.Property<bool>("HasWifi")
                         .HasColumnType("boolean")
                         .HasColumnName("has_wifi");
-
-                    b.Property<int?>("ImaginaryAgentId")
-                        .HasColumnType("integer")
-                        .HasColumnName("imaginary_agent_id");
 
                     b.Property<bool>("IsEmergency")
                         .HasColumnType("boolean")
@@ -153,6 +151,7 @@ namespace KeyNekretnine.Migrations
                         .HasColumnName("type_id");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("user_id");
 
@@ -163,9 +162,6 @@ namespace KeyNekretnine.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_adverts");
-
-                    b.HasIndex("ImaginaryAgentId")
-                        .HasDatabaseName("ix_adverts_imaginary_agent_id");
 
                     b.HasIndex("NeighborhoodId")
                         .HasDatabaseName("ix_adverts_neighborhood_id");
@@ -626,52 +622,6 @@ namespace KeyNekretnine.Migrations
                         .HasDatabaseName("ix_images_advert_id");
 
                     b.ToTable("images", (string)null);
-                });
-
-            modelBuilder.Entity("Entities.Models.ImaginaryAgent", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AgencyId")
-                        .HasColumnType("integer")
-                        .HasColumnName("agency_id");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)")
-                        .HasColumnName("first_name");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("image_url");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)")
-                        .HasColumnName("last_name");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("phone_number");
-
-                    b.HasKey("Id")
-                        .HasName("pk_imaginary_agents");
-
-                    b.HasIndex("AgencyId")
-                        .HasDatabaseName("ix_imaginary_agents_agency_id");
-
-                    b.ToTable("imaginary_agents", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Models.Neighborhood", b =>
@@ -8836,21 +8786,21 @@ namespace KeyNekretnine.Migrations
                         new
                         {
                             Id = "548e52a6-485a-49a5-b204-8994eaa79a12",
-                            ConcurrencyStamp = "b4a970a6-4401-44d6-a129-c42a0fdb27d1",
+                            ConcurrencyStamp = "a0a79df4-59a6-455c-84de-4b7c566f7539",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
                             Id = "62558fd6-61f6-42fe-8cb7-8bc5fea7fb93",
-                            ConcurrencyStamp = "dc480549-7816-46b7-b7b0-a757e452df1a",
+                            ConcurrencyStamp = "709cfde2-7400-4d89-8817-62ba5e22b572",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
                             Id = "f78fff4a-06dc-4b5d-864c-d70cd9ced860",
-                            ConcurrencyStamp = "0fd0434a-2920-4ec1-b536-337ce9922f0c",
+                            ConcurrencyStamp = "4fa68e9e-cf46-4576-947d-edd14cac2b3c",
                             Name = "Moderator",
                             NormalizedName = "MODERATOR"
                         });
@@ -8991,11 +8941,6 @@ namespace KeyNekretnine.Migrations
 
             modelBuilder.Entity("Entities.Models.Advert", b =>
                 {
-                    b.HasOne("Entities.Models.ImaginaryAgent", "ImaginaryAgent")
-                        .WithMany("Adverts")
-                        .HasForeignKey("ImaginaryAgentId")
-                        .HasConstraintName("fk_adverts_imaginary_agents_imaginary_agent_id");
-
                     b.HasOne("Entities.Models.Neighborhood", "Neighborhood")
                         .WithMany("Adverts")
                         .HasForeignKey("NeighborhoodId")
@@ -9027,9 +8972,9 @@ namespace KeyNekretnine.Migrations
                     b.HasOne("Entities.Models.User", "User")
                         .WithMany("Adverts")
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("fk_adverts_users_user_id");
-
-                    b.Navigation("ImaginaryAgent");
 
                     b.Navigation("Neighborhood");
 
@@ -9074,18 +9019,6 @@ namespace KeyNekretnine.Migrations
                         .HasConstraintName("fk_images_adverts_advert_id");
 
                     b.Navigation("Advert");
-                });
-
-            modelBuilder.Entity("Entities.Models.ImaginaryAgent", b =>
-                {
-                    b.HasOne("Entities.Models.Agency", "Agency")
-                        .WithMany("ImaginaryAgents")
-                        .HasForeignKey("AgencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_imaginary_agents_agencies_agency_id");
-
-                    b.Navigation("Agency");
                 });
 
             modelBuilder.Entity("Entities.Models.Neighborhood", b =>
@@ -9248,19 +9181,9 @@ namespace KeyNekretnine.Migrations
                     b.Navigation("Adverts");
                 });
 
-            modelBuilder.Entity("Entities.Models.Agency", b =>
-                {
-                    b.Navigation("ImaginaryAgents");
-                });
-
             modelBuilder.Entity("Entities.Models.City", b =>
                 {
                     b.Navigation("Neighborhoods");
-                });
-
-            modelBuilder.Entity("Entities.Models.ImaginaryAgent", b =>
-                {
-                    b.Navigation("Adverts");
                 });
 
             modelBuilder.Entity("Entities.Models.Neighborhood", b =>

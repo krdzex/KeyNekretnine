@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Repository;
@@ -11,9 +12,10 @@ using Repository;
 namespace KeyNekretnine.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20230528232320_AddingImaginaryAgentsTable")]
+    partial class AddingImaginaryAgentsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,10 +78,6 @@ namespace KeyNekretnine.Migrations
                     b.Property<bool>("HasWifi")
                         .HasColumnType("boolean")
                         .HasColumnName("has_wifi");
-
-                    b.Property<int?>("ImaginaryAgentId")
-                        .HasColumnType("integer")
-                        .HasColumnName("imaginary_agent_id");
 
                     b.Property<bool>("IsEmergency")
                         .HasColumnType("boolean")
@@ -153,6 +151,7 @@ namespace KeyNekretnine.Migrations
                         .HasColumnName("type_id");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("user_id");
 
@@ -163,9 +162,6 @@ namespace KeyNekretnine.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_adverts");
-
-                    b.HasIndex("ImaginaryAgentId")
-                        .HasDatabaseName("ix_adverts_imaginary_agent_id");
 
                     b.HasIndex("NeighborhoodId")
                         .HasDatabaseName("ix_adverts_neighborhood_id");
@@ -8836,21 +8832,21 @@ namespace KeyNekretnine.Migrations
                         new
                         {
                             Id = "548e52a6-485a-49a5-b204-8994eaa79a12",
-                            ConcurrencyStamp = "b4a970a6-4401-44d6-a129-c42a0fdb27d1",
+                            ConcurrencyStamp = "770a8aa0-d2ac-4c14-ada8-889f9e1e8bd2",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
                             Id = "62558fd6-61f6-42fe-8cb7-8bc5fea7fb93",
-                            ConcurrencyStamp = "dc480549-7816-46b7-b7b0-a757e452df1a",
+                            ConcurrencyStamp = "690de828-6136-4d0c-bb51-d6cdec568ced",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
                             Id = "f78fff4a-06dc-4b5d-864c-d70cd9ced860",
-                            ConcurrencyStamp = "0fd0434a-2920-4ec1-b536-337ce9922f0c",
+                            ConcurrencyStamp = "4379d961-94e2-4410-968f-a5d305c5a4f0",
                             Name = "Moderator",
                             NormalizedName = "MODERATOR"
                         });
@@ -8991,11 +8987,6 @@ namespace KeyNekretnine.Migrations
 
             modelBuilder.Entity("Entities.Models.Advert", b =>
                 {
-                    b.HasOne("Entities.Models.ImaginaryAgent", "ImaginaryAgent")
-                        .WithMany("Adverts")
-                        .HasForeignKey("ImaginaryAgentId")
-                        .HasConstraintName("fk_adverts_imaginary_agents_imaginary_agent_id");
-
                     b.HasOne("Entities.Models.Neighborhood", "Neighborhood")
                         .WithMany("Adverts")
                         .HasForeignKey("NeighborhoodId")
@@ -9027,9 +9018,9 @@ namespace KeyNekretnine.Migrations
                     b.HasOne("Entities.Models.User", "User")
                         .WithMany("Adverts")
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("fk_adverts_users_user_id");
-
-                    b.Navigation("ImaginaryAgent");
 
                     b.Navigation("Neighborhood");
 
@@ -9256,11 +9247,6 @@ namespace KeyNekretnine.Migrations
             modelBuilder.Entity("Entities.Models.City", b =>
                 {
                     b.Navigation("Neighborhoods");
-                });
-
-            modelBuilder.Entity("Entities.Models.ImaginaryAgent", b =>
-                {
-                    b.Navigation("Adverts");
                 });
 
             modelBuilder.Entity("Entities.Models.Neighborhood", b =>

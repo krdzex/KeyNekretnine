@@ -13,5 +13,5 @@ public class User : IdentityUser
     public DateTime? BanEnd { get; set; }
     public IEnumerable<UserAdvertFavorite> UserAdvertFavorites { get; set; }
     public IEnumerable<UserAdvertReport> UserAdvertReports { get; set; }
-
+    public Agency Agency { get; set; }
 }

@@ -22,6 +22,9 @@ public class RepositoryContext : IdentityDbContext<User>
     public DbSet<RejectReason> RejectReasons { get; set; }
     public DbSet<UserAdvertReport> UserAdvertReports { get; set; }
     public DbSet<AdvertFeature> AdvertFeatures { get; set; }
+    public DbSet<Agency> Agencies { get; set; }
+    public DbSet<ImaginaryAgent> ImaginaryAgents { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
