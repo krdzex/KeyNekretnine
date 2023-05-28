@@ -1,4 +1,5 @@
-﻿using Contracts;
+﻿using AspNetCoreRateLimit;
+using Contracts;
 using Entities.Models;
 using KeyNekretnine.BackgroundWorkers;
 using LoggerService;
@@ -19,12 +20,31 @@ public static class ServiceExtensions
 {
     public static void ConfigureCors(this IServiceCollection services) =>
         services.AddCors(options =>
-        {
-            options.AddPolicy("CorsPolicy", builder =>
-            builder.AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader());
-        });
+            options.AddPolicy("Dev", builder =>
+            {
+                builder
+                .WithOrigins("https://keynekretnine-dev.vercel.app", "https://keynekretnine-git-http-only-voi99.vercel.app", "http://localhost:3000", "https://localhost:4200")
+                .WithExposedHeaders("set-cookie", "xcvuhgi-awtzpdsa", "mjoifp-fo8ahsj")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials();
+            })
+    );
+    //services.AddCors(options =>
+    //{
+    //    options.AddPolicy("CorsPolicy", builder =>
+    //    builder.AllowAnyMethod()
+    //    .AllowAnyHeader()
+    //    .SetIsOriginAllowed(origin => true)
+    //    .AllowCredentials());
+
+    //    //options.AddPolicy("ProdPolicy", builder =>
+    //    //{
+    //    //    builder.WithOrigins("https://keynekretnine-dev.vercel.app");
+    //    //    builder.AllowAnyHeader();
+    //    //    builder.WithMethods("PUT", "POST", "DELETE", "GET");
+    //    //});
+    //});
 
     public static void ConfigureLoggerService(this IServiceCollection services) =>
         services.AddSingleton<ILoggerManager, LoggerManager>();
@@ -106,7 +126,11 @@ public static class ServiceExtensions
     {
         var builder = services.AddIdentity<User, IdentityRole>(o =>
         {
+            o.Password.RequireDigit = true;
+            o.Password.RequireLowercase = true;
+            o.Password.RequireUppercase = true;
             o.User.RequireUniqueEmail = true;
+            o.SignIn.RequireConfirmedEmail = true;
         })
         .AddEntityFrameworkStores<RepositoryContext>()
         .AddTokenProvider("KeyNekretnineAPI", typeof(DataProtectorTokenProvider<User>))
@@ -119,9 +143,13 @@ public static class ServiceExtensions
         {
             o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-            .AddJwtBearer(o =>
+        }).AddCookie(o =>
+        {
+            o.Cookie.Name = "xcvuhgi-awtzpdsa";
+        }).AddJwtBearer(o =>
             {
+                o.RequireHttpsMetadata = false;
+                o.SaveToken = true;
                 o.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
@@ -130,6 +158,14 @@ public static class ServiceExtensions
                     ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER"),
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY"))),
                     ValidateAudience = false
+                };
+                o.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        context.Token = context.Request.Cookies["xcvuhgi-awtzpdsa"];
+                        return Task.CompletedTask;
+                    }
                 };
             });
     }
@@ -150,5 +186,29 @@ public static class ServiceExtensions
 
             options.ConfigurationOptions = configurationOptions;
         });
+    }
+
+    public static void ConfigureRateLimitingOptions(this IServiceCollection services)
+    {
+        var rateLimitRules = new List<RateLimitRule>
+        {
+            new RateLimitRule
+            {
+                Endpoint = "*",
+                Limit = 100,
+                Period = "1m"
+            }
+        };
+
+        services.Configure<IpRateLimitOptions>(opt =>
+        {
+            opt.GeneralRules = rateLimitRules;
+        });
+
+        services.AddSingleton<IRateLimitCounterStore,
+        MemoryCacheRateLimitCounterStore>();
+        services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+        services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+        services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
     }
 }

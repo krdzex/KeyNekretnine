@@ -1,5 +1,8 @@
-﻿namespace Service.Contracts;
+﻿using Microsoft.AspNetCore.Http;
+
+namespace Service.Contracts;
 public interface IImageService
 {
-    Task<string> UploadImageOnCloudinary(byte[] imagePath, string folderName);
+    Task<string> UploadImageOnCloudinaryUsingDb(byte[] imagePath, string folderName);
+    Task<string> UploadImageOnCloudinary(IFormFile image, string folderName);
 }

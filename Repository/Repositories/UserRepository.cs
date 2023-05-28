@@ -208,7 +208,7 @@ internal sealed class UserRepository : IUserRepository
         }
     }
 
-    public async Task UpdateUser(UpdateUserDto updateUser, string email)
+    public async Task UpdateUser(UpdateUserDto updateUser, string imageUrl, string email)
     {
         var user = await _userManager.FindByEmailAsync(email);
 
@@ -218,7 +218,20 @@ internal sealed class UserRepository : IUserRepository
         }
 
         _mapper.Map(updateUser, user);
+        user.ProfileImageUrl = imageUrl;
 
         await _userManager.UpdateAsync(user);
+    }
+
+    public async Task BanCheck(User user)
+    {
+        if (user.IsBanned)
+        {
+            if (user.BanEnd > DateTime.UtcNow)
+            {
+                throw new UnauthorizedAccessException($"Banned until {user.BanEnd}");
+            }
+            await UserBanExpired(user);
+        }
     }
 }

@@ -261,6 +261,8 @@ public static class AdvertQuery
         has_terrace = @has_terrace,
         has_wifi = @has_wifi,
         is_furnished = @is_furnished,
+        is_emergency = @is_emergency,
+        is_under_construction = @is_under_construction,
         year_of_building_created = @year_of_building_created,
         purpose_id = @purpose_id,
         type_id = @type_id,

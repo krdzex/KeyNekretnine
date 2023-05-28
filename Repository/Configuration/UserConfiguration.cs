@@ -12,10 +12,11 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.LastName).IsRequired().HasMaxLength(50);
         builder.Property(x => x.Email).IsRequired().HasMaxLength(100);
         builder.Property(x => x.AccountCreatedDate).IsRequired();
-        builder.Property(x => x.PasswordHash).IsRequired();
+        builder.Property(x => x.PasswordHash).IsRequired(false);
         builder.Property(x => x.IsBanned).IsRequired().HasDefaultValue(false);
         builder.Property(x => x.BanEnd).IsRequired(false);
         builder.Property(x => x.ProfileImageUrl).HasMaxLength(150);
         builder.Property(x => x.About).HasMaxLength(1000);
+
     }
 }

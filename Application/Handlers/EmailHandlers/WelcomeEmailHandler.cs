@@ -1,4 +1,4 @@
-﻿using Application.Notifications;
+﻿using Application.Notifications.AuthNotification;
 using Entities.Exceptions;
 using MediatR;
 using Service.Contracts;

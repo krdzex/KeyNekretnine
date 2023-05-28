@@ -21,7 +21,34 @@ public class TokenController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Refresh([FromBody] TokenRequest request)
     {
-        return Ok(await _sender.Send(new CreateAccessAndRefreshTokenCommand(request)));
+        var refreshToken = Request.Cookies["mjoifp-fo8ahsj"];
+        var accessToken = Request.Cookies["xcvuhgi-awtzpdsa"];
+
+        var newTokens = new TokenRequest { RefreshToken = refreshToken, Token = accessToken };
+        var tokens = await _sender.Send(new CreateAccessAndRefreshTokenCommand(newTokens));
+
+        HttpContext.Response.Cookies.Append("xcvuhgi-awtzpdsa", tokens.Token,
+            new CookieOptions
+            {
+                Expires = DateTime.Now.AddDays(7),
+                HttpOnly = true,
+                Secure = true,
+                IsEssential = true,
+                SameSite = SameSiteMode.None,
+
+            });
+
+        HttpContext.Response.Cookies.Append("mjoifp-fo8ahsj", tokens.RefreshToken,
+            new CookieOptions
+            {
+                Expires = DateTime.Now.AddDays(7),
+                HttpOnly = true,
+                Secure = true,
+                IsEssential = true,
+                SameSite = SameSiteMode.None,
+
+            });
+        return Ok(tokens);
 
     }
 };

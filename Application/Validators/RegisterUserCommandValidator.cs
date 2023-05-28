@@ -1,4 +1,4 @@
-﻿using Application.Notifications;
+﻿using Application.Notifications.AuthNotification;
 using FluentValidation;
 
 namespace Application.Validators

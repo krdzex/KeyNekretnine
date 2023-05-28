@@ -41,6 +41,6 @@ public static class OrderQueryBuilder
         }
         var orderQuery = orderQueryBuilder.ToString().TrimEnd(',', ' ');
 
-        return string.IsNullOrEmpty(orderQuery) ? "a.created_date desc" : orderQuery;
+        return string.IsNullOrEmpty(orderQuery) ? alias.ToString() == "a" ? "a.created_date desc" : "u.account_created_date" : orderQuery;
     }
 }

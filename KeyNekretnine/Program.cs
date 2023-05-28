@@ -1,4 +1,5 @@
 using Application.Behaviors;
+using AspNetCoreRateLimit;
 using CompanyEmployees.Extensions;
 using Contracts;
 using FluentValidation;
@@ -13,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 //LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(),
 //"/nlog.config"));
+builder.Services.ConfigureCors();
 
 builder.Services.AddControllers(config =>
 {
@@ -33,7 +35,8 @@ builder.Services.Configure<KestrelServerOptions>(options =>
     options.Limits.MaxRequestBodySize = int.MaxValue;
 });
 
-builder.Services.ConfigureCors();
+builder.Services.AddMemoryCache();
+builder.Services.AddHttpClient();
 builder.Services.AddMediatR(typeof(Application.AssemblyReference).Assembly);
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
@@ -57,6 +60,8 @@ builder.Services.AddControllers();
 builder.Services.ConfigureDapperContext();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.ConfigureRateLimitingOptions();
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
@@ -65,13 +70,15 @@ app.ConfigureExceptionHandler(logger);
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
+app.UseCors("Dev");
+
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.DisplayRequestDuration();
 });
 
-app.UseCors("CorsPolicy");
+app.UseIpRateLimiting();
 
 app.UseHttpsRedirection();
 

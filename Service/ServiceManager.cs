@@ -12,10 +12,10 @@ public sealed class ServiceManager : IServiceManager
     private readonly Lazy<IImageService> _imageService;
     private readonly Lazy<IEmailService> _emailService;
 
-    public ServiceManager(IMapper mapper, UserManager<User> userManager, IConfiguration configuration)
+    public ServiceManager(IMapper mapper, UserManager<User> userManager, IConfiguration configuration, HttpClient httpClient)
     {
         _authenticationService = new Lazy<IAuthenticationService>(() => new AuthenticationService(userManager, mapper));
-        _tokenService = new Lazy<ITokenService>(() => new TokenService(userManager, configuration));
+        _tokenService = new Lazy<ITokenService>(() => new TokenService(userManager, configuration, httpClient));
         _imageService = new Lazy<IImageService>(() => new ImageService());
         _emailService = new Lazy<IEmailService>(() => new EmailService(configuration));
     }

@@ -1,5 +1,5 @@
-﻿using Application.Commands.UserCommands;
-using Application.Notifications;
+﻿using Application.Commands.AuthCommands;
+using Application.Notifications.AuthNotification;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +12,13 @@ public class AuthenticationController : ControllerBase
 {
     private readonly ISender _sender;
     private readonly IPublisher _publisher;
-    public AuthenticationController(ISender sender, IPublisher publisher)
+    private readonly HttpClient _httpClient;
+
+    public AuthenticationController(ISender sender, IPublisher publisher, HttpClient httpClient)
     {
         _sender = sender;
         _publisher = publisher;
+        _httpClient = httpClient;
     }
 
     [HttpPost("registration")]
@@ -38,6 +41,83 @@ public class AuthenticationController : ControllerBase
     {
         var tokens = await _sender.Send(new LoginUserCommand(userForAuthenticationDto));
 
+        HttpContext.Response.Cookies.Append("xcvuhgi-awtzpdsa", tokens.Token,
+            new CookieOptions
+            {
+                Expires = DateTime.Now.AddDays(7),
+                HttpOnly = true,
+                Secure = true,
+                IsEssential = true,
+                SameSite = SameSiteMode.None
+            });
+
+        HttpContext.Response.Cookies.Append("mjoifp-fo8ahsj", tokens.RefreshToken,
+            new CookieOptions
+            {
+                Expires = DateTime.Now.AddDays(7),
+                HttpOnly = true,
+                Secure = true,
+                IsEssential = true,
+                SameSite = SameSiteMode.None
+            });
+
+        return Accepted(tokens);
+    }
+
+
+    [HttpPost("google-login")]
+    public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginDto googleLoginDto)
+    {
+        var tokens = await _sender.Send(new GoogleLoginCommand(googleLoginDto));
+
+        HttpContext.Response.Cookies.Append("xcvuhgi-awtzpdsa", tokens.Token,
+            new CookieOptions
+            {
+                Expires = DateTime.Now.AddDays(7),
+                HttpOnly = true,
+                Secure = true,
+                IsEssential = true,
+                SameSite = SameSiteMode.None
+            });
+
+        HttpContext.Response.Cookies.Append("mjoifp-fo8ahsj", tokens.RefreshToken,
+            new CookieOptions
+            {
+                Expires = DateTime.Now.AddDays(7),
+                HttpOnly = true,
+                Secure = true,
+                IsEssential = true,
+                SameSite = SameSiteMode.None,
+            });
+        return Accepted(tokens);
+    }
+
+    [HttpPost("facebook-login")]
+    public async Task<IActionResult> FacebookLogin([FromBody] string accessToken)
+    {
+        var tokens = await _sender.Send(new FacebookLoginCommand(accessToken));
+
+        HttpContext.Response.Cookies.Append("xcvuhgi-awtzpdsa", tokens.Token,
+            new CookieOptions
+            {
+                Expires = DateTime.Now.AddDays(7),
+                HttpOnly = true,
+                Secure = true,
+                IsEssential = true,
+                SameSite = SameSiteMode.None
+            });
+
+        HttpContext.Response.Cookies.Append("mjoifp-fo8ahsj", tokens.RefreshToken,
+            new CookieOptions
+            {
+                Expires = DateTime.Now.AddDays(7),
+                HttpOnly = true,
+                Secure = true,
+                IsEssential = true,
+                SameSite = SameSiteMode.None,
+            });
+
         return Accepted(tokens);
     }
 }
+

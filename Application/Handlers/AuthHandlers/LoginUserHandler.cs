@@ -1,10 +1,10 @@
-﻿using Application.Commands.UserCommands;
+﻿using Application.Commands.AuthCommands;
 using Contracts;
 using MediatR;
 using Service.Contracts;
 using Shared.RequestFeatures;
 
-namespace Application.Handlers.UserHandlers;
+namespace Application.Handlers.AuthHandlers;
 internal sealed class LoginUserHandler : IRequestHandler<LoginUserCommand, TokenRequest>
 {
     private readonly IServiceManager _service;
@@ -20,14 +20,7 @@ internal sealed class LoginUserHandler : IRequestHandler<LoginUserCommand, Token
     {
         var loggedUser = await _service.AuthenticationService.ValidateUser(request.LoginUser);
 
-        if (loggedUser.IsBanned)
-        {
-            if (loggedUser.BanEnd > DateTime.UtcNow)
-            {
-                throw new UnauthorizedAccessException($"Banned until {loggedUser.BanEnd}");
-            }
-            await _repository.User.UserBanExpired(loggedUser);
-        }
+        await _repository.User.BanCheck(loggedUser);
 
         var accessToken = await _service.TokenService.CreateToken(loggedUser);
         var rereshToken = await _service.TokenService.CreateRefreshToken(loggedUser);

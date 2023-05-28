@@ -18,4 +18,6 @@ public class UpdateAdvertInformationsDto
     public int? YearOfBuildingCreated { get; set; }
     public int AdvertTypeId { get; set; }
     public int AdvertPurposeId { get; set; }
+    public bool IsEmergency { get; set; }
+    public bool IsUnderConstruction { get; set; }
 }

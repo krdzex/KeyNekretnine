@@ -103,7 +103,7 @@ public class UserController : ControllerBase
     [Authorize]
     [ServiceFilter(typeof(BanUserChack))]
     [HttpPut("update")]
-    public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto updateUserDto)
+    public async Task<IActionResult> UpdateUser([FromForm] UpdateUserDto updateUserDto)
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
 

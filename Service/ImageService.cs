@@ -1,5 +1,6 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.IO;
 using Service.Contracts;
 
@@ -21,13 +22,33 @@ internal sealed class ImageService : IImageService
     }
 
 
-    public async Task<string> UploadImageOnCloudinary(byte[] item, string folderName)
+    public async Task<string> UploadImageOnCloudinaryUsingDb(byte[] item, string folderName)
     {
         using (var memoryStream = manager.GetStream("memory", item, 0, item.Length))
         {
             var uploadParams = new ImageUploadParams()
             {
                 File = new FileDescription(@"fileName", memoryStream),
+                Transformation = new Transformation().Quality(60),
+                Format = "WebP",
+                Folder = folderName
+            };
+            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+            return uploadResult.Url.ToString();
+        }
+    }
+
+    public async Task<string> UploadImageOnCloudinary(IFormFile image, string folderName)
+    {
+        using (Stream stream = new MemoryStream())
+        {
+            stream.Flush();
+            await image.CopyToAsync(stream);
+            stream.Position = 0;
+
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(@"fileName", stream),
                 Transformation = new Transformation().Quality(60),
                 Format = "WebP",
                 Folder = folderName

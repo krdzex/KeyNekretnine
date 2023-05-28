@@ -551,6 +551,8 @@ internal class AdvertRepository : IAdvertRepository
             param.Add("has_terrace", updateAdvertInformationsDto.HasTerrace, DbType.Boolean);
             param.Add("has_wifi", updateAdvertInformationsDto.HasWifi, DbType.Boolean);
             param.Add("is_furnished", updateAdvertInformationsDto.IsFurnished, DbType.Boolean);
+            param.Add("is_emergency", updateAdvertInformationsDto.IsEmergency, DbType.Boolean);
+            param.Add("is_under_construction", updateAdvertInformationsDto.IsUnderConstruction, DbType.Boolean);
             param.Add("year_of_building_created", updateAdvertInformationsDto.YearOfBuildingCreated, DbType.Int16);
             param.Add("building_floor", updateAdvertInformationsDto.BuildingFloor, DbType.Int16);
             param.Add("purpose_id", updateAdvertInformationsDto.AdvertPurposeId, DbType.Int16);
