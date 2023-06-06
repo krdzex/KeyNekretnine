@@ -1,24 +1,22 @@
 ﻿using Application.Commands.AuthCommands;
 using Application.Notifications.AuthNotification;
+using KeyNekretnine.Presentation.Infrastructure;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataTransferObjects.Auth;
 
 namespace KeyNekretnine.Presentation.Controllers;
 [Route("api/[controller]")]
-[ApiController]
-public class AuthenticationController : ControllerBase
+public class AuthenticationController : ApiController
 {
-    private readonly ISender _sender;
     private readonly IPublisher _publisher;
-    private readonly HttpClient _httpClient;
 
-    public AuthenticationController(ISender sender, IPublisher publisher, HttpClient httpClient)
+    public AuthenticationController(ISender sender, IPublisher publisher)
+        : base(sender)
     {
-        _sender = sender;
         _publisher = publisher;
-        _httpClient = httpClient;
     }
 
     [HttpPost("registration")]
@@ -39,38 +37,30 @@ public class AuthenticationController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] UserForAuthenticationDto userForAuthenticationDto)
     {
-        var tokens = await _sender.Send(new LoginUserCommand(userForAuthenticationDto));
+        var tokens = await Sender.Send(new LoginUserCommand(userForAuthenticationDto));
 
-        HttpContext.Response.Cookies.Append("xcvuhgi-awtzpdsa", tokens.Token,
+        HttpContext.Response.Cookies.Append("X-Access-Token", tokens.AccessToken,
             new CookieOptions
             {
-                Expires = DateTime.Now.AddDays(7),
-                HttpOnly = true,
-                Secure = true,
-                IsEssential = true,
-                SameSite = SameSiteMode.None
+                HttpOnly = true
             });
 
-        HttpContext.Response.Cookies.Append("mjoifp-fo8ahsj", tokens.RefreshToken,
+        HttpContext.Response.Cookies.Append("X-Refresh-Token", tokens.RefreshToken,
             new CookieOptions
             {
-                Expires = DateTime.Now.AddDays(7),
-                HttpOnly = true,
-                Secure = true,
-                IsEssential = true,
-                SameSite = SameSiteMode.None
+                HttpOnly = true
             });
 
-        return Accepted(tokens);
+        return Accepted();
     }
 
 
     [HttpPost("google-login")]
     public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginDto googleLoginDto)
     {
-        var tokens = await _sender.Send(new GoogleLoginCommand(googleLoginDto));
+        var tokens = await Sender.Send(new GoogleLoginCommand(googleLoginDto));
 
-        HttpContext.Response.Cookies.Append("xcvuhgi-awtzpdsa", tokens.Token,
+        HttpContext.Response.Cookies.Append("X-Access-Token", tokens.AccessToken,
             new CookieOptions
             {
                 Expires = DateTime.Now.AddDays(7),
@@ -80,7 +70,7 @@ public class AuthenticationController : ControllerBase
                 SameSite = SameSiteMode.None
             });
 
-        HttpContext.Response.Cookies.Append("mjoifp-fo8ahsj", tokens.RefreshToken,
+        HttpContext.Response.Cookies.Append("X-Refresh-Token", tokens.RefreshToken,
             new CookieOptions
             {
                 Expires = DateTime.Now.AddDays(7),
@@ -89,15 +79,15 @@ public class AuthenticationController : ControllerBase
                 IsEssential = true,
                 SameSite = SameSiteMode.None,
             });
-        return Accepted(tokens);
+        return Accepted();
     }
 
     [HttpPost("facebook-login")]
     public async Task<IActionResult> FacebookLogin([FromBody] string accessToken)
     {
-        var tokens = await _sender.Send(new FacebookLoginCommand(accessToken));
+        var tokens = await Sender.Send(new FacebookLoginCommand(accessToken));
 
-        HttpContext.Response.Cookies.Append("xcvuhgi-awtzpdsa", tokens.Token,
+        HttpContext.Response.Cookies.Append("X-Access-Token", tokens.AccessToken,
             new CookieOptions
             {
                 Expires = DateTime.Now.AddDays(7),
@@ -107,7 +97,7 @@ public class AuthenticationController : ControllerBase
                 SameSite = SameSiteMode.None
             });
 
-        HttpContext.Response.Cookies.Append("mjoifp-fo8ahsj", tokens.RefreshToken,
+        HttpContext.Response.Cookies.Append("X-Refresh-Token", tokens.RefreshToken,
             new CookieOptions
             {
                 Expires = DateTime.Now.AddDays(7),
@@ -117,7 +107,27 @@ public class AuthenticationController : ControllerBase
                 SameSite = SameSiteMode.None,
             });
 
-        return Accepted(tokens);
+        return Accepted();
+    }
+
+    [HttpPost("logout")]
+    [Authorize]
+    public IActionResult Logout()
+    {
+        HttpContext.Response.Cookies.Delete("X-Access-Token", new CookieOptions()
+        {
+
+            HttpOnly = true,
+            Secure = true
+        }); ;
+
+        HttpContext.Response.Cookies.Delete("X-Refresh-Token", new CookieOptions()
+        {
+            HttpOnly = true,
+            Secure = true
+        });
+
+        return Ok();
     }
 }
 

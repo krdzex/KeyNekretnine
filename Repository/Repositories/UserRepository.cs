@@ -132,15 +132,8 @@ internal sealed class UserRepository : IUserRepository
         }
     }
 
-    public async Task<IdentityResult> ConfrimUserEmail(string token, string email)
+    public async Task<IdentityResult> ConfrimUserEmail(User user, string token)
     {
-        var user = await _userManager.FindByEmailAsync(email);
-
-        if (user == null)
-        {
-            throw new UserNotFoundException();
-        }
-
         var result = await _userManager.ConfirmEmailAsync(user, token);
 
         return result;
@@ -233,5 +226,12 @@ internal sealed class UserRepository : IUserRepository
             }
             await UserBanExpired(user);
         }
+    }
+
+    public async Task<User> FindUserByEmail(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+
+        return user;
     }
 }

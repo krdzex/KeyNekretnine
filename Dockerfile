@@ -5,6 +5,7 @@ COPY ./*/*.csproj ./
 RUN for file in $(ls *.csproj); do mkdir -p ./${file%.*}/ && mv $file ./${file%.*}/; done
 RUN dotnet restore
 COPY . .
+RUN dotnet test ./Application.UnitTests/Application.UnitTests.csproj
 RUN dotnet publish ./KeyNekretnine/KeyNekretnine.csproj -o /publish/
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /publish

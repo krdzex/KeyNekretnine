@@ -21,13 +21,13 @@ public class TokenController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Refresh([FromBody] TokenRequest request)
     {
-        var refreshToken = Request.Cookies["mjoifp-fo8ahsj"];
-        var accessToken = Request.Cookies["xcvuhgi-awtzpdsa"];
+        var refreshToken = Request.Cookies["X-Refresh-Token"];
+        var accessToken = Request.Cookies["X-Access-Token"];
 
-        var newTokens = new TokenRequest { RefreshToken = refreshToken, Token = accessToken };
+        var newTokens = new TokenRequest { RefreshToken = refreshToken, AccessToken = accessToken };
         var tokens = await _sender.Send(new CreateAccessAndRefreshTokenCommand(newTokens));
 
-        HttpContext.Response.Cookies.Append("xcvuhgi-awtzpdsa", tokens.Token,
+        HttpContext.Response.Cookies.Append("X-Access-Token", tokens.AccessToken,
             new CookieOptions
             {
                 Expires = DateTime.Now.AddDays(7),
@@ -38,7 +38,7 @@ public class TokenController : ControllerBase
 
             });
 
-        HttpContext.Response.Cookies.Append("mjoifp-fo8ahsj", tokens.RefreshToken,
+        HttpContext.Response.Cookies.Append("X-Refresh-Token", tokens.RefreshToken,
             new CookieOptions
             {
                 Expires = DateTime.Now.AddDays(7),

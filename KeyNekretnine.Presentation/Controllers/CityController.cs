@@ -1,4 +1,6 @@
-﻿using Application.Queries.CityQueries;
+﻿using Application.Cities.Queries.GetCities;
+using Application.Core.Cities.Queries.GetMostPopularCtities;
+using KeyNekretnine.Presentation.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,30 +8,36 @@ using Microsoft.AspNetCore.Mvc;
 namespace KeyNekretnine.Presentation.Controllers;
 
 [Route("api/[controller]")]
-[ApiController]
-public class CityController : ControllerBase
+public class CityController : ApiController
 {
-    private readonly ISender _sender;
 
     public CityController(ISender sender)
+        : base(sender)
     {
-        _sender = sender;
     }
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ResponseCache(Duration = 120)]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get(CancellationToken cancellationToken)
     {
-        return Ok(await _sender.Send(new GetCitiesQuery()));
+        var query = new GetCitiesQuery();
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
     }
 
     [HttpGet("popular")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ResponseCache(Duration = 120)]
-    public async Task<IActionResult> GetMostPopular()
+    public async Task<IActionResult> GetMostPopular(CancellationToken cancellationToken)
     {
-        return Ok(await _sender.Send(new GetMostPopularCitiesQuery()));
+        var query = new GetMostPopularCitiesQuery();
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
     }
 }

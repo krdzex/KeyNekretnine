@@ -3,5 +3,5 @@
 namespace Contracts;
 public interface INeighborhoodRepository
 {
-    Task<IEnumerable<NeighborhoodDto>> GetNeighborhoods(int id, CancellationToken token);
+    Task<IEnumerable<NeighborhoodDto>> GetNeighborhoods(int city, CancellationToken token);
 }

@@ -6,7 +6,7 @@ namespace Contracts;
 public interface IAdvertRepository
 {
     Task<AllInfomrationsAboutAdvertDto> GetAdvert(int advertId, CancellationToken cancellationToken);
-    Task<AdminAllInformationsAboutAdvertDto> GetAdminAdvert(int advertId, CancellationToken cancellationToken);
+    Task<AdminAllInformationsAboutAdvertDto> GetAdminAdvertById(int advertId, CancellationToken cancellationToken);
     Task<Pagination<MinimalInformationsAboutAdvertDto>> GetAdverts(AdvertParameters advertParameters, CancellationToken cancellationToken);
     Task<IEnumerable<ShowAdvertLocationOnMapDto>> GetMapPoints(CancellationToken cancellationToken);
     Task<MinimalInformationsAboutAdvertDto> GetAdvertFromMapPoint(int id, CancellationToken cancellationToken);
@@ -31,5 +31,5 @@ public interface IAdvertRepository
     Task UpdateAdvertInformations(UpdateAdvertInformationsDto updateAdvertInformationsDto, int advertId, CancellationToken cancellationToken);
     Task<bool> ChackIfUserIsAdvertOwner(int advertId, string email);
     Task UpdateAdvertLocation(UpdateAdvertLocationDto updateAdvertLocationDto, int advertId, CancellationToken cancellationToken);
-    Task<MyAdvertDto> GetMyAdvert(int advertId, string userId, CancellationToken cancellationToken);
+    Task<MyAdvertDto> GetMyAdvertById(int advertId, string userId, CancellationToken cancellationToken);
 }

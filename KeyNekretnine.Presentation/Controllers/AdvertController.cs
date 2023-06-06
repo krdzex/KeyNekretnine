@@ -1,9 +1,20 @@
-﻿using Application.Commands.AdvertCommands;
+﻿using Application.Adverts.Queries.GetAdvertById;
+using Application.Commands.AdvertCommands;
+using Application.Core.Adverts.Queries.GetAdminAdvert;
+using Application.Core.Adverts.Queries.GetAdminAdverts;
+using Application.Core.Adverts.Queries.GetAdvertFromMap;
+using Application.Core.Adverts.Queries.GetAdvertReports;
+using Application.Core.Adverts.Queries.GetAdverts;
+using Application.Core.Adverts.Queries.GetADvertsCompare;
+using Application.Core.Adverts.Queries.GetFavoriteAdverts;
+using Application.Core.Adverts.Queries.GetIsFavorite;
+using Application.Core.Adverts.Queries.GetmapPoints;
+using Application.Core.Adverts.Queries.GetMyAdvertById;
+using Application.Core.Adverts.Queries.GetMyAdverts;
 using Application.Notifications.AdvertNotifications;
-using Application.Queries.AdvertQueries;
-using Application.Queries.AdvertQuery;
 using KeyNekretnine.Attributes;
 using KeyNekretnine.Presentation.ActionFilters;
+using KeyNekretnine.Presentation.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -15,15 +26,13 @@ using System.Security.Claims;
 namespace KeyNekretnine.Presentation.Controllers;
 
 [Route("api/[controller]")]
-[ApiController]
-public class AdvertController : ControllerBase
+public class AdvertController : ApiController
 {
-    private readonly ISender _sender;
     private readonly IPublisher _publisher;
 
     public AdvertController(ISender sender, IPublisher publisher)
+        : base(sender)
     {
-        _sender = sender;
         _publisher = publisher;
     }
 
@@ -31,34 +40,50 @@ public class AdvertController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Get(int id)
+    public async Task<IActionResult> Get(int id, CancellationToken cancellationToken)
     {
-        return Ok(await _sender.Send(new GetAdvertQuery { Id = id, BypassCache = true }));
+        var query = new GetAdvertByIdQuery(id);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
     }
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetPaging([FromQuery] AdvertParameters advertParameters)
+    public async Task<IActionResult> Get([FromQuery] AdvertParameters advertParameters, CancellationToken cancellationToken)
     {
-        return Ok(await _sender.Send(new GetAdvertsQuery(advertParameters)));
+        var query = new GetAdvertsQuery(advertParameters);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
     }
 
     [HttpGet("map")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetMapPoints()
+    public async Task<IActionResult> GetMapPoints(CancellationToken cancellationToken)
     {
-        return Ok(await _sender.Send(new GetMapPointsQuery()));
+        var query = new GetMapPointsQuery();
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
     }
 
     [HttpGet("map/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetAdvertFromMapPoint(int id)
+    public async Task<IActionResult> GetAdvertFromMapPoint(int id, CancellationToken cancellationToken)
     {
-        return Ok(await _sender.Send(new GetAdvertFromMapQuery(id)));
+        var query = new GetAdvertFromMapQuery(id);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
     }
 
     [Authorize]
@@ -71,7 +96,7 @@ public class AdvertController : ControllerBase
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
 
-        await _sender.Send(new CreateAdvertCommand(newAdvert, email));
+        await Sender.Send(new CreateAdvertCommand(newAdvert, email));
 
         return Accepted();
     }
@@ -105,9 +130,13 @@ public class AdvertController : ControllerBase
     [HttpGet("/api/admin/advert")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetAdminAdverts([FromQuery] AdminAdvertParameters adminAdvertParameters)
+    public async Task<IActionResult> GetAdminAdverts([FromQuery] AdminAdvertParameters adminAdvertParameters, CancellationToken cancellationToken)
     {
-        return Ok(await _sender.Send(new GetAdminAdvertsQuery(adminAdvertParameters)));
+        var query = new GetAdminAdvertsQuery(adminAdvertParameters);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
     }
 
     [Authorize(Roles = "Administrator")]
@@ -115,9 +144,13 @@ public class AdvertController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetAdminAdvert(int id)
+    public async Task<IActionResult> GetAdminAdvert(int id, CancellationToken cancellationToken)
     {
-        return Ok(await _sender.Send(new GetAdminAdvertQuery(id)));
+        var query = new GetAdminAdvertByIdQuery(id);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
     }
 
     [Authorize]
@@ -126,11 +159,15 @@ public class AdvertController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetMyAdverts([FromQuery] MyAdvertsParameters myAdvertParameters)
+    public async Task<IActionResult> GetMyAdverts([FromQuery] MyAdvertsParameters myAdvertParameters, CancellationToken cancellationToken)
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
 
-        return Ok(await _sender.Send(new GetMyAdvertsQuery(myAdvertParameters, email)));
+        var query = new GetMyAdvertsQuery(myAdvertParameters, email);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
     }
 
     [Authorize]
@@ -140,11 +177,15 @@ public class AdvertController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetMyAdverts(int advertId)
+    public async Task<IActionResult> GetMyAdverts(int advertId, CancellationToken cancellationToken)
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
 
-        return Ok(await _sender.Send(new GetMyAdvertQuery(advertId, email)));
+        var query = new GetMyAdvertByIdQuery(advertId, email);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
     }
 
     [Authorize]
@@ -158,7 +199,7 @@ public class AdvertController : ControllerBase
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
 
-        await _sender.Send(new MakeAdvertFavoriteCommand(advertId, email));
+        await Sender.Send(new MakeAdvertFavoriteCommand(advertId, email));
 
         return NoContent();
     }
@@ -173,7 +214,7 @@ public class AdvertController : ControllerBase
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
 
-        await _sender.Send(new RemoveAdvertFromFavoriteCommand(advertId, email));
+        await Sender.Send(new RemoveAdvertFromFavoriteCommand(advertId, email));
 
         return NoContent();
     }
@@ -184,11 +225,15 @@ public class AdvertController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> FavoriteAdverts([FromQuery] FavoriteAdvertsParameters requestParameters)
+    public async Task<IActionResult> FavoriteAdverts([FromQuery] FavoriteAdvertsParameters requestParameters, CancellationToken cancellationToken)
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
 
-        return Ok(await _sender.Send(new GetFavoriteAdvertsQuery(requestParameters, email)));
+        var query = new GetFavoriteAdvertsQuery(requestParameters, email);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
     }
 
     [Authorize]
@@ -198,11 +243,15 @@ public class AdvertController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> IsAdvertFavorite(int advertId)
+    public async Task<IActionResult> IsAdvertFavorite(int advertId, CancellationToken cancellationToken)
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
 
-        return Ok(await _sender.Send(new GetIsFavoriteAdvertQuery(advertId, email)));
+        var query = new GetIsAdvertFavoriteQuery(advertId, email);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
     }
 
 
@@ -217,7 +266,7 @@ public class AdvertController : ControllerBase
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
 
-        await _sender.Send(new ReportAdvertCommand(advertId, email, reportAdvertDto.RejectReasonId));
+        await Sender.Send(new ReportAdvertCommand(advertId, email, reportAdvertDto.RejectReasonId));
 
         return NoContent();
     }
@@ -226,18 +275,26 @@ public class AdvertController : ControllerBase
     [Authorize(Roles = "Administrator")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetAdvertReports([FromQuery] ReportParameters reportParameters)
+    public async Task<IActionResult> GetAdvertReports([FromQuery] ReportParameters reportParameters, CancellationToken cancellationToken)
     {
-        return Ok(await _sender.Send(new GetAdvertReportsQuery(reportParameters)));
+        var query = new GetAdvertReportsQuery(reportParameters);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
     }
 
 
     [HttpGet("compare/{firstAdvert}/{sacondAdvert}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetAdvertsCompare(int firstAdvert, int sacondAdvert)
+    public async Task<IActionResult> GetAdvertsCompare(int firstAdvert, int sacondAdvert, CancellationToken cancellationToken)
     {
-        return Ok(await _sender.Send(new GetAdvertsCompareQuery(firstAdvert, sacondAdvert)));
+        var query = new GetAdvertsCompareQuery(firstAdvert, sacondAdvert);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
     }
 
     [HttpPut("{advertId}/update/informations")]
@@ -248,7 +305,7 @@ public class AdvertController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateInformations([FromBody] UpdateAdvertInformationsDto updateAdvertInformationsDto, int advertId)
     {
-        await _sender.Send(new UpdateAdvertCommand(updateAdvertInformationsDto, advertId));
+        await Sender.Send(new UpdateAdvertCommand(updateAdvertInformationsDto, advertId));
 
         return NoContent();
     }
@@ -261,7 +318,20 @@ public class AdvertController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateLocation([FromBody] UpdateAdvertLocationDto updateAdvertLocationDto, int advertId)
     {
-        await _sender.Send(new UpdateAdvertLocationCommand(updateAdvertLocationDto, advertId));
+        await Sender.Send(new UpdateAdvertLocationCommand(updateAdvertLocationDto, advertId));
+
+        return NoContent();
+    }
+
+    [HttpDelete("{advertId}/images")]
+    [Authorize]
+    [ServiceFilter(typeof(BanUserChack))]
+    [ServiceFilter(typeof(OwnerAdvertChack))]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> DeleteImages([FromBody] IEnumerable<string> imageUrls, int advertId)
+    {
+        await Sender.Send(new DeleteImagesCommand(imageUrls, advertId));
 
         return NoContent();
     }

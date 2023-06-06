@@ -1,26 +1,28 @@
-﻿using Application.Queries.AdvertStatusesQueries;
+﻿using Application.Core.AdvertStatuses.Queries.GetAdvertStatuses;
+using KeyNekretnine.Presentation.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KeyNekretnine.Presentation.Controllers;
 [Route("api/advert/statuses")]
-[ApiController]
-public class AdvertStatusController : ControllerBase
+public class AdvertStatusController : ApiController
 {
-    private readonly ISender _sender;
-
     public AdvertStatusController(ISender sender)
+        : base(sender)
     {
-        _sender = sender;
     }
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ResponseCache(Duration = 120)]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get(CancellationToken cancellationToken)
     {
-        return Ok(await _sender.Send(new GetAdvertStatusesQuery()));
+        var query = new GetAdvertStatusesQuery();
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
     }
 }

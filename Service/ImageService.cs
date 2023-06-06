@@ -1,8 +1,10 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Entities.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IO;
 using Service.Contracts;
+using System.Net;
 
 namespace Service;
 internal sealed class ImageService : IImageService
@@ -55,6 +57,16 @@ internal sealed class ImageService : IImageService
             };
             var uploadResult = await _cloudinary.UploadAsync(uploadParams);
             return uploadResult.Url.ToString();
+        }
+    }
+
+    public async Task DeleteImageFromCloudinary(string publicId)
+    {
+        var result = await _cloudinary.DestroyAsync(new DeletionParams(publicId));
+
+        if (result.StatusCode != HttpStatusCode.OK)
+        {
+            throw new CloudinaryException();
         }
     }
 }

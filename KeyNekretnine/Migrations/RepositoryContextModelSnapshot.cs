@@ -613,6 +613,11 @@ namespace KeyNekretnine.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("advert_id");
 
+                    b.Property<string>("PublicId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("public_id");
+
                     b.Property<string>("Url")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -8836,21 +8841,21 @@ namespace KeyNekretnine.Migrations
                         new
                         {
                             Id = "548e52a6-485a-49a5-b204-8994eaa79a12",
-                            ConcurrencyStamp = "b4a970a6-4401-44d6-a129-c42a0fdb27d1",
+                            ConcurrencyStamp = "58f9d22b-7818-416a-a42f-756e94d05b86",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
                             Id = "62558fd6-61f6-42fe-8cb7-8bc5fea7fb93",
-                            ConcurrencyStamp = "dc480549-7816-46b7-b7b0-a757e452df1a",
+                            ConcurrencyStamp = "479c5db7-f72d-461c-bc82-bf5af70d06ef",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
                             Id = "f78fff4a-06dc-4b5d-864c-d70cd9ced860",
-                            ConcurrencyStamp = "0fd0434a-2920-4ec1-b536-337ce9922f0c",
+                            ConcurrencyStamp = "89844452-fe0f-46e5-ad8d-dcfbddd04c2d",
                             Name = "Moderator",
                             NormalizedName = "MODERATOR"
                         });

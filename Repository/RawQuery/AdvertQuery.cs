@@ -187,10 +187,10 @@ public static class AdvertQuery
           VALUES(@userId,@advertId,@createdFavoriteDate)";
 
     public const string ChackIfAdvertIsFavoriteQuery = @"
-          SELECT COUNT(*)
+          SELECT COUNT(*) > 0 AS is_favorited
           FROM user_advert_favorites
           WHERE user_id = @userId
-          AND advert_id = @advertId";
+          AND advert_id = @advertId;";
 
     public const string DeleteAdvertFromFavoriteQuery = @"
           DELETE FROM user_advert_favorites

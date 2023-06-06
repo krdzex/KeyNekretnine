@@ -24,7 +24,7 @@ public static class ServiceExtensions
             {
                 builder
                 .WithOrigins("https://keynekretnine-dev.vercel.app", "https://keynekretnine-git-http-only-voi99.vercel.app", "http://localhost:3000", "https://localhost:4200")
-                .WithExposedHeaders("set-cookie", "xcvuhgi-awtzpdsa", "mjoifp-fo8ahsj")
+                .WithExposedHeaders("set-cookie")
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials();
@@ -145,7 +145,7 @@ public static class ServiceExtensions
             o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddCookie(o =>
         {
-            o.Cookie.Name = "xcvuhgi-awtzpdsa";
+            o.Cookie.Name = "X-Access-Token";
         }).AddJwtBearer(o =>
             {
                 o.RequireHttpsMetadata = false;
@@ -163,7 +163,7 @@ public static class ServiceExtensions
                 {
                     OnMessageReceived = context =>
                     {
-                        context.Token = context.Request.Cookies["xcvuhgi-awtzpdsa"];
+                        context.Token = context.Request.Cookies["X-Access-Token"];
                         return Task.CompletedTask;
                     }
                 };

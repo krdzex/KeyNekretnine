@@ -89,7 +89,7 @@ internal class AdvertRepository : IAdvertRepository
         }
     }
 
-    public async Task<AdminAllInformationsAboutAdvertDto> GetAdminAdvert(int advertId, CancellationToken cancellationToken)
+    public async Task<AdminAllInformationsAboutAdvertDto> GetAdminAdvertById(int advertId, CancellationToken cancellationToken)
     {
         var query = AdvertQuery.SingleAdminAdvertQuery;
 
@@ -374,8 +374,8 @@ internal class AdvertRepository : IAdvertRepository
 
             var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
 
-            int count = await connection.QueryFirstOrDefaultAsync<int>(cmd);
-            return count > 0;
+            var result = await connection.QueryFirstOrDefaultAsync<bool>(cmd);
+            return result;
         }
     }
 
@@ -392,8 +392,8 @@ internal class AdvertRepository : IAdvertRepository
 
             var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
 
-            int count = await connection.QueryFirstOrDefaultAsync<int>(cmd);
-            return count > 0;
+            var result = await connection.QueryFirstOrDefaultAsync<bool>(cmd);
+            return result;
         }
     }
 
@@ -478,8 +478,8 @@ internal class AdvertRepository : IAdvertRepository
 
             var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
 
-            int count = await connection.QueryFirstOrDefaultAsync<int>(cmd);
-            return count > 0;
+            var result = await connection.QueryFirstOrDefaultAsync<bool>(cmd);
+            return result;
         }
     }
 
@@ -603,7 +603,7 @@ internal class AdvertRepository : IAdvertRepository
         }
     }
 
-    public async Task<MyAdvertDto> GetMyAdvert(int advertId, string userId, CancellationToken cancellationToken)
+    public async Task<MyAdvertDto> GetMyAdvertById(int advertId, string userId, CancellationToken cancellationToken)
     {
         var query = AdvertQuery.MyAdvertQuery;
 

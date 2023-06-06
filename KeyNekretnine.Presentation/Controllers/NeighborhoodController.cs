@@ -1,4 +1,5 @@
-﻿using Application.Queries.NeighborhoodsQueries;
+﻿using Application.Core.Neighborhoods.Queries;
+using KeyNekretnine.Presentation.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,23 +7,24 @@ using Microsoft.AspNetCore.Mvc;
 namespace KeyNekretnine.Presentation.Controllers;
 
 [Route("api/[controller]")]
-[ApiController]
-public class NeighborhoodController : ControllerBase
+public class NeighborhoodController : ApiController
 {
-    private readonly ISender _sender;
-
     public NeighborhoodController(ISender sender)
+        : base(sender)
     {
-        _sender = sender;
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{cityId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ResponseCache(Duration = 120)]
-    public async Task<IActionResult> Get(int id)
+    public async Task<IActionResult> Get(int cityId, CancellationToken cancellationToken)
     {
-        return Ok(await _sender.Send(new GetNeighborhoodsQuery(id)));
+        var query = new GetNeighborhoodsByCityIdQuery(cityId);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
     }
 }

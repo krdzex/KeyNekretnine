@@ -25,7 +25,7 @@ internal sealed class LoginUserHandler : IRequestHandler<LoginUserCommand, Token
         var accessToken = await _service.TokenService.CreateToken(loggedUser);
         var rereshToken = await _service.TokenService.CreateRefreshToken(loggedUser);
 
-        var tokenResponse = new TokenRequest { Token = accessToken, RefreshToken = rereshToken };
+        var tokenResponse = new TokenRequest { AccessToken = accessToken, RefreshToken = rereshToken };
 
         return tokenResponse;
     }

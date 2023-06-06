@@ -29,7 +29,7 @@ internal sealed class GoogleLoginHandler : IRequestHandler<GoogleLoginCommand, T
         var accessToken = await _service.TokenService.CreateToken(user);
         var rereshToken = await _service.TokenService.CreateRefreshToken(user);
 
-        var tokenResponse = new TokenRequest { Token = accessToken, RefreshToken = rereshToken };
+        var tokenResponse = new TokenRequest { AccessToken = accessToken, RefreshToken = rereshToken };
 
         return tokenResponse;
     }

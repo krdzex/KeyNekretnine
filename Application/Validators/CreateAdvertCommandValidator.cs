@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Application.Validators
 {
-    public class CreateAdvertCommandValidator : AbstractValidator<CreateAdvertCommand>
+    public sealed class CreateAdvertCommandValidator : AbstractValidator<CreateAdvertCommand>
     {
         public CreateAdvertCommandValidator()
         {

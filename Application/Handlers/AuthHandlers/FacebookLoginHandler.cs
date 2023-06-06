@@ -30,7 +30,7 @@ internal sealed class FacebookLoginHandler : IRequestHandler<FacebookLoginComman
         var accessToken = await _service.TokenService.CreateToken(dbUser);
         var rereshToken = await _service.TokenService.CreateRefreshToken(dbUser);
 
-        var tokenResponse = new TokenRequest { Token = accessToken, RefreshToken = rereshToken };
+        var tokenResponse = new TokenRequest { AccessToken = accessToken, RefreshToken = rereshToken };
 
         return tokenResponse;
     }

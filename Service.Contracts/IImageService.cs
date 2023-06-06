@@ -5,4 +5,5 @@ public interface IImageService
 {
     Task<string> UploadImageOnCloudinaryUsingDb(byte[] imagePath, string folderName);
     Task<string> UploadImageOnCloudinary(IFormFile image, string folderName);
+    Task DeleteImageFromCloudinary(string publicId);
 }

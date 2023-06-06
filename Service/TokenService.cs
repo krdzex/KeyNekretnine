@@ -83,7 +83,7 @@ internal sealed class TokenService : ITokenService
     public async Task<TokenRequest> VerifyRefreshToken(TokenRequest request)
     {
         var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
-        var tokenContent = jwtSecurityTokenHandler.ReadJwtToken(request.Token);
+        var tokenContent = jwtSecurityTokenHandler.ReadJwtToken(request.AccessToken);
         var email = tokenContent.Claims.ToList().FirstOrDefault(q => q.Type == ClaimTypes.Email)?.Value;
         var user = await _userManager.FindByEmailAsync(email);
 
@@ -94,7 +94,7 @@ internal sealed class TokenService : ITokenService
             return null;
         }
 
-        return new TokenRequest { Token = await CreateToken(user), RefreshToken = await CreateRefreshToken(user) };
+        return new TokenRequest { AccessToken = await CreateToken(user), RefreshToken = await CreateRefreshToken(user) };
     }
 
     public async Task<GoogleJsonWebSignature.Payload> VerifyGoogleToken(GoogleLoginDto googleLoginDto)
