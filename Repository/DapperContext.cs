@@ -7,9 +7,8 @@ public class DapperContext
     public IDbConnection CreateConnection()
         => new NpgsqlConnection(GetConnectionString());
 
-    private static string GetConnectionString()
+    public string GetConnectionString()
     {
-
         var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
         var databaseUri = new Uri(databaseUrl);
         var userInfo = databaseUri.UserInfo.Split(':');

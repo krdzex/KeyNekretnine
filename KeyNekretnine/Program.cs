@@ -9,15 +9,16 @@ builder.Services
     .AddCaching()
     .AddApplication()
     .AddPresentation()
-    .AddAuthorizationAndAuthentication()
+    .AddCustomAttributes()
     .AddDatabase()
+    .AddAuthorizationAndAuthentication()
     .AddRateLimiting()
     .AddBackgroundTasks()
     .AddManagers()
-    .AddCustomAttributes()
     .AddHttpConfiguration()
     .AddMapings()
     .AddServicesRegistration();
+
 
 var app = builder.Build();
 

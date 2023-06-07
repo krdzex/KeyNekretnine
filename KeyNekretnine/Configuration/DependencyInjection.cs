@@ -133,20 +133,6 @@ namespace KeyNekretnine.Configuration
                 };
             });
 
-            services.AddIdentity<User, IdentityRole>(o =>
-            {
-                o.Password.RequireDigit = true;
-                o.Password.RequireLowercase = true;
-                o.Password.RequireUppercase = true;
-                o.User.RequireUniqueEmail = true;
-                o.SignIn.RequireConfirmedEmail = true;
-            })
-            .AddEntityFrameworkStores<RepositoryContext>()
-            .AddTokenProvider("KeyNekretnineAPI", typeof(DataProtectorTokenProvider<User>))
-            .AddDefaultTokenProviders();
-
-            services.AddAuthentication();
-
             return services;
         }
 
@@ -170,6 +156,18 @@ namespace KeyNekretnine.Configuration
                 opts.UseNpgsql(builder.ToString()).UseSnakeCaseNamingConvention();
             });
 
+            services.AddIdentity<User, IdentityRole>(o =>
+            {
+                o.Password.RequireDigit = true;
+                o.Password.RequireLowercase = true;
+                o.Password.RequireUppercase = true;
+                o.User.RequireUniqueEmail = true;
+                o.SignIn.RequireConfirmedEmail = true;
+            })
+            .AddEntityFrameworkStores<RepositoryContext>()
+            .AddTokenProvider("KeyNekretnineAPI", typeof(DataProtectorTokenProvider<User>))
+            .AddDefaultTokenProviders();
+
             services.AddSingleton<DapperContext>();
 
             return services;
@@ -192,8 +190,7 @@ namespace KeyNekretnine.Configuration
                 opt.GeneralRules = rateLimitRules;
             });
 
-            services.AddSingleton<IRateLimitCounterStore,
-            MemoryCacheRateLimitCounterStore>();
+            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
             services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
             services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
             services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
