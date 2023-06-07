@@ -15,7 +15,7 @@ internal sealed class ConfirmUserEmailHandler : ICommandHandler<ConfirmUserEmail
     }
     public async Task<Result<bool>> Handle(ConfirmUserEmailCommand request, CancellationToken cancellationToken)
     {
-        var user = await _repository.User.FindUserByEmail(request.Email);
+        var user = await _repository.User.GetUserByEmail(request.Email);
 
         if (user is null)
         {

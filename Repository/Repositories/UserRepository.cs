@@ -9,7 +9,6 @@ using Shared.CustomResponses;
 using Shared.DataTransferObjects.User;
 using Shared.RequestFeatures;
 using System.Data;
-using System.Security.Claims;
 
 namespace Repository.Repositories;
 internal sealed class UserRepository : IUserRepository
@@ -110,13 +109,10 @@ internal sealed class UserRepository : IUserRepository
         }
     }
 
-    public async Task<UserInformationDto> GetLoggedUserInformations(IEnumerable<Claim> userClaims, CancellationToken cancellationToken)
+    public async Task<UserInformationDto> GetLoggedUserInformationsByEmail(string email, CancellationToken cancellationToken)
     {
 
         var query = UserQuery.GetLoggedUserInformations;
-
-        var email = userClaims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
-        var roles = userClaims.Where(c => c.Type == ClaimTypes.Role).Select(x => x.Value);
 
         using (var connection = _dapperContext.CreateConnection())
         {
@@ -126,7 +122,6 @@ internal sealed class UserRepository : IUserRepository
             var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
 
             var userInformations = await connection.QueryFirstOrDefaultAsync<UserInformationDto>(cmd);
-            userInformations.Roles = roles;
 
             return userInformations;
         }
@@ -154,7 +149,7 @@ internal sealed class UserRepository : IUserRepository
         }
     }
 
-    public async Task<UserDto> GetUser(string userId, CancellationToken cancellationToken)
+    public async Task<UserDto> GetUserById(string userId, CancellationToken cancellationToken)
     {
         var query = UserQuery.GetUserById;
 
@@ -228,7 +223,7 @@ internal sealed class UserRepository : IUserRepository
         }
     }
 
-    public async Task<User> FindUserByEmail(string email)
+    public async Task<User> GetUserByEmail(string email)
     {
         var user = await _userManager.FindByEmailAsync(email);
 
