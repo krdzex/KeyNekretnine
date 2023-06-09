@@ -8,8 +8,8 @@ namespace Contracts;
 public interface IUserRepository
 {
     Task UserBanExpired(User user);
-    Task BanUser(string userId, int noOfDays);
-    Task UnbanUser(string userId);
+    Task<IdentityResult> BanUser(User user, int noOfDays);
+    Task<IdentityResult> UnbanUser(User user);
     Task<Pagination<UserForListDto>> GetUsers(UserParameters userParameters, CancellationToken cancellationToken);
     Task<string> GetUserIdFromEmail(string email, CancellationToken cancellationToken);
     Task<UserInformationDto> GetLoggedUserInformationsByEmail(string email, CancellationToken cancellationToken);
@@ -18,7 +18,7 @@ public interface IUserRepository
     Task<UserDto> GetUserById(string userId, CancellationToken cancellationToken);
     Task<(string, DateTime)> GetEmailAndBanEndFromUserId(string userId, CancellationToken cancellationToken);
     Task<string> GetEmailFromUserId(string userId, CancellationToken cancellationToken);
-    Task UpdateUser(UpdateUserDto updateUser, string profileImageUrl, string email);
+    Task<IdentityResult> UpdateUser(User user, UpdateUserDto updateUser);
     Task BanCheck(User user);
     Task<User> GetUserByEmail(string email);
 }

@@ -12,22 +12,34 @@ namespace KeyNekretnine.Presentation.Infrastructure
 
         protected ApiController(ISender sender) => Sender = sender;
 
-        protected IActionResult HandleFailure(Result result) =>
-            result switch
+        protected IActionResult HandleFailure(Result result)
+        {
+            switch (result)
             {
-                { IsSuccess: true } => throw new InvalidOperationException(),
-                IValidationResult validationResult =>
-                    BadRequest(CreateProblemDetails(
-                        "Validation Error", StatusCodes.Status400BadRequest,
-                        result.Error,
-                        validationResult.Errors)),
+                case { IsSuccess: true }:
+                    throw new InvalidOperationException();
 
-                _ =>
-                    BadRequest(CreateProblemDetails(
+                case IValidationResult validationResult:
+                    return BadRequest(CreateProblemDetails(
+                        "Validation Error",
+                        StatusCodes.Status400BadRequest,
+                        result.Error,
+                        validationResult.Errors));
+                case IMultipleErrorsResult multipleErrorsResult:
+                    return BadRequest(CreateProblemDetails(
                         "Bad Request",
                         StatusCodes.Status400BadRequest,
-                        result.Error))
-            };
+                        result.Error,
+                        multipleErrorsResult.Errors));
+
+                default:
+                    if (result.Error.Code.Contains("NotFound"))
+                    {
+                        return NotFound(result.Error);
+                    }
+                    return BadRequest(result.Error);
+            }
+        }
 
         private static ProblemDetails CreateProblemDetails(
             string title,

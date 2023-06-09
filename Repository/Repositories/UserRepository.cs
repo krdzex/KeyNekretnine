@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Contracts;
 using Dapper;
-using Entities.Exceptions;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Repository.RawQuery;
@@ -31,34 +30,25 @@ internal sealed class UserRepository : IUserRepository
         await _userManager.UpdateAsync(user);
     }
 
-    public async Task BanUser(string userId, int noOfDays)
+    public async Task<IdentityResult> BanUser(User user, int noOfDays)
     {
-        var user = await _userManager.FindByIdAsync(userId);
-
-        if (user == null)
-        {
-            throw new UserNotFoundException();
-        }
-
         user.IsBanned = true;
         user.BanEnd = DateTime.Now.AddDays(Convert.ToDouble(noOfDays));
 
-        await _userManager.UpdateAsync(user);
+        var banResult = await _userManager.UpdateAsync(user);
+
+        return banResult;
     }
 
-    public async Task UnbanUser(string userId)
+    public async Task<IdentityResult> UnbanUser(User user)
     {
-        var user = await _userManager.FindByIdAsync(userId);
-
-        if (user == null)
-        {
-            throw new UserNotFoundException();
-        }
 
         user.IsBanned = false;
         user.BanEnd = null;
 
-        await _userManager.UpdateAsync(user);
+        var unbanResult = await _userManager.UpdateAsync(user);
+
+        return unbanResult;
     }
 
     public async Task<Pagination<UserForListDto>> GetUsers(UserParameters userParameters, CancellationToken cancellationToken)
@@ -196,19 +186,13 @@ internal sealed class UserRepository : IUserRepository
         }
     }
 
-    public async Task UpdateUser(UpdateUserDto updateUser, string imageUrl, string email)
+    public async Task<IdentityResult> UpdateUser(User user, UpdateUserDto updateUser)
     {
-        var user = await _userManager.FindByEmailAsync(email);
-
-        if (user == null)
-        {
-            throw new UserNotFoundException();
-        }
-
         _mapper.Map(updateUser, user);
-        user.ProfileImageUrl = imageUrl;
 
-        await _userManager.UpdateAsync(user);
+        var result = await _userManager.UpdateAsync(user);
+
+        return result;
     }
 
     public async Task BanCheck(User user)
@@ -224,6 +208,13 @@ internal sealed class UserRepository : IUserRepository
     }
 
     public async Task<User> GetUserByEmail(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+
+        return user;
+    }
+
+    public async Task<User> GetUserProfileImageUrl(string email)
     {
         var user = await _userManager.FindByEmailAsync(email);
 

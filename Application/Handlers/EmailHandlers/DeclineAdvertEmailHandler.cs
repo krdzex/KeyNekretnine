@@ -20,7 +20,7 @@ internal sealed class DeclineAdvertEmailHandler : INotificationHandler<DeclineAd
     {
         var userEmail = await _repositoryManager.Advert.GetUserEmailFromAdvertId(notification.AdvertId, cancellationToken);
 
-        var sendStatus = await _serviceManager.EmailService.SendDeclineAdvertEmail(userEmail, notification.AdvertId);
+        var sendStatus = await _serviceManager.EmailService.SendDeclineAdvertEmail(userEmail, notification.AdvertId, cancellationToken);
 
         if (!sendStatus)
         {

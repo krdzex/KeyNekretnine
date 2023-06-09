@@ -20,7 +20,7 @@ internal sealed class ApproveAdvertEmailHandler : INotificationHandler<ApproveAd
     {
         var userEmail = await _repositoryManager.Advert.GetUserEmailFromAdvertId(notification.AdvertId, cancellationToken);
 
-        var sendStatus = await _serviceManager.EmailService.SendApproveAdvertEmail(userEmail, notification.AdvertId);
+        var sendStatus = await _serviceManager.EmailService.SendApproveAdvertEmail(userEmail, notification.AdvertId, cancellationToken);
 
         if (!sendStatus)
         {

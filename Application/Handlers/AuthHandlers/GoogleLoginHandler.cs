@@ -19,7 +19,6 @@ internal sealed class GoogleLoginHandler : IRequestHandler<GoogleLoginCommand, T
 
     public async Task<TokenRequest> Handle(GoogleLoginCommand request, CancellationToken cancellationToken)
     {
-
         var payload = await _service.TokenService.VerifyGoogleToken(request.GoogleLoginDto);
 
         var user = await _service.AuthenticationService.GoogleLogin(request.GoogleLoginDto, payload);

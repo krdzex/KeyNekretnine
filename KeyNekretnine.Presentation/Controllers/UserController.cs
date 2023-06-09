@@ -1,9 +1,12 @@
-﻿using Application.Commands.UserCommands;
+﻿using Application.Core.Users.Commands.MultipleUsersUnban;
+using Application.Core.Users.Commands.UnbanUser;
+using Application.Core.Users.Commands.UpdateUser;
+using Application.Core.Users.Notifications.BanUser;
+using Application.Core.Users.Notifications.MultipleUserBan;
 using Application.Core.Users.Queries.ConfirmEmailQuery;
 using Application.Core.Users.Queries.GetCurrentUserQuery;
 using Application.Core.Users.Queries.GetUserByQuery;
 using Application.Core.Users.Queries.GetUsersQuery;
-using Application.Notifications.UserNotifications;
 using KeyNekretnine.Attributes;
 using KeyNekretnine.Presentation.Infrastructure;
 using MediatR;
@@ -11,7 +14,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.DataTransferObjects.User;
 using Shared.RequestFeatures;
-using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
 namespace KeyNekretnine.Presentation.Controllers;
@@ -19,12 +21,10 @@ namespace KeyNekretnine.Presentation.Controllers;
 [Route("api/[controller]")]
 public sealed class UserController : ApiController
 {
-    private readonly IPublisher _publisher;
 
-    public UserController(ISender sender, IPublisher published)
+    public UserController(ISender sender)
         : base(sender)
     {
-        _publisher = published;
     }
 
     [Authorize]
@@ -38,27 +38,31 @@ public sealed class UserController : ApiController
 
         var response = await Sender.Send(query, cancellationToken);
 
-        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
+        return response.IsSuccess ? Ok(response.Value) : HandleFailure(response);
     }
 
     [Authorize(Roles = "Administrator")]
     [ServiceFilter(typeof(BanUserChack))]
-    [HttpPut("{id:guid}/ban")]
-    public async Task<IActionResult> Ban(Guid id, [Required] int days)
+    [HttpPut("ban")]
+    public async Task<IActionResult> Ban([FromBody] BanUserDto banUserDto, CancellationToken cancellationToken)
     {
-        await _publisher.Publish(new BanUserNotification(id.ToString(), days));
+        var command = new BanUserCommand(banUserDto.Email, banUserDto.Days);
 
-        return NoContent();
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : HandleFailure(response);
     }
 
     [Authorize(Roles = "Administrator")]
     [ServiceFilter(typeof(BanUserChack))]
-    [HttpPut("{id:guid}/unban")]
-    public async Task<IActionResult> Unban(Guid id)
+    [HttpPut("/unban")]
+    public async Task<IActionResult> Unban([FromBody] string email, CancellationToken cancellationToken)
     {
-        await _publisher.Publish(new UnbanUserNotification(id.ToString()));
+        var command = new UnbanUserCommand(email);
 
-        return NoContent();
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : HandleFailure(response);
     }
 
     [Authorize(Roles = "Administrator")]
@@ -69,7 +73,7 @@ public sealed class UserController : ApiController
 
         var response = await Sender.Send(query, cancellationToken);
 
-        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
+        return response.IsSuccess ? Ok(response.Value) : HandleFailure(response);
     }
 
     [HttpGet("ConfirmEmail")]
@@ -79,7 +83,7 @@ public sealed class UserController : ApiController
 
         var response = await Sender.Send(query, cancellationToken);
 
-        return response.IsSuccess ? RedirectToPage("https://keynekretnine-dev.vercel.app") : BadRequest(response.Error);
+        return response.IsSuccess ? RedirectToPage("https://keynekretnine-dev.vercel.app") : HandleFailure(response);
     }
 
     [HttpGet("{userId:guid}")]
@@ -89,38 +93,45 @@ public sealed class UserController : ApiController
 
         var response = await Sender.Send(query, cancellationToken);
 
-        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
+        return response.IsSuccess ? Ok(response.Value) : HandleFailure(response);
     }
 
     [Authorize(Roles = "Administrator")]
     [ServiceFilter(typeof(BanUserChack))]
     [HttpPut("multiple/ban")]
-    public async Task<IActionResult> MultipleBan([FromBody] BanUsersDto banUsers)
+    public async Task<IActionResult> MultipleBan([FromBody] BanUsersDto banUsers, CancellationToken cancellationToken)
     {
-        await _publisher.Publish(new MultipleBanUserNotification(banUsers.UserIds, banUsers.Days));
+        var command = new MultipleUsersBanCommand(banUsers.Emails, banUsers.Days);
 
-        return NoContent();
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : HandleFailure(response);
     }
 
     [Authorize(Roles = "Administrator")]
     [ServiceFilter(typeof(BanUserChack))]
     [HttpPut("multiple/unban")]
-    public async Task<IActionResult> MultipleUnban([FromBody] List<string> userIds)
+    public async Task<IActionResult> MultipleUnban([FromBody] List<string> userIds, CancellationToken cancellationToken)
     {
-        await _publisher.Publish(new MultipleUnbanUserNotification(userIds));
+        var command = new MultipleUsersUnbanCommand(userIds);
 
-        return NoContent();
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : HandleFailure(response);
+
     }
 
     [Authorize]
     [ServiceFilter(typeof(BanUserChack))]
     [HttpPut("update")]
-    public async Task<IActionResult> UpdateUser([FromForm] UpdateUserDto updateUserDto)
+    public async Task<IActionResult> UpdateUser([FromForm] UpdateUserDto updateUserDto, CancellationToken cancellationToken)
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
 
-        await Sender.Send(new UpdateUserCommand(updateUserDto, email));
+        var command = new UpdateUserCommand(updateUserDto, email);
 
-        return NoContent();
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : HandleFailure(response);
     }
 }

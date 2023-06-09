@@ -23,6 +23,6 @@ public class AdvertStatusController : ApiController
 
         var response = await Sender.Send(query, cancellationToken);
 
-        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
+        return response.IsSuccess ? Ok(response.Value) : HandleFailure(response);
     }
 }

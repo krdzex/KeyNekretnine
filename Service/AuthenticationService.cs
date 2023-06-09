@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Entities.Exceptions;
 using Entities.Models;
 using Google.Apis.Auth;
 using Microsoft.AspNetCore.Identity;
@@ -26,15 +25,21 @@ internal sealed class AuthenticationService : IAuthenticationService
 
         if (!result.Succeeded)
         {
-            var errors = new Dictionary<string, string> { };
-            foreach (var error in result.Errors)
-            {
-                errors.Add(error.Code, error.Description);
-            }
-            throw new AuthenticationException(errors);
+            return result;
+            //var errors = new Dictionary<string, string> { };
+            //foreach (var error in result.Errors)
+            //{
+            //    errors.Add(error.Code, error.Description);
+            //}
+            //throw new AuthenticationException(errors);
         }
 
-        await _userManager.AddToRoleAsync(user, "User");
+        var addRoleRsult = await _userManager.AddToRoleAsync(user, "User");
+
+        if (!addRoleRsult.Succeeded)
+        {
+            return result;
+        }
 
         return result;
     }

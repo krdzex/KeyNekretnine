@@ -9,6 +9,7 @@ namespace Entities.DomainErrors
             public static Error UserNotFound => new Error(
                 "User.NotFound",
                 "User doesnt exist in database");
+
         }
     }
 }

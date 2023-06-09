@@ -25,6 +25,6 @@ public class NeighborhoodController : ApiController
 
         var response = await Sender.Send(query, cancellationToken);
 
-        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+        return response.IsSuccess ? Ok(response.Value) : HandleFailure(response);
     }
 }

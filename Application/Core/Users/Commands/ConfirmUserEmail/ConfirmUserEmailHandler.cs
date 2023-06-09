@@ -24,6 +24,13 @@ internal sealed class ConfirmUserEmailHandler : ICommandHandler<ConfirmUserEmail
 
         var result = await _repository.User.ConfrimUserEmail(user, request.Email);
 
-        return result.Succeeded;
+        if (!result.Succeeded)
+        {
+            var errors = result.Errors.Select(error => new Error(error.Code, error.Description)).ToArray();
+
+            return MultipleErrorsResult<bool>.WithErrors(errors);
+        }
+
+        return true;
     }
 }

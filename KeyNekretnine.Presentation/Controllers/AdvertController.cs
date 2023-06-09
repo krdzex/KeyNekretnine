@@ -46,7 +46,7 @@ public class AdvertController : ApiController
 
         var response = await Sender.Send(query, cancellationToken);
 
-        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+        return response.IsSuccess ? Ok(response.Value) : HandleFailure(response);
     }
 
     [HttpGet]
@@ -58,7 +58,7 @@ public class AdvertController : ApiController
 
         var response = await Sender.Send(query, cancellationToken);
 
-        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
+        return response.IsSuccess ? Ok(response.Value) : HandleFailure(response);
     }
 
     [HttpGet("map")]
@@ -70,7 +70,7 @@ public class AdvertController : ApiController
 
         var response = await Sender.Send(query, cancellationToken);
 
-        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
+        return response.IsSuccess ? Ok(response.Value) : HandleFailure(response);
     }
 
     [HttpGet("map/{id}")]
@@ -83,7 +83,7 @@ public class AdvertController : ApiController
 
         var response = await Sender.Send(query, cancellationToken);
 
-        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+        return response.IsSuccess ? Ok(response.Value) : HandleFailure(response);
     }
 
     [Authorize]
@@ -136,7 +136,7 @@ public class AdvertController : ApiController
 
         var response = await Sender.Send(query, cancellationToken);
 
-        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+        return response.IsSuccess ? Ok(response.Value) : HandleFailure(response);
     }
 
     [Authorize(Roles = "Administrator")]
@@ -150,7 +150,7 @@ public class AdvertController : ApiController
 
         var response = await Sender.Send(query, cancellationToken);
 
-        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+        return response.IsSuccess ? Ok(response.Value) : HandleFailure(response);
     }
 
     [Authorize]
@@ -167,7 +167,7 @@ public class AdvertController : ApiController
 
         var response = await Sender.Send(query, cancellationToken);
 
-        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
+        return response.IsSuccess ? Ok(response.Value) : HandleFailure(response);
     }
 
     [Authorize]
@@ -185,7 +185,7 @@ public class AdvertController : ApiController
 
         var response = await Sender.Send(query, cancellationToken);
 
-        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
+        return response.IsSuccess ? Ok(response.Value) : HandleFailure(response);
     }
 
     [Authorize]
@@ -233,7 +233,7 @@ public class AdvertController : ApiController
 
         var response = await Sender.Send(query, cancellationToken);
 
-        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
+        return response.IsSuccess ? Ok(response.Value) : HandleFailure(response);
     }
 
     [Authorize]
@@ -251,7 +251,7 @@ public class AdvertController : ApiController
 
         var response = await Sender.Send(query, cancellationToken);
 
-        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
+        return response.IsSuccess ? Ok(response.Value) : HandleFailure(response);
     }
 
 
@@ -281,7 +281,7 @@ public class AdvertController : ApiController
 
         var response = await Sender.Send(query, cancellationToken);
 
-        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
+        return response.IsSuccess ? Ok(response.Value) : HandleFailure(response);
     }
 
 
@@ -294,7 +294,7 @@ public class AdvertController : ApiController
 
         var response = await Sender.Send(query, cancellationToken);
 
-        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
+        return response.IsSuccess ? Ok(response.Value) : HandleFailure(response);
     }
 
     [HttpPut("{advertId}/update/informations")]

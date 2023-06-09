@@ -1,5 +1,5 @@
 ﻿using Application.Commands.AuthCommands;
-using Application.Notifications.AuthNotification;
+using Application.Core.Auth.Commands.UserRegistration;
 using KeyNekretnine.Presentation.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -11,12 +11,10 @@ namespace KeyNekretnine.Presentation.Controllers;
 [Route("api/[controller]")]
 public class AuthenticationController : ApiController
 {
-    private readonly IPublisher _publisher;
 
-    public AuthenticationController(ISender sender, IPublisher publisher)
+    public AuthenticationController(ISender sender)
         : base(sender)
     {
-        _publisher = publisher;
     }
 
     [HttpPost("registration")]
@@ -24,11 +22,13 @@ public class AuthenticationController : ApiController
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 
-    public async Task<IActionResult> Register([FromBody] UserForRegistrationDto userForRegistration)
+    public async Task<IActionResult> Register([FromBody] UserForRegistrationDto userForRegistration, CancellationToken cancellationToken)
     {
-        await _publisher.Publish(new UserSignupNotification(userForRegistration));
+        var command = new UserRegistrationCommand(userForRegistration);
 
-        return StatusCode(201);
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? StatusCode(201) : HandleFailure(response);
     }
 
     [ProducesResponseType(StatusCodes.Status202Accepted)]

@@ -19,7 +19,7 @@ public class TokenController : ControllerBase
     [HttpPost("refresh")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Refresh([FromBody] TokenRequest request)
+    public async Task<IActionResult> Refresh()
     {
         var refreshToken = Request.Cookies["X-Refresh-Token"];
         var accessToken = Request.Cookies["X-Access-Token"];

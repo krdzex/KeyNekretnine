@@ -1,6 +1,6 @@
 ﻿namespace Shared.DataTransferObjects.User;
-public class BanUsersDto
+public class BanUserDto
 {
-    public IEnumerable<string> Emails { get; set; }
+    public string Email { get; set; }
     public int Days { get; set; }
 }

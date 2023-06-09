@@ -23,7 +23,7 @@ internal sealed class SendConfirmEmailHandler : IRequestHandler<SendConfirmEmail
 
         var token = HttpUtility.UrlEncode(await _userManager.GenerateEmailConfirmationTokenAsync(user));
 
-        var result = await _serviceManager.EmailService.SendEmailConfrim(request.Email, token);
+        var result = await _serviceManager.EmailService.SendEmailConfrim(request.Email, token, cancellationToken);
 
         if (!result)
         {
