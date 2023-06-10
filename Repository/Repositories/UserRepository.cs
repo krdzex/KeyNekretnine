@@ -220,4 +220,11 @@ internal sealed class UserRepository : IUserRepository
 
         return user;
     }
+
+    public async Task<string> GenerateEmailConfirmationToken(User user)
+    {
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+        return token;
+    }
 }

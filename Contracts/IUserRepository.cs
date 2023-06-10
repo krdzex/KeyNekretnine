@@ -19,6 +19,7 @@ public interface IUserRepository
     Task<(string, DateTime)> GetEmailAndBanEndFromUserId(string userId, CancellationToken cancellationToken);
     Task<string> GetEmailFromUserId(string userId, CancellationToken cancellationToken);
     Task<IdentityResult> UpdateUser(User user, UpdateUserDto updateUser);
+    Task<string> GenerateEmailConfirmationToken(User user);
     Task BanCheck(User user);
     Task<User> GetUserByEmail(string email);
 }

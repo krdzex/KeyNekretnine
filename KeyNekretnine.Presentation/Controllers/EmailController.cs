@@ -1,5 +1,6 @@
-﻿using Application.Commands.EmailCommands;
+﻿using Application.Core.Email.Commands.SendConfirmEmail;
 using KeyNekretnine.Attributes;
+using KeyNekretnine.Presentation.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -9,14 +10,12 @@ using System.Security.Claims;
 namespace KeyNekretnine.Presentation.Controllers;
 
 [Route("api/[controller]")]
-[ApiController]
-public class EmailController : ControllerBase
+public class EmailController : ApiController
 {
-    private readonly ISender _sender;
 
     public EmailController(ISender sender)
+        : base(sender)
     {
-        _sender = sender;
     }
 
     [HttpPost]
@@ -25,12 +24,14 @@ public class EmailController : ControllerBase
     [ServiceFilter(typeof(BanUserChack))]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> SendEmailConfirm()
+    public async Task<IActionResult> SendEmailConfirm(CancellationToken cancellationToken)
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
 
-        await _sender.Send(new SendConfirmEmailCommand(email));
+        var command = new SendConfirmEmailCommand(email);
 
-        return Ok();
+        var result = await Sender.Send(command, cancellationToken);
+
+        return result.IsSuccess ? NoContent() : HandleFailure(result);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Application.Commands;
+﻿using Application.Core.Tokens.Commands.RefreshTokens;
+using KeyNekretnine.Presentation.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,27 +8,28 @@ using Shared.RequestFeatures;
 namespace KeyNekretnine.Presentation.Controllers;
 [Route("api/token")]
 [ApiController]
-public class TokenController : ControllerBase
+public class TokenController : ApiController
 {
-    private readonly ISender _sender;
 
     public TokenController(ISender sender)
+        : base(sender)
     {
-        _sender = sender;
     }
 
     [HttpPost("refresh")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Refresh()
+    public async Task<IActionResult> Refresh(CancellationToken cancellationToken)
     {
-        var refreshToken = Request.Cookies["X-Refresh-Token"];
-        var accessToken = Request.Cookies["X-Access-Token"];
+        var newTokens = new TokenRequest { RefreshToken = Request.Cookies["X-Refresh-Token"], AccessToken = Request.Cookies["X-Access-Token"] };
 
-        var newTokens = new TokenRequest { RefreshToken = refreshToken, AccessToken = accessToken };
-        var tokens = await _sender.Send(new CreateAccessAndRefreshTokenCommand(newTokens));
+        var command = new RefreshTokensCommand(newTokens);
 
-        HttpContext.Response.Cookies.Append("X-Access-Token", tokens.AccessToken,
+        var response = await Sender.Send(command, cancellationToken);
+
+        if (response.IsSuccess)
+        {
+            HttpContext.Response.Cookies.Append("X-Access-Token", response.Value.AccessToken,
             new CookieOptions
             {
                 Expires = DateTime.Now.AddDays(7),
@@ -38,7 +40,7 @@ public class TokenController : ControllerBase
 
             });
 
-        HttpContext.Response.Cookies.Append("X-Refresh-Token", tokens.RefreshToken,
+            HttpContext.Response.Cookies.Append("X-Refresh-Token", response.Value.RefreshToken,
             new CookieOptions
             {
                 Expires = DateTime.Now.AddDays(7),
@@ -48,7 +50,8 @@ public class TokenController : ControllerBase
                 SameSite = SameSiteMode.None,
 
             });
-        return Ok(tokens);
+        }
 
+        return response.IsSuccess ? NoContent() : HandleFailure(response);
     }
 };

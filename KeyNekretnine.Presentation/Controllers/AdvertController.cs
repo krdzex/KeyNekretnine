@@ -1,5 +1,7 @@
 ﻿using Application.Adverts.Queries.GetAdvertById;
 using Application.Commands.AdvertCommands;
+using Application.Core.Adverts.Commands.ApproveAdvert;
+using Application.Core.Adverts.Commands.RejectAdvert;
 using Application.Core.Adverts.Queries.GetAdminAdvert;
 using Application.Core.Adverts.Queries.GetAdminAdverts;
 using Application.Core.Adverts.Queries.GetAdvertFromMap;
@@ -11,7 +13,6 @@ using Application.Core.Adverts.Queries.GetIsFavorite;
 using Application.Core.Adverts.Queries.GetmapPoints;
 using Application.Core.Adverts.Queries.GetMyAdvertById;
 using Application.Core.Adverts.Queries.GetMyAdverts;
-using Application.Notifications.AdvertNotifications;
 using KeyNekretnine.Attributes;
 using KeyNekretnine.Presentation.ActionFilters;
 using KeyNekretnine.Presentation.Infrastructure;
@@ -107,11 +108,13 @@ public class AdvertController : ApiController
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Approve(int id)
+    public async Task<IActionResult> Approve(int id, CancellationToken cancellationToken)
     {
-        await _publisher.Publish(new ApproveAdvertNotification(id));
+        var command = new ApproveAdvertCommand(id);
 
-        return NoContent();
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : HandleFailure(response);
     }
 
     [Authorize(Roles = "Administrator")]
@@ -119,11 +122,13 @@ public class AdvertController : ApiController
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Decline(int id)
+    public async Task<IActionResult> Decline(int id, CancellationToken cancellationToken)
     {
-        await _publisher.Publish(new DeclineAdvertNotification(id));
+        var command = new RejectAdvertCommand(id);
 
-        return NoContent();
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : HandleFailure(response);
     }
 
     [Authorize(Roles = "Administrator")]

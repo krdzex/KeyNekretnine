@@ -29,10 +29,4 @@
 			<_Parameter1>Application.UnitTests</_Parameter1>
 		</AssemblyAttribute>
 	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Commands\UserCommands\" />
-	  <Folder Include="Handlers\UserHandlers\" />
-	  <Folder Include="Notifications\AuthNotification\" />
-	</ItemGroup>
 </Project>
