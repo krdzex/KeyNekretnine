@@ -8,7 +8,6 @@ namespace Repository;
 
 public sealed class RepositoryManager : IRepositoryManager
 {
-    private readonly RepositoryContext _repositoryContext;
     private readonly Lazy<ICityRepository> _cityRepository;
     private readonly Lazy<IAdvertPurposeRepository> _advertPurposeRepository;
     private readonly Lazy<IAdvertTypeRepository> _advertTypeRepository;
@@ -16,18 +15,14 @@ public sealed class RepositoryManager : IRepositoryManager
     private readonly Lazy<IAdvertRepository> _advertRepository;
     private readonly Lazy<IUserRepository> _userRepository;
     private readonly Lazy<IImageRepository> _imageRepository;
-    private readonly DapperContext _dapperContext;
     private readonly Lazy<ITemporeryImageDataRepository> _temporeryImageDataRepository;
     private readonly Lazy<IRejectReasonRepository> _rejectReasonRepository;
     private readonly Lazy<IAdvertFeatureRepository> _advertFeatureRepository;
     private readonly Lazy<IAdvertStatusRepository> _advertStatusRepository;
+    private readonly Lazy<IAgencyRepository> _agencyRepository;
 
-
-
-    public RepositoryManager(IMapper mapper, RepositoryContext repositoryContext, UserManager<User> userManager, DapperContext dapperContext)
+    public RepositoryManager(IMapper mapper, UserManager<User> userManager, DapperContext dapperContext)
     {
-        _repositoryContext = repositoryContext;
-        _dapperContext = dapperContext;
         _cityRepository = new Lazy<ICityRepository>(() => new CityRepository(dapperContext));
         _advertPurposeRepository = new Lazy<IAdvertPurposeRepository>(() => new AdvertPurposeRepository(dapperContext));
         _advertTypeRepository = new Lazy<IAdvertTypeRepository>(() => new AdvertTypeRepository(dapperContext));
@@ -39,7 +34,7 @@ public sealed class RepositoryManager : IRepositoryManager
         _rejectReasonRepository = new Lazy<IRejectReasonRepository>(() => new RejectReasonRepository(dapperContext));
         _advertFeatureRepository = new Lazy<IAdvertFeatureRepository>(() => new AdvertFeatureRepository(dapperContext));
         _advertStatusRepository = new Lazy<IAdvertStatusRepository>(() => new AdvertStatusRepository(dapperContext));
-
+        _agencyRepository = new Lazy<IAgencyRepository>(() => new AgencyRepository(dapperContext));
     }
 
     public ICityRepository City => _cityRepository.Value;
@@ -53,4 +48,6 @@ public sealed class RepositoryManager : IRepositoryManager
     public IRejectReasonRepository RejectReason => _rejectReasonRepository.Value;
     public IAdvertFeatureRepository AdvertFeature => _advertFeatureRepository.Value;
     public IAdvertStatusRepository AdvertStatus => _advertStatusRepository.Value;
+    public IAgencyRepository Agency => _agencyRepository.Value;
+
 }

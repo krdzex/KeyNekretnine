@@ -17,9 +17,9 @@ internal sealed class UserRegistrationHandler : ICommandHandler<UserRegistration
     {
         var result = await _service.AuthenticationService.RegisterUser(notification.RegistrationUser);
 
-        if (!result.Succeeded)
+        if (!result.Item2.Succeeded)
         {
-            var errors = result.Errors.Select(error => new Error(error.Code, error.Description)).ToArray();
+            var errors = result.Item2.Errors.Select(error => new Error(error.Code, error.Description)).ToArray();
 
             return MultipleErrorsResult<Unit>.WithErrors(errors);
         }

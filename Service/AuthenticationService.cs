@@ -18,24 +18,24 @@ internal sealed class AuthenticationService : IAuthenticationService
         _mapper = mapper;
     }
 
-    public async Task<IdentityResult> RegisterUser(UserForRegistrationDto userForRegistration)
+    public async Task<Tuple<string, IdentityResult>> RegisterUser(UserForRegistrationDto userForRegistration)
     {
         var user = _mapper.Map<User>(userForRegistration);
         var result = await _userManager.CreateAsync(user, userForRegistration.Password);
 
         if (!result.Succeeded)
         {
-            return result;
+            return new Tuple<string, IdentityResult>(null, result);
         }
 
         var addRoleRsult = await _userManager.AddToRoleAsync(user, "User");
 
         if (!addRoleRsult.Succeeded)
         {
-            return result;
+            return new Tuple<string, IdentityResult>(null, result);
         }
 
-        return result;
+        return new Tuple<string, IdentityResult>(user.Id, result);
     }
 
     public async Task<User> ValidateUser(UserForAuthenticationDto userForAuthentication)

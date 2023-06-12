@@ -12,4 +12,5 @@ public interface IRepositoryManager
     IRejectReasonRepository RejectReason { get; }
     IAdvertFeatureRepository AdvertFeature { get; }
     IAdvertStatusRepository AdvertStatus { get; }
+    IAgencyRepository Agency { get; }
 }
