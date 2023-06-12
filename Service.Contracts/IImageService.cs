@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Http;
 
 namespace Service.Contracts;
 public interface IImageService
 {
     Task<string> UploadImageOnCloudinaryUsingDb(byte[] imagePath, string folderName);
     Task<string> UploadImageOnCloudinary(IFormFile image, string folderName);
-    Task DeleteImageFromCloudinary(string publicId);
+    Task<DeletionResult> DeleteImageFromCloudinary(string publicId);
 }

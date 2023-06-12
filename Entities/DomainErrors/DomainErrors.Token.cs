@@ -6,9 +6,9 @@ namespace Entities.DomainErrors
     {
         public static class Token
         {
-            public static Error BadTokens => new Error(
-                   "Token.CantVarifyTokens",
-                   "Cant varify tokens.");
+            public static Error BadToken => new Error(
+                   "Token.CantVarifyToken",
+                   "Cant varify token.");
         }
     }
 }

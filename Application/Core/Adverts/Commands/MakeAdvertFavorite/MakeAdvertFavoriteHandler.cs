@@ -1,10 +1,11 @@
-﻿using Application.Commands.AdvertCommands;
+﻿using Application.Abstraction.Messaging;
 using Contracts;
-using Entities.Exceptions;
+using Entities.DomainErrors;
 using MediatR;
+using Shared.Error;
 
-namespace Application.Handlers.AdvertHandlers;
-internal sealed class MakeAdvertFavoriteHandler : IRequestHandler<MakeAdvertFavoriteCommand, Unit>
+namespace Application.Core.Adverts.Commands.MakeAdvertFavorite;
+internal sealed class MakeAdvertFavoriteHandler : ICommandHandler<MakeAdvertFavoriteCommand, Unit>
 {
 
     private readonly IRepositoryManager _repository;
@@ -12,22 +13,30 @@ internal sealed class MakeAdvertFavoriteHandler : IRequestHandler<MakeAdvertFavo
     {
         _repository = repository;
     }
-    public async Task<Unit> Handle(MakeAdvertFavoriteCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Unit>> Handle(MakeAdvertFavoriteCommand request, CancellationToken cancellationToken)
     {
         var advertExist = await _repository.Advert.ChackIfAdvertExistAndItsApproved(request.AdvertId, cancellationToken);
 
         if (!advertExist)
         {
-            throw new AdvertNotFoundException(request.AdvertId);
+            return Result.Failure<Unit>(DomainErrors.Advert.AdvertNotFound(request.AdvertId));
         }
 
         var userId = await _repository.User.GetUserIdFromEmail(request.UserEmail, cancellationToken);
+
+        if (userId is null)
+        {
+            return Result.Failure<Unit>(DomainErrors.User.UserNotFound);
+        }
 
         var isFavorite = await _repository.Advert.ChackIfAdvertIsFavorite(userId, request.AdvertId, cancellationToken);
 
         if (isFavorite)
         {
-            throw new AdvertAlreadyFavoriteException();
+            if (userId is null)
+            {
+                return Result.Failure<Unit>(DomainErrors.Advert.AdvertAlreadyFavorite);
+            }
         }
 
         await _repository.Advert.MakeAdvertFavorite(userId, request.AdvertId, cancellationToken);

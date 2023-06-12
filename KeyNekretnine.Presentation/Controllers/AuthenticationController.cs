@@ -1,5 +1,7 @@
-﻿using Application.Commands.AuthCommands;
+﻿using Application.Core.Auth.Commands.FacebookLogin;
+using Application.Core.Auth.Commands.GoogleLogin;
 using Application.Core.Auth.Commands.UserRegistration;
+using Application.Core.Auth.Queries.UserLogin;
 using KeyNekretnine.Presentation.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -35,32 +37,42 @@ public class AuthenticationController : ApiController
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] UserForAuthenticationDto userForAuthenticationDto)
+    public async Task<IActionResult> Login([FromBody] UserForAuthenticationDto userForAuthenticationDto, CancellationToken cancellationToken)
     {
-        var tokens = await Sender.Send(new LoginUserCommand(userForAuthenticationDto));
+        var query = new LoginUserQuery(userForAuthenticationDto);
 
-        HttpContext.Response.Cookies.Append("X-Access-Token", tokens.AccessToken,
-            new CookieOptions
-            {
-                HttpOnly = true
-            });
+        var response = await Sender.Send(query, cancellationToken);
 
-        HttpContext.Response.Cookies.Append("X-Refresh-Token", tokens.RefreshToken,
-            new CookieOptions
-            {
-                HttpOnly = true
-            });
+        if (response.IsSuccess)
+        {
+            HttpContext.Response.Cookies.Append("X-Access-Token", response.Value.AccessToken,
+                new CookieOptions
+                {
+                    HttpOnly = true
+                });
 
-        return Accepted();
+            HttpContext.Response.Cookies.Append("X-Refresh-Token", response.Value.RefreshToken,
+                new CookieOptions
+                {
+                    HttpOnly = true
+                });
+        }
+
+        return response.IsSuccess ? Accepted() : HandleFailure(response);
     }
 
 
     [HttpPost("google-login")]
-    public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginDto googleLoginDto)
+    public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginDto googleLoginDto, CancellationToken cancellationToken)
     {
-        var tokens = await Sender.Send(new GoogleLoginCommand(googleLoginDto));
 
-        HttpContext.Response.Cookies.Append("X-Access-Token", tokens.AccessToken,
+        var command = new GoogleLoginCommand(googleLoginDto);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        if (response.IsSuccess)
+        {
+            HttpContext.Response.Cookies.Append("X-Access-Token", response.Value.AccessToken,
             new CookieOptions
             {
                 Expires = DateTime.Now.AddDays(7),
@@ -70,7 +82,7 @@ public class AuthenticationController : ApiController
                 SameSite = SameSiteMode.None
             });
 
-        HttpContext.Response.Cookies.Append("X-Refresh-Token", tokens.RefreshToken,
+            HttpContext.Response.Cookies.Append("X-Refresh-Token", response.Value.RefreshToken,
             new CookieOptions
             {
                 Expires = DateTime.Now.AddDays(7),
@@ -79,15 +91,21 @@ public class AuthenticationController : ApiController
                 IsEssential = true,
                 SameSite = SameSiteMode.None,
             });
-        return Accepted();
+        }
+
+        return response.IsSuccess ? Accepted() : HandleFailure(response);
     }
 
     [HttpPost("facebook-login")]
-    public async Task<IActionResult> FacebookLogin([FromBody] string accessToken)
+    public async Task<IActionResult> FacebookLogin([FromBody] string accessToken, CancellationToken cancellationToken)
     {
-        var tokens = await Sender.Send(new FacebookLoginCommand(accessToken));
+        var command = new FacebookLoginCommand(accessToken);
 
-        HttpContext.Response.Cookies.Append("X-Access-Token", tokens.AccessToken,
+        var response = await Sender.Send(command, cancellationToken);
+
+        if (response.IsSuccess)
+        {
+            HttpContext.Response.Cookies.Append("X-Access-Token", response.Value.AccessToken,
             new CookieOptions
             {
                 Expires = DateTime.Now.AddDays(7),
@@ -97,7 +115,7 @@ public class AuthenticationController : ApiController
                 SameSite = SameSiteMode.None
             });
 
-        HttpContext.Response.Cookies.Append("X-Refresh-Token", tokens.RefreshToken,
+            HttpContext.Response.Cookies.Append("X-Refresh-Token", response.Value.RefreshToken,
             new CookieOptions
             {
                 Expires = DateTime.Now.AddDays(7),
@@ -106,8 +124,9 @@ public class AuthenticationController : ApiController
                 IsEssential = true,
                 SameSite = SameSiteMode.None,
             });
+        }
 
-        return Accepted();
+        return response.IsSuccess ? Accepted() : HandleFailure(response);
     }
 
     [HttpPost("logout")]

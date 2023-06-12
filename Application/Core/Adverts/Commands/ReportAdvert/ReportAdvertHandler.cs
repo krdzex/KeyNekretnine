@@ -1,10 +1,11 @@
-﻿using Application.Commands.AdvertCommands;
+﻿using Application.Abstraction.Messaging;
 using Contracts;
-using Entities.Exceptions;
+using Entities.DomainErrors;
 using MediatR;
+using Shared.Error;
 
-namespace Application.Handlers.AdvertHandlers;
-internal sealed class ReportAdvertHandler : IRequestHandler<ReportAdvertCommand, Unit>
+namespace Application.Core.Adverts.Commands.ReportAdvert;
+internal sealed class ReportAdvertHandler : ICommandHandler<ReportAdvertCommand, Unit>
 {
     private readonly IRepositoryManager _repository;
 
@@ -12,16 +13,21 @@ internal sealed class ReportAdvertHandler : IRequestHandler<ReportAdvertCommand,
     {
         _repository = repository;
     }
-    public async Task<Unit> Handle(ReportAdvertCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Unit>> Handle(ReportAdvertCommand request, CancellationToken cancellationToken)
     {
         var advertExist = await _repository.Advert.ChackIfAdvertExistAndItsApproved(request.AdvertId, cancellationToken);
 
         if (!advertExist)
         {
-            throw new AdvertNotFoundException(request.AdvertId);
+            return Result.Failure<Unit>(DomainErrors.Advert.AdvertNotFound(request.AdvertId));
         }
 
         var userId = await _repository.User.GetUserIdFromEmail(request.UserEmail, cancellationToken);
+
+        if (userId is null)
+        {
+            return Result.Failure<Unit>(DomainErrors.User.UserNotFound);
+        }
 
         var isReported = await _repository.Advert.ChackIfAdvertWithThisReasonUserAlreadyReported(userId, request.AdvertId, request.RejectReasonId, cancellationToken);
 

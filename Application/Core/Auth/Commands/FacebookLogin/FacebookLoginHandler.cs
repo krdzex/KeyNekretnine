@@ -1,11 +1,11 @@
-﻿using Application.Commands.AuthCommands;
+﻿using Application.Abstraction.Messaging;
 using Contracts;
-using MediatR;
+using Entities.DomainErrors;
 using Service.Contracts;
+using Shared.Error;
 using Shared.RequestFeatures;
-
-namespace Application.Handlers.AuthHandlers;
-internal sealed class FacebookLoginHandler : IRequestHandler<FacebookLoginCommand, TokenRequest>
+namespace Application.Core.Auth.Commands.FacebookLogin;
+internal sealed class FacebookLoginHandler : ICommandHandler<FacebookLoginCommand, TokenRequest>
 {
     private readonly IServiceManager _service;
     private readonly IRepositoryManager _repository;
@@ -17,17 +17,20 @@ internal sealed class FacebookLoginHandler : IRequestHandler<FacebookLoginComman
     }
 
 
-    public async Task<TokenRequest> Handle(FacebookLoginCommand request, CancellationToken cancellationToken)
+    public async Task<Result<TokenRequest>> Handle(FacebookLoginCommand request, CancellationToken cancellationToken)
     {
-
-
         var fbUser = await _service.TokenService.VerifyFacebookTokenAndGetUserInfo(request.FbAccessToken);
 
         var dbUser = await _service.AuthenticationService.FacebookLogin(fbUser);
 
+        if (dbUser is null)
+        {
+            return Result.Failure<TokenRequest>(DomainErrors.Token.BadToken);
+        }
+
         await _repository.User.BanCheck(dbUser);
 
-        var accessToken = await _service.TokenService.CreateToken(dbUser);
+        var accessToken = await _service.TokenService.CreateAccessToken(dbUser);
         var rereshToken = await _service.TokenService.CreateRefreshToken(dbUser);
 
         var tokenResponse = new TokenRequest { AccessToken = accessToken, RefreshToken = rereshToken };

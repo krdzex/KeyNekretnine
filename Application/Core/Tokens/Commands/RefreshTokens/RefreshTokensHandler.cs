@@ -18,7 +18,7 @@ internal sealed class RefreshTokensHandler : ICommandHandler<RefreshTokensComman
 
         if (newTokens is null)
         {
-            return Result.Failure<TokenRequest>(DomainErrors.Token.BadTokens);
+            return Result.Failure<TokenRequest>(DomainErrors.Token.BadToken);
         }
 
         return newTokens;

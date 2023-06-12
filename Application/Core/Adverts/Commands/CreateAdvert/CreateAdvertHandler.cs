@@ -1,23 +1,22 @@
-﻿using Application.Commands.AdvertCommands;
+﻿using Application.Abstraction.Messaging;
 using Contracts;
-using Entities.Exceptions;
+using Entities.DomainErrors;
 using MediatR;
-using Service.Contracts;
-using Shared;
+using Shared.Error;
 using System.Transactions;
 
-namespace Application.Handlers.AdvertHandlers;
-internal sealed class CreateAdvertHandler : IRequestHandler<CreateAdvertCommand, Unit>
+namespace Application.Core.Adverts.Commands.CreateAdvert;
+internal sealed class CreateAdvertHandler : ICommandHandler<CreateAdvertCommand, Unit>
 {
     private readonly IRepositoryManager _repository;
-    private readonly IProcessingChannel _channel;
-
-    public CreateAdvertHandler(IRepositoryManager repository, IProcessingChannel channel)
+    private readonly IPublisher _publisher;
+    public CreateAdvertHandler(IRepositoryManager repository, IPublisher publisher)
     {
         _repository = repository;
-        _channel = channel;
+        _publisher = publisher;
     }
-    public async Task<Unit> Handle(CreateAdvertCommand request, CancellationToken cancellationToken)
+
+    public async Task<Result<Unit>> Handle(CreateAdvertCommand request, CancellationToken cancellationToken)
     {
         var advertId = -1;
 
@@ -27,7 +26,7 @@ internal sealed class CreateAdvertHandler : IRequestHandler<CreateAdvertCommand,
 
             if (userId is null)
             {
-                throw new UserNotFoundException();
+                return Result.Failure<Unit>(DomainErrors.User.UserNotFound);
             }
 
             advertId = await _repository.Advert.CreateAdvert(request.AdvertForCreating, userId, cancellationToken);
@@ -47,10 +46,8 @@ internal sealed class CreateAdvertHandler : IRequestHandler<CreateAdvertCommand,
             transaction.Complete();
         }
 
-        if (advertId != -1)
-        {
-            await _channel.AddQueueItemAsync(new QueueItem { AdvertId = advertId });
-        }
+        await _publisher.Publish(new AdvertCreatedEvent(advertId), cancellationToken);
+
         return Unit.Value;
     }
 }

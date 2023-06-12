@@ -1,7 +1,13 @@
 ﻿using Application.Adverts.Queries.GetAdvertById;
-using Application.Commands.AdvertCommands;
 using Application.Core.Adverts.Commands.ApproveAdvert;
+using Application.Core.Adverts.Commands.CreateAdvert;
+using Application.Core.Adverts.Commands.DeleteImagesCommand;
+using Application.Core.Adverts.Commands.MakeAdvertFavorite;
 using Application.Core.Adverts.Commands.RejectAdvert;
+using Application.Core.Adverts.Commands.RemoveAdvertFromFavorite;
+using Application.Core.Adverts.Commands.ReportAdvert;
+using Application.Core.Adverts.Commands.UpdateAdvert;
+using Application.Core.Adverts.Commands.UpdateAdvertLocation;
 using Application.Core.Adverts.Queries.GetAdminAdvert;
 using Application.Core.Adverts.Queries.GetAdminAdverts;
 using Application.Core.Adverts.Queries.GetAdvertFromMap;
@@ -93,13 +99,15 @@ public class AdvertController : ApiController
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Create([FromForm] AddAdvertDto newAdvert)
+    public async Task<IActionResult> Create([FromForm] AddAdvertDto newAdvert, CancellationToken cancellationToken)
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
 
-        await Sender.Send(new CreateAdvertCommand(newAdvert, email));
+        var command = new CreateAdvertCommand(newAdvert, email);
 
-        return Accepted();
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? Accepted() : HandleFailure(response);
     }
 
     [Authorize(Roles = "Administrator")]
@@ -200,13 +208,15 @@ public class AdvertController : ApiController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> MakeAdvertToFavorite(int advertId)
+    public async Task<IActionResult> MakeAdvertToFavorite(int advertId, CancellationToken cancellationToken)
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
 
-        await Sender.Send(new MakeAdvertFavoriteCommand(advertId, email));
+        var command = new MakeAdvertFavoriteCommand(advertId, email);
 
-        return NoContent();
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : HandleFailure(response);
     }
 
     [Authorize]
@@ -215,13 +225,15 @@ public class AdvertController : ApiController
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> RemoveAdvertFromFavorite(int advertId)
+    public async Task<IActionResult> RemoveAdvertFromFavorite(int advertId, CancellationToken cancellationToken)
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
 
-        await Sender.Send(new RemoveAdvertFromFavoriteCommand(advertId, email));
+        var command = new RemoveAdvertFromFavoriteCommand(advertId, email);
 
-        return NoContent();
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : HandleFailure(response);
     }
 
     [Authorize]
@@ -267,13 +279,16 @@ public class AdvertController : ApiController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> ReportAdvert(int advertId, [FromBody] ReportAdvertDto reportAdvertDto)
+    public async Task<IActionResult> ReportAdvert(int advertId, [FromBody] ReportAdvertDto reportAdvertDto, CancellationToken cancellationToken)
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
 
-        await Sender.Send(new ReportAdvertCommand(advertId, email, reportAdvertDto.RejectReasonId));
+        var command = new ReportAdvertCommand(advertId, email, reportAdvertDto.RejectReasonId);
 
-        return NoContent();
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : HandleFailure(response);
+
     }
 
     [HttpGet("report")]
@@ -308,11 +323,13 @@ public class AdvertController : ApiController
     [ServiceFilter(typeof(OwnerAdvertChack))]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateInformations([FromBody] UpdateAdvertInformationsDto updateAdvertInformationsDto, int advertId)
+    public async Task<IActionResult> UpdateInformations([FromBody] UpdateAdvertInformationsDto updateAdvertInformationsDto, int advertId, CancellationToken cancellationToken)
     {
-        await Sender.Send(new UpdateAdvertCommand(updateAdvertInformationsDto, advertId));
+        var command = new UpdateAdvertCommand(updateAdvertInformationsDto, advertId);
 
-        return NoContent();
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : HandleFailure(response);
     }
 
     [HttpPut("{advertId}/update/location")]
@@ -321,11 +338,13 @@ public class AdvertController : ApiController
     [ServiceFilter(typeof(OwnerAdvertChack))]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateLocation([FromBody] UpdateAdvertLocationDto updateAdvertLocationDto, int advertId)
+    public async Task<IActionResult> UpdateLocation([FromBody] UpdateAdvertLocationDto updateAdvertLocationDto, int advertId, CancellationToken cancellationToken)
     {
-        await Sender.Send(new UpdateAdvertLocationCommand(updateAdvertLocationDto, advertId));
+        var command = new UpdateAdvertLocationCommand(updateAdvertLocationDto, advertId);
 
-        return NoContent();
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : HandleFailure(response);
     }
 
     [HttpDelete("{advertId}/images")]
@@ -334,10 +353,12 @@ public class AdvertController : ApiController
     [ServiceFilter(typeof(OwnerAdvertChack))]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> DeleteImages([FromBody] IEnumerable<string> imageUrls, int advertId)
+    public async Task<IActionResult> DeleteImages([FromBody] IEnumerable<string> imageUrls, int advertId, CancellationToken cancellationToken)
     {
-        await Sender.Send(new DeleteImagesCommand(imageUrls, advertId));
+        var command = new DeleteImagesCommand(imageUrls, advertId);
 
-        return NoContent();
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : HandleFailure(response);
     }
 }

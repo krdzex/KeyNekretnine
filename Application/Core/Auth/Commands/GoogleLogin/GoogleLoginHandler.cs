@@ -1,11 +1,12 @@
-﻿using Application.Commands.AuthCommands;
+﻿using Application.Abstraction.Messaging;
 using Contracts;
-using MediatR;
+using Entities.DomainErrors;
 using Service.Contracts;
+using Shared.Error;
 using Shared.RequestFeatures;
 
-namespace Application.Handlers.AuthHandlers;
-internal sealed class GoogleLoginHandler : IRequestHandler<GoogleLoginCommand, TokenRequest>
+namespace Application.Core.Auth.Commands.GoogleLogin;
+internal sealed class GoogleLoginHandler : ICommandHandler<GoogleLoginCommand, TokenRequest>
 {
     private readonly IServiceManager _service;
     private readonly IRepositoryManager _repository;
@@ -17,15 +18,20 @@ internal sealed class GoogleLoginHandler : IRequestHandler<GoogleLoginCommand, T
     }
 
 
-    public async Task<TokenRequest> Handle(GoogleLoginCommand request, CancellationToken cancellationToken)
+    public async Task<Result<TokenRequest>> Handle(GoogleLoginCommand request, CancellationToken cancellationToken)
     {
         var payload = await _service.TokenService.VerifyGoogleToken(request.GoogleLoginDto);
 
         var user = await _service.AuthenticationService.GoogleLogin(request.GoogleLoginDto, payload);
 
+        if (user is null)
+        {
+            return Result.Failure<TokenRequest>(DomainErrors.Token.BadToken);
+        }
+
         await _repository.User.BanCheck(user);
 
-        var accessToken = await _service.TokenService.CreateToken(user);
+        var accessToken = await _service.TokenService.CreateAccessToken(user);
         var rereshToken = await _service.TokenService.CreateRefreshToken(user);
 
         var tokenResponse = new TokenRequest { AccessToken = accessToken, RefreshToken = rereshToken };

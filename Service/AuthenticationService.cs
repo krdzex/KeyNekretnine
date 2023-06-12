@@ -26,12 +26,6 @@ internal sealed class AuthenticationService : IAuthenticationService
         if (!result.Succeeded)
         {
             return result;
-            //var errors = new Dictionary<string, string> { };
-            //foreach (var error in result.Errors)
-            //{
-            //    errors.Add(error.Code, error.Description);
-            //}
-            //throw new AuthenticationException(errors);
         }
 
         var addRoleRsult = await _userManager.AddToRoleAsync(user, "User");
@@ -47,12 +41,13 @@ internal sealed class AuthenticationService : IAuthenticationService
     public async Task<User> ValidateUser(UserForAuthenticationDto userForAuthentication)
     {
         var user = await _userManager.FindByEmailAsync(userForAuthentication.Email);
+
         if (user != null && await _userManager.CheckPasswordAsync(user, userForAuthentication.Password))
         {
             return user;
         }
 
-        throw new UnauthorizedAccessException("Invalid Credentials");
+        return null;
     }
 
     public async Task<User> GoogleLogin(GoogleLoginDto googleLoginDto, GoogleJsonWebSignature.Payload payload)
@@ -76,9 +71,6 @@ internal sealed class AuthenticationService : IAuthenticationService
                 await _userManager.AddLoginAsync(user, info);
             }
         }
-
-        if (user == null)
-            throw new UnauthorizedAccessException("Invalid token");
 
         return user;
     }
@@ -104,9 +96,6 @@ internal sealed class AuthenticationService : IAuthenticationService
                 await _userManager.AddLoginAsync(user, info);
             }
         }
-
-        if (user == null)
-            throw new UnauthorizedAccessException("Invalid token");
 
         return user;
     }

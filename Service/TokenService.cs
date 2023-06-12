@@ -26,7 +26,7 @@ internal sealed class TokenService : ITokenService
         _httpClient = httpClient;
     }
 
-    public async Task<string> CreateToken(User user)
+    public async Task<string> CreateAccessToken(User user)
     {
         var signingCredentials = GetSigningCredentials();
         var claims = await GetClaims(user);
@@ -94,7 +94,7 @@ internal sealed class TokenService : ITokenService
             return null;
         }
 
-        return new TokenRequest { AccessToken = await CreateToken(user), RefreshToken = await CreateRefreshToken(user) };
+        return new TokenRequest { AccessToken = await CreateAccessToken(user), RefreshToken = await CreateRefreshToken(user) };
     }
 
     public async Task<GoogleJsonWebSignature.Payload> VerifyGoogleToken(GoogleLoginDto googleLoginDto)
@@ -110,7 +110,6 @@ internal sealed class TokenService : ITokenService
         }
         catch
         {
-            //log an exception
             throw new UnauthorizedAccessException("Invalid token");
         }
     }

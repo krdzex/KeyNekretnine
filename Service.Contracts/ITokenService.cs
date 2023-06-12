@@ -7,7 +7,7 @@ using Shared.RequestFeatures;
 namespace Service.Contracts;
 public interface ITokenService
 {
-    Task<string> CreateToken(User user);
+    Task<string> CreateAccessToken(User user);
     Task<string> CreateRefreshToken(User user);
     Task<TokenRequest> VerifyRefreshToken(TokenRequest request);
     Task<GoogleJsonWebSignature.Payload> VerifyGoogleToken(GoogleLoginDto googleLoginDto);

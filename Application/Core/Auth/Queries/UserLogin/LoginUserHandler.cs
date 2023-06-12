@@ -1,11 +1,11 @@
-﻿using Application.Commands.AuthCommands;
+﻿using Application.Abstraction.Messaging;
 using Contracts;
-using MediatR;
+using Entities.DomainErrors;
 using Service.Contracts;
+using Shared.Error;
 using Shared.RequestFeatures;
-
-namespace Application.Handlers.AuthHandlers;
-internal sealed class LoginUserHandler : IRequestHandler<LoginUserCommand, TokenRequest>
+namespace Application.Core.Auth.Queries.UserLogin;
+internal sealed class LoginUserHandler : IQueryHandler<LoginUserQuery, TokenRequest>
 {
     private readonly IServiceManager _service;
     private readonly IRepositoryManager _repository;
@@ -16,13 +16,18 @@ internal sealed class LoginUserHandler : IRequestHandler<LoginUserCommand, Token
         _repository = repository;
     }
 
-    public async Task<TokenRequest> Handle(LoginUserCommand request, CancellationToken cancellationToken)
+    public async Task<Result<TokenRequest>> Handle(LoginUserQuery request, CancellationToken cancellationToken)
     {
         var loggedUser = await _service.AuthenticationService.ValidateUser(request.LoginUser);
 
+        if (loggedUser is null)
+        {
+            return Result.Failure<TokenRequest>(DomainErrors.Auth.InvalidCredentials);
+        }
+
         await _repository.User.BanCheck(loggedUser);
 
-        var accessToken = await _service.TokenService.CreateToken(loggedUser);
+        var accessToken = await _service.TokenService.CreateAccessToken(loggedUser);
         var rereshToken = await _service.TokenService.CreateRefreshToken(loggedUser);
 
         var tokenResponse = new TokenRequest { AccessToken = accessToken, RefreshToken = rereshToken };

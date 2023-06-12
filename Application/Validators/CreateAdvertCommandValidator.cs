@@ -1,4 +1,4 @@
-﻿using Application.Commands.AdvertCommands;
+﻿using Application.Core.Adverts.Commands.CreateAdvert;
 using FluentValidation;
 
 namespace Application.Validators
