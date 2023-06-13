@@ -38,20 +38,19 @@ internal sealed class ImageService : IImageService
         }
     }
 
-    public async Task<string> UploadImageOnCloudinary(IFormFile image, string folderName)
+    public async Task<string> UploadImageOnCloudinary(IFormFile image)
     {
-        using (Stream stream = new MemoryStream())
+        using (var memoryStream = manager.GetStream("test"))
         {
-            stream.Flush();
-            await image.CopyToAsync(stream);
-            stream.Position = 0;
+            await image.CopyToAsync(memoryStream);
+            memoryStream.Flush();
+            memoryStream.Position = 0;
 
             var uploadParams = new ImageUploadParams()
             {
-                File = new FileDescription(@"fileName", stream),
+                File = new FileDescription(@"fileName", memoryStream),
                 Transformation = new Transformation().Quality(60),
                 Format = "WebP",
-                Folder = folderName
             };
             var uploadResult = await _cloudinary.UploadAsync(uploadParams);
             return uploadResult.Url.ToString();
@@ -63,5 +62,15 @@ internal sealed class ImageService : IImageService
         var result = await _cloudinary.DestroyAsync(new DeletionParams(publicId));
 
         return result;
+    }
+
+    public string GetPublicIdFromUrl(string url)
+    {
+        string[] urlParts = url.Split('/');
+        string part8 = string.Join("/", urlParts.Skip(7));
+        int dotIndex = part8.LastIndexOf('.');
+        string publicId = part8.Substring(0, dotIndex);
+
+        return publicId;
     }
 }
