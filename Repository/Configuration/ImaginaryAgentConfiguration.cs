@@ -11,6 +11,6 @@ public class ImaginaryAgentConfiguration : IEntityTypeConfiguration<ImaginaryAge
         builder.Property(x => x.FirstName).IsRequired().HasMaxLength(30);
         builder.Property(x => x.LastName).IsRequired().HasMaxLength(30);
         builder.Property(x => x.PhoneNumber).IsRequired().HasMaxLength(50);
-        builder.Property(x => x.ImageUrl).IsRequired().HasMaxLength(200);
+        builder.Property(x => x.ImageUrl).HasMaxLength(200);
     }
 }

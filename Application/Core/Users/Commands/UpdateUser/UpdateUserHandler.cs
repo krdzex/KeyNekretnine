@@ -30,9 +30,13 @@ internal sealed class UpdateUserHandler : ICommandHandler<UpdateUserCommand, Uni
 
             if (request.UpdateUser.Image?.Length > 0)
             {
-                if (user.ProfileImageUrl is not null)
+                var tempProfileImageUrl = user.ProfileImageUrl;
+
+                user.ProfileImageUrl = await _serviceManager.ImageService.UploadImageOnCloudinary(request.UpdateUser.Image);
+
+                if (tempProfileImageUrl is not null)
                 {
-                    var publicId = _serviceManager.ImageService.GetPublicIdFromUrl(user.ProfileImageUrl);
+                    var publicId = _serviceManager.ImageService.GetPublicIdFromUrl(tempProfileImageUrl);
 
                     var deleteResult = await _serviceManager.ImageService.DeleteImageFromCloudinary(publicId);
 
@@ -41,8 +45,6 @@ internal sealed class UpdateUserHandler : ICommandHandler<UpdateUserCommand, Uni
                         return Result.Failure<Unit>(DomainErrors.ImageService.ImageCouldntBeDeleted);
                     }
                 }
-
-                user.ProfileImageUrl = await _serviceManager.ImageService.UploadImageOnCloudinary(request.UpdateUser.Image);
             }
 
             var result = await _repository.User.UpdateUser(user, request.UpdateUser);
