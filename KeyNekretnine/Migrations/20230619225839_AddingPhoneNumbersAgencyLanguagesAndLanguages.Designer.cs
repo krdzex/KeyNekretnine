@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Repository;
@@ -11,9 +12,10 @@ using Repository;
 namespace KeyNekretnine.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20230619225839_AddingPhoneNumbersAgencyLanguagesAndLanguages")]
+    partial class AddingPhoneNumbersAgencyLanguagesAndLanguages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -397,10 +399,10 @@ namespace KeyNekretnine.Migrations
                         .HasColumnType("double precision")
                         .HasColumnName("latitude");
 
-                    b.Property<string>("LinkedlnUrl")
+                    b.Property<string>("Linkedln")
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)")
-                        .HasColumnName("linkedln_url");
+                        .HasColumnName("linkedln");
 
                     b.Property<string>("Location")
                         .HasMaxLength(200)
@@ -10706,21 +10708,21 @@ namespace KeyNekretnine.Migrations
                         new
                         {
                             Id = "548e52a6-485a-49a5-b204-8994eaa79a12",
-                            ConcurrencyStamp = "98dc8141-9803-450d-a640-81dbfa216388",
+                            ConcurrencyStamp = "623201e9-e3e9-437d-9b8d-69fde79e38cb",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
                             Id = "62558fd6-61f6-42fe-8cb7-8bc5fea7fb93",
-                            ConcurrencyStamp = "0c32929f-e81b-482a-9e73-b3525bb76deb",
+                            ConcurrencyStamp = "cb91afdf-25ec-4f3c-af5b-cc175333093b",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
                             Id = "f78fff4a-06dc-4b5d-864c-d70cd9ced860",
-                            ConcurrencyStamp = "c6f69816-064e-457c-bb60-efc8e6a418fa",
+                            ConcurrencyStamp = "bb966937-da47-4c5c-abc4-dd02066a5699",
                             Name = "Moderator",
                             NormalizedName = "MODERATOR"
                         });

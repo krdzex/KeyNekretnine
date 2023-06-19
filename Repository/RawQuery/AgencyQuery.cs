@@ -33,12 +33,12 @@ namespace Repository.RawQuery
 
         public static string MakeGetAgenciesQuery(string orderBy)
         {
-            var countAdvertQuery = new StringBuilder(@"
+            var countAgenciesQuery = new StringBuilder(@"
             SELECT COUNT(a.id)
             FROM agencies AS a
             WHERE(@name = '' OR LOWER(a.name) LIKE '%' || LOWER(@name) || '%');");
 
-            var selectAdvertsQuery = new StringBuilder($@"
+            var selectAgenciesQuery = new StringBuilder($@"
             SELECT a.name,a.created_date, COUNT(*) AS num_adverts
             FROM adverts AS ad
             JOIN imaginary_agents AS ia ON ad.imaginary_agent_id = ia.id
@@ -47,7 +47,7 @@ namespace Repository.RawQuery
             GROUP BY a.name,a.created_date
             ORDER BY {orderBy} OFFSET @Skip FETCH NEXT @Take ROWS ONLY;");
 
-            return countAdvertQuery.ToString() + selectAdvertsQuery.ToString();
+            return countAgenciesQuery.ToString() + selectAgenciesQuery.ToString();
         }
     }
 }

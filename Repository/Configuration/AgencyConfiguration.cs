@@ -12,5 +12,16 @@ public class AgencyConfiguration : IEntityTypeConfiguration<Agency>
         builder.Property(x => x.CreatedDate).IsRequired();
         builder.HasOne(a => a.User).WithOne(i => i.Agency);
         builder.HasMany(a => a.ImaginaryAgents).WithOne(i => i.Agency).HasForeignKey(x => x.AgencyId);
+        builder.Property(x => x.Location).HasMaxLength(200);
+        builder.Property(x => x.Email).HasMaxLength(100);
+        builder.Property(x => x.WebsiteUrl).HasMaxLength(200);
+        builder.Property(x => x.WorkStartTime).HasMaxLength(50);
+        builder.Property(x => x.WorkEndTime).HasMaxLength(50);
+        builder.Property(x => x.TwitterUrl).HasMaxLength(200);
+        builder.Property(x => x.FacebookUrl).HasMaxLength(200);
+        builder.Property(x => x.InstagramUrl).HasMaxLength(200);
+        builder.Property(x => x.LinkedlnUrl).HasMaxLength(200);
+        builder.Property(x => x.Latitude).HasMaxLength(91);
+        builder.Property(x => x.Longitude).HasMaxLength(181);
     }
 }

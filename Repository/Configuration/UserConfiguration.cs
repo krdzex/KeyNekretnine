@@ -17,6 +17,5 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.BanEnd).IsRequired(false);
         builder.Property(x => x.ProfileImageUrl).HasMaxLength(150);
         builder.Property(x => x.About).HasMaxLength(1000);
-
     }
 }

@@ -24,6 +24,9 @@ public class RepositoryContext : IdentityDbContext<User>
     public DbSet<AdvertFeature> AdvertFeatures { get; set; }
     public DbSet<Agency> Agencies { get; set; }
     public DbSet<ImaginaryAgent> ImaginaryAgents { get; set; }
+    public DbSet<Language> Languages { get; set; }
+    public DbSet<PhoneNumber> PhoneNumbers { get; set; }
+    public DbSet<AgencyLanguage> AgencyLanguages { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
