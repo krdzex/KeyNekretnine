@@ -13,4 +13,5 @@ public interface IRepositoryManager
     IAdvertFeatureRepository AdvertFeature { get; }
     IAdvertStatusRepository AdvertStatus { get; }
     IAgencyRepository Agency { get; }
+    IPhoneNumberRepository PhoneNumber { get; }
 }

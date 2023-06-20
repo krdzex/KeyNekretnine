@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace KeyNekretnine.Presentation.Controllers;
 
 [Route("api/reject-reason")]
-public class RejectReasonsController : ApiController
+public class RejectReasonController : ApiController
 {
-    public RejectReasonsController(ISender sender)
+    public RejectReasonController(ISender sender)
         : base(sender)
     {
     }

@@ -20,6 +20,7 @@ public sealed class RepositoryManager : IRepositoryManager
     private readonly Lazy<IAdvertFeatureRepository> _advertFeatureRepository;
     private readonly Lazy<IAdvertStatusRepository> _advertStatusRepository;
     private readonly Lazy<IAgencyRepository> _agencyRepository;
+    private readonly Lazy<IPhoneNumberRepository> _phoneNumberRepository;
 
     public RepositoryManager(IMapper mapper, UserManager<User> userManager, DapperContext dapperContext)
     {
@@ -35,6 +36,7 @@ public sealed class RepositoryManager : IRepositoryManager
         _advertFeatureRepository = new Lazy<IAdvertFeatureRepository>(() => new AdvertFeatureRepository(dapperContext));
         _advertStatusRepository = new Lazy<IAdvertStatusRepository>(() => new AdvertStatusRepository(dapperContext));
         _agencyRepository = new Lazy<IAgencyRepository>(() => new AgencyRepository(dapperContext));
+        _phoneNumberRepository = new Lazy<IPhoneNumberRepository>(() => new PhoneNumberRepository(dapperContext));
     }
 
     public ICityRepository City => _cityRepository.Value;
@@ -49,5 +51,5 @@ public sealed class RepositoryManager : IRepositoryManager
     public IAdvertFeatureRepository AdvertFeature => _advertFeatureRepository.Value;
     public IAdvertStatusRepository AdvertStatus => _advertStatusRepository.Value;
     public IAgencyRepository Agency => _agencyRepository.Value;
-
+    public IPhoneNumberRepository PhoneNumber => _phoneNumberRepository.Value;
 }
