@@ -34,10 +34,7 @@ internal sealed class MakeAdvertFavoriteHandler : ICommandHandler<MakeAdvertFavo
 
         if (isFavorite)
         {
-            if (userId is null)
-            {
-                return Result.Failure<Unit>(DomainErrors.Advert.AdvertAlreadyFavorite);
-            }
+            return Result.Failure<Unit>(DomainErrors.Advert.AdvertAlreadyFavorite);
         }
 
         await _repository.Advert.MakeAdvertFavorite(userId, request.AdvertId, cancellationToken);

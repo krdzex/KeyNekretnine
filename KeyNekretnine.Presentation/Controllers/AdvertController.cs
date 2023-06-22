@@ -35,13 +35,9 @@ namespace KeyNekretnine.Presentation.Controllers;
 [Route("api/[controller]")]
 public class AdvertController : ApiController
 {
-    private readonly IPublisher _publisher;
-
     public AdvertController(ISender sender, IPublisher publisher)
         : base(sender)
-    {
-        _publisher = publisher;
-    }
+    { }
 
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -99,6 +95,7 @@ public class AdvertController : ApiController
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Create([FromForm] AddAdvertDto newAdvert, CancellationToken cancellationToken)
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
@@ -116,6 +113,8 @@ public class AdvertController : ApiController
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Approve(int id, CancellationToken cancellationToken)
     {
         var command = new ApproveAdvertCommand(id);
@@ -130,6 +129,8 @@ public class AdvertController : ApiController
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Decline(int id, CancellationToken cancellationToken)
     {
         var command = new RejectAdvertCommand(id);
@@ -143,6 +144,7 @@ public class AdvertController : ApiController
     [HttpGet("/api/admin/advert")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetAdminAdverts([FromQuery] AdminAdvertParameters adminAdvertParameters, CancellationToken cancellationToken)
     {
         var query = new GetAdminAdvertsQuery(adminAdvertParameters);
@@ -157,6 +159,7 @@ public class AdvertController : ApiController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetAdminAdvert(int id, CancellationToken cancellationToken)
     {
         var query = new GetAdminAdvertByIdQuery(id);
@@ -172,6 +175,7 @@ public class AdvertController : ApiController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetMyAdverts([FromQuery] MyAdvertsParameters myAdvertParameters, CancellationToken cancellationToken)
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
@@ -190,6 +194,8 @@ public class AdvertController : ApiController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+
     public async Task<IActionResult> GetMyAdverts(int advertId, CancellationToken cancellationToken)
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
@@ -208,6 +214,7 @@ public class AdvertController : ApiController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> MakeAdvertToFavorite(int advertId, CancellationToken cancellationToken)
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
@@ -224,7 +231,9 @@ public class AdvertController : ApiController
     [ServiceFilter(typeof(BanUserChack))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> RemoveAdvertFromFavorite(int advertId, CancellationToken cancellationToken)
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
@@ -242,6 +251,7 @@ public class AdvertController : ApiController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> FavoriteAdverts([FromQuery] FavoriteAdvertsParameters requestParameters, CancellationToken cancellationToken)
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
@@ -257,9 +267,9 @@ public class AdvertController : ApiController
     [HttpGet("{advertId}/is-favorite")]
     [ServiceFilter(typeof(BanUserChack))]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> IsAdvertFavorite(int advertId, CancellationToken cancellationToken)
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
@@ -276,9 +286,9 @@ public class AdvertController : ApiController
     [HttpPost("{advertId}/report")]
     [ServiceFilter(typeof(BanUserChack))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> ReportAdvert(int advertId, [FromBody] ReportAdvertDto reportAdvertDto, CancellationToken cancellationToken)
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
@@ -295,6 +305,7 @@ public class AdvertController : ApiController
     [Authorize(Roles = "Administrator")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetAdvertReports([FromQuery] ReportParameters reportParameters, CancellationToken cancellationToken)
     {
         var query = new GetAdvertReportsQuery(reportParameters);
@@ -322,7 +333,9 @@ public class AdvertController : ApiController
     [ServiceFilter(typeof(BanUserChack))]
     [ServiceFilter(typeof(OwnerAdvertChack))]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> UpdateInformations([FromBody] UpdateAdvertInformationsDto updateAdvertInformationsDto, int advertId, CancellationToken cancellationToken)
     {
         var command = new UpdateAdvertCommand(updateAdvertInformationsDto, advertId);
@@ -337,7 +350,9 @@ public class AdvertController : ApiController
     [ServiceFilter(typeof(BanUserChack))]
     [ServiceFilter(typeof(OwnerAdvertChack))]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> UpdateLocation([FromBody] UpdateAdvertLocationDto updateAdvertLocationDto, int advertId, CancellationToken cancellationToken)
     {
         var command = new UpdateAdvertLocationCommand(updateAdvertLocationDto, advertId);
@@ -352,7 +367,11 @@ public class AdvertController : ApiController
     [ServiceFilter(typeof(BanUserChack))]
     [ServiceFilter(typeof(OwnerAdvertChack))]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+
     public async Task<IActionResult> DeleteImages([FromBody] IEnumerable<string> imageUrls, int advertId, CancellationToken cancellationToken)
     {
         var command = new DeleteImagesCommand(imageUrls, advertId);
