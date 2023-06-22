@@ -14,4 +14,6 @@ public interface IRepositoryManager
     IAdvertStatusRepository AdvertStatus { get; }
     IAgencyRepository Agency { get; }
     IPhoneNumberRepository PhoneNumber { get; }
+    ILanguageRepository Language { get; }
+
 }
