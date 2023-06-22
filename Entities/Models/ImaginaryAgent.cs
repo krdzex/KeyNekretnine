@@ -10,4 +10,6 @@ public class ImaginaryAgent : EntityBase
 
     public Agency Agency { get; set; }
     public int AgencyId { get; set; }
+    public IEnumerable<ImaginaryAgentLanguage> ImaginaryAgentLanguages { get; set; }
+
 }

@@ -27,6 +27,7 @@ public class RepositoryContext : IdentityDbContext<User>
     public DbSet<Language> Languages { get; set; }
     public DbSet<PhoneNumber> PhoneNumbers { get; set; }
     public DbSet<AgencyLanguage> AgencyLanguages { get; set; }
+    public DbSet<ImaginaryAgentLanguage> ImaginaryAgentLanguages { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
