@@ -14,9 +14,13 @@ namespace Repository.RawQuery
         WHERE id = @agencyId;";
 
         public const string GetAgencyByIdQuery = @"
-        SELECT name
+        SELECT name,email,facebook_url,instagram_url,latitude,longitude,linkedin_url,description,location,twitter_url,website_url,work_start_time,work_end_time,email,image_url
         FROM agencies
-        WHERE id = @agencyId;";
+        WHERE id = @agencyId;
+
+        SELECT l.id,l.name FROM agency_languages al
+        JOIN languages l ON al.language_id = l.id
+        WHERE al.agency_id = @agencyId;";
 
 
         public const string IsUserAgencyOwnerQuery = @"

@@ -3,6 +3,7 @@ using Dapper;
 using Repository.RawQuery;
 using Shared.CustomResponses;
 using Shared.DataTransferObjects.Agency;
+using Shared.DataTransferObjects.Language;
 using Shared.RequestFeatures;
 using System.Data;
 
@@ -102,9 +103,16 @@ public class AgencyRepository : IAgencyRepository
 
             var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
 
-            var result = await connection.QueryFirstOrDefaultAsync<GetAgencyDto>(cmd);
+            var multi = await connection.QueryMultipleAsync(cmd);
 
-            return result;
+            var agency = await multi.ReadSingleOrDefaultAsync<GetAgencyDto>();
+
+            if (agency != null)
+            {
+                agency.Languages = (await multi.ReadAsync<LanguageDto>());
+            }
+
+            return agency;
         }
     }
 
