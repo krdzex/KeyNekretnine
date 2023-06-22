@@ -5,11 +5,12 @@ using Entities.DomainErrors;
 using Entities.Models;
 using FluentAssertions;
 using Moq;
-namespace Application.UnitTests.Users.Commands;
 
+namespace Application.UnitTests.Users.Commands;
 public class ConfirmUserEmailHandlerTests
 {
     private readonly Mock<IRepositoryManager> _reposistoryManagerMock;
+
     public ConfirmUserEmailHandlerTests()
     {
         _reposistoryManagerMock = new Mock<IRepositoryManager> { DefaultValue = DefaultValue.Mock };
@@ -20,7 +21,6 @@ public class ConfirmUserEmailHandlerTests
     {
         var email = "test@gmail.com";
 
-        // Arrange
         var command = new ConfirmUserEmailCommand("testtoken", email);
 
         _reposistoryManagerMock.Setup(
@@ -29,10 +29,8 @@ public class ConfirmUserEmailHandlerTests
 
         var handler = new ConfirmUserEmailHandler(_reposistoryManagerMock.Object);
 
-        // Act
         var result = await handler.Handle(command, default);
 
-        // Assert
         result.IsFailure.Should().BeTrue();
         result.Error.Should().Be(DomainErrors.User.UserNotFound);
     }

@@ -5,11 +5,12 @@ using FluentAssertions;
 using Moq;
 using Shared.DataTransferObjects.User;
 using System.Security.Claims;
-namespace Application.UnitTests.Users.Queries;
 
+namespace Application.UnitTests.Users.Queries;
 public class GetCurrentUserHandlerTests
 {
     private readonly Mock<IRepositoryManager> _reposistoryManagerMock;
+
     public GetCurrentUserHandlerTests()
     {
         _reposistoryManagerMock = new Mock<IRepositoryManager> { DefaultValue = DefaultValue.Mock };
@@ -26,7 +27,6 @@ public class GetCurrentUserHandlerTests
             new Claim(ClaimTypes.Role,"Admin")
         };
 
-        // Arrange
         var query = new GetCurrentUserQuery(claims);
 
         _reposistoryManagerMock.Setup(
@@ -35,10 +35,8 @@ public class GetCurrentUserHandlerTests
 
         var handler = new GetCurrentUserHandler(_reposistoryManagerMock.Object);
 
-        // Act
         var result = await handler.Handle(query, default);
 
-        // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().NotBeNull();
     }
@@ -54,7 +52,6 @@ public class GetCurrentUserHandlerTests
             new Claim(ClaimTypes.Role,"Admin")
         };
 
-        // Arrange
         var query = new GetCurrentUserQuery(claims);
 
         _reposistoryManagerMock.Setup(
@@ -63,13 +60,9 @@ public class GetCurrentUserHandlerTests
 
         var handler = new GetCurrentUserHandler(_reposistoryManagerMock.Object);
 
-        // Act
         var result = await handler.Handle(query, default);
 
-
-        // Assert
         result.IsFailure.Should().BeTrue();
         result.Error.Should().Be(DomainErrors.User.UserNotFound);
     }
 }
-

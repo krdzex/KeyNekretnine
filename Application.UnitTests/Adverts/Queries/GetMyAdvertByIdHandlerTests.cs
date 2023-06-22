@@ -9,6 +9,7 @@ namespace Application.UnitTests.Adverts.Queries;
 public class GetMyAdvertByIdHandlerTests
 {
     private readonly Mock<IRepositoryManager> _reposistoryManagerMock;
+
     public GetMyAdvertByIdHandlerTests()
     {
         _reposistoryManagerMock = new Mock<IRepositoryManager> { DefaultValue = DefaultValue.Mock };
@@ -20,7 +21,7 @@ public class GetMyAdvertByIdHandlerTests
         var advertId = 5;
         var email = "test@test.com";
         var userId = "test";
-        // Arrange
+
         var query = new GetMyAdvertByIdQuery(advertId, email);
 
         _reposistoryManagerMock.Setup(
@@ -33,10 +34,8 @@ public class GetMyAdvertByIdHandlerTests
 
         var handler = new GetMyAdvertByIdHandler(_reposistoryManagerMock.Object);
 
-        // Act
         var result = await handler.Handle(query, default);
 
-        // Assert
         result.IsFailure.Should().BeTrue();
         result.Error.Should().Be(DomainErrors.User.UserNotFound);
     }
@@ -47,7 +46,7 @@ public class GetMyAdvertByIdHandlerTests
         var advertId = 5;
         var email = "test@test.com";
         var userId = "test";
-        // Arrange
+
         var query = new GetMyAdvertByIdQuery(advertId, email);
 
         _reposistoryManagerMock.Setup(
@@ -60,10 +59,8 @@ public class GetMyAdvertByIdHandlerTests
 
         var handler = new GetMyAdvertByIdHandler(_reposistoryManagerMock.Object);
 
-        // Act
         var result = await handler.Handle(query, default);
 
-        // Assert
         result.IsFailure.Should().BeTrue();
         result.Error.Should().Be(DomainErrors.Advert.AdvertNotFound(advertId));
     }
@@ -74,7 +71,7 @@ public class GetMyAdvertByIdHandlerTests
         var advertId = 5;
         var email = "test@test.com";
         var userId = "test";
-        // Arrange
+
         var query = new GetMyAdvertByIdQuery(advertId, email);
 
         _reposistoryManagerMock.Setup(
@@ -87,10 +84,8 @@ public class GetMyAdvertByIdHandlerTests
 
         var handler = new GetMyAdvertByIdHandler(_reposistoryManagerMock.Object);
 
-        // Act
         var result = await handler.Handle(query, default);
 
-        // Assert
         result.IsSuccess.Should().BeTrue();
         result.Error.Should().NotBeNull();
     }

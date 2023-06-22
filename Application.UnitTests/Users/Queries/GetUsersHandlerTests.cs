@@ -10,6 +10,7 @@ namespace Application.UnitTests.Users.Queries;
 public class GetUsersHandlerTests
 {
     private readonly Mock<IRepositoryManager> _reposistoryManagerMock;
+
     public GetUsersHandlerTests()
     {
         _reposistoryManagerMock = new Mock<IRepositoryManager> { DefaultValue = DefaultValue.Mock };
@@ -19,11 +20,8 @@ public class GetUsersHandlerTests
     public async Task Handle_Should_ReturnSuccess_WhenNoErrors()
     {
         var parameters = new UserParameters
-        {
+        { };
 
-        };
-
-        // Arrange
         var query = new GetUsersQuery(parameters);
 
         _reposistoryManagerMock.Setup(
@@ -32,10 +30,8 @@ public class GetUsersHandlerTests
 
         var handler = new GetUsersHandler(_reposistoryManagerMock.Object);
 
-        // Act
         var result = await handler.Handle(query, default);
 
-        // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().NotBeNull();
     }

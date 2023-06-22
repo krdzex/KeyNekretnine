@@ -8,6 +8,7 @@ namespace Application.UnitTests.Adverts.Queries;
 public class GetIsAdvertFavoriteHandlerTests
 {
     private readonly Mock<IRepositoryManager> _reposistoryManagerMock;
+
     public GetIsAdvertFavoriteHandlerTests()
     {
         _reposistoryManagerMock = new Mock<IRepositoryManager> { DefaultValue = DefaultValue.Mock };
@@ -19,7 +20,7 @@ public class GetIsAdvertFavoriteHandlerTests
         var advertId = 5;
         var email = "test@test.com";
         var userId = "test";
-        // Arrange
+
         var query = new GetIsAdvertFavoriteQuery(advertId, email);
 
         _reposistoryManagerMock.Setup(
@@ -32,10 +33,8 @@ public class GetIsAdvertFavoriteHandlerTests
 
         var handler = new GetIsAdvertFavoriteHandler(_reposistoryManagerMock.Object);
 
-        // Act
         var result = await handler.Handle(query, default);
 
-        // Assert
         result.IsFailure.Should().BeTrue();
         result.Error.Should().Be(DomainErrors.User.UserNotFound);
     }
@@ -46,7 +45,7 @@ public class GetIsAdvertFavoriteHandlerTests
         var advertId = 5;
         var email = "test@test.com";
         var userId = "test";
-        // Arrange
+
         var query = new GetIsAdvertFavoriteQuery(advertId, email);
 
         _reposistoryManagerMock.Setup(
@@ -59,10 +58,8 @@ public class GetIsAdvertFavoriteHandlerTests
 
         var handler = new GetIsAdvertFavoriteHandler(_reposistoryManagerMock.Object);
 
-        // Act
         var result = await handler.Handle(query, default);
 
-        // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().BeTrue();
     }
@@ -73,7 +70,7 @@ public class GetIsAdvertFavoriteHandlerTests
         var advertId = 5;
         var email = "test@test.com";
         var userId = "test";
-        // Arrange
+
         var query = new GetIsAdvertFavoriteQuery(advertId, email);
 
         _reposistoryManagerMock.Setup(
@@ -86,10 +83,8 @@ public class GetIsAdvertFavoriteHandlerTests
 
         var handler = new GetIsAdvertFavoriteHandler(_reposistoryManagerMock.Object);
 
-        // Act
         var result = await handler.Handle(query, default);
 
-        // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().BeFalse();
     }

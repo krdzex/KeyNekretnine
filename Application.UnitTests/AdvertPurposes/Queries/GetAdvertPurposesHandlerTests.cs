@@ -8,6 +8,7 @@ namespace Application.UnitTests.AdvertPurposes.Queries;
 public class GetAdvertPurposesHandlerTests
 {
     private readonly Mock<IRepositoryManager> _reposistoryManagerMock;
+
     public GetAdvertPurposesHandlerTests()
     {
         _reposistoryManagerMock = new Mock<IRepositoryManager> { DefaultValue = DefaultValue.Mock };
@@ -16,7 +17,6 @@ public class GetAdvertPurposesHandlerTests
     [Fact]
     public async Task Handle_Should_ReturnSuccess_WhenThereIsNoErrors()
     {
-        // Arrange
         var query = new GetAdvertPurposesQuery();
 
         var advertPurposes = new List<AdvertPurposeDto>
@@ -32,11 +32,8 @@ public class GetAdvertPurposesHandlerTests
 
         var handler = new GetAdvertPurposesHandler(_reposistoryManagerMock.Object);
 
-
-        // Act
         var result = await handler.Handle(query, default);
 
-        // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().NotBeEmpty();
         result.Value.Should().BeEquivalentTo(advertPurposes);

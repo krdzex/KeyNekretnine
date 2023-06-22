@@ -8,6 +8,7 @@ namespace Application.UnitTests.Cities.Queries;
 public class GetMostPopularCitiesHandlerTests
 {
     private readonly Mock<IRepositoryManager> _reposistoryManagerMock;
+
     public GetMostPopularCitiesHandlerTests()
     {
         _reposistoryManagerMock = new Mock<IRepositoryManager> { DefaultValue = DefaultValue.Mock };
@@ -33,11 +34,8 @@ public class GetMostPopularCitiesHandlerTests
 
         var handler = new GetMostPopularCitiesHandler(_reposistoryManagerMock.Object);
 
-
-        // Act
         var result = await handler.Handle(query, default);
 
-        // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().NotBeEmpty();
         result.Value.Should().BeEquivalentTo(cities);

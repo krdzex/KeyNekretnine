@@ -8,6 +8,7 @@ namespace Application.UnitTests.AdvertStatuses.Queries;
 public class GetAdvertStatsuesHandlerTests
 {
     private readonly Mock<IRepositoryManager> _reposistoryManagerMock;
+
     public GetAdvertStatsuesHandlerTests()
     {
         _reposistoryManagerMock = new Mock<IRepositoryManager> { DefaultValue = DefaultValue.Mock };
@@ -16,7 +17,6 @@ public class GetAdvertStatsuesHandlerTests
     [Fact]
     public async Task Handle_Should_ReturnSuccess_WhenThereIsNoErrors()
     {
-        // Arrange
         var query = new GetAdvertStatusesQuery();
 
         var advertStatuses = new List<AdvertStatusDto>
@@ -32,11 +32,8 @@ public class GetAdvertStatsuesHandlerTests
 
         var handler = new GetAdvertStatusesHandler(_reposistoryManagerMock.Object);
 
-
-        // Act
         var result = await handler.Handle(query, default);
 
-        // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().NotBeEmpty();
         result.Value.Should().BeEquivalentTo(advertStatuses);

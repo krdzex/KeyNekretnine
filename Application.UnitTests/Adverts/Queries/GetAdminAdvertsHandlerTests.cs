@@ -10,6 +10,7 @@ namespace Application.UnitTests.Adverts.Queries;
 public class GetAdminAdvertsHandlerTests
 {
     private readonly Mock<IRepositoryManager> _reposistoryManagerMock;
+
     public GetAdminAdvertsHandlerTests()
     {
         _reposistoryManagerMock = new Mock<IRepositoryManager> { DefaultValue = DefaultValue.Mock };
@@ -19,10 +20,8 @@ public class GetAdminAdvertsHandlerTests
     public async Task Handle_Should_ReturnSuccess_WhenThereIsNoErrors()
     {
         var parameters = new AdminAdvertParameters
-        {
+        { };
 
-        };
-        // Arrange
         var query = new GetAdminAdvertsQuery(parameters);
 
         _reposistoryManagerMock.Setup(
@@ -31,11 +30,8 @@ public class GetAdminAdvertsHandlerTests
 
         var handler = new GetAdminAdvertsHandler(_reposistoryManagerMock.Object);
 
-
-        // Act
         var result = await handler.Handle(query, default);
 
-        // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().NotBeNull();
     }

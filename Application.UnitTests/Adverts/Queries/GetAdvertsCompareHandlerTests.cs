@@ -9,6 +9,7 @@ namespace Application.UnitTests.Adverts.Queries;
 public class GetAdvertsCompareHandlerTests
 {
     private readonly Mock<IRepositoryManager> _reposistoryManagerMock;
+
     public GetAdvertsCompareHandlerTests()
     {
         _reposistoryManagerMock = new Mock<IRepositoryManager> { DefaultValue = DefaultValue.Mock };
@@ -17,7 +18,6 @@ public class GetAdvertsCompareHandlerTests
     [Fact]
     public async Task Handle_Should_ReturnSuccess_WhenThereIsNoErrors()
     {
-        // Arrange
         var query = new GetAdvertsCompareQuery(2, 1);
 
         _reposistoryManagerMock.Setup(
@@ -26,11 +26,8 @@ public class GetAdvertsCompareHandlerTests
 
         var handler = new GetAdvertsCompareHandler(_reposistoryManagerMock.Object);
 
-
-        // Act
         var result = await handler.Handle(query, default);
 
-        // Assert
         result.IsSuccess.Should().BeTrue();
     }
 }

@@ -8,6 +8,7 @@ namespace Application.UnitTests.Cities.Queries;
 public class GetCitiesHandlerTests
 {
     private readonly Mock<IRepositoryManager> _reposistoryManagerMock;
+
     public GetCitiesHandlerTests()
     {
         _reposistoryManagerMock = new Mock<IRepositoryManager> { DefaultValue = DefaultValue.Mock };
@@ -16,7 +17,6 @@ public class GetCitiesHandlerTests
     [Fact]
     public async Task Handle_Should_ReturnSuccess_WhenThereIsNoErrors()
     {
-        // Arrange
         var query = new GetCitiesQuery();
 
         var cities = new List<CityDto>
@@ -32,11 +32,8 @@ public class GetCitiesHandlerTests
 
         var handler = new GetCitiesHandler(_reposistoryManagerMock.Object);
 
-
-        // Act
         var result = await handler.Handle(query, default);
 
-        // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().NotBeEmpty();
         result.Value.Should().BeEquivalentTo(cities);
@@ -45,7 +42,6 @@ public class GetCitiesHandlerTests
     [Fact]
     public async Task Handle_Should_ReturnSuccess_WhenNoCitiesExist()
     {
-        // Arrange
         var query = new GetCitiesQuery();
 
         var cities = new List<CityDto>();
@@ -56,10 +52,8 @@ public class GetCitiesHandlerTests
 
         var handler = new GetCitiesHandler(_reposistoryManagerMock.Object);
 
-        // Act
         var result = await handler.Handle(query, default);
 
-        // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().BeEmpty();
     }

@@ -11,6 +11,7 @@ namespace Application.UnitTests.Adverts.Queries;
 public class GetFavoriteAdvertsHandlerTests
 {
     private readonly Mock<IRepositoryManager> _reposistoryManagerMock;
+
     public GetFavoriteAdvertsHandlerTests()
     {
         _reposistoryManagerMock = new Mock<IRepositoryManager> { DefaultValue = DefaultValue.Mock };
@@ -20,13 +21,11 @@ public class GetFavoriteAdvertsHandlerTests
     public async Task Handle_Should_ReturnFailureResult_WhenUserDoesntExist()
     {
         var parameters = new FavoriteAdvertsParameters
-        {
-
-        };
+        { };
 
         var email = "test@test.com";
         var userId = "test";
-        // Arrange
+
         var query = new GetFavoriteAdvertsQuery(parameters, email);
 
         _reposistoryManagerMock.Setup(
@@ -39,10 +38,8 @@ public class GetFavoriteAdvertsHandlerTests
 
         var handler = new GetFavoriteAdvertsHandler(_reposistoryManagerMock.Object);
 
-        // Act
         var result = await handler.Handle(query, default);
 
-        // Assert
         result.IsFailure.Should().BeTrue();
         result.Error.Should().Be(DomainErrors.User.UserNotFound);
     }
@@ -51,13 +48,11 @@ public class GetFavoriteAdvertsHandlerTests
     public async Task Handle_Should_ReturnSuccesseResult_WhenUserExist()
     {
         var parameters = new FavoriteAdvertsParameters
-        {
-
-        };
+        { };
 
         var email = "test@test.com";
         var userId = "test";
-        // Arrange
+
         var query = new GetFavoriteAdvertsQuery(parameters, email);
 
         _reposistoryManagerMock.Setup(
@@ -70,10 +65,8 @@ public class GetFavoriteAdvertsHandlerTests
 
         var handler = new GetFavoriteAdvertsHandler(_reposistoryManagerMock.Object);
 
-        // Act
         var result = await handler.Handle(query, default);
 
-        // Assert
         result.IsSuccess.Should().BeTrue();
     }
 }

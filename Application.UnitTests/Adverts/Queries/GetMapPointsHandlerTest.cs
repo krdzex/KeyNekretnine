@@ -8,6 +8,7 @@ namespace Application.UnitTests.Adverts.Queries;
 public class GetMapPointsHandlerTest
 {
     private readonly Mock<IRepositoryManager> _reposistoryManagerMock;
+
     public GetMapPointsHandlerTest()
     {
         _reposistoryManagerMock = new Mock<IRepositoryManager> { DefaultValue = DefaultValue.Mock };
@@ -16,7 +17,6 @@ public class GetMapPointsHandlerTest
     [Fact]
     public async Task Handle_Should_ReturnSuccess_WhenThereIsNoErrors()
     {
-        // Arrange
         var query = new GetMapPointsQuery();
 
         _reposistoryManagerMock.Setup(
@@ -25,11 +25,8 @@ public class GetMapPointsHandlerTest
 
         var handler = new GetMapPointsHandler(_reposistoryManagerMock.Object);
 
-
-        // Act
         var result = await handler.Handle(query, default);
 
-        // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().NotBeNull();
     }

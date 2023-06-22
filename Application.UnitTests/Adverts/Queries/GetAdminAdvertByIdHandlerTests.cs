@@ -9,6 +9,7 @@ namespace Application.UnitTests.Adverts.Queries;
 public class GetAdminAdvertByIdHandlerTests
 {
     private readonly Mock<IRepositoryManager> _reposistoryManagerMock;
+
     public GetAdminAdvertByIdHandlerTests()
     {
         _reposistoryManagerMock = new Mock<IRepositoryManager> { DefaultValue = DefaultValue.Mock };
@@ -24,7 +25,6 @@ public class GetAdminAdvertByIdHandlerTests
             Id = advertId,
         };
 
-        // Arrange
         var query = new GetAdminAdvertByIdQuery(advertId);
 
         _reposistoryManagerMock.Setup(
@@ -33,20 +33,16 @@ public class GetAdminAdvertByIdHandlerTests
 
         var handler = new GetAdminAdvertByIdHandler(_reposistoryManagerMock.Object);
 
-        // Act
         var result = await handler.Handle(query, default);
 
-        // Assert
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().NotBeNull();
         result.Value.Should().BeEquivalentTo(advert);
-
     }
 
     [Fact]
     public async Task Handle_Should_ReturnFailureResult_WhenAdvertDoesNotExist()
     {
-        // Arrange
         var query = new GetAdminAdvertByIdQuery(-1);
 
         _reposistoryManagerMock.Setup(
@@ -55,10 +51,8 @@ public class GetAdminAdvertByIdHandlerTests
 
         var handler = new GetAdminAdvertByIdHandler(_reposistoryManagerMock.Object);
 
-        // Act
         var result = await handler.Handle(query, default);
 
-        // Assert
         result.IsFailure.Should().BeTrue();
         result.Error.Should().Be(DomainErrors.Advert.AdminAdvertNotFound(-1));
     }
