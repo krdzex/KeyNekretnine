@@ -6,6 +6,7 @@ namespace Application.Core.Auth.Commands.UserRegistration;
 internal sealed class SendWelcomeEmailHandler : INotificationHandler<UserCreatedEvent>
 {
     private readonly IServiceManager _serviceManager;
+
     public SendWelcomeEmailHandler(IServiceManager serviceManager)
     {
         _serviceManager = serviceManager;

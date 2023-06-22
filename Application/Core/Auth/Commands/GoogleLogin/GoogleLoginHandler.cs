@@ -17,7 +17,6 @@ internal sealed class GoogleLoginHandler : ICommandHandler<GoogleLoginCommand, T
         _repository = repository;
     }
 
-
     public async Task<Result<TokenRequest>> Handle(GoogleLoginCommand request, CancellationToken cancellationToken)
     {
         var payload = await _service.TokenService.VerifyGoogleToken(request.GoogleLoginDto);
@@ -38,5 +37,4 @@ internal sealed class GoogleLoginHandler : ICommandHandler<GoogleLoginCommand, T
 
         return tokenResponse;
     }
-
 }

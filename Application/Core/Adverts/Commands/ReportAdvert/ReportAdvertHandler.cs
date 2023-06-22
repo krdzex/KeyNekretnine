@@ -13,6 +13,7 @@ internal sealed class ReportAdvertHandler : ICommandHandler<ReportAdvertCommand,
     {
         _repository = repository;
     }
+
     public async Task<Result<Unit>> Handle(ReportAdvertCommand request, CancellationToken cancellationToken)
     {
         var advertExist = await _repository.Advert.ChackIfAdvertExistAndItsApproved(request.AdvertId, cancellationToken);
@@ -41,4 +42,3 @@ internal sealed class ReportAdvertHandler : ICommandHandler<ReportAdvertCommand,
         return Unit.Value;
     }
 }
-

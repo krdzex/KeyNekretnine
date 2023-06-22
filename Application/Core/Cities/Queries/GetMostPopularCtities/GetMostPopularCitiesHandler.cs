@@ -12,6 +12,7 @@ internal sealed class GetMostPopularCitiesHandler : IQueryHandler<GetMostPopular
     {
         _repository = repository;
     }
+
     public async Task<Result<List<PopularCitiesDto>>> Handle(GetMostPopularCitiesQuery request, CancellationToken cancellationToken)
     {
         var cities = await _repository.City.GetMostPopularCities(cancellationToken);

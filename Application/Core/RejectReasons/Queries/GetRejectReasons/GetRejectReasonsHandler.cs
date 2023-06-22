@@ -12,6 +12,7 @@ internal sealed class GetRejectReasonsHandler : IQueryHandler<GetRejectReasonsQu
     {
         _repository = repository;
     }
+
     public async Task<Result<List<RejectReasonDto>>> Handle(GetRejectReasonsQuery request, CancellationToken cancellationToken)
     {
         var rejectReasons = await _repository.RejectReason.GetRejectReasons(cancellationToken);

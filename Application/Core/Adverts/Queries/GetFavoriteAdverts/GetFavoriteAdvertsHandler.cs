@@ -4,6 +4,7 @@ using Entities.DomainErrors;
 using Shared.CustomResponses;
 using Shared.DataTransferObjects.Advert;
 using Shared.Error;
+
 namespace Application.Core.Adverts.Queries.GetFavoriteAdverts;
 internal sealed class GetFavoriteAdvertsHandler : IQueryHandler<GetFavoriteAdvertsQuery, Pagination<MinimalInformationsAboutAdvertDto>>
 {
@@ -13,6 +14,7 @@ internal sealed class GetFavoriteAdvertsHandler : IQueryHandler<GetFavoriteAdver
     {
         _repository = repository;
     }
+
     public async Task<Result<Pagination<MinimalInformationsAboutAdvertDto>>> Handle(GetFavoriteAdvertsQuery request, CancellationToken cancellationToken)
     {
         var userId = await _repository.User.GetUserIdFromEmail(request.Email, cancellationToken);

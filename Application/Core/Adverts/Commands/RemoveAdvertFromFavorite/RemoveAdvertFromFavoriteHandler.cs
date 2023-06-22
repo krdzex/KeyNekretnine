@@ -7,12 +7,13 @@ using Shared.Error;
 namespace Application.Core.Adverts.Commands.RemoveAdvertFromFavorite;
 internal sealed class RemoveAdvertFromFavoriteHandler : ICommandHandler<RemoveAdvertFromFavoriteCommand, Unit>
 {
-
     private readonly IRepositoryManager _repository;
+
     public RemoveAdvertFromFavoriteHandler(IRepositoryManager repository)
     {
         _repository = repository;
     }
+
     public async Task<Result<Unit>> Handle(RemoveAdvertFromFavoriteCommand request, CancellationToken cancellationToken)
     {
 
@@ -35,4 +36,3 @@ internal sealed class RemoveAdvertFromFavoriteHandler : ICommandHandler<RemoveAd
         return Unit.Value;
     }
 }
-

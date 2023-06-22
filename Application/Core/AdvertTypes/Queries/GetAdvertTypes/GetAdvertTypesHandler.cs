@@ -12,6 +12,7 @@ internal sealed class GetAdvertTypesHandler : IQueryHandler<GetAdvertTypesQuery,
     {
         _repository = repository;
     }
+
     public async Task<Result<List<AdvertTypeDto>>> Handle(GetAdvertTypesQuery request, CancellationToken cancellationToken)
     {
         var advertTypes = await _repository.AdvertType.GetAdvertTypes(cancellationToken);

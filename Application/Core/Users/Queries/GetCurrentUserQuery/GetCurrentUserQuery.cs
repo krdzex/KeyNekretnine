@@ -4,4 +4,3 @@ using System.Security.Claims;
 
 namespace Application.Core.Users.Queries.GetCurrentUserQuery;
 public sealed record GetCurrentUserQuery(IEnumerable<Claim> UserClaims) : IQuery<UserInformationDto>;
-

@@ -13,6 +13,7 @@ internal sealed class GetAgenciesHandler : IQueryHandler<GetAgenciesQuery, Pagin
     {
         _repository = repository;
     }
+
     public async Task<Result<Pagination<GetAgenciesDto>>> Handle(GetAgenciesQuery request, CancellationToken cancellationToken)
     {
         var agencies = await _repository.Agency.GetAgencies(request.AgencyParameters, cancellationToken);

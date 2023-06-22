@@ -13,6 +13,7 @@ internal sealed class ConfirmUserEmailHandler : ICommandHandler<ConfirmUserEmail
     {
         _repository = repository;
     }
+
     public async Task<Result<bool>> Handle(ConfirmUserEmailCommand request, CancellationToken cancellationToken)
     {
         var user = await _repository.User.GetUserByEmail(request.Email);

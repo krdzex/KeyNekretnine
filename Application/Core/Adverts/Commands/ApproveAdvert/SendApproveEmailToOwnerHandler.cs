@@ -25,4 +25,3 @@ internal sealed class SendApproveEmailToOwnerHandler : INotificationHandler<Adve
         await Task.CompletedTask;
     }
 }
-

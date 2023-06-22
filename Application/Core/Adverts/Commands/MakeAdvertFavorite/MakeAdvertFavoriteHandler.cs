@@ -7,12 +7,13 @@ using Shared.Error;
 namespace Application.Core.Adverts.Commands.MakeAdvertFavorite;
 internal sealed class MakeAdvertFavoriteHandler : ICommandHandler<MakeAdvertFavoriteCommand, Unit>
 {
-
     private readonly IRepositoryManager _repository;
+
     public MakeAdvertFavoriteHandler(IRepositoryManager repository)
     {
         _repository = repository;
     }
+
     public async Task<Result<Unit>> Handle(MakeAdvertFavoriteCommand request, CancellationToken cancellationToken)
     {
         var advertExist = await _repository.Advert.ChackIfAdvertExistAndItsApproved(request.AdvertId, cancellationToken);
@@ -44,4 +45,3 @@ internal sealed class MakeAdvertFavoriteHandler : ICommandHandler<MakeAdvertFavo
         return Unit.Value;
     }
 }
-

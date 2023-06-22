@@ -3,6 +3,7 @@ using Entities.DomainErrors;
 using Service.Contracts;
 using Shared.Error;
 using Shared.RequestFeatures;
+
 namespace Application.Core.Tokens.Commands.RefreshTokens;
 internal sealed class RefreshTokensHandler : ICommandHandler<RefreshTokensCommand, TokenRequest>
 {
@@ -12,6 +13,7 @@ internal sealed class RefreshTokensHandler : ICommandHandler<RefreshTokensComman
     {
         _service = service;
     }
+
     public async Task<Result<TokenRequest>> Handle(RefreshTokensCommand request, CancellationToken cancellationToken)
     {
         var newTokens = await _service.TokenService.VerifyRefreshToken(request.OldTokens);

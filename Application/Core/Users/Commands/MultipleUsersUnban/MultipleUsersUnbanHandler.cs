@@ -3,6 +3,7 @@ using Contracts;
 using Entities.DomainErrors;
 using MediatR;
 using Shared.Error;
+
 namespace Application.Core.Users.Commands.MultipleUsersUnban;
 internal sealed class MultipleUsersUnbanHandler : ICommandHandler<MultipleUsersUnbanCommand, Unit>
 {
@@ -14,6 +15,7 @@ internal sealed class MultipleUsersUnbanHandler : ICommandHandler<MultipleUsersU
         _repository = repository;
         _publisher = publisher;
     }
+
     public async Task<Result<Unit>> Handle(MultipleUsersUnbanCommand request, CancellationToken cancellationToken)
     {
         foreach (var email in request.Emails)
@@ -39,4 +41,3 @@ internal sealed class MultipleUsersUnbanHandler : ICommandHandler<MultipleUsersU
         return Unit.Value;
     }
 }
-

@@ -12,6 +12,7 @@ internal sealed class GetPhoneNumbersHandler : IQueryHandler<GetPhoneNumbersQuer
     {
         _repository = repository;
     }
+
     public async Task<Result<List<PhoneNumberDto>>> Handle(GetPhoneNumbersQuery request, CancellationToken cancellationToken)
     {
         var phoneNumbers = await _repository.PhoneNumber.GetAll(cancellationToken);

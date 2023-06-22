@@ -13,6 +13,7 @@ internal sealed class GetAdminAdvertsHandler : IQueryHandler<GetAdminAdvertsQuer
     {
         _repository = repository;
     }
+
     public async Task<Result<Pagination<AdminTableAdvertDto>>> Handle(GetAdminAdvertsQuery request, CancellationToken cancellationToken)
     {
 

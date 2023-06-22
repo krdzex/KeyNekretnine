@@ -5,7 +5,6 @@ using Shared.DataTransferObjects.Agency;
 using Shared.Error;
 
 namespace Application.Core.Agencies.Queries.GetAgencyById;
-
 internal sealed class GetAgencyByIdHandler : IQueryHandler<GetAgencyByIdQuery, GetAgencyDto>
 {
     private readonly IRepositoryManager _repository;
@@ -14,6 +13,7 @@ internal sealed class GetAgencyByIdHandler : IQueryHandler<GetAgencyByIdQuery, G
     {
         _repository = repository;
     }
+
     public async Task<Result<GetAgencyDto>> Handle(GetAgencyByIdQuery request, CancellationToken cancellationToken)
     {
         var agency = await _repository.Agency.GetAgencyById(request.AgencyId, cancellationToken);

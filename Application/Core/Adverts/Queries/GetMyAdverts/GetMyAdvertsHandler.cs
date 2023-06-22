@@ -4,6 +4,7 @@ using Entities.DomainErrors;
 using Shared.CustomResponses;
 using Shared.DataTransferObjects.Advert;
 using Shared.Error;
+
 namespace Application.Core.Adverts.Queries.GetMyAdverts;
 internal sealed class GetMyAdvertsHandler : IQueryHandler<GetMyAdvertsQuery, Pagination<MyAdvertsDto>>
 {
@@ -13,6 +14,7 @@ internal sealed class GetMyAdvertsHandler : IQueryHandler<GetMyAdvertsQuery, Pag
     {
         _repository = repository;
     }
+
     public async Task<Result<Pagination<MyAdvertsDto>>> Handle(GetMyAdvertsQuery request, CancellationToken cancellationToken)
     {
         var userId = await _repository.User.GetUserIdFromEmail(request.Email, cancellationToken);

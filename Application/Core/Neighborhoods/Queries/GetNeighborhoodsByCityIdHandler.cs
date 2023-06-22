@@ -13,6 +13,7 @@ internal sealed class GetNeighborhoodsByCityIdHandler : IQueryHandler<GetNeighbo
     {
         _repository = repository;
     }
+
     public async Task<Result<List<NeighborhoodDto>>> Handle(GetNeighborhoodsByCityIdQuery request, CancellationToken cancellationToken)
     {
         var neighborhoods = await _repository.Neighborhood.GetNeighborhoods(request.CityId, cancellationToken);

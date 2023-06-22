@@ -13,6 +13,7 @@ internal sealed class GetAdvertHandler : IQueryHandler<GetAdvertByIdQuery, AllIn
     {
         _repository = repository;
     }
+
     public async Task<Result<AllInfomrationsAboutAdvertDto>> Handle(GetAdvertByIdQuery request, CancellationToken cancellationToken)
     {
         var advert = await _repository.Advert.GetAdvert(request.Id, cancellationToken);

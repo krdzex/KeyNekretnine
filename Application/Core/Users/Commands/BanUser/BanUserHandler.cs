@@ -8,12 +8,14 @@ namespace Application.Core.Users.Notifications.BanUser;
 internal sealed class BanUserHandler : ICommandHandler<BanUserCommand, Unit>
 {
     private readonly IRepositoryManager _repository;
-    private IPublisher _publisher;
+    private readonly IPublisher _publisher;
+
     public BanUserHandler(IRepositoryManager repository, IPublisher publisher)
     {
         _repository = repository;
         _publisher = publisher;
     }
+
     public async Task<Result<Unit>> Handle(BanUserCommand request, CancellationToken cancellationToken)
     {
         var user = await _repository.User.GetUserByEmail(request.Email);

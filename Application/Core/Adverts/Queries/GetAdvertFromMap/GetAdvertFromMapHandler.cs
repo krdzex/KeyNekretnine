@@ -3,6 +3,7 @@ using Contracts;
 using Entities.DomainErrors;
 using Shared.DataTransferObjects.Advert;
 using Shared.Error;
+
 namespace Application.Core.Adverts.Queries.GetAdvertFromMap;
 internal sealed class GetAdvertFromMapHandler : IQueryHandler<GetAdvertFromMapQuery, MinimalInformationsAboutAdvertDto>
 {
@@ -12,6 +13,7 @@ internal sealed class GetAdvertFromMapHandler : IQueryHandler<GetAdvertFromMapQu
     {
         _repository = repository;
     }
+
     public async Task<Result<MinimalInformationsAboutAdvertDto>> Handle(GetAdvertFromMapQuery request, CancellationToken cancellationToken)
     {
         var advert = await _repository.Advert.GetAdvertFromMapPoint(request.Id, cancellationToken);
@@ -25,4 +27,3 @@ internal sealed class GetAdvertFromMapHandler : IQueryHandler<GetAdvertFromMapQu
         return advert;
     }
 }
-

@@ -10,11 +10,13 @@ internal sealed class CreateImaginaryAgentHandler : ICommandHandler<CreateImagin
 {
     private readonly IRepositoryManager _repository;
     private readonly IServiceManager _service;
+
     public CreateImaginaryAgentHandler(IRepositoryManager repository, IServiceManager service)
     {
         _repository = repository;
         _service = service;
     }
+
     public async Task<Result<Unit>> Handle(CreateImaginaryAgentCommand request, CancellationToken cancellationToken)
     {
 

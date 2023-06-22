@@ -13,6 +13,7 @@ internal sealed class GetUsersHandler : IQueryHandler<GetUsersQuery, Pagination<
     {
         _repository = repository;
     }
+
     public async Task<Result<Pagination<UserForListDto>>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
     {
         var users = await _repository.User.GetUsers(request.UserParameters, cancellationToken);

@@ -11,6 +11,7 @@ internal sealed class SendMultipleUnbanEmailHandler : INotificationHandler<Users
     {
         _serviceManager = serviceManager;
     }
+
     public async Task Handle(UsersUnbannedEvent request, CancellationToken cancellationToken)
     {
         foreach (var email in request.Emails)

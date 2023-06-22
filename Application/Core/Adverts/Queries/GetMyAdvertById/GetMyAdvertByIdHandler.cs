@@ -3,6 +3,7 @@ using Contracts;
 using Entities.DomainErrors;
 using Shared.DataTransferObjects.Advert;
 using Shared.Error;
+
 namespace Application.Core.Adverts.Queries.GetMyAdvertById;
 internal sealed class GetMyAdvertByIdHandler : IQueryHandler<GetMyAdvertByIdQuery, MyAdvertDto>
 {

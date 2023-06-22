@@ -12,11 +12,13 @@ internal sealed class UpdateUserHandler : ICommandHandler<UpdateUserCommand, Uni
 {
     private readonly IRepositoryManager _repository;
     private readonly IServiceManager _serviceManager;
+
     public UpdateUserHandler(IRepositoryManager repository, IServiceManager serviceManager)
     {
         _repository = repository;
         _serviceManager = serviceManager;
     }
+
     public async Task<Result<Unit>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
         using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))

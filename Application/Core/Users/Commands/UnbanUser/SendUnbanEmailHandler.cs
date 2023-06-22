@@ -11,6 +11,7 @@ internal sealed class SendUnbanEmailHandler : INotificationHandler<UserUnbannedE
     {
         _serviceManager = serviceManager;
     }
+
     public async Task Handle(UserUnbannedEvent request, CancellationToken cancellationToken)
     {
 

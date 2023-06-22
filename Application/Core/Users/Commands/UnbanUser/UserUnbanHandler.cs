@@ -3,6 +3,7 @@ using Contracts;
 using Entities.DomainErrors;
 using MediatR;
 using Shared.Error;
+
 namespace Application.Core.Users.Commands.UnbanUser;
 internal sealed class UserUnbanHandler : ICommandHandler<UnbanUserCommand, Unit>
 {
@@ -14,6 +15,7 @@ internal sealed class UserUnbanHandler : ICommandHandler<UnbanUserCommand, Unit>
         _repository = repository;
         _publisher = publisher;
     }
+
     public async Task<Result<Unit>> Handle(UnbanUserCommand request, CancellationToken cancellationToken)
     {
         var user = await _repository.User.GetUserByEmail(request.Email);

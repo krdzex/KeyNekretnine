@@ -12,6 +12,7 @@ internal sealed class GetMapPointsHandler : IQueryHandler<GetMapPointsQuery, Lis
     {
         _repository = repository;
     }
+
     public async Task<Result<List<ShowAdvertLocationOnMapDto>>> Handle(GetMapPointsQuery request, CancellationToken cancellationToken)
     {
         var mapLocations = await _repository.Advert.GetMapPoints(cancellationToken);

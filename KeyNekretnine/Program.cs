@@ -2,7 +2,6 @@ using AspNetCoreRateLimit;
 using Contracts;
 using KeyNekretnine.Configuration;
 using KeyNekretnine.Extensions;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services

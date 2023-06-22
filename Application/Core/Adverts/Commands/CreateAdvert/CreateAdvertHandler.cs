@@ -10,6 +10,7 @@ internal sealed class CreateAdvertHandler : ICommandHandler<CreateAdvertCommand,
 {
     private readonly IRepositoryManager _repository;
     private readonly IPublisher _publisher;
+
     public CreateAdvertHandler(IRepositoryManager repository, IPublisher publisher)
     {
         _repository = repository;
@@ -51,4 +52,3 @@ internal sealed class CreateAdvertHandler : ICommandHandler<CreateAdvertCommand,
         return Unit.Value;
     }
 }
-

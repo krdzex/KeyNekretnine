@@ -4,6 +4,7 @@ using Entities.DomainErrors;
 using Service.Contracts;
 using Shared.Error;
 using Shared.RequestFeatures;
+
 namespace Application.Core.Auth.Commands.FacebookLogin;
 internal sealed class FacebookLoginHandler : ICommandHandler<FacebookLoginCommand, TokenRequest>
 {
@@ -15,7 +16,6 @@ internal sealed class FacebookLoginHandler : ICommandHandler<FacebookLoginComman
         _service = service;
         _repository = repository;
     }
-
 
     public async Task<Result<TokenRequest>> Handle(FacebookLoginCommand request, CancellationToken cancellationToken)
     {
@@ -37,5 +37,4 @@ internal sealed class FacebookLoginHandler : ICommandHandler<FacebookLoginComman
 
         return tokenResponse;
     }
-
 }

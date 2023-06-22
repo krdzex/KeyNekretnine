@@ -3,11 +3,13 @@ using Contracts;
 using Entities.DomainErrors;
 using MediatR;
 using Shared.Error;
+
 namespace Application.Core.Adverts.Commands.RejectAdvert;
 internal sealed class RejectAdvertHandler : ICommandHandler<RejectAdvertCommand, Unit>
 {
     private readonly IRepositoryManager _repository;
     private readonly IPublisher _publisher;
+
     public RejectAdvertHandler(IRepositoryManager repository, IPublisher publisher)
     {
         _repository = repository;

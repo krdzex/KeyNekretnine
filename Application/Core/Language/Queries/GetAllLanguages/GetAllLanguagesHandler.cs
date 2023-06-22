@@ -12,6 +12,7 @@ internal sealed class GetAllLanguagesHandler : IQueryHandler<GetAllLanguagesQuer
     {
         _repository = repository;
     }
+
     public async Task<Result<List<LanguageDto>>> Handle(GetAllLanguagesQuery request, CancellationToken cancellationToken)
     {
         var languages = await _repository.Language.GetAll(cancellationToken);

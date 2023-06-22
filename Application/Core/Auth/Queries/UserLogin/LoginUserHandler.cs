@@ -4,6 +4,7 @@ using Entities.DomainErrors;
 using Service.Contracts;
 using Shared.Error;
 using Shared.RequestFeatures;
+
 namespace Application.Core.Auth.Queries.UserLogin;
 internal sealed class LoginUserHandler : IQueryHandler<LoginUserQuery, TokenRequest>
 {
@@ -35,4 +36,3 @@ internal sealed class LoginUserHandler : IQueryHandler<LoginUserQuery, TokenRequ
         return tokenResponse;
     }
 }
-

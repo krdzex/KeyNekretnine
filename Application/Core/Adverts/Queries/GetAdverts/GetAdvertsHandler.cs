@@ -14,6 +14,7 @@ internal sealed class GetAdvertsHandler : IQueryHandler<GetAdvertsQuery, Paginat
     {
         _repository = repository;
     }
+
     public async Task<Result<Pagination<MinimalInformationsAboutAdvertDto>>> Handle(GetAdvertsQuery request, CancellationToken cancellationToken)
     {
         if (request.AdvertParameters.MaxPrice < request.AdvertParameters.MinPrice)

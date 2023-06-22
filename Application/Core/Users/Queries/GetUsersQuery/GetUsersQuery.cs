@@ -5,4 +5,3 @@ using Shared.RequestFeatures;
 
 namespace Application.Core.Users.Queries.GetUsersQuery;
 public sealed record GetUsersQuery(UserParameters UserParameters) : IQuery<Pagination<UserForListDto>>;
-

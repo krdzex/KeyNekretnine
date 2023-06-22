@@ -14,6 +14,7 @@ internal sealed class GetCurrentUserHandler : IQueryHandler<GetCurrentUserQuery,
     {
         _repository = repository;
     }
+
     public async Task<Result<UserInformationDto>> Handle(GetCurrentUserQuery request, CancellationToken cancellationToken)
     {
         var email = request.UserClaims.FirstOrDefault(q => q.Type == ClaimTypes.Email)!.Value;

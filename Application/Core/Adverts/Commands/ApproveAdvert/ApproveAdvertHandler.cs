@@ -35,4 +35,3 @@ internal sealed class ApproveAdvertHandler : ICommandHandler<ApproveAdvertComman
         return Unit.Value;
     }
 }
-

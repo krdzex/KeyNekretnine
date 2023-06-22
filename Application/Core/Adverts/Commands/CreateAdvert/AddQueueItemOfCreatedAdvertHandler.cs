@@ -3,7 +3,6 @@ using Service.Contracts;
 using Shared;
 
 namespace Application.Core.Adverts.Commands.CreateAdvert;
-
 internal sealed class AddQueueItemOfCreatedAdvertHandler : INotificationHandler<AdvertCreatedEvent>
 {
     private readonly IProcessingChannel _channel;

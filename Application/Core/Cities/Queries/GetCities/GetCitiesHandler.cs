@@ -12,6 +12,7 @@ internal sealed class GetCitiesHandler : IQueryHandler<GetCitiesQuery, List<City
     {
         _repository = repository;
     }
+
     public async Task<Result<List<CityDto>>> Handle(GetCitiesQuery request, CancellationToken cancellationToken)
     {
         var cities = await _repository.City.GetCities(cancellationToken);
@@ -19,4 +20,3 @@ internal sealed class GetCitiesHandler : IQueryHandler<GetCitiesQuery, List<City
         return cities.ToList();
     }
 }
-

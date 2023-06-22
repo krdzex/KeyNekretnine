@@ -12,6 +12,7 @@ internal sealed class GetAdvertStatusesHandler : IQueryHandler<GetAdvertStatuses
     {
         _repository = repository;
     }
+
     public async Task<Result<List<AdvertStatusDto>>> Handle(GetAdvertStatusesQuery request, CancellationToken cancellationToken)
     {
         var advertStatuses = await _repository.AdvertStatus.GetAdvertsStatuses(cancellationToken);
@@ -19,4 +20,3 @@ internal sealed class GetAdvertStatusesHandler : IQueryHandler<GetAdvertStatuses
         return advertStatuses.ToList();
     }
 }
-
