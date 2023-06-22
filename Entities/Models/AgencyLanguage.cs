@@ -1,5 +1,4 @@
 ﻿namespace Entities.Models;
-
 public class AgencyLanguage
 {
     public int AgencyId { get; set; }

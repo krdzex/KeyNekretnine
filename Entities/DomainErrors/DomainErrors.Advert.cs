@@ -26,4 +26,3 @@ public static partial class DomainErrors
            $"Advert is need at least 4 images");
     }
 }
-
