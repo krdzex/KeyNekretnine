@@ -46,16 +46,24 @@ public class AuthenticationController : ApiController
         if (response.IsSuccess)
         {
             HttpContext.Response.Cookies.Append("X-Access-Token", response.Value.AccessToken,
-                new CookieOptions
-                {
-                    HttpOnly = true
-                });
+            new CookieOptions
+            {
+                Expires = DateTime.Now.AddDays(7),
+                HttpOnly = true,
+                Secure = true,
+                IsEssential = true,
+                SameSite = SameSiteMode.None
+            });
 
             HttpContext.Response.Cookies.Append("X-Refresh-Token", response.Value.RefreshToken,
-                new CookieOptions
-                {
-                    HttpOnly = true
-                });
+            new CookieOptions
+            {
+                Expires = DateTime.Now.AddDays(7),
+                HttpOnly = true,
+                Secure = true,
+                IsEssential = true,
+                SameSite = SameSiteMode.None,
+            });
         }
 
         return response.IsSuccess ? Accepted() : HandleFailure(response);
