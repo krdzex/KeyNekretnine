@@ -1,9 +1,7 @@
 ﻿using Shared.DataTransferObjects.PhoneNumber;
 
-namespace Contracts
+namespace Contracts;
+public interface IPhoneNumberRepository
 {
-    public interface IPhoneNumberRepository
-    {
-        Task<IEnumerable<PhoneNumberDto>> GetAll(CancellationToken cancellationToken);
-    }
+    Task<IEnumerable<PhoneNumberDto>> GetAll(CancellationToken cancellationToken);
 }

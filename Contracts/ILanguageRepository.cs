@@ -1,9 +1,7 @@
 ﻿using Shared.DataTransferObjects.Language;
 
-namespace Contracts
+namespace Contracts;
+public interface ILanguageRepository
 {
-    public interface ILanguageRepository
-    {
-        Task<IEnumerable<LanguageDto>> GetAll(CancellationToken cancellationToken);
-    }
+    Task<IEnumerable<LanguageDto>> GetAll(CancellationToken cancellationToken);
 }
