@@ -58,15 +58,15 @@ public sealed class CreateAdvertCommandValidator : AbstractValidator<CreateAdver
 
         RuleFor(x => x.AdvertForCreating.NoOfBedrooms)
             .NotEmpty()
-            .WithMessage("Number of badrooms is required")
+                .WithMessage("Number of badrooms is required")
             .GreaterThanOrEqualTo(1)
-            .WithMessage("Number of badrooms cant be lower then 1");
+                .WithMessage("Number of badrooms cant be lower then 1");
 
         RuleFor(x => x.AdvertForCreating.BuildingFloor)
             .NotEmpty()
-            .WithMessage("Building floor is required")
+                .WithMessage("Building floor is required")
             .GreaterThanOrEqualTo(1)
-            .WithMessage("Building floor cant be lower then 1");
+                .WithMessage("Building floor cant be lower then 1");
 
         RuleFor(x => x.AdvertForCreating.CoverImage)
             .NotEmpty()
@@ -88,13 +88,37 @@ public sealed class CreateAdvertCommandValidator : AbstractValidator<CreateAdver
                 }
             });
 
-        RuleFor(x => x.AdvertForCreating.Longitude)
-           .NotEmpty()
-           .WithMessage("Required field");
+        RuleFor(u => u.AdvertForCreating.Longitude)
+            .Custom((longitude, context) =>
+            {
+                if (longitude is not null)
+                {
+                    if (longitude <= -180 || longitude >= 180)
+                    {
+                        context.AddFailure("Longitude need to be between -180 and 180");
+                    }
+                }
+                else
+                {
+                    context.AddFailure("Longitude is required");
+                }
+            });
 
-        RuleFor(x => x.AdvertForCreating.Latitude)
-           .NotEmpty()
-           .WithMessage("Required field");
+        RuleFor(u => u.AdvertForCreating.Latitude)
+            .Custom((latitude, context) =>
+            {
+                if (latitude is not null)
+                {
+                    if (latitude <= -90 || latitude >= 90)
+                    {
+                        context.AddFailure("Latitude need to be between -90 and 90");
+                    }
+                }
+                else
+                {
+                    context.AddFailure("Latitude is required");
+                }
+            });
 
         RuleFor(x => x.AdvertForCreating.YearOfBuildingCreated)
             .NotEmpty()

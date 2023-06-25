@@ -6,6 +6,7 @@ using Shared.DataTransferObjects.Agency;
 using Shared.DataTransferObjects.Language;
 using Shared.RequestFeatures;
 using System.Data;
+using System.Globalization;
 
 namespace Repository.Repositories;
 public class AgencyRepository : IAgencyRepository
@@ -116,6 +117,24 @@ public class AgencyRepository : IAgencyRepository
         }
     }
 
+    public async Task<string> GetAgencyImage(int agencyId, CancellationToken cancellationToken)
+    {
+        var query = AgencyQuery.GetAgencyImageQuery;
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var param = new DynamicParameters();
+
+            param.Add("agencyId", agencyId, DbType.Int32);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            var imageUrl = await connection.QueryFirstOrDefaultAsync<string>(cmd);
+
+            return imageUrl;
+        }
+    }
+
     public async Task<Pagination<GetAgenciesDto>> GetAgencies(AgencyParameters agencyParameters, CancellationToken cancellationToken)
     {
         var orderBy = OrderQueryBuilder.CreateOrderQuery<GetAgenciesDto>(agencyParameters.OrderBy, 'a');
@@ -143,6 +162,36 @@ public class AgencyRepository : IAgencyRepository
             var metadata = new PagedList<GetAgenciesDto>(agencies, count, agencyParameters.PageNumber, agencyParameters.PageSize);
 
             return new Pagination<GetAgenciesDto> { Data = agencies, MetaData = metadata.MetaData };
+        }
+    }
+
+    public async Task UpdateAgency(UpdateAgencyDto updateAgencyDto, int agencyId, CancellationToken cancellationToken)
+    {
+        var query = AgencyQuery.UpdateAgencyQuery;
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var param = new DynamicParameters();
+
+            param.Add("agencyId", agencyId, DbType.Int32);
+            param.Add("name", updateAgencyDto.Name, DbType.String);
+            param.Add("location", updateAgencyDto.Location, DbType.String);
+            param.Add("description", updateAgencyDto.Description, DbType.String);
+            param.Add("email", updateAgencyDto.Email, DbType.String);
+            param.Add("websiteUrl", updateAgencyDto.WebsiteUrl, DbType.String);
+            param.Add("workStartTime", TimeSpan.ParseExact(updateAgencyDto.WorkStartTime, @"hh\:mm", CultureInfo.CurrentCulture));
+            param.Add("workEndTime", TimeSpan.ParseExact(updateAgencyDto.WorkEndTime, @"hh\:mm", CultureInfo.CurrentCulture));
+            param.Add("twitterUrl", updateAgencyDto.TwitterUrl, DbType.String);
+            param.Add("facebookUrl", updateAgencyDto.FacebookUrl, DbType.String);
+            param.Add("instagramUrl", updateAgencyDto.InstagramUrl, DbType.String);
+            param.Add("linkedinUrl", updateAgencyDto.LinkedinUrl, DbType.String);
+            param.Add("latitude", updateAgencyDto.Latitude, DbType.Double);
+            param.Add("longitude", updateAgencyDto.Longitude, DbType.Double);
+            param.Add("imageUrl", updateAgencyDto.Image, DbType.String);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            await connection.ExecuteAsync(cmd);
         }
     }
 }

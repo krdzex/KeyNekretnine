@@ -30,8 +30,8 @@ public class AdvertConfiguration : IEntityTypeConfiguration<Advert>
         builder.Property(x => x.YearOfBuildingCreated).HasMaxLength(3000);
         builder.Property(x => x.CoverImageUrl).IsRequired().HasMaxLength(150);
         builder.Property(x => x.Street).IsRequired().HasMaxLength(300);
-        builder.Property(x => x.Latitude).IsRequired().HasMaxLength(91);
-        builder.Property(x => x.Longitude).IsRequired().HasMaxLength(181);
+        builder.Property(x => x.Latitude).IsRequired();
+        builder.Property(x => x.Longitude).IsRequired();
         builder.HasOne(a => a.User).WithMany(u => u.Adverts).HasForeignKey(x => x.UserId);
         builder.HasOne(a => a.ImaginaryAgent).WithMany(u => u.Adverts).HasForeignKey(x => x.ImaginaryAgentId);
         builder.HasMany(a => a.Images).WithOne(i => i.Advert).HasForeignKey(x => x.AdvertId);

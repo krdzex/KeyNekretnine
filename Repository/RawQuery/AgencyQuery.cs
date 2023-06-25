@@ -8,6 +8,10 @@ namespace Repository.RawQuery
         INSERT INTO agencies (name, created_date, user_id)
         VALUES(@name,@createdDate,@userId);";
 
+        public const string GetAgencyImageQuery = @"
+        SELECT image_url FROM agencies
+        WHERE id = @agencyId;";
+
         public const string DoesAgencyExistQuery = @"
         SELECT COUNT(id)
         FROM agencies
@@ -53,5 +57,10 @@ namespace Repository.RawQuery
 
             return countAgenciesQuery.ToString() + selectAgenciesQuery.ToString();
         }
+
+        public const string UpdateAgencyQuery = @"
+        UPDATE agencies
+        SET name = @name, location = @location, description = @description, email =  @email, website_url = @websiteUrl, work_start_time = @workStartTime, work_end_time = @workEndTime, twitter_url = @twitterUrl, facebook_url = @facebookUrl, instagram_url = @instagramUrl,linkedin_url = @linkedinUrl, latitude = @latitude,longitude = @longitude, image_url = @imageUrl
+        WHERE id = @agencyId;";
     }
 }

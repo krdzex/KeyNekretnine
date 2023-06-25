@@ -11,4 +11,6 @@ public interface IAgencyRepository
     Task CreateImaginaryAgent(ImaginaryAgentDto imaginaryAgent, int agencyId, CancellationToken cancellationToken);
     Task<GetAgencyDto> GetAgencyById(int agencyId, CancellationToken cancellationToken);
     Task<Pagination<GetAgenciesDto>> GetAgencies(AgencyParameters agencyParameters, CancellationToken cancellationToken);
+    Task<string> GetAgencyImage(int agencyId, CancellationToken cancellationToken);
+    Task UpdateAgency(UpdateAgencyDto updateAgencyDto, int agencyId, CancellationToken cancellationToken);
 }

@@ -21,8 +21,8 @@ public class AgencyConfiguration : IEntityTypeConfiguration<Agency>
         builder.Property(x => x.FacebookUrl).HasMaxLength(200);
         builder.Property(x => x.InstagramUrl).HasMaxLength(200);
         builder.Property(x => x.LinkedinUrl).HasMaxLength(200);
-        builder.Property(x => x.Latitude).HasMaxLength(91);
-        builder.Property(x => x.Longitude).HasMaxLength(181);
+        builder.Property(x => x.Latitude).IsRequired(false);
+        builder.Property(x => x.Longitude).IsRequired(false);
         builder.Property(x => x.Description).HasMaxLength(1000);
         builder.Property(x => x.ImageUrl).HasMaxLength(200);
     }

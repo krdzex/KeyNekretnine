@@ -22,8 +22,8 @@ public class AddAdvertDto
     public int AdvertPurposeId { get; set; }
     public IFormFileCollection ImageFiles { get; set; }
     public IFormFile CoverImage { get; set; }
-    public double Latitude { get; set; }
-    public double Longitude { get; set; }
+    public double? Latitude { get; set; }
+    public double? Longitude { get; set; }
     public string Street { get; set; }
     public int NeighborhoodId { get; set; }
     public IEnumerable<string> Features { get; set; }

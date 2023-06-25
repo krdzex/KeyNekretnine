@@ -10,9 +10,11 @@ public sealed class RegisterUserCommandValidator :
         RuleFor(u => u.RegistrationUser.FirstName)
             .NotEmpty()
             .WithMessage("Field First Name cant be empty");
+
         RuleFor(u => u.RegistrationUser.LastName)
             .NotEmpty()
             .WithMessage("Field Last Name cant be empty");
+
         RuleFor(u => u.RegistrationUser.Email)
             .NotEmpty()
                 .WithMessage("Email is required field")
