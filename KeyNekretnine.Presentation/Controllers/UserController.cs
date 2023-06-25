@@ -55,7 +55,7 @@ public sealed class UserController : ApiController
 
     [Authorize(Roles = "Administrator")]
     [ServiceFilter(typeof(BanUserChack))]
-    [HttpPut("/unban")]
+    [HttpPut("unban")]
     public async Task<IActionResult> Unban([FromBody] string email, CancellationToken cancellationToken)
     {
         var command = new UnbanUserCommand(email);
