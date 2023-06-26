@@ -2,6 +2,7 @@
 using Application.Core.Agencies.Commands.CreateImaginaryAgent;
 using Application.Core.Agencies.Commands.UpdateAgency;
 using Application.Core.Agencies.Queries.GetAgencies;
+using Application.Core.Agencies.Queries.GetAgencyAdverts;
 using Application.Core.Agencies.Queries.GetAgencyById;
 using KeyNekretnine.Attributes;
 using KeyNekretnine.Presentation.Infrastructure;
@@ -92,5 +93,17 @@ public class AgencyController : ApiController
         var response = await Sender.Send(command, cancellationToken);
 
         return response.IsSuccess ? Accepted() : HandleFailure(response);
+    }
+
+    [HttpGet("{agencyId}/adverts")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetAgencyAdverts(int agencyId, CancellationToken cancellationToken)
+    {
+        var query = new GetAgencyAdvertsQuery(agencyId);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : HandleFailure(response);
     }
 }

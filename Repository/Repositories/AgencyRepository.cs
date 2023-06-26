@@ -2,6 +2,7 @@
 using Dapper;
 using Repository.RawQuery;
 using Shared.CustomResponses;
+using Shared.DataTransferObjects.Advert;
 using Shared.DataTransferObjects.Agency;
 using Shared.DataTransferObjects.Language;
 using Shared.RequestFeatures;
@@ -225,6 +226,24 @@ public class AgencyRepository : IAgencyRepository
             var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
 
             await connection.ExecuteAsync(cmd);
+        }
+    }
+
+    public async Task<IEnumerable<MinimalInformationsAboutAdvertDto>> GetAdvertsForAgency(int agencyId, CancellationToken cancellationToken)
+    {
+        var query = AgencyQuery.GetAgencyAdvertsQuery;
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var param = new DynamicParameters();
+
+            param.Add("agencyId", agencyId, DbType.Int16);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            var adverts = await connection.QueryAsync<MinimalInformationsAboutAdvertDto>(cmd);
+
+            return adverts;
         }
     }
 }

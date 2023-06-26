@@ -1,4 +1,5 @@
 ﻿using Shared.CustomResponses;
+using Shared.DataTransferObjects.Advert;
 using Shared.DataTransferObjects.Agency;
 using Shared.RequestFeatures;
 
@@ -15,4 +16,5 @@ public interface IAgencyRepository
     Task UpdateAgency(UpdateAgencyDto updateAgencyDto, int agencyId, CancellationToken cancellationToken);
     Task AddLanguageToAgency(int languageId, int agencyId, CancellationToken cancellationToken);
     Task DeleteLanguagesForAgency(int agencyId, CancellationToken cancellationToken);
+    Task<IEnumerable<MinimalInformationsAboutAdvertDto>> GetAdvertsForAgency(int agencyId, CancellationToken cancellationToken);
 }

@@ -71,5 +71,16 @@ namespace Repository.RawQuery
         public const string DeleteLanguagesForAgencyQuery = @"
         DELETE FROM agency_languages
         WHERE agency_id = @agencyId;";
+
+        public const string GetAgencyAdvertsQuery = @"
+        SELECT a.id,a.price,a.floor_space,a.no_of_bedrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,t.name_sr AS type_name_sr,t.name_en AS type_name_en,a.street,a.is_emergency,a.is_under_construction,a.is_furnished
+        FROM adverts AS a
+        JOIN imaginary_agents AS ia ON a.imaginary_agent_id = ia.id
+        JOIN advert_types t ON a.type_id = t.id
+        JOIN advert_purposes p ON a.purpose_id = p.id
+        JOIN neighborhoods n ON a.neighborhood_id = n.id
+        JOIN cities c ON n.city_id = c.id
+        WHERE ia.agency_id = @agencyId
+        AND a.status_id = 1;";
     }
 }
