@@ -8,6 +8,11 @@ namespace Repository.RawQuery
         INSERT INTO agencies (name, created_date, user_id)
         VALUES(@name,@createdDate,@userId);";
 
+        public const string GetAgencyLocatinQuery = @"
+        SELECT latitude,longitude,address
+        FROM agencies
+        WHERE id = @agencyId;";
+
         public const string GetAgencyImageQuery = @"
         SELECT image_url FROM agencies
         WHERE id = @agencyId;";
@@ -18,7 +23,7 @@ namespace Repository.RawQuery
         WHERE id = @agencyId;";
 
         public const string GetAgencyByIdQuery = @"
-        SELECT name,email,facebook_url,instagram_url,latitude,longitude,linkedin_url,description,location,twitter_url,website_url,work_start_time,work_end_time,email,image_url
+        SELECT name,email,facebook_url,instagram_url,linkedin_url,description,address,twitter_url,website_url,work_start_time,work_end_time,email,image_url
         FROM agencies
         WHERE id = @agencyId;
 
@@ -60,7 +65,7 @@ namespace Repository.RawQuery
 
         public const string UpdateAgencyQuery = @"
         UPDATE agencies
-        SET name = @name, location = @location, description = @description, email =  @email, website_url = @websiteUrl, work_start_time = @workStartTime, work_end_time = @workEndTime, twitter_url = @twitterUrl, facebook_url = @facebookUrl, instagram_url = @instagramUrl,linkedin_url = @linkedinUrl, latitude = @latitude,longitude = @longitude, image_url = @imageUrl
+        SET name = @name, address = @address, description = @description, email =  @email, website_url = @websiteUrl, work_start_time = @workStartTime, work_end_time = @workEndTime, twitter_url = @twitterUrl, facebook_url = @facebookUrl, instagram_url = @instagramUrl,linkedin_url = @linkedinUrl, latitude = @latitude,longitude = @longitude, image_url = @imageUrl
         WHERE id = @agencyId;";
 
         public const string AssignLanguageToAgencyQuery = @"
@@ -82,5 +87,10 @@ namespace Repository.RawQuery
         JOIN cities c ON n.city_id = c.id
         WHERE ia.agency_id = @agencyId
         AND a.status_id = 1;";
+
+        public const string GetAgentsQuery = @"
+        SELECT ia.first_name,ia.last_name,ia.image_url
+        FROM imaginary_agents AS ia
+        WHERE ia.agency_id = @agencyId;";
     }
 }

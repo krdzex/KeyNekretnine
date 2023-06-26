@@ -3,7 +3,9 @@ using Application.Core.Agencies.Commands.CreateImaginaryAgent;
 using Application.Core.Agencies.Commands.UpdateAgency;
 using Application.Core.Agencies.Queries.GetAgencies;
 using Application.Core.Agencies.Queries.GetAgencyAdverts;
+using Application.Core.Agencies.Queries.GetAgencyAgents;
 using Application.Core.Agencies.Queries.GetAgencyById;
+using Application.Core.Agencies.Queries.GetAgencyLocation;
 using KeyNekretnine.Attributes;
 using KeyNekretnine.Presentation.Infrastructure;
 using MediatR;
@@ -43,7 +45,7 @@ public class AgencyController : ApiController
     [HttpPost("{agencyId}/agent")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CreateAgent([FromForm] ImaginaryAgentDto imaginaryAgentDto, int agencyId, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateAgent([FromForm] NewImaginaryAgentDto imaginaryAgentDto, int agencyId, CancellationToken cancellationToken)
     {
         var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
 
@@ -101,6 +103,30 @@ public class AgencyController : ApiController
     public async Task<IActionResult> GetAgencyAdverts(int agencyId, CancellationToken cancellationToken)
     {
         var query = new GetAgencyAdvertsQuery(agencyId);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : HandleFailure(response);
+    }
+
+    [HttpGet("{agencyId}/agents")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetAgents(int agencyId, CancellationToken cancellationToken)
+    {
+        var query = new GetAgencyAgentsQuery(agencyId);
+
+        var response = await Sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : HandleFailure(response);
+    }
+
+    [HttpGet("{agencyId}/location")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetAgencyLocation(int agencyId, CancellationToken cancellationToken)
+    {
+        var query = new GetAgencyLocationQuery(agencyId);
 
         var response = await Sender.Send(query, cancellationToken);
 

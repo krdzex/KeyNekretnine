@@ -73,7 +73,7 @@ public class AgencyRepository : IAgencyRepository
         }
     }
 
-    public async Task CreateImaginaryAgent(ImaginaryAgentDto imaginaryAgent, int agencyId, CancellationToken cancellationToken)
+    public async Task CreateImaginaryAgent(NewImaginaryAgentDto imaginaryAgent, int agencyId, CancellationToken cancellationToken)
     {
         var query = AgencyQuery.CreateAgentQuery;
 
@@ -176,7 +176,7 @@ public class AgencyRepository : IAgencyRepository
 
             param.Add("agencyId", agencyId, DbType.Int32);
             param.Add("name", updateAgencyDto.Name, DbType.String);
-            param.Add("location", updateAgencyDto.Location, DbType.String);
+            param.Add("location", updateAgencyDto.Address, DbType.String);
             param.Add("description", updateAgencyDto.Description, DbType.String);
             param.Add("email", updateAgencyDto.Email, DbType.String);
             param.Add("websiteUrl", updateAgencyDto.WebsiteUrl, DbType.String);
@@ -244,6 +244,42 @@ public class AgencyRepository : IAgencyRepository
             var adverts = await connection.QueryAsync<MinimalInformationsAboutAdvertDto>(cmd);
 
             return adverts;
+        }
+    }
+
+    public async Task<IEnumerable<AgentForAgencyDto>> GetAgents(int agencyId, CancellationToken cancellationToken)
+    {
+        var query = AgencyQuery.GetAgentsQuery;
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var param = new DynamicParameters();
+
+            param.Add("agencyId", agencyId, DbType.Int16);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            var agents = await connection.QueryAsync<AgentForAgencyDto>(cmd);
+
+            return agents;
+        }
+    }
+
+    public async Task<AgencyLocationDto> GetAgencyLocation(int agencyId, CancellationToken cancellationToken)
+    {
+        var query = AgencyQuery.GetAgencyLocatinQuery;
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var param = new DynamicParameters();
+
+            param.Add("agencyId", agencyId, DbType.Int16);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            var location = await connection.QueryFirstOrDefaultAsync<AgencyLocationDto>(cmd);
+
+            return location;
         }
     }
 }

@@ -26,7 +26,7 @@ public sealed class UpdateAgencyCommandValidator :
             .MaximumLength(100)
                 .WithMessage("Max number of characters is 100");
 
-        RuleFor(u => u.UpdateAgency.Location)
+        RuleFor(u => u.UpdateAgency.Address)
             .MaximumLength(200)
             .WithMessage("Max number of characters is 200");
 
