@@ -16,10 +16,8 @@ internal sealed class GetAgentsHandler : IQueryHandler<GetAgentsQuery, Paginatio
 
     public async Task<Result<Pagination<MinimalAgentInformationsDto>>> Handle(GetAgentsQuery request, CancellationToken cancellationToken)
     {
-        //var agents = await _repository.Agency.GetAgencyLocation(request.AgencyId, cancellationToken);
+        var agents = await _repository.Agent.GetAgents(request.AgentParameters, cancellationToken);
 
-        //return agents;
-
-        return new Pagination<MinimalAgentInformationsDto>();
+        return agents;
     }
 }

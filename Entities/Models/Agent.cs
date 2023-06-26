@@ -17,5 +17,4 @@ public class Agent : EntityBase
     public int AgencyId { get; set; }
 
     public IEnumerable<AgentLanguage> AgentLanguages { get; set; }
-
 }

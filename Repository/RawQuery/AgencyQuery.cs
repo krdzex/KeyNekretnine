@@ -38,12 +38,6 @@ namespace Repository.RawQuery
         WHERE id = @agencyId
         AND user_id = @userId;";
 
-        public const string CreateAgentQuery = @"
-        INSERT INTO agents
-        (first_name,last_name,phone_number,image_url,agency_id)
-        VALUES
-        (@firstName,@lastName,@phoneNumber,@imageUrl,@agencyId);";
-
         public static string MakeGetAgenciesQuery(string orderBy)
         {
             var countAgenciesQuery = new StringBuilder(@"

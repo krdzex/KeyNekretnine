@@ -5,7 +5,7 @@ using MediatR;
 using Service.Contracts;
 using Shared.Error;
 
-namespace Application.Core.Agencies.Commands.CreateAgent;
+namespace Application.Core.Agents.Commands.CreateAgent;
 internal sealed class CreateAgentHandler : ICommandHandler<CreateAgentCommand, Unit>
 {
     private readonly IRepositoryManager _repository;
