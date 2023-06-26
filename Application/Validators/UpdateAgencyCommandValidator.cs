@@ -106,7 +106,29 @@ public sealed class UpdateAgencyCommandValidator :
                 {
                     if (image.Length > MaxImageSizeInBytes)
                     {
-                        context.AddFailure($"The image must not exceed 0.5MB in size.");
+                        context.AddFailure("The image must not exceed 0.5MB in size.");
+                    }
+                }
+            });
+
+        RuleFor(u => u.UpdateAgency.LanguageId)
+            .Custom((languagesIds, context) =>
+            {
+                if (languagesIds is not null)
+                {
+                    if (ContainsDuplicates(languagesIds))
+                    {
+                        context.AddFailure("Duplicate language is not allowed");
+                    }
+                    else
+                    {
+                        foreach (var id in languagesIds)
+                        {
+                            if (id < 1 || id > 52)
+                            {
+                                context.AddFailure("Invalid language");
+                            }
+                        }
                     }
                 }
             });
@@ -134,5 +156,20 @@ public sealed class UpdateAgencyCommandValidator :
         }
 
         return true;
+    }
+
+    public bool ContainsDuplicates<T>(IEnumerable<T> ids)
+    {
+        HashSet<T> set = new();
+
+        foreach (var id in ids)
+        {
+            if (!set.Add(id))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

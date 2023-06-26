@@ -21,4 +21,5 @@ public class UpdateAgencyDto
 
     [BindNever]
     public string ImageUrl { get; set; }
+    public IEnumerable<int> LanguageId { get; set; }
 }

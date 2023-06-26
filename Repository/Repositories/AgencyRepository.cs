@@ -179,8 +179,8 @@ public class AgencyRepository : IAgencyRepository
             param.Add("description", updateAgencyDto.Description, DbType.String);
             param.Add("email", updateAgencyDto.Email, DbType.String);
             param.Add("websiteUrl", updateAgencyDto.WebsiteUrl, DbType.String);
-            param.Add("workStartTime", TimeSpan.ParseExact(updateAgencyDto.WorkStartTime, @"hh\:mm", CultureInfo.CurrentCulture));
-            param.Add("workEndTime", TimeSpan.ParseExact(updateAgencyDto.WorkEndTime, @"hh\:mm", CultureInfo.CurrentCulture));
+            param.Add("workStartTime", updateAgencyDto.WorkStartTime is not null ? TimeSpan.ParseExact(updateAgencyDto.WorkStartTime, @"hh\:mm", CultureInfo.CurrentCulture) : null);
+            param.Add("workEndTime", updateAgencyDto.WorkEndTime is not null ? TimeSpan.ParseExact(updateAgencyDto.WorkEndTime, @"hh\:mm", CultureInfo.CurrentCulture) : null);
             param.Add("twitterUrl", updateAgencyDto.TwitterUrl, DbType.String);
             param.Add("facebookUrl", updateAgencyDto.FacebookUrl, DbType.String);
             param.Add("instagramUrl", updateAgencyDto.InstagramUrl, DbType.String);
@@ -188,6 +188,39 @@ public class AgencyRepository : IAgencyRepository
             param.Add("latitude", updateAgencyDto.Latitude, DbType.Double);
             param.Add("longitude", updateAgencyDto.Longitude, DbType.Double);
             param.Add("imageUrl", updateAgencyDto.Image, DbType.String);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            await connection.ExecuteAsync(cmd);
+        }
+    }
+
+    public async Task AddLanguageToAgency(int languageId, int agencyId, CancellationToken cancellationToken)
+    {
+        var query = AgencyQuery.AssignLanguageToAgencyQuery;
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var param = new DynamicParameters();
+
+            param.Add("languageId", languageId, DbType.Int16);
+            param.Add("agencyId", agencyId, DbType.Int16);
+
+            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
+
+            await connection.ExecuteAsync(cmd);
+        }
+    }
+
+    public async Task DeleteLanguagesForAgency(int agencyId, CancellationToken cancellationToken)
+    {
+        var query = AgencyQuery.DeleteLanguagesForAgencyQuery;
+
+        using (var connection = _dapperContext.CreateConnection())
+        {
+            var param = new DynamicParameters();
+
+            param.Add("agencyId", agencyId, DbType.Int16);
 
             var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
 

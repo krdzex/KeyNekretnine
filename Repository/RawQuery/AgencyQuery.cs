@@ -62,5 +62,14 @@ namespace Repository.RawQuery
         UPDATE agencies
         SET name = @name, location = @location, description = @description, email =  @email, website_url = @websiteUrl, work_start_time = @workStartTime, work_end_time = @workEndTime, twitter_url = @twitterUrl, facebook_url = @facebookUrl, instagram_url = @instagramUrl,linkedin_url = @linkedinUrl, latitude = @latitude,longitude = @longitude, image_url = @imageUrl
         WHERE id = @agencyId;";
+
+        public const string AssignLanguageToAgencyQuery = @"
+        INSERT INTO agency_languages (agency_id, language_id)
+        VALUES(@agencyId,@languageId);";
+
+
+        public const string DeleteLanguagesForAgencyQuery = @"
+        DELETE FROM agency_languages
+        WHERE agency_id = @agencyId;";
     }
 }

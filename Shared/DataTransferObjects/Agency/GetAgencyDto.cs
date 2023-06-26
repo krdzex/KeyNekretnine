@@ -8,8 +8,8 @@ public class GetAgencyDto
     public string Description { get; set; }
     public string Email { get; set; }
     public string Website_Url { get; set; }
-    public TimeSpan Work_Start_Time { get; set; }
-    public TimeSpan Work_End_Time { get; set; }
+    public TimeSpan? Work_Start_Time { get; set; }
+    public TimeSpan? Work_End_Time { get; set; }
     public string Twitter_Url { get; set; }
     public string Facebook_Url { get; set; }
     public string Instagram_Url { get; set; }

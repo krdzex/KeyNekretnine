@@ -13,4 +13,6 @@ public interface IAgencyRepository
     Task<Pagination<GetAgenciesDto>> GetAgencies(AgencyParameters agencyParameters, CancellationToken cancellationToken);
     Task<string> GetAgencyImage(int agencyId, CancellationToken cancellationToken);
     Task UpdateAgency(UpdateAgencyDto updateAgencyDto, int agencyId, CancellationToken cancellationToken);
+    Task AddLanguageToAgency(int languageId, int agencyId, CancellationToken cancellationToken);
+    Task DeleteLanguagesForAgency(int agencyId, CancellationToken cancellationToken);
 }
