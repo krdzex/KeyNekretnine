@@ -39,7 +39,7 @@ namespace Repository.RawQuery
         AND user_id = @userId;";
 
         public const string CreateAgentQuery = @"
-        INSERT INTO imaginary_agents
+        INSERT INTO agents
         (first_name,last_name,phone_number,image_url,agency_id)
         VALUES
         (@firstName,@lastName,@phoneNumber,@imageUrl,@agencyId);";
@@ -54,7 +54,7 @@ namespace Repository.RawQuery
             var selectAgenciesQuery = new StringBuilder($@"
             SELECT a.name, a.created_date, COUNT(*) AS num_adverts, a.email, a.facebook_url, a.instagram_url, a.linkedin_url, a.twitter_url, a.image_url, a.address
             FROM adverts AS ad
-            JOIN imaginary_agents AS ia ON ad.imaginary_agent_id = ia.id
+            JOIN agents AS ia ON ad.agent_id = ia.id
             JOIN agencies AS a ON ia.agency_id = a.id
             WHERE(@name = '' OR LOWER(a.name) LIKE '%' || LOWER(@name) || '%')
             GROUP BY a.name,a.created_date,a.email,a.facebook_url, a.linkedin_url, a.twitter_url, a.image_url, a.instagram_url, a.address
@@ -80,7 +80,7 @@ namespace Repository.RawQuery
         public const string GetAgencyAdvertsQuery = @"
         SELECT a.id,a.price,a.floor_space,a.no_of_bedrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,t.name_sr AS type_name_sr,t.name_en AS type_name_en,a.street,a.is_emergency,a.is_under_construction,a.is_furnished
         FROM adverts AS a
-        JOIN imaginary_agents AS ia ON a.imaginary_agent_id = ia.id
+        JOIN agents AS ia ON a.agent_id = ia.id
         JOIN advert_types t ON a.type_id = t.id
         JOIN advert_purposes p ON a.purpose_id = p.id
         JOIN neighborhoods n ON a.neighborhood_id = n.id
@@ -90,7 +90,7 @@ namespace Repository.RawQuery
 
         public const string GetAgentsQuery = @"
         SELECT ia.first_name,ia.last_name,ia.image_url
-        FROM imaginary_agents AS ia
+        FROM agents AS ia
         WHERE ia.agency_id = @agencyId;";
     }
 }

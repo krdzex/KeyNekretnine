@@ -15,4 +15,5 @@ public interface IRepositoryManager
     IAgencyRepository Agency { get; }
     IPhoneNumberRepository PhoneNumber { get; }
     ILanguageRepository Language { get; }
+    IAgentRepository Agent { get; }
 }

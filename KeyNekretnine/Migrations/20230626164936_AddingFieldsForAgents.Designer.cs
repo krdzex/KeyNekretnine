@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Repository;
@@ -11,9 +12,10 @@ using Repository;
 namespace KeyNekretnine.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20230626164936_AddingFieldsForAgents")]
+    partial class AddingFieldsForAgents
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,10 +32,6 @@ namespace KeyNekretnine.Migrations
                         .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AgentId")
-                        .HasColumnType("integer")
-                        .HasColumnName("agent_id");
 
                     b.Property<int>("BuildingFloor")
                         .HasColumnType("integer")
@@ -80,6 +78,10 @@ namespace KeyNekretnine.Migrations
                     b.Property<bool>("HasWifi")
                         .HasColumnType("boolean")
                         .HasColumnName("has_wifi");
+
+                    b.Property<int?>("ImaginaryAgentId")
+                        .HasColumnType("integer")
+                        .HasColumnName("imaginary_agent_id");
 
                     b.Property<bool>("IsEmergency")
                         .HasColumnType("boolean")
@@ -162,8 +164,8 @@ namespace KeyNekretnine.Migrations
                     b.HasKey("Id")
                         .HasName("pk_adverts");
 
-                    b.HasIndex("AgentId")
-                        .HasDatabaseName("ix_adverts_agent_id");
+                    b.HasIndex("ImaginaryAgentId")
+                        .HasDatabaseName("ix_adverts_imaginary_agent_id");
 
                     b.HasIndex("NeighborhoodId")
                         .HasDatabaseName("ix_adverts_neighborhood_id");
@@ -475,100 +477,6 @@ namespace KeyNekretnine.Migrations
                     b.ToTable("agency_languages", (string)null);
                 });
 
-            modelBuilder.Entity("Entities.Models.Agent", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AgencyId")
-                        .HasColumnType("integer")
-                        .HasColumnName("agency_id");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)")
-                        .HasColumnName("description");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("email");
-
-                    b.Property<string>("FacebookUrl")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("facebook_url");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)")
-                        .HasColumnName("first_name");
-
-                    b.Property<string>("ImageUrl")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("image_url");
-
-                    b.Property<string>("InstagramUrl")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("instagram_url");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)")
-                        .HasColumnName("last_name");
-
-                    b.Property<string>("LinkedinUrl")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("linkedin_url");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("phone_number");
-
-                    b.Property<string>("TwitterUrl")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("twitter_url");
-
-                    b.HasKey("Id")
-                        .HasName("pk_agents");
-
-                    b.HasIndex("AgencyId")
-                        .HasDatabaseName("ix_agents_agency_id");
-
-                    b.ToTable("agents", (string)null);
-                });
-
-            modelBuilder.Entity("Entities.Models.AgentLanguage", b =>
-                {
-                    b.Property<int>("AgentId")
-                        .HasColumnType("integer")
-                        .HasColumnName("agent_id");
-
-                    b.Property<int>("LanguageId")
-                        .HasColumnType("integer")
-                        .HasColumnName("language_id");
-
-                    b.HasKey("AgentId", "LanguageId")
-                        .HasName("pk_agent_languages");
-
-                    b.HasIndex("LanguageId")
-                        .HasDatabaseName("ix_agent_languages_language_id");
-
-                    b.ToTable("agent_languages", (string)null);
-                });
-
             modelBuilder.Entity("Entities.Models.City", b =>
                 {
                     b.Property<int>("Id")
@@ -803,6 +711,100 @@ namespace KeyNekretnine.Migrations
                         .HasDatabaseName("ix_images_advert_id");
 
                     b.ToTable("images", (string)null);
+                });
+
+            modelBuilder.Entity("Entities.Models.ImaginaryAgent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AgencyId")
+                        .HasColumnType("integer")
+                        .HasColumnName("agency_id");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("description");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("email");
+
+                    b.Property<string>("FacebookUrl")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("facebook_url");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)")
+                        .HasColumnName("first_name");
+
+                    b.Property<string>("ImageUrl")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("image_url");
+
+                    b.Property<string>("InstagramUrl")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("instagram_url");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)")
+                        .HasColumnName("last_name");
+
+                    b.Property<string>("LinkedinUrl")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("linkedin_url");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("phone_number");
+
+                    b.Property<string>("TwitterUrl")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("twitter_url");
+
+                    b.HasKey("Id")
+                        .HasName("pk_imaginary_agents");
+
+                    b.HasIndex("AgencyId")
+                        .HasDatabaseName("ix_imaginary_agents_agency_id");
+
+                    b.ToTable("imaginary_agents", (string)null);
+                });
+
+            modelBuilder.Entity("Entities.Models.ImaginaryAgentLanguage", b =>
+                {
+                    b.Property<int>("ImaginaryAgentId")
+                        .HasColumnType("integer")
+                        .HasColumnName("imaginary_agent_id");
+
+                    b.Property<int>("LanguageId")
+                        .HasColumnType("integer")
+                        .HasColumnName("language_id");
+
+                    b.HasKey("ImaginaryAgentId", "LanguageId")
+                        .HasName("pk_imaginary_agent_languages");
+
+                    b.HasIndex("LanguageId")
+                        .HasDatabaseName("ix_imaginary_agent_languages_language_id");
+
+                    b.ToTable("imaginary_agent_languages", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Models.Language", b =>
@@ -11021,21 +11023,21 @@ namespace KeyNekretnine.Migrations
                         new
                         {
                             Id = "548e52a6-485a-49a5-b204-8994eaa79a12",
-                            ConcurrencyStamp = "15eda9e3-70e6-43d0-938d-44353ca9e502",
+                            ConcurrencyStamp = "dccd526d-7ccb-484c-ab05-4ec3df1d7414",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
                             Id = "62558fd6-61f6-42fe-8cb7-8bc5fea7fb93",
-                            ConcurrencyStamp = "54eb5348-6c8a-4171-a882-609973362fa6",
+                            ConcurrencyStamp = "f1e10ff8-ab18-4959-b9ac-b096849d695b",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
                             Id = "f78fff4a-06dc-4b5d-864c-d70cd9ced860",
-                            ConcurrencyStamp = "c3fbfc32-541a-43e6-964d-5ebce4830525",
+                            ConcurrencyStamp = "2e391e68-ee22-4bb3-99a0-b4133af72de4",
                             Name = "Moderator",
                             NormalizedName = "MODERATOR"
                         });
@@ -11176,10 +11178,10 @@ namespace KeyNekretnine.Migrations
 
             modelBuilder.Entity("Entities.Models.Advert", b =>
                 {
-                    b.HasOne("Entities.Models.Agent", "Agent")
+                    b.HasOne("Entities.Models.ImaginaryAgent", "ImaginaryAgent")
                         .WithMany("Adverts")
-                        .HasForeignKey("AgentId")
-                        .HasConstraintName("fk_adverts_agents_agent_id");
+                        .HasForeignKey("ImaginaryAgentId")
+                        .HasConstraintName("fk_adverts_imaginary_agents_imaginary_agent_id");
 
                     b.HasOne("Entities.Models.Neighborhood", "Neighborhood")
                         .WithMany("Adverts")
@@ -11214,7 +11216,7 @@ namespace KeyNekretnine.Migrations
                         .HasForeignKey("UserId")
                         .HasConstraintName("fk_adverts_users_user_id");
 
-                    b.Navigation("Agent");
+                    b.Navigation("ImaginaryAgent");
 
                     b.Navigation("Neighborhood");
 
@@ -11270,39 +11272,6 @@ namespace KeyNekretnine.Migrations
                     b.Navigation("Language");
                 });
 
-            modelBuilder.Entity("Entities.Models.Agent", b =>
-                {
-                    b.HasOne("Entities.Models.Agency", "Agency")
-                        .WithMany("Agents")
-                        .HasForeignKey("AgencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_agents_agencies_agency_id");
-
-                    b.Navigation("Agency");
-                });
-
-            modelBuilder.Entity("Entities.Models.AgentLanguage", b =>
-                {
-                    b.HasOne("Entities.Models.Agent", "Agent")
-                        .WithMany("AgentLanguages")
-                        .HasForeignKey("AgentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_agent_languages_agents_agent_id");
-
-                    b.HasOne("Entities.Models.Language", "Language")
-                        .WithMany("AgentLanguages")
-                        .HasForeignKey("LanguageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_agent_languages_languages_language_id");
-
-                    b.Navigation("Agent");
-
-                    b.Navigation("Language");
-                });
-
             modelBuilder.Entity("Entities.Models.Image", b =>
                 {
                     b.HasOne("Entities.Models.Advert", "Advert")
@@ -11313,6 +11282,39 @@ namespace KeyNekretnine.Migrations
                         .HasConstraintName("fk_images_adverts_advert_id");
 
                     b.Navigation("Advert");
+                });
+
+            modelBuilder.Entity("Entities.Models.ImaginaryAgent", b =>
+                {
+                    b.HasOne("Entities.Models.Agency", "Agency")
+                        .WithMany("ImaginaryAgents")
+                        .HasForeignKey("AgencyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_imaginary_agents_agencies_agency_id");
+
+                    b.Navigation("Agency");
+                });
+
+            modelBuilder.Entity("Entities.Models.ImaginaryAgentLanguage", b =>
+                {
+                    b.HasOne("Entities.Models.ImaginaryAgent", "ImaginaryAgent")
+                        .WithMany("ImaginaryAgentLanguages")
+                        .HasForeignKey("ImaginaryAgentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_imaginary_agent_languages_imaginary_agents_imaginary_agent_");
+
+                    b.HasOne("Entities.Models.Language", "Language")
+                        .WithMany("ImaginaryAgentLanguages")
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_imaginary_agent_languages_languages_language_id");
+
+                    b.Navigation("ImaginaryAgent");
+
+                    b.Navigation("Language");
                 });
 
             modelBuilder.Entity("Entities.Models.Neighborhood", b =>
@@ -11479,14 +11481,7 @@ namespace KeyNekretnine.Migrations
                 {
                     b.Navigation("AgencyLanguages");
 
-                    b.Navigation("Agents");
-                });
-
-            modelBuilder.Entity("Entities.Models.Agent", b =>
-                {
-                    b.Navigation("Adverts");
-
-                    b.Navigation("AgentLanguages");
+                    b.Navigation("ImaginaryAgents");
                 });
 
             modelBuilder.Entity("Entities.Models.City", b =>
@@ -11494,11 +11489,18 @@ namespace KeyNekretnine.Migrations
                     b.Navigation("Neighborhoods");
                 });
 
+            modelBuilder.Entity("Entities.Models.ImaginaryAgent", b =>
+                {
+                    b.Navigation("Adverts");
+
+                    b.Navigation("ImaginaryAgentLanguages");
+                });
+
             modelBuilder.Entity("Entities.Models.Language", b =>
                 {
                     b.Navigation("AgencyLanguages");
 
-                    b.Navigation("AgentLanguages");
+                    b.Navigation("ImaginaryAgentLanguages");
                 });
 
             modelBuilder.Entity("Entities.Models.Neighborhood", b =>

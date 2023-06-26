@@ -73,26 +73,6 @@ public class AgencyRepository : IAgencyRepository
         }
     }
 
-    public async Task CreateImaginaryAgent(NewImaginaryAgentDto imaginaryAgent, int agencyId, CancellationToken cancellationToken)
-    {
-        var query = AgencyQuery.CreateAgentQuery;
-
-        using (var connection = _dapperContext.CreateConnection())
-        {
-            var param = new DynamicParameters();
-
-            param.Add("firstName", imaginaryAgent.LastName, DbType.String);
-            param.Add("lastName", imaginaryAgent.LastName, DbType.String);
-            param.Add("phoneNumber", imaginaryAgent.PhoneNumber, DbType.String);
-            param.Add("imageUrl", imaginaryAgent.ImageUrl, DbType.String);
-            param.Add("agencyId", agencyId, DbType.Int32);
-
-            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
-
-            await connection.ExecuteAsync(cmd);
-        }
-    }
-
     public async Task<GetAgencyDto> GetAgencyById(int agencyId, CancellationToken cancellationToken)
     {
         var query = AgencyQuery.GetAgencyByIdQuery;

@@ -29,8 +29,8 @@ public class Advert : EntityBase
     public User User { get; set; }
 
 
-    public int? ImaginaryAgentId { get; set; }
-    public ImaginaryAgent ImaginaryAgent { get; set; }
+    public int? AgentId { get; set; }
+    public Agent Agent { get; set; }
 
     public List<Image> Images { get; set; }
     public string CoverImageUrl { get; set; }

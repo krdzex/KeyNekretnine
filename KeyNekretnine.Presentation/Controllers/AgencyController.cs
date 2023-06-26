@@ -1,5 +1,4 @@
 ﻿using Application.Core.Agencies.Commands.CreateAgency;
-using Application.Core.Agencies.Commands.CreateImaginaryAgent;
 using Application.Core.Agencies.Commands.UpdateAgency;
 using Application.Core.Agencies.Queries.GetAgencies;
 using Application.Core.Agencies.Queries.GetAgencyAdverts;
@@ -34,22 +33,6 @@ public class AgencyController : ApiController
     public async Task<IActionResult> CreateAgency([FromBody] CreateAgencyDto createAgencyDto, CancellationToken cancellationToken)
     {
         var command = new CreateAgencyCommand(createAgencyDto);
-
-        var response = await Sender.Send(command, cancellationToken);
-
-        return response.IsSuccess ? NoContent() : HandleFailure(response);
-    }
-
-    [Authorize]
-    [ServiceFilter(typeof(BanUserChack))]
-    [HttpPost("{agencyId}/agent")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CreateAgent([FromForm] NewImaginaryAgentDto imaginaryAgentDto, int agencyId, CancellationToken cancellationToken)
-    {
-        var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
-
-        var command = new CreateImaginaryAgentCommand(imaginaryAgentDto, email, agencyId);
 
         var response = await Sender.Send(command, cancellationToken);
 

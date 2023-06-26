@@ -21,5 +21,5 @@ public class Agency : EntityBase
     public User User { get; set; }
     public string UserId { get; set; }
 
-    public IEnumerable<ImaginaryAgent> ImaginaryAgents { get; set; }
+    public IEnumerable<Agent> Agents { get; set; }
 }

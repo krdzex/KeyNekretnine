@@ -2,8 +2,9 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Shared.DataTransferObjects.Agency;
-public class NewImaginaryAgentDto
+public class CreateAgentDto
 {
+    public int AgencyId { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string PhoneNumber { get; set; }

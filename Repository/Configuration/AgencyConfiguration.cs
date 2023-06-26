@@ -11,7 +11,7 @@ public class AgencyConfiguration : IEntityTypeConfiguration<Agency>
         builder.Property(x => x.Name).IsRequired().HasMaxLength(50);
         builder.Property(x => x.CreatedDate).IsRequired();
         builder.HasOne(a => a.User).WithOne(i => i.Agency);
-        builder.HasMany(a => a.ImaginaryAgents).WithOne(i => i.Agency).HasForeignKey(x => x.AgencyId);
+        builder.HasMany(a => a.Agents).WithOne(i => i.Agency).HasForeignKey(x => x.AgencyId);
         builder.Property(x => x.Address).HasMaxLength(200);
         builder.Property(x => x.Email).HasMaxLength(100);
         builder.Property(x => x.WebsiteUrl).HasMaxLength(200);
