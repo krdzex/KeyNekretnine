@@ -1,13 +1,14 @@
 ﻿using System.Text;
 
 namespace Repository.RawQuery;
-public class AgentsQuery
+public class AgentQuery
 {
     public const string CreateAgentQuery = @"
         INSERT INTO agents
-        (first_name,last_name,phone_number,image_url,agency_id)
+        (first_name, last_name, phone_number, image_url, agency_id, description, email, twitter_url, facebook_url, instagram_url, linkedin_url)
         VALUES
-        (@firstName,@lastName,@phoneNumber,@imageUrl,@agencyId);";
+        (@firstName, @lastName, @phoneNumber, @imageUrl, @agencyId, @description, @email, @twitterUrl, @facebookUrl, @instagramUrl, @linkedinUrl)
+        RETURNING id;";
 
     public static string MakeGetAgentsQuery(string orderBy)
     {
@@ -45,4 +46,32 @@ public class AgentsQuery
         SELECT l.id,l.name FROM agent_languages al
         JOIN languages l ON al.language_id = l.id
         WHERE al.agent_id = @agentId;";
+
+    public const string AssignLanguageToAgentQuery = @"
+        INSERT INTO agent_languages (agent_id, language_id)
+        VALUES(@agentId,@languageId);";
+
+
+    public const string DeleteLanguagesForAgentQuery = @"
+        DELETE FROM agent_languages
+        WHERE agent_id = @agentId;";
+
+    public const string GetAgentImageQuery = @"
+        SELECT image_url FROM agents
+        WHERE id = @agentId;";
+
+    public const string UpdateAgentQuery = @"
+        UPDATE agents
+        SET first_name = @firstName, last_name = @lastName, phone_number = @phoneNumber, image_url = @imageUrl, description = @description, email = @email, twitter_url = @twitterUrl, facebook_url = @facebookUrl, instagram_url = instagram_url, linkedin_url = @linkedinUrl
+        WHERE id = @agentId;";
+
+    public const string DoesAgentExistQuery = @"
+        SELECT COUNT(id)
+        FROM agents
+        WHERE id = @agentId;";
+
+    public const string GetAgencyIdFromUserQuery = @"
+        SELECT agency_id
+        FROM agents
+        WHERE id = @agentId;";
 }

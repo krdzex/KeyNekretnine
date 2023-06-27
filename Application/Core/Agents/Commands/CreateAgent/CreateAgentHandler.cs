@@ -4,6 +4,7 @@ using Entities.DomainErrors;
 using MediatR;
 using Service.Contracts;
 using Shared.Error;
+using System.Transactions;
 
 namespace Application.Core.Agents.Commands.CreateAgent;
 internal sealed class CreateAgentHandler : ICommandHandler<CreateAgentCommand, Unit>
@@ -19,35 +20,46 @@ internal sealed class CreateAgentHandler : ICommandHandler<CreateAgentCommand, U
 
     public async Task<Result<Unit>> Handle(CreateAgentCommand request, CancellationToken cancellationToken)
     {
-
-        var agencyExist = await _repository.Agency.DoesAgencyExist(request.Agent.AgencyId, cancellationToken);
-
-        if (!agencyExist)
+        using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
         {
-            return Result.Failure<Unit>(DomainErrors.Agency.AgencyNotFound);
+            var agencyExist = await _repository.Agency.DoesAgencyExist(request.Agent.AgencyId, cancellationToken);
+
+            if (!agencyExist)
+            {
+                return Result.Failure<Unit>(DomainErrors.Agency.AgencyNotFound);
+            }
+
+            var userId = await _repository.User.GetUserIdFromEmail(request.Email, cancellationToken);
+
+            if (userId is null)
+            {
+                return Result.Failure<Unit>(DomainErrors.User.UserNotFound);
+            }
+
+            var isUserAgencyOwner = await _repository.Agency.IsUserAgencyOwner(userId, request.Agent.AgencyId, cancellationToken);
+
+            if (!isUserAgencyOwner)
+            {
+                return Result.Failure<Unit>(DomainErrors.Agency.NotOwnerError);
+            }
+
+            if (request.Agent.Image?.Length > 0)
+            {
+                request.Agent.ImageUrl = await _service.ImageService.UploadImageOnCloudinary(request.Agent.Image);
+            }
+
+            var agentId = await _repository.Agent.CreateAgentAndReturnId(request.Agent, cancellationToken);
+
+            if (request.Agent.LanguageId is not null)
+            {
+                foreach (var languageId in request.Agent.LanguageId)
+                {
+                    await _repository.Agent.AddLanguageToAgent(languageId, agentId, cancellationToken);
+                }
+            }
+
+            transaction.Complete();
         }
-
-        var userId = await _repository.User.GetUserIdFromEmail(request.Email, cancellationToken);
-
-        if (userId is null)
-        {
-            return Result.Failure<Unit>(DomainErrors.User.UserNotFound);
-        }
-
-        var isUserAgencyOwner = await _repository.Agency.IsUserAgencyOwner(userId, request.Agent.AgencyId, cancellationToken);
-
-        if (!isUserAgencyOwner)
-        {
-            return Result.Failure<Unit>(DomainErrors.Agency.NotOwnerError);
-        }
-
-        if (request.Agent.Image?.Length > 0)
-        {
-            request.Agent.ImageUrl = await _service.ImageService.UploadImageOnCloudinary(request.Agent.Image);
-        }
-
-        await _repository.Agent.CreateAgent(request.Agent, cancellationToken);
-
         return Unit.Value;
     }
 }

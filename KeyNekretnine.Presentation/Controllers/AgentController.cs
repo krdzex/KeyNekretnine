@@ -1,4 +1,5 @@
 ﻿using Application.Core.Agents.Commands.CreateAgent;
+using Application.Core.Agents.Commands.UpdateAgent;
 using Application.Core.Agents.Queries.GetAgentAdverts;
 using Application.Core.Agents.Queries.GetAgentById;
 using Application.Core.Agents.Queries.GetAgents;
@@ -74,5 +75,21 @@ public class AgentController : ApiController
         var response = await Sender.Send(query, cancellationToken);
 
         return response.IsSuccess ? Ok(response.Value) : HandleFailure(response);
+    }
+
+    [Authorize]
+    [ServiceFilter(typeof(BanUserChack))]
+    [HttpPut("{agentId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> UpdateAgent([FromForm] UpdateAgentDto updateAgentDto, int agentId, CancellationToken cancellationToken)
+    {
+        var email = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.Email).Value;
+
+        var command = new UpdateAgentCommand(updateAgentDto, agentId, email);
+
+        var response = await Sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? Accepted() : HandleFailure(response);
     }
 }
