@@ -23,7 +23,7 @@ namespace Repository.RawQuery
         WHERE id = @agencyId;";
 
         public const string GetAgencyByIdQuery = @"
-        SELECT name,email,facebook_url,instagram_url,linkedin_url,description,address,twitter_url,website_url,work_start_time,work_end_time,email,image_url
+        SELECT id,name,email,facebook_url,instagram_url,linkedin_url,description,address,twitter_url,website_url,work_start_time,work_end_time,email,image_url
         FROM agencies
         WHERE id = @agencyId;
 
