@@ -43,6 +43,15 @@ internal sealed class CreateAgentHandler : ICommandHandler<CreateAgentCommand, U
                 return Result.Failure<Unit>(DomainErrors.Agency.NotOwnerError);
             }
 
+            var phoneNumber = await _repository.PhoneNumber.MakeNumber(request.Agent.NumberMaker, cancellationToken);
+
+            if (phoneNumber is null)
+            {
+                return Result.Failure<Unit>(DomainErrors.Agent.BadPhoneNumber);
+            }
+
+            request.Agent.PhoneNumber = phoneNumber;
+
             if (request.Agent.Image?.Length > 0)
             {
                 request.Agent.ImageUrl = await _service.ImageService.UploadImageOnCloudinary(request.Agent.Image);

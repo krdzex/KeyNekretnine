@@ -13,10 +13,15 @@ public class CreateAgentDto
     public string FacebookUrl { get; set; }
     public string InstagramUrl { get; set; }
     public string LinkedinUrl { get; set; }
+
+    [BindNever]
     public string PhoneNumber { get; set; }
+
     public IFormFile Image { get; set; }
 
     [BindNever]
     public string ImageUrl { get; set; }
     public IEnumerable<int> LanguageId { get; set; }
+
+    public CreateNumberDto NumberMaker { get; set; }
 }

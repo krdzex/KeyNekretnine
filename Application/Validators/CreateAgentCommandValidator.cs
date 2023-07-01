@@ -37,9 +37,25 @@ public sealed class CreateAgentCommandValidator :
             .MaximumLength(1000)
                 .WithMessage("Max number of characters is 1000");
 
-        RuleFor(u => u.Agent.PhoneNumber)
-            .NotEmpty()
-                .WithMessage("Field is required");
+        RuleFor(u => u.Agent.NumberMaker.CountryId)
+            .Custom((countryId, context) =>
+            {
+                if (countryId is not null)
+                {
+                    if (countryId <= 0 || countryId > 248)
+                    {
+                        context.AddFailure("Bad country number id");
+                    }
+                }
+                else
+                {
+                    context.AddFailure("Field is required");
+                }
+            });
+
+        RuleFor(u => u.Agent.NumberMaker.Number)
+        .NotEmpty()
+        .WithMessage("Field is required");
 
         RuleFor(u => u.Agent.FacebookUrl)
             .Must(BeAValidUrl)

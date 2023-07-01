@@ -46,7 +46,7 @@ namespace Repository.RawQuery
             WHERE(@name = '' OR LOWER(a.name) LIKE '%' || LOWER(@name) || '%');");
 
             var selectAgenciesQuery = new StringBuilder($@"
-            SELECT a.name, a.created_date, COUNT(*) AS num_adverts, a.email, a.facebook_url, a.instagram_url, a.linkedin_url, a.twitter_url, a.image_url, a.address
+            SELECT a.id, a.name, a.created_date, COUNT(*) AS num_adverts, a.email, a.facebook_url, a.instagram_url, a.linkedin_url, a.twitter_url, a.image_url, a.address
             FROM adverts AS ad
             JOIN agents AS ia ON ad.agent_id = ia.id
             JOIN agencies AS a ON ia.agency_id = a.id
