@@ -51,7 +51,7 @@ namespace Repository.RawQuery
             JOIN agents AS ia ON ad.agent_id = ia.id
             JOIN agencies AS a ON ia.agency_id = a.id
             WHERE(@name = '' OR LOWER(a.name) LIKE '%' || LOWER(@name) || '%')
-            GROUP BY a.name,a.created_date,a.email,a.facebook_url, a.linkedin_url, a.twitter_url, a.image_url, a.instagram_url, a.address
+            GROUP BY a.id, a.name,a.created_date,a.email,a.facebook_url, a.linkedin_url, a.twitter_url, a.image_url, a.instagram_url, a.address
             ORDER BY {orderBy} OFFSET @Skip FETCH NEXT @Take ROWS ONLY;");
 
             return countAgenciesQuery.ToString() + selectAgenciesQuery.ToString();
