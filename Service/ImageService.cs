@@ -43,7 +43,6 @@ internal sealed class ImageService : IImageService
         using (var memoryStream = manager.GetStream("test"))
         {
             await image.CopyToAsync(memoryStream);
-            memoryStream.Flush();
             memoryStream.Position = 0;
 
             var uploadParams = new ImageUploadParams()

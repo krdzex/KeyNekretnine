@@ -52,7 +52,8 @@ public class AuthenticationController : ApiController
                 HttpOnly = true,
                 Secure = true,
                 IsEssential = true,
-                SameSite = SameSiteMode.None
+                SameSite = SameSiteMode.None,
+                Domain = ".keynekretnine-dev.vercel.app"
             });
 
             HttpContext.Response.Cookies.Append("X-Refresh-Token", response.Value.RefreshToken,
@@ -63,6 +64,7 @@ public class AuthenticationController : ApiController
                 Secure = true,
                 IsEssential = true,
                 SameSite = SameSiteMode.None,
+                Domain = ".keynekretnine-dev.vercel.app"
             });
         }
 
@@ -87,7 +89,8 @@ public class AuthenticationController : ApiController
                 HttpOnly = true,
                 Secure = true,
                 IsEssential = true,
-                SameSite = SameSiteMode.None
+                SameSite = SameSiteMode.None,
+                Domain = ".keynekretnine-dev.vercel.app"
             });
 
             HttpContext.Response.Cookies.Append("X-Refresh-Token", response.Value.RefreshToken,
@@ -98,6 +101,7 @@ public class AuthenticationController : ApiController
                 Secure = true,
                 IsEssential = true,
                 SameSite = SameSiteMode.None,
+                Domain = ".keynekretnine-dev.vercel.app"
             });
         }
 
@@ -120,7 +124,8 @@ public class AuthenticationController : ApiController
                 HttpOnly = true,
                 Secure = true,
                 IsEssential = true,
-                SameSite = SameSiteMode.None
+                SameSite = SameSiteMode.None,
+                Domain = ".keynekretnine-dev.vercel.app"
             });
 
             HttpContext.Response.Cookies.Append("X-Refresh-Token", response.Value.RefreshToken,
@@ -131,6 +136,7 @@ public class AuthenticationController : ApiController
                 Secure = true,
                 IsEssential = true,
                 SameSite = SameSiteMode.None,
+                Domain = ".keynekretnine-dev.vercel.app"
             });
         }
 

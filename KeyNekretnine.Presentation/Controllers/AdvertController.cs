@@ -35,7 +35,7 @@ namespace KeyNekretnine.Presentation.Controllers;
 [Route("api/[controller]")]
 public class AdvertController : ApiController
 {
-    public AdvertController(ISender sender, IPublisher publisher)
+    public AdvertController(ISender sender)
         : base(sender)
     { }
 
