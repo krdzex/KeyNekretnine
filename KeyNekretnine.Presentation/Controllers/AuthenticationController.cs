@@ -52,8 +52,7 @@ public class AuthenticationController : ApiController
                 HttpOnly = true,
                 Secure = true,
                 IsEssential = true,
-                SameSite = SameSiteMode.None,
-                Domain = ".keynekretnine-dev.vercel.app"
+                SameSite = SameSiteMode.None
             });
 
             HttpContext.Response.Cookies.Append("X-Refresh-Token", response.Value.RefreshToken,
@@ -63,8 +62,7 @@ public class AuthenticationController : ApiController
                 HttpOnly = true,
                 Secure = true,
                 IsEssential = true,
-                SameSite = SameSiteMode.None,
-                Domain = ".keynekretnine-dev.vercel.app"
+                SameSite = SameSiteMode.None
             });
         }
 
@@ -89,8 +87,7 @@ public class AuthenticationController : ApiController
                 HttpOnly = true,
                 Secure = true,
                 IsEssential = true,
-                SameSite = SameSiteMode.None,
-                Domain = ".keynekretnine-dev.vercel.app"
+                SameSite = SameSiteMode.None
             });
 
             HttpContext.Response.Cookies.Append("X-Refresh-Token", response.Value.RefreshToken,
@@ -100,8 +97,7 @@ public class AuthenticationController : ApiController
                 HttpOnly = true,
                 Secure = true,
                 IsEssential = true,
-                SameSite = SameSiteMode.None,
-                Domain = ".keynekretnine-dev.vercel.app"
+                SameSite = SameSiteMode.None
             });
         }
 
@@ -124,8 +120,7 @@ public class AuthenticationController : ApiController
                 HttpOnly = true,
                 Secure = true,
                 IsEssential = true,
-                SameSite = SameSiteMode.None,
-                Domain = ".keynekretnine-dev.vercel.app"
+                SameSite = SameSiteMode.None
             });
 
             HttpContext.Response.Cookies.Append("X-Refresh-Token", response.Value.RefreshToken,
@@ -135,8 +130,7 @@ public class AuthenticationController : ApiController
                 HttpOnly = true,
                 Secure = true,
                 IsEssential = true,
-                SameSite = SameSiteMode.None,
-                Domain = ".keynekretnine-dev.vercel.app"
+                SameSite = SameSiteMode.None
             });
         }
 
