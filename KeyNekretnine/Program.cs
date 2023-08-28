@@ -1,5 +1,4 @@
 using AspNetCoreRateLimit;
-using Contracts;
 using KeyNekretnine.Configuration;
 using KeyNekretnine.Extensions;
 
@@ -22,8 +21,6 @@ builder.Services
 
 var app = builder.Build();
 
-var logger = app.Services.GetRequiredService<ILoggerManager>();
-app.ConfigureExceptionHandler(logger);
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
@@ -34,6 +31,10 @@ app.UseSwaggerUI(c =>
 {
     c.DisplayRequestDuration();
 });
+
+app.UseHttpsRedirection();
+
+app.UseCustomExceptionHandler();
 
 app.UseIpRateLimiting();
 

@@ -6,7 +6,6 @@ using FluentValidation;
 using KeyNekretnine.Attributes;
 using KeyNekretnine.BackgroundWorkers;
 using KeyNekretnine.Presentation.ActionFilters;
-using LoggerService;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -247,7 +246,6 @@ public static class DependencyInjection
     public static IServiceCollection AddServicesRegistration(this IServiceCollection services)
     {
         services.AddSingleton<IProcessingChannel, ProcessingChannel>();
-        services.AddSingleton<ILoggerManager, LoggerManager>();
 
         return services;
     }
