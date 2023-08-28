@@ -1,15 +1,10 @@
-﻿using Application.Behaviors;
-using AspNetCoreRateLimit;
+﻿using AspNetCoreRateLimit;
 using Contracts;
 using Entities.Models;
-using FluentValidation;
 using KeyNekretnine.Attributes;
 using KeyNekretnine.BackgroundWorkers;
 using KeyNekretnine.Presentation.ActionFilters;
-using MediatR;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Npgsql;
@@ -40,18 +35,6 @@ public static class DependencyInjection
         });
 
         services.AddMemoryCache();
-
-        return services;
-    }
-
-    public static IServiceCollection AddApplication(this IServiceCollection services)
-    {
-        services.AddMediatR(typeof(Application.AssemblyReference).Assembly);
-        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
-        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-        services.AddValidatorsFromAssembly(
-            typeof(Application.AssemblyReference).Assembly,
-            includeInternalTypes: true);
 
         return services;
     }
@@ -246,13 +229,6 @@ public static class DependencyInjection
     public static IServiceCollection AddServicesRegistration(this IServiceCollection services)
     {
         services.AddSingleton<IProcessingChannel, ProcessingChannel>();
-
-        return services;
-    }
-
-    public static IServiceCollection AddMapings(this IServiceCollection services)
-    {
-        services.AddAutoMapper(typeof(Program));
 
         return services;
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application.Exceptions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace KeyNekretnine.Middleware;
 

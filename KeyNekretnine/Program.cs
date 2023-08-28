@@ -1,26 +1,30 @@
 using AspNetCoreRateLimit;
-using KeyNekretnine.Configuration;
 using KeyNekretnine.Extensions;
+
+//builder.Services
+//    .AddCaching()
+//    .AddPresentation()
+//    .AddCustomAttributes()
+//    .AddDatabase()
+//    .AddAuthorizationAndAuthentication()
+//    .AddRateLimiting()
+//    .AddBackgroundTasks()
+//    .AddManagers()
+//    .AddHttpConfiguration()
+//    .AddServicesRegistration();
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services
-    .AddCaching()
-    .AddApplication()
-    .AddPresentation()
-    .AddCustomAttributes()
-    .AddDatabase()
-    .AddAuthorizationAndAuthentication()
-    .AddRateLimiting()
-    .AddBackgroundTasks()
-    .AddManagers()
-    .AddHttpConfiguration()
-    .AddMapings()
-    .AddServicesRegistration();
+builder.Services.AddControllers();
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
-
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
