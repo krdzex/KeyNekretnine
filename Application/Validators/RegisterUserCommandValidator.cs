@@ -1,7 +1,7 @@
-﻿using Application.Core.Auth.Commands.UserRegistration;
-using FluentValidation;
+﻿using FluentValidation;
+using KeyNekretnine.Application.Core.Auth.Commands.UserRegistration;
 
-namespace Application.Validators;
+namespace KeyNekretnine.Application.Validators;
 public sealed class RegisterUserCommandValidator :
     AbstractValidator<UserRegistrationCommand>
 {

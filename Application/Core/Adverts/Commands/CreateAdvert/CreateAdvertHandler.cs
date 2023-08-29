@@ -1,11 +1,11 @@
-﻿using Application.Abstraction.Messaging;
-using Contracts;
+﻿using Contracts;
 using Entities.DomainErrors;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using MediatR;
 using Shared.Error;
 using System.Transactions;
 
-namespace Application.Core.Adverts.Commands.CreateAdvert;
+namespace KeyNekretnine.Application.Core.Adverts.Commands.CreateAdvert;
 internal sealed class CreateAdvertHandler : ICommandHandler<CreateAdvertCommand, Unit>
 {
     private readonly IRepositoryManager _repository;

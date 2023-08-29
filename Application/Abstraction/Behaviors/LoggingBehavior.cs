@@ -1,8 +1,8 @@
-﻿using Application.Abstraction.Messaging;
+﻿using KeyNekretnine.Application.Abstraction.Messaging;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Application.Abstraction.Behaviors;
+namespace KeyNekretnine.Application.Abstraction.Behaviors;
 public class LoggingBehavior<TRequest, TResponse>
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IBaseCommand

@@ -1,7 +1,7 @@
-﻿using Application.Exceptions;
+﻿using KeyNekretnine.Application.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KeyNekretnine.Middleware;
+namespace KeyNekretnine.Api.Middleware;
 
 public class ExceptionHandlingMiddleware
 {
@@ -61,7 +61,7 @@ public class ExceptionHandlingMiddleware
                 StatusCodes.Status500InternalServerError,
                 "ServerError",
                 "Server error",
-                "An unexpected error has occurred",
+                exception.Message,
                 null)
         };
     }
@@ -71,5 +71,5 @@ public class ExceptionHandlingMiddleware
         string Type,
         string Title,
         string Detail,
-        IEnumerable<object>? Errors);
+        IEnumerable<object> Errors);
 }

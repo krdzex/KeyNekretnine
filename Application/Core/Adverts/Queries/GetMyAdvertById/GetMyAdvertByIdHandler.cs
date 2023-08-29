@@ -1,10 +1,10 @@
-﻿using Application.Abstraction.Messaging;
-using Contracts;
+﻿using Contracts;
 using Entities.DomainErrors;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using Shared.DataTransferObjects.Advert;
 using Shared.Error;
 
-namespace Application.Core.Adverts.Queries.GetMyAdvertById;
+namespace KeyNekretnine.Application.Core.Adverts.Queries.GetMyAdvertById;
 internal sealed class GetMyAdvertByIdHandler : IQueryHandler<GetMyAdvertByIdQuery, MyAdvertDto>
 {
     private readonly IRepositoryManager _repository;

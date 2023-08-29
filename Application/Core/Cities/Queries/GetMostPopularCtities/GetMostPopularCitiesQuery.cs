@@ -1,5 +1,4 @@
-﻿using Application.Abstraction.Messaging;
-using Shared.DataTransferObjects.City;
+﻿using KeyNekretnine.Application.Abstraction.Messaging;
 
-namespace Application.Core.Cities.Queries.GetMostPopularCtities;
-public sealed record GetMostPopularCitiesQuery() : IQuery<List<PopularCitiesDto>>;
+namespace KeyNekretnine.Application.Core.Cities.Queries.GetMostPopularCtities;
+public sealed record GetMostPopularCitiesQuery() : IQuery<IReadOnlyList<PopularCityReponse>>;

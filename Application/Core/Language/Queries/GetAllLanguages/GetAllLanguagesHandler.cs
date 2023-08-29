@@ -1,9 +1,9 @@
-﻿using Application.Abstraction.Messaging;
-using Contracts;
+﻿using Contracts;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using Shared.DataTransferObjects.Language;
 using Shared.Error;
 
-namespace Application.Core.Language.Queries.GetAllLanguages;
+namespace KeyNekretnine.Application.Core.Language.Queries.GetAllLanguages;
 internal sealed class GetAllLanguagesHandler : IQueryHandler<GetAllLanguagesQuery, List<LanguageDto>>
 {
     private readonly IRepositoryManager _repository;

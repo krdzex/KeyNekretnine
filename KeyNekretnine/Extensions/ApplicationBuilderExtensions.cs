@@ -1,6 +1,6 @@
-﻿using KeyNekretnine.Middleware;
+﻿using KeyNekretnine.Api.Middleware;
 
-namespace KeyNekretnine.Extensions;
+namespace KeyNekretnine.Api.Extensions;
 
 public static class ApplicationBuilderExtensions
 {

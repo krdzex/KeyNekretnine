@@ -1,4 +1,4 @@
-﻿namespace Application.Exceptions;
+﻿namespace KeyNekretnine.Application.Exceptions;
 public sealed class ValidationException : Exception
 {
     public ValidationException(IEnumerable<ValidationError> errors)

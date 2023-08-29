@@ -1,11 +1,11 @@
-﻿using Application.Abstraction.Messaging;
-using Contracts;
+﻿using Contracts;
 using Entities.DomainErrors;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using Service.Contracts;
 using Shared.Error;
 using Shared.RequestFeatures;
 
-namespace Application.Core.Auth.Commands.GoogleLogin;
+namespace KeyNekretnine.Application.Core.Auth.Commands.GoogleLogin;
 internal sealed class GoogleLoginHandler : ICommandHandler<GoogleLoginCommand, TokenRequest>
 {
     private readonly IServiceManager _service;

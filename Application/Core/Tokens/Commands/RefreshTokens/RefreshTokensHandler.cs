@@ -1,10 +1,10 @@
-﻿using Application.Abstraction.Messaging;
-using Entities.DomainErrors;
+﻿using Entities.DomainErrors;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using Service.Contracts;
 using Shared.Error;
 using Shared.RequestFeatures;
 
-namespace Application.Core.Tokens.Commands.RefreshTokens;
+namespace KeyNekretnine.Application.Core.Tokens.Commands.RefreshTokens;
 internal sealed class RefreshTokensHandler : ICommandHandler<RefreshTokensCommand, TokenRequest>
 {
     private readonly IServiceManager _service;

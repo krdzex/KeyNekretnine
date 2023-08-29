@@ -1,13 +1,13 @@
-﻿using Application.Abstraction.Messaging;
-using Contracts;
+﻿using Contracts;
 using Entities.DomainErrors;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using MediatR;
 using Service.Contracts;
 using Shared.Error;
 using System.Net;
 using System.Transactions;
 
-namespace Application.Core.Users.Commands.UpdateUser;
+namespace KeyNekretnine.Application.Core.Users.Commands.UpdateUser;
 internal sealed class UpdateUserHandler : ICommandHandler<UpdateUserCommand, Unit>
 {
     private readonly IRepositoryManager _repository;

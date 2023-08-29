@@ -1,9 +1,9 @@
-﻿using Application.Abstraction.Messaging;
+﻿using KeyNekretnine.Application.Abstraction.Messaging;
 using MediatR;
 using Service.Contracts;
 using Shared.Error;
 
-namespace Application.Core.Auth.Commands.UserRegistration;
+namespace KeyNekretnine.Application.Core.Auth.Commands.UserRegistration;
 internal sealed class UserRegistrationHandler : ICommandHandler<UserRegistrationCommand, Unit>
 {
     private readonly IServiceManager _service;

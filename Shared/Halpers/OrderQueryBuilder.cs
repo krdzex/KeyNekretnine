@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Text;
 
-namespace Shared.RequestFeatures;
+namespace Shared.Halpers;
 public static class OrderQueryBuilder
 {
     public static string CreateOrderQuery<T>(string orderByQueryString, char alias)
@@ -27,7 +27,7 @@ public static class OrderQueryBuilder
 
             var direction = orderParams[i].EndsWith(" asc") ? "asc" : "desc";
 
-            if (propertyFromQueryName.ToLower() == "num_adverts")
+            if (propertyFromQueryName.ToLower() == "numadverts")
             {
                 orderQueryBuilder
                     .Append($"{objectProperty.Name.ToLower().ToString()} {direction}, ");

@@ -1,7 +1,7 @@
-﻿using Application.Core.Adverts.Commands.CreateAdvert;
-using FluentValidation;
+﻿using FluentValidation;
+using KeyNekretnine.Application.Core.Adverts.Commands.CreateAdvert;
 
-namespace Application.Validators;
+namespace KeyNekretnine.Application.Validators;
 public sealed class CreateAdvertCommandValidator : AbstractValidator<CreateAdvertCommand>
 {
     public CreateAdvertCommandValidator()

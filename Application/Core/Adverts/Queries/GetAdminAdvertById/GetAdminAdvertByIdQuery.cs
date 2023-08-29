@@ -1,5 +1,5 @@
-﻿using Application.Abstraction.Messaging;
+﻿using KeyNekretnine.Application.Abstraction.Messaging;
 using Shared.DataTransferObjects.Advert;
 
-namespace Application.Core.Adverts.Queries.GetAdminAdvert;
+namespace KeyNekretnine.Application.Core.Adverts.Queries.GetAdminAdvertById;
 public sealed record GetAdminAdvertByIdQuery(int AdvertId) : IQuery<AdminAllInformationsAboutAdvertDto>;

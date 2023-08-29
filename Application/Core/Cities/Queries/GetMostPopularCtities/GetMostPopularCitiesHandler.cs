@@ -1,22 +1,49 @@
-﻿using Application.Abstraction.Messaging;
-using Contracts;
-using Shared.DataTransferObjects.City;
+﻿using Dapper;
+using KeyNekretnine.Application.Abstraction.Data;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using Shared.Error;
 
-namespace Application.Core.Cities.Queries.GetMostPopularCtities;
-internal sealed class GetMostPopularCitiesHandler : IQueryHandler<GetMostPopularCitiesQuery, List<PopularCitiesDto>>
+namespace KeyNekretnine.Application.Core.Cities.Queries.GetMostPopularCtities;
+internal sealed class GetMostPopularCitiesHandler : IQueryHandler<GetMostPopularCitiesQuery, IReadOnlyList<PopularCityReponse>>
 {
-    private readonly IRepositoryManager _repository;
+    private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-    public GetMostPopularCitiesHandler(IRepositoryManager repository)
+    public GetMostPopularCitiesHandler(ISqlConnectionFactory sqlConnectionFactory)
     {
-        _repository = repository;
+        _sqlConnectionFactory = sqlConnectionFactory;
     }
 
-    public async Task<Result<List<PopularCitiesDto>>> Handle(GetMostPopularCitiesQuery request, CancellationToken cancellationToken)
+    public async Task<Result<IReadOnlyList<PopularCityReponse>>> Handle(GetMostPopularCitiesQuery request, CancellationToken cancellationToken)
     {
-        var cities = await _repository.City.GetMostPopularCities(cancellationToken);
+        using var connection = _sqlConnectionFactory.CreateConnection();
 
-        return cities.ToList();
+        const string sql = """
+             WITH cte AS (
+                    SELECT 
+                        c.id,
+                        c.name, 
+                        c.image_url, 
+                        count(a.id) AS adverts_count
+                    FROM adverts a
+                    INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
+                    INNER JOIN cities c ON c.id = n.city_id
+                    WHERE a.status_id = 1
+                    GROUP BY c.name, c.image_url,c.id
+                    )
+                    SELECT 
+                        id,
+                        name, 
+                        adverts_count AS AdvertsCount, 
+                        image_url AS ImageUrl
+                    FROM cte
+                    ORDER BY adverts_count DESC
+                    LIMIT 5
+            """;
+
+        var cmd = new CommandDefinition(sql, cancellationToken: cancellationToken);
+
+        var popularCities = await connection.QueryAsync<PopularCityReponse>(cmd);
+
+        return popularCities.ToList();
     }
 }

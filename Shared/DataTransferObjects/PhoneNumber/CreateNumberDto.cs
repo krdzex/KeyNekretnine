@@ -1,4 +1,4 @@
-﻿namespace Shared.DataTransferObjects.Agency
+﻿namespace Shared.DataTransferObjects.PhoneNumber
 {
     public class CreateNumberDto
     {

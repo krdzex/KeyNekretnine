@@ -1,10 +1,10 @@
-﻿using Application.Abstraction.Messaging;
-using Contracts;
+﻿using Contracts;
 using Entities.DomainErrors;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using MediatR;
 using Shared.Error;
 
-namespace Application.Core.Adverts.Commands.UpdateAdvert;
+namespace KeyNekretnine.Application.Core.Adverts.Commands.UpdateAdvert;
 internal sealed class UpdateAdvertHandler : ICommandHandler<UpdateAdvertCommand, Unit>
 {
     private readonly IRepositoryManager _repository;

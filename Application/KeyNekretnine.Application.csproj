@@ -1,0 +1,68 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Core\Adverts\**" />
+    <Compile Remove="Core\Agencies\Commands\**" />
+    <Compile Remove="Core\Agents\**" />
+    <Compile Remove="Core\Auth\**" />
+    <Compile Remove="Core\Cities\**" />
+    <Compile Remove="Core\Email\**" />
+    <Compile Remove="Core\Language\**" />
+    <Compile Remove="Core\Neighborhoods\**" />
+    <Compile Remove="Core\PhoneNumbers\**" />
+    <Compile Remove="Core\RejectReasons\**" />
+    <Compile Remove="Core\Tokens\**" />
+    <Compile Remove="Core\Users\**" />
+    <Compile Remove="Queries\**" />
+    <Compile Remove="Validators\**" />
+    <EmbeddedResource Remove="Core\Adverts\**" />
+    <EmbeddedResource Remove="Core\Agencies\Commands\**" />
+    <EmbeddedResource Remove="Core\Agents\**" />
+    <EmbeddedResource Remove="Core\Auth\**" />
+    <EmbeddedResource Remove="Core\Cities\**" />
+    <EmbeddedResource Remove="Core\Email\**" />
+    <EmbeddedResource Remove="Core\Language\**" />
+    <EmbeddedResource Remove="Core\Neighborhoods\**" />
+    <EmbeddedResource Remove="Core\PhoneNumbers\**" />
+    <EmbeddedResource Remove="Core\RejectReasons\**" />
+    <EmbeddedResource Remove="Core\Tokens\**" />
+    <EmbeddedResource Remove="Core\Users\**" />
+    <EmbeddedResource Remove="Queries\**" />
+    <EmbeddedResource Remove="Validators\**" />
+    <None Remove="Core\Adverts\**" />
+    <None Remove="Core\Agencies\Commands\**" />
+    <None Remove="Core\Agents\**" />
+    <None Remove="Core\Auth\**" />
+    <None Remove="Core\Cities\**" />
+    <None Remove="Core\Email\**" />
+    <None Remove="Core\Language\**" />
+    <None Remove="Core\Neighborhoods\**" />
+    <None Remove="Core\PhoneNumbers\**" />
+    <None Remove="Core\RejectReasons\**" />
+    <None Remove="Core\Tokens\**" />
+    <None Remove="Core\Users\**" />
+    <None Remove="Queries\**" />
+    <None Remove="Validators\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.151" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.7.1" />
+    <PackageReference Include="MediatR" Version="12.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Contracts\Contracts.csproj" />
+    <ProjectReference Include="..\KeyNekretnine.Domain\KeyNekretnine.Domain.csproj" />
+    <ProjectReference Include="..\Service.Contracts\Service.Contracts.csproj" />
+    <ProjectReference Include="..\Shared\Shared.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Application.UnitTests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+</Project>

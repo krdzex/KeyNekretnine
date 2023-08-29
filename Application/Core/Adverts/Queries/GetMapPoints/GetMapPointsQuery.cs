@@ -1,5 +1,5 @@
-﻿using Application.Abstraction.Messaging;
+﻿using KeyNekretnine.Application.Abstraction.Messaging;
 using Shared.DataTransferObjects.Advert;
 
-namespace Application.Core.Adverts.Queries.GetmapPoints;
+namespace KeyNekretnine.Application.Core.Adverts.Queries.GetMapPoints;
 public sealed record GetMapPointsQuery() : IQuery<List<ShowAdvertLocationOnMapDto>>;

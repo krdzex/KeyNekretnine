@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace Application.Abstraction.Data;
+namespace KeyNekretnine.Application.Abstraction.Data;
 public interface ISqlConnectionFactory
 {
     IDbConnection CreateConnection();

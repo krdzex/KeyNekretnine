@@ -1,10 +1,10 @@
-﻿using Application.Abstraction.Messaging;
-using Contracts;
+﻿using Contracts;
 using Entities.DomainErrors;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using Shared.DataTransferObjects.User;
 using Shared.Error;
 
-namespace Application.Core.Users.Queries.GetUserByQuery;
+namespace KeyNekretnine.Application.Core.Users.Queries.GetUserByIdQuery;
 internal sealed class GetUserByIdHandler : IQueryHandler<GetUserByIdQuery, UserDto>
 {
     private readonly IRepositoryManager _repository;

@@ -1,9 +1,9 @@
-﻿using Application.Abstraction.Messaging;
-using Contracts;
+﻿using Contracts;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using Shared.DataTransferObjects.RejectReason;
 using Shared.Error;
 
-namespace Application.Core.RejectReasons.Queries.GetRejectReasons;
+namespace KeyNekretnine.Application.Core.RejectReasons.Queries.GetRejectReasons;
 internal sealed class GetRejectReasonsHandler : IQueryHandler<GetRejectReasonsQuery, List<RejectReasonDto>>
 {
     private readonly IRepositoryManager _repository;

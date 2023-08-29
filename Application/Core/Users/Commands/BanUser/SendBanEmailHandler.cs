@@ -2,7 +2,7 @@
 using MediatR;
 using Service.Contracts;
 
-namespace Application.Core.Users.Notifications.BanUser;
+namespace KeyNekretnine.Application.Core.Users.Commands.BanUser;
 internal sealed class SendBanEmailHandler : INotificationHandler<UserBannedEvent>
 {
     private readonly IServiceManager _serviceManager;

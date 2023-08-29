@@ -1,10 +1,10 @@
-﻿using Application.Abstraction.Messaging;
-using Contracts;
+﻿using Contracts;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using Shared.CustomResponses;
 using Shared.DataTransferObjects.Agency;
 using Shared.Error;
 
-namespace Application.Core.Agents.Queries.GetAgents;
+namespace KeyNekretnine.Application.Core.Agents.Queries.GetAgents;
 internal sealed class GetAgentsHandler : IQueryHandler<GetAgentsQuery, Pagination<MinimalAgentInformationsDto>>
 {
     private readonly IRepositoryManager _repository;

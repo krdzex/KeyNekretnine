@@ -1,5 +1,4 @@
-﻿using Application.Core.AdvertStatuses.Queries.GetAdvertStatuses;
-using KeyNekretnine.Presentation.Infrastructure;
+﻿using KeyNekretnine.Presentation.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

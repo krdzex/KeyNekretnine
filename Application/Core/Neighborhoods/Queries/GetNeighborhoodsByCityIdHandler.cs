@@ -1,10 +1,10 @@
-﻿using Application.Abstraction.Messaging;
-using Contracts;
+﻿using Contracts;
 using Entities.DomainErrors;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using Shared.DataTransferObjects.Neighborhood;
 using Shared.Error;
 
-namespace Application.Core.Neighborhoods.Queries;
+namespace KeyNekretnine.Application.Core.Neighborhoods.Queries;
 internal sealed class GetNeighborhoodsByCityIdHandler : IQueryHandler<GetNeighborhoodsByCityIdQuery, List<NeighborhoodDto>>
 {
     private readonly IRepositoryManager _repository;

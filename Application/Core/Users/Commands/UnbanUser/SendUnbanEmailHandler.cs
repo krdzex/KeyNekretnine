@@ -2,7 +2,7 @@
 using MediatR;
 using Service.Contracts;
 
-namespace Application.Core.Users.Commands.UnbanUser;
+namespace KeyNekretnine.Application.Core.Users.Commands.UnbanUser;
 internal sealed class SendUnbanEmailHandler : INotificationHandler<UserUnbannedEvent>
 {
     private readonly IServiceManager _serviceManager;

@@ -1,9 +1,9 @@
-﻿using Application.Abstraction.Messaging;
-using Contracts;
+﻿using Contracts;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using Shared.DataTransferObjects.Advert;
 using Shared.Error;
 
-namespace Application.Core.Adverts.Queries.GetmapPoints;
+namespace KeyNekretnine.Application.Core.Adverts.Queries.GetMapPoints;
 internal sealed class GetMapPointsHandler : IQueryHandler<GetMapPointsQuery, List<ShowAdvertLocationOnMapDto>>
 {
     private readonly IRepositoryManager _repository;

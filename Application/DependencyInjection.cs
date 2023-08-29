@@ -1,8 +1,8 @@
-﻿using Application.Abstraction.Behaviors;
-using FluentValidation;
+﻿using FluentValidation;
+using KeyNekretnine.Application.Abstraction.Behaviors;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Application;
+namespace KeyNekretnine.Application;
 public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)

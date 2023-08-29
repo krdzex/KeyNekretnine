@@ -1,7 +1,7 @@
-﻿using Application.Core.Agents.Commands.UpdateAgent;
-using FluentValidation;
+﻿using FluentValidation;
+using KeyNekretnine.Application.Core.Agents.Commands.UpdateAgent;
 
-namespace Application.Validators;
+namespace KeyNekretnine.Application.Validators;
 public sealed class UpdateAgentCommandValidator :
     AbstractValidator<UpdateAgentCommand>
 {

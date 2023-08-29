@@ -1,8 +1,8 @@
-﻿using Application.Core.Agencies.Commands.UpdateAgency;
-using FluentValidation;
+﻿using FluentValidation;
+using KeyNekretnine.Application.Core.Agencies.Commands.UpdateAgency;
 using System.Globalization;
 
-namespace Application.Validators;
+namespace KeyNekretnine.Application.Validators;
 public sealed class UpdateAgencyCommandValidator :
     AbstractValidator<UpdateAgencyCommand>
 {

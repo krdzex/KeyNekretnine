@@ -1,11 +1,8 @@
 ﻿using Contracts;
 using Dapper;
 using Repository.RawQuery;
-using Shared.CustomResponses;
-using Shared.DataTransferObjects.Advert;
 using Shared.DataTransferObjects.Agency;
 using Shared.DataTransferObjects.Language;
-using Shared.RequestFeatures;
 using System.Data;
 using System.Globalization;
 
@@ -116,36 +113,6 @@ public class AgencyRepository : IAgencyRepository
         }
     }
 
-    public async Task<Pagination<GetAgenciesDto>> GetAgencies(AgencyParameters agencyParameters, CancellationToken cancellationToken)
-    {
-        var orderBy = OrderQueryBuilder.CreateOrderQuery<GetAgenciesDto>(agencyParameters.OrderBy, 'a');
-
-        var query = AgencyQuery.MakeGetAgenciesQuery(orderBy);
-
-        var name = !string.IsNullOrEmpty(agencyParameters.Name) ?
-            agencyParameters.Name.Trim().ToLower() : string.Empty;
-
-        var skip = (agencyParameters.PageNumber - 1) * agencyParameters.PageSize;
-
-        var param = new DynamicParameters();
-        param.Add("skip", skip, DbType.Int32);
-        param.Add("take", agencyParameters.PageSize, DbType.Int32);
-        param.Add("name", name);
-
-        using (var connection = _dapperContext.CreateConnection())
-        {
-            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
-
-            var multi = await connection.QueryMultipleAsync(cmd);
-            var count = await multi.ReadSingleAsync<int>();
-            var agencies = (await multi.ReadAsync<GetAgenciesDto>()).ToList();
-
-            var metadata = new PagedList<GetAgenciesDto>(agencies, count, agencyParameters.PageNumber, agencyParameters.PageSize);
-
-            return new Pagination<GetAgenciesDto> { Data = agencies, MetaData = metadata.MetaData };
-        }
-    }
-
     public async Task UpdateAgency(UpdateAgencyDto updateAgencyDto, int agencyId, CancellationToken cancellationToken)
     {
         var query = AgencyQuery.UpdateAgencyQuery;
@@ -206,42 +173,6 @@ public class AgencyRepository : IAgencyRepository
             var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
 
             await connection.ExecuteAsync(cmd);
-        }
-    }
-
-    public async Task<IEnumerable<MinimalInformationsAboutAdvertDto>> GetAdvertsForAgency(int agencyId, CancellationToken cancellationToken)
-    {
-        var query = AgencyQuery.GetAgencyAdvertsQuery;
-
-        using (var connection = _dapperContext.CreateConnection())
-        {
-            var param = new DynamicParameters();
-
-            param.Add("agencyId", agencyId, DbType.Int16);
-
-            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
-
-            var adverts = await connection.QueryAsync<MinimalInformationsAboutAdvertDto>(cmd);
-
-            return adverts;
-        }
-    }
-
-    public async Task<IEnumerable<AgentForAgencyDto>> GetAgents(int agencyId, CancellationToken cancellationToken)
-    {
-        var query = AgencyQuery.GetAgentsQuery;
-
-        using (var connection = _dapperContext.CreateConnection())
-        {
-            var param = new DynamicParameters();
-
-            param.Add("agencyId", agencyId, DbType.Int16);
-
-            var cmd = new CommandDefinition(query, param, cancellationToken: cancellationToken);
-
-            var agents = await connection.QueryAsync<AgentForAgencyDto>(cmd);
-
-            return agents;
         }
     }
 

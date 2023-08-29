@@ -3,7 +3,7 @@ using Service.Contracts;
 using Shared;
 using System.Transactions;
 
-namespace KeyNekretnine.BackgroundWorkers;
+namespace KeyNekretnine.Api.BackgroundWorkers;
 public class ChannelBackgroundWorker : BackgroundService
 {
     private readonly IProcessingChannel _checkoutProcessingChannel;

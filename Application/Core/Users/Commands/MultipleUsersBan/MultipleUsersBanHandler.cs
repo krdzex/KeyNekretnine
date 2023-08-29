@@ -1,10 +1,11 @@
-﻿using Application.Abstraction.Messaging;
+﻿using Application.Core.Users.Notifications.MultipleUserBan;
 using Contracts;
 using Entities.DomainErrors;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using MediatR;
 using Shared.Error;
 
-namespace Application.Core.Users.Notifications.MultipleUserBan;
+namespace KeyNekretnine.Application.Core.Users.Commands.MultipleUsersBan;
 internal sealed class MultipleUsersBanHandler : ICommandHandler<MultipleUsersBanCommand, Unit>
 {
     private readonly IRepositoryManager _repository;

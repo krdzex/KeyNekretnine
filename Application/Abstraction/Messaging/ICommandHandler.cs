@@ -1,7 +1,7 @@
-﻿using MediatR;
-using Shared.Error;
+﻿using KeyNekretnine.Domain.Abstraction;
+using MediatR;
 
-namespace Application.Abstraction.Messaging;
+namespace KeyNekretnine.Application.Abstraction.Messaging;
 public interface ICommandHandler<TCommand> : IRequestHandler<TCommand, Result>
     where TCommand : ICommand
 {

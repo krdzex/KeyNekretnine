@@ -7,7 +7,7 @@ using Application.Core.Users.Queries.ConfirmEmailQuery;
 using Application.Core.Users.Queries.GetCurrentUserQuery;
 using Application.Core.Users.Queries.GetUserByQuery;
 using Application.Core.Users.Queries.GetUsersQuery;
-using KeyNekretnine.Attributes;
+using KeyNekretnine.Presentation.ActionFilters;
 using KeyNekretnine.Presentation.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

@@ -1,5 +1,5 @@
 ﻿using Application.Core.Email.Commands.SendConfirmEmail;
-using KeyNekretnine.Attributes;
+using KeyNekretnine.Presentation.ActionFilters;
 using KeyNekretnine.Presentation.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

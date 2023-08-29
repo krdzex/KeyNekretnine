@@ -5,7 +5,7 @@ using Application.Core.Agencies.Queries.GetAgencyAdverts;
 using Application.Core.Agencies.Queries.GetAgencyAgents;
 using Application.Core.Agencies.Queries.GetAgencyById;
 using Application.Core.Agencies.Queries.GetAgencyLocation;
-using KeyNekretnine.Attributes;
+using KeyNekretnine.Presentation.ActionFilters;
 using KeyNekretnine.Presentation.Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

@@ -5,7 +5,7 @@ using FluentAssertions;
 using Moq;
 using Shared.DataTransferObjects.Neighborhood;
 
-namespace Applications.UnitTests.Neighborhoods.Queries;
+namespace Application.UnitTests.Neighborhoods.Queries;
 public class GetNeighborhoodsByCityIdHandlerTests
 {
     private readonly Mock<IRepositoryManager> _reposistoryManagerMock;

@@ -2,7 +2,7 @@
 using MediatR;
 using Service.Contracts;
 
-namespace Application.Core.Users.Notifications.MultipleUserBan;
+namespace KeyNekretnine.Application.Core.Users.Commands.MultipleUsersBan;
 internal sealed class SendMultipleBanEmailHandler : INotificationHandler<UsersBannedEvent>
 {
     private readonly IServiceManager _serviceManager;

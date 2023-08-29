@@ -2,7 +2,7 @@
 using MediatR;
 using Service.Contracts;
 
-namespace Application.Core.Adverts.Commands.RejectAdvert;
+namespace KeyNekretnine.Application.Core.Adverts.Commands.RejectAdvert;
 internal sealed class SendRejectEmailToOwnerHandler : INotificationHandler<AdvertRejectedEvent>
 {
     private readonly IServiceManager _serviceManager;

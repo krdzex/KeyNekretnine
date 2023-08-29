@@ -1,12 +1,12 @@
-﻿using Application.Abstraction.Messaging;
-using Contracts;
+﻿using Contracts;
 using Entities.DomainErrors;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using MediatR;
 using Service.Contracts;
 using Shared.Error;
 using System.Transactions;
 
-namespace Application.Core.Agents.Commands.CreateAgent;
+namespace KeyNekretnine.Application.Core.Agents.Commands.CreateAgent;
 internal sealed class CreateAgentHandler : ICommandHandler<CreateAgentCommand, Unit>
 {
     private readonly IRepositoryManager _repository;

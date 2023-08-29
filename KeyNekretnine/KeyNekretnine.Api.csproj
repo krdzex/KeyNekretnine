@@ -14,14 +14,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Application\Application.csproj" />
-    <ProjectReference Include="..\Contracts\Contracts.csproj" />
-    <ProjectReference Include="..\KeyNekretnine.Presentation\KeyNekretnine.Presentation.csproj" />
-    <ProjectReference Include="..\Repository\Repository.csproj" />
-    <ProjectReference Include="..\Service\Service.csproj" />
-    <ProjectReference Include="..\Shared\Shared.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Migrations\" />
+    <ProjectReference Include="..\Application\KeyNekretnine.Application.csproj" />
+    <ProjectReference Include="..\Infrastructure\KeyNekretnine.Infrastructure.csproj" />
   </ItemGroup>
 </Project>

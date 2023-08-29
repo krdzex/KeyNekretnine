@@ -1,11 +1,11 @@
-﻿using Application.Abstraction.Messaging;
-using Contracts;
+﻿using Contracts;
 using Entities.DomainErrors;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using Shared.DataTransferObjects.User;
 using Shared.Error;
 using System.Security.Claims;
 
-namespace Application.Core.Users.Queries.GetCurrentUserQuery;
+namespace KeyNekretnine.Application.Core.Users.Queries.GetCurrentUserQuery;
 internal sealed class GetCurrentUserHandler : IQueryHandler<GetCurrentUserQuery, UserInformationDto>
 {
     private readonly IRepositoryManager _repository;

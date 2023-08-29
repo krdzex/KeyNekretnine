@@ -1,10 +1,11 @@
-﻿using Application.Abstraction.Messaging;
+﻿using Application.Core.Users.Commands.UnbanUser;
 using Contracts;
 using Entities.DomainErrors;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using MediatR;
 using Shared.Error;
 
-namespace Application.Core.Users.Commands.UnbanUser;
+namespace KeyNekretnine.Application.Core.Users.Commands.UnbanUser;
 internal sealed class UserUnbanHandler : ICommandHandler<UnbanUserCommand, Unit>
 {
     private readonly IRepositoryManager _repository;

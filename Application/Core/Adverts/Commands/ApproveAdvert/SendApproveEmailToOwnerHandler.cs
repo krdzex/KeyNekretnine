@@ -2,7 +2,7 @@
 using MediatR;
 using Service.Contracts;
 
-namespace Application.Core.Adverts.Commands.ApproveAdvert;
+namespace KeyNekretnine.Application.Core.Adverts.Commands.ApproveAdvert;
 internal sealed class SendApproveEmailToOwnerHandler : INotificationHandler<AdvertApprovedEvent>
 {
     private readonly IServiceManager _serviceManager;

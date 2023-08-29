@@ -1,7 +1,7 @@
-﻿using Application.Core.Agents.Commands.CreateAgent;
-using FluentValidation;
+﻿using FluentValidation;
+using KeyNekretnine.Application.Core.Agents.Commands.CreateAgent;
 
-namespace Application.Validators;
+namespace KeyNekretnine.Application.Validators;
 public sealed class CreateAgentCommandValidator :
     AbstractValidator<CreateAgentCommand>
 {

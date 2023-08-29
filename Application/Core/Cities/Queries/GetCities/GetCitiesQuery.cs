@@ -1,5 +1,4 @@
-﻿using Application.Abstraction.Messaging;
-using Shared.DataTransferObjects.City;
+﻿using KeyNekretnine.Application.Abstraction.Messaging;
 
-namespace Application.Cities.Queries.GetCities;
-public sealed record GetCitiesQuery() : IQuery<List<CityDto>>;
+namespace KeyNekretnine.Application.Core.Cities.Queries.GetCities;
+public sealed record GetCitiesQuery() : IQuery<List<CityReponse>>;

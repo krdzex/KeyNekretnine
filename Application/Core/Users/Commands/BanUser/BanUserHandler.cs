@@ -1,10 +1,11 @@
-﻿using Application.Abstraction.Messaging;
+﻿using Application.Core.Users.Notifications.BanUser;
 using Contracts;
 using Entities.DomainErrors;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using MediatR;
 using Shared.Error;
 
-namespace Application.Core.Users.Notifications.BanUser;
+namespace KeyNekretnine.Application.Core.Users.Commands.BanUser;
 internal sealed class BanUserHandler : ICommandHandler<BanUserCommand, Unit>
 {
     private readonly IRepositoryManager _repository;

@@ -1,10 +1,10 @@
-﻿using Application.Abstraction.Messaging;
-using Contracts;
+﻿using Contracts;
 using Entities.DomainErrors;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using MediatR;
 using Shared.Error;
 
-namespace Application.Core.Adverts.Commands.RejectAdvert;
+namespace KeyNekretnine.Application.Core.Adverts.Commands.RejectAdvert;
 internal sealed class RejectAdvertHandler : ICommandHandler<RejectAdvertCommand, Unit>
 {
     private readonly IRepositoryManager _repository;

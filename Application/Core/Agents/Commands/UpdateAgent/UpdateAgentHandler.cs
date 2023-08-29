@@ -1,13 +1,13 @@
-﻿using Application.Abstraction.Messaging;
-using Contracts;
+﻿using Contracts;
 using Entities.DomainErrors;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using MediatR;
 using Service.Contracts;
 using Shared.Error;
 using System.Net;
 using System.Transactions;
 
-namespace Application.Core.Agents.Commands.UpdateAgent;
+namespace KeyNekretnine.Application.Core.Agents.Commands.UpdateAgent;
 internal sealed class UpdateAgentHandler : ICommandHandler<UpdateAgentCommand, Unit>
 {
     private readonly IRepositoryManager _repository;

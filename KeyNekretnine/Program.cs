@@ -1,5 +1,6 @@
-using AspNetCoreRateLimit;
-using KeyNekretnine.Extensions;
+using KeyNekretnine.Api.Extensions;
+using KeyNekretnine.Application;
+using KeyNekretnine.Infrastructure;
 
 //builder.Services
 //    .AddCaching()
@@ -40,7 +41,7 @@ app.UseHttpsRedirection();
 
 app.UseCustomExceptionHandler();
 
-app.UseIpRateLimiting();
+//app.UseIpRateLimiting();
 
 app.UseHttpsRedirection();
 

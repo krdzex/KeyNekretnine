@@ -1,10 +1,9 @@
-﻿using Application.Abstraction.Messaging;
-using Application.Core.Adverts.Queries.GetADvertsCompare;
-using Contracts;
+﻿using Contracts;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using Shared.DataTransferObjects.Advert;
 using Shared.Error;
 
-namespace Application.Core.Adverts.Queries.GetAdvertsCompare;
+namespace KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertsCompare;
 internal sealed class GetAdvertsCompareHandler : IQueryHandler<GetAdvertsCompareQuery, List<CompareAdvertDto>>
 {
     private readonly IRepositoryManager _repository;

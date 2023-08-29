@@ -1,9 +1,9 @@
-﻿using Application.Abstraction.Messaging;
-using Contracts;
+﻿using Contracts;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using Shared.DataTransferObjects.Advert;
 using Shared.Error;
 
-namespace Application.Core.Agents.Queries.GetAgentAdverts;
+namespace KeyNekretnine.Application.Core.Agents.Queries.GetAgentAdverts;
 internal sealed class GetAgentAdvertsHandler : IQueryHandler<GetAgentAdvertsQuery, List<MinimalInformationsAboutAdvertDto>>
 {
     private readonly IRepositoryManager _repository;

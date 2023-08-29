@@ -1,9 +1,9 @@
-﻿using Application.Abstraction.Messaging;
-using Contracts;
+﻿using Contracts;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using Shared.DataTransferObjects.Agency;
 using Shared.Error;
 
-namespace Application.Core.Agents.Queries.GetAgentById;
+namespace KeyNekretnine.Application.Core.Agents.Queries.GetAgentById;
 internal sealed class GetAgentByIdHandler : IQueryHandler<GetAgentByIdQuery, AllAgentInformationsDto>
 {
     private readonly IRepositoryManager _repository;

@@ -2,7 +2,7 @@
 using MediatR;
 using Service.Contracts;
 
-namespace Application.Core.Auth.Commands.UserRegistration;
+namespace KeyNekretnine.Application.Core.Auth.Commands.UserRegistration;
 internal sealed class SendWelcomeEmailHandler : INotificationHandler<UserCreatedEvent>
 {
     private readonly IServiceManager _serviceManager;

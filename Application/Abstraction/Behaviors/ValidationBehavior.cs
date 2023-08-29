@@ -1,9 +1,9 @@
-﻿using Application.Abstraction.Messaging;
-using Application.Exceptions;
-using FluentValidation;
+﻿using FluentValidation;
+using KeyNekretnine.Application.Abstraction.Messaging;
+using KeyNekretnine.Application.Exceptions;
 using MediatR;
 
-namespace Application.Abstraction.Behaviors;
+namespace KeyNekretnine.Application.Abstraction.Behaviors;
 public class ValidationBehavior<TRequest, TResponse>
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IBaseCommand

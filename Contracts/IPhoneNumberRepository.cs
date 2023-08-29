@@ -1,5 +1,4 @@
-﻿using Shared.DataTransferObjects.Agency;
-using Shared.DataTransferObjects.PhoneNumber;
+﻿using Shared.DataTransferObjects.PhoneNumber;
 
 namespace Contracts;
 public interface IPhoneNumberRepository

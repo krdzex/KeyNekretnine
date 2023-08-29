@@ -1,4 +1,4 @@
-﻿using Application.Abstraction.Messaging;
+﻿using KeyNekretnine.Application.Abstraction.Messaging;
 
-namespace Application.Core.Adverts.Queries.GetIsFavorite;
+namespace KeyNekretnine.Application.Core.Adverts.Queries.GetIsAdvertFavorite;
 public sealed record GetIsAdvertFavoriteQuery(int AdvertId, string Email) : IQuery<bool>;

@@ -1,7 +1,7 @@
-﻿using Application.Abstraction.Messaging;
+﻿using KeyNekretnine.Application.Abstraction.Messaging;
 using Shared.CustomResponses;
 using Shared.DataTransferObjects.Advert;
 using Shared.RequestFeatures;
 
-namespace Application.Core.Adverts.Queries.GetAdvertReports;
+namespace KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertReports;
 public sealed record GetAdvertReportsQuery(ReportParameters ReportParameters) : IQuery<Pagination<AdvertReportsDto>>;

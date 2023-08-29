@@ -1,10 +1,10 @@
-﻿using Application.Abstraction.Messaging;
-using Contracts;
+﻿using Contracts;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using Shared.CustomResponses;
 using Shared.DataTransferObjects.User;
 using Shared.Error;
 
-namespace Application.Core.Users.Queries.GetUsersQuery;
+namespace KeyNekretnine.Application.Core.Users.Queries.GetUsersQuery;
 internal sealed class GetUsersHandler : IQueryHandler<GetUsersQuery, Pagination<UserForListDto>>
 {
     private readonly IRepositoryManager _repository;

@@ -1,9 +1,9 @@
-﻿using Application.Abstraction.Messaging;
-using Contracts;
+﻿using Contracts;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using Shared.DataTransferObjects.PhoneNumber;
 using Shared.Error;
 
-namespace Application.Core.PhoneNumbers.Queries.GetPhoneNumbers;
+namespace KeyNekretnine.Application.Core.PhoneNumbers.Queries.GetPhoneNumbers;
 internal sealed class GetPhoneNumbersHandler : IQueryHandler<GetPhoneNumbersQuery, List<PhoneNumberDto>>
 {
     private readonly IRepositoryManager _repository;

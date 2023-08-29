@@ -1,5 +1,5 @@
-﻿using Application.Abstraction.Messaging;
+﻿using KeyNekretnine.Application.Abstraction.Messaging;
 using Shared.DataTransferObjects.RejectReason;
 
-namespace Application.Core.RejectReasons.Queries.GetRejectReasons;
+namespace KeyNekretnine.Application.Core.RejectReasons.Queries.GetRejectReasons;
 public sealed record GetRejectReasonsQuery() : IQuery<List<RejectReasonDto>>;

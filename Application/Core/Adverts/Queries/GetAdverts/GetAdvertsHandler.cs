@@ -1,11 +1,11 @@
-﻿using Application.Abstraction.Messaging;
-using Contracts;
+﻿using Contracts;
 using Entities.Exceptions;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using Shared.CustomResponses;
 using Shared.DataTransferObjects.Advert;
 using Shared.Error;
 
-namespace Application.Core.Adverts.Queries.GetAdverts;
+namespace KeyNekretnine.Application.Core.Adverts.Queries.GetAdverts;
 internal sealed class GetAdvertsHandler : IQueryHandler<GetAdvertsQuery, Pagination<MinimalInformationsAboutAdvertDto>>
 {
     private readonly IRepositoryManager _repository;

@@ -1,4 +1,4 @@
 ﻿using MediatR;
 
-namespace Application.Core.Auth.Commands.UserRegistration;
+namespace KeyNekretnine.Application.Core.Auth.Commands.UserRegistration;
 public sealed record UserCreatedEvent(string Email) : INotification;

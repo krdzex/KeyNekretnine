@@ -1,4 +1,4 @@
 ﻿using MediatR;
 
-namespace Application.Core.Users.Notifications.MultipleUserBan;
+namespace KeyNekretnine.Application.Core.Users.Commands.MultipleUsersBan;
 public sealed record UsersBannedEvent(IEnumerable<string> Emails, int NoOfDays) : INotification;

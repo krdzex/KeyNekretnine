@@ -1,10 +1,9 @@
-﻿using Application.Abstraction.Messaging;
-using Application.Core.Users.Queries.ConfirmEmailQuery;
-using Contracts;
+﻿using Contracts;
 using Entities.DomainErrors;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using Shared.Error;
 
-namespace Application.Core.Users.Queries.ConfirmUserEmail;
+namespace KeyNekretnine.Application.Core.Users.Commands.ConfirmUserEmail;
 internal sealed class ConfirmUserEmailHandler : ICommandHandler<ConfirmUserEmailCommand, bool>
 {
     private readonly IRepositoryManager _repository;

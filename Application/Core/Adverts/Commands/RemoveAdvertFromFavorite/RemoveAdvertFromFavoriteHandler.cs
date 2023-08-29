@@ -1,10 +1,10 @@
-﻿using Application.Abstraction.Messaging;
-using Contracts;
+﻿using Contracts;
 using Entities.DomainErrors;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using MediatR;
 using Shared.Error;
 
-namespace Application.Core.Adverts.Commands.RemoveAdvertFromFavorite;
+namespace KeyNekretnine.Application.Core.Adverts.Commands.RemoveAdvertFromFavorite;
 internal sealed class RemoveAdvertFromFavoriteHandler : ICommandHandler<RemoveAdvertFromFavoriteCommand, Unit>
 {
     private readonly IRepositoryManager _repository;

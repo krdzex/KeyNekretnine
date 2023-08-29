@@ -1,12 +1,12 @@
-﻿using Application.Abstraction.Messaging;
-using Contracts;
+﻿using Contracts;
 using Entities.DomainErrors;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using MediatR;
 using Service.Contracts;
 using Shared.Error;
 using System.Web;
 
-namespace Application.Core.Email.Commands.SendConfirmEmail;
+namespace KeyNekretnine.Application.Core.Email.Commands.SendConfirmEmail;
 internal sealed class SendConfirmEmailHandler : ICommandHandler<SendConfirmEmailCommand, Unit>
 {
     private readonly IServiceManager _serviceManager;

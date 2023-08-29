@@ -1,10 +1,10 @@
-﻿using Application.Abstraction.Messaging;
-using Contracts;
+﻿using Contracts;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using Shared.CustomResponses;
 using Shared.DataTransferObjects.Advert;
 using Shared.Error;
 
-namespace Application.Core.Adverts.Queries.GetAdvertReports;
+namespace KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertReports;
 internal sealed class GetAdvertReportsHandler : IQueryHandler<GetAdvertReportsQuery, Pagination<AdvertReportsDto>>
 {
     private readonly IRepositoryManager _repository;
