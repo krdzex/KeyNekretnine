@@ -1,10 +1,10 @@
 ﻿using Dapper;
 using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Messaging;
-using Shared.Error;
+using KeyNekretnine.Domain.Abstraction;
 
 namespace KeyNekretnine.Application.Core.Cities.Queries.GetCities;
-internal sealed class GetCitiesHandler : IQueryHandler<GetCitiesQuery, List<CityReponse>>
+internal sealed class GetCitiesHandler : IQueryHandler<GetCitiesQuery, IReadOnlyList<CityReponse>>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
@@ -13,7 +13,7 @@ internal sealed class GetCitiesHandler : IQueryHandler<GetCitiesQuery, List<City
         _sqlConnectionFactory = sqlConnectionFactory;
     }
 
-    public async Task<Result<List<CityReponse>>> Handle(GetCitiesQuery request, CancellationToken cancellationToken)
+    public async Task<Result<IReadOnlyList<CityReponse>>> Handle(GetCitiesQuery request, CancellationToken cancellationToken)
     {
         using var connection = _sqlConnectionFactory.CreateConnection();
 
@@ -21,7 +21,7 @@ internal sealed class GetCitiesHandler : IQueryHandler<GetCitiesQuery, List<City
             SELECT
                 id AS Id,
                 name AS Name,
-                geo_id AS GeoId,
+                geo_id AS GeoId
             FROM cities
             """;
 

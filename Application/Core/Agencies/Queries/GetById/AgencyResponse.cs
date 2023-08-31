@@ -1,4 +1,4 @@
-﻿using KeyNekretnine.Application.Core.Agencies.Queries.GetById;
+﻿using KeyNekretnine.Application.Core.Language.Queries.Get;
 using KeyNekretnine.Application.Core.Shared;
 
 namespace KeyNekretnine.Application.Core.Agencies.Queries.GetAgencyById;

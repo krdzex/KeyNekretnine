@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Messaging;
-using KeyNekretnine.Application.Core.Agencies.Queries.GetById;
+using KeyNekretnine.Application.Core.Language.Queries.Get;
 using KeyNekretnine.Application.Core.Shared;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Agencies;
@@ -39,7 +39,7 @@ internal sealed class GetAgencyByIdHandler : IQueryHandler<GetAgencyByIdQuery, A
                 a.instagram_url AS instagram,
                 a.linkedin_url AS linkedin,
                 a.twitter_url AS twitter,
-                l.id AS LanguageId,
+                l.id,
                 l.name
             FROM agencies a
             LEFT JOIN agency_languages al ON al.agency_id = a.id
@@ -65,7 +65,7 @@ internal sealed class GetAgencyByIdHandler : IQueryHandler<GetAgencyByIdQuery, A
             }
             return agency;
 
-        }, new { request.AgencyId }, splitOn: "facebook,LanguageId");
+        }, new { request.AgencyId }, splitOn: "facebook,id");
 
         if (agenciesDictionary.Count <= 0)
         {

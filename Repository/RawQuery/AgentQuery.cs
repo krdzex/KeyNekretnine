@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace Repository.RawQuery;
+﻿namespace Repository.RawQuery;
 public class AgentQuery
 {
     public const string CreateAgentQuery = @"
@@ -9,23 +7,6 @@ public class AgentQuery
         VALUES
         (@firstName, @lastName, @phoneNumber, @imageUrl, @agencyId, @description, @email, @twitterUrl, @facebookUrl, @instagramUrl, @linkedinUrl)
         RETURNING id;";
-
-    public static string MakeGetAgentsQuery(string orderBy)
-    {
-        var countAgentsQuery = new StringBuilder(@"
-            SELECT COUNT(a.id)
-            FROM agents AS a;");
-
-        var selectAgentsQuery = new StringBuilder($@"
-            SELECT a.id, a.first_name, COUNT(ad.id) AS num_adverts, a.last_Name, a.email, a.twitter_Url, a.facebook_Url, a.instagram_Url, a.linkedin_Url, a.linkedin_Url, a.image_Url, ag.id AS agency_id, ag.name AS agency_name 
-            FROM agents AS a
-            LEFT JOIN adverts AS ad ON a.id = ad.agent_id AND ad.status_id = 1
-            LEFT JOIN agencies as ag ON ag.id = a.agency_id
-            GROUP BY a.id, ag.id
-            ORDER BY {orderBy} OFFSET @Skip FETCH NEXT @Take ROWS ONLY;");
-
-        return countAgentsQuery.ToString() + selectAgentsQuery.ToString();
-    }
 
     public const string GetAgentAdvertsQuery = @"
         SELECT a.id,a.price,a.floor_space,a.no_of_bedrooms,a.no_of_bathrooms,a.created_date,a.cover_image_url,CONCAT(c.name, ', ', n.name) AS location,p.name_en AS purpose_name_en,p.name_sr AS purpose_name_sr,t.name_sr AS type_name_sr,t.name_en AS type_name_en,a.street,a.is_emergency,a.is_under_construction,a.is_furnished

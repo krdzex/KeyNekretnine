@@ -6,11 +6,6 @@
         INSERT INTO agencies (name, created_date, user_id)
         VALUES(@name,@createdDate,@userId);";
 
-        public const string GetAgencyLocatinQuery = @"
-        SELECT latitude,longitude,address
-        FROM agencies
-        WHERE id = @agencyId;";
-
         public const string GetAgencyImageQuery = @"
         SELECT image_url FROM agencies
         WHERE id = @agencyId;";
@@ -19,15 +14,6 @@
         SELECT COUNT(id)
         FROM agencies
         WHERE id = @agencyId;";
-
-        public const string GetAgencyByIdQuery = @"
-        SELECT id,name,email,facebook_url,instagram_url,linkedin_url,description,address,twitter_url,website_url,work_start_time,work_end_time,email,image_url
-        FROM agencies
-        WHERE id = @agencyId;
-
-        SELECT l.id,l.name FROM agency_languages al
-        JOIN languages l ON al.language_id = l.id
-        WHERE al.agency_id = @agencyId;";
 
 
         public const string IsUserAgencyOwnerQuery = @"

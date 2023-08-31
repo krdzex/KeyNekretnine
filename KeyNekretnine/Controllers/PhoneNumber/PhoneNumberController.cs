@@ -1,17 +1,17 @@
-﻿using Application.Core.PhoneNumbers.Queries.GetPhoneNumbers;
-using KeyNekretnine.Presentation.Infrastructure;
+﻿using KeyNekretnine.Application.Core.PhoneNumbers.Queries.GetPhoneNumbers;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KeyNekretnine.Presentation.Controllers;
+namespace KeyNekretnine.Api.Controllers.PhoneNumber;
 
+[ApiController]
 [Route("api/phone-number")]
-public class PhoneNumberController : ApiController
+public class PhoneNumberController : ControllerBase
 {
+    private readonly ISender _sender;
     public PhoneNumberController(ISender sender)
-        : base(sender)
     {
+        _sender = sender;
     }
 
     [HttpGet]
@@ -22,8 +22,8 @@ public class PhoneNumberController : ApiController
     {
         var query = new GetPhoneNumbersQuery();
 
-        var response = await Sender.Send(query, cancellationToken);
+        var response = await _sender.Send(query, cancellationToken);
 
-        return response.IsSuccess ? Ok(response.Value) : HandleFailure(response);
+        return Ok(response.Value);
     }
 }

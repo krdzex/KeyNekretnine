@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Messaging;
-using Shared.Error;
+using KeyNekretnine.Domain.Abstraction;
 
 namespace KeyNekretnine.Application.Core.Cities.Queries.GetMostPopularCtities;
 internal sealed class GetMostPopularCitiesHandler : IQueryHandler<GetMostPopularCitiesQuery, IReadOnlyList<PopularCityReponse>>
