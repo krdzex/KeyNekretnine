@@ -1,5 +1,4 @@
-﻿namespace Shared.RequestFeatures;
-
+﻿namespace KeyNekretnine.Application.Core.Shared.Pagination;
 public class PagedList<T> : List<T>
 {
     public MetaData MetaData { get; set; }

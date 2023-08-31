@@ -2,6 +2,7 @@
 using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Application.Core.Agencies.Queries.GetById;
+using KeyNekretnine.Application.Core.Shared;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Agencies;
 
@@ -27,17 +28,17 @@ internal sealed class GetAgencyByIdHandler : IQueryHandler<GetAgencyByIdQuery, A
                 a.id,
                 a.name,
                 a.email,
-                a.facebook_url AS facebookUrl,
-                a.instagram_url AS instagramUrl,
-                a.linkedin_url AS linkedinUrl,
                 a.description,
                 a.address,
-                a.twitter_url AS twitterUrl,
                 a.website_url AS websiteUrl,
                 a.work_start_time AS workStartTime,
                 a.work_end_time AS workEndTime,
                 a.email,
                 a.image_url AS ImageUrl,
+                a.facebook_url AS facebook,
+                a.instagram_url AS instagram,
+                a.linkedin_url AS linkedin,
+                a.twitter_url AS twitter,
                 l.id AS LanguageId,
                 l.name
             FROM agencies a
@@ -46,9 +47,7 @@ internal sealed class GetAgencyByIdHandler : IQueryHandler<GetAgencyByIdQuery, A
             WHERE a.id = @agencyId;
             """;
 
-        var cmd = new CommandDefinition(sql, new { request.AgencyId }, cancellationToken: cancellationToken);
-
-        var agency = await connection.QueryAsync<AgencyResponse, LanguageResponse, AgencyResponse>(sql, (agency, language) =>
+        var agency = await connection.QueryAsync<AgencyResponse, SocialNetworkResponse, LanguageResponse, AgencyResponse>(sql, (agency, socialNetwork, language) =>
         {
             if (agenciesDictionary.TryGetValue(agency.Id, out var existingAgency))
             {
@@ -58,22 +57,22 @@ internal sealed class GetAgencyByIdHandler : IQueryHandler<GetAgencyByIdQuery, A
             {
                 agenciesDictionary.Add(agency.Id, agency);
             }
-            agency.Languages.Add(language);
+            agency.SocialNetwork ??= socialNetwork;
+
+            if (language is not null)
+            {
+                agency.Languages.Add(language);
+            }
             return agency;
 
-        }, new { request.AgencyId }, splitOn: "LanguageId");
+        }, new { request.AgencyId }, splitOn: "facebook,LanguageId");
 
         if (agenciesDictionary.Count <= 0)
         {
-            return Result.Failure<AgencyResponse>(AgencyErrors.AgencyNotFound);
+            return Result.Failure<AgencyResponse>(AgencyErrors.NotFound);
         }
 
         var agencyResponse = agenciesDictionary[request.AgencyId];
-
-        if (agencyResponse is null)
-        {
-            return Result.Failure<AgencyResponse>(AgencyErrors.AgencyNotFound);
-        }
 
         return agencyResponse;
     }

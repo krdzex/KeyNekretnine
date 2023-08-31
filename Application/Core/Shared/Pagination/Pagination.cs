@@ -1,6 +1,6 @@
 ﻿using Shared.RequestFeatures;
 
-namespace Shared.CustomResponses;
+namespace KeyNekretnine.Application.Core.Shared.Pagination;
 public class Pagination<T>
 {
     public IEnumerable<T> Data { get; set; }

@@ -7,7 +7,7 @@
   <ItemGroup>
     <Compile Remove="Core\Adverts\**" />
     <Compile Remove="Core\Agencies\Commands\**" />
-    <Compile Remove="Core\Agents\**" />
+    <Compile Remove="Core\Agents\Commands\**" />
     <Compile Remove="Core\Auth\**" />
     <Compile Remove="Core\Cities\**" />
     <Compile Remove="Core\Email\**" />
@@ -21,7 +21,7 @@
     <Compile Remove="Validators\**" />
     <EmbeddedResource Remove="Core\Adverts\**" />
     <EmbeddedResource Remove="Core\Agencies\Commands\**" />
-    <EmbeddedResource Remove="Core\Agents\**" />
+    <EmbeddedResource Remove="Core\Agents\Commands\**" />
     <EmbeddedResource Remove="Core\Auth\**" />
     <EmbeddedResource Remove="Core\Cities\**" />
     <EmbeddedResource Remove="Core\Email\**" />
@@ -35,7 +35,7 @@
     <EmbeddedResource Remove="Validators\**" />
     <None Remove="Core\Adverts\**" />
     <None Remove="Core\Agencies\Commands\**" />
-    <None Remove="Core\Agents\**" />
+    <None Remove="Core\Agents\Commands\**" />
     <None Remove="Core\Auth\**" />
     <None Remove="Core\Cities\**" />
     <None Remove="Core\Email\**" />

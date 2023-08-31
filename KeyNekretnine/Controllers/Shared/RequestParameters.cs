@@ -1,4 +1,4 @@
-﻿namespace Shared.RequestFeatures;
+﻿namespace KeyNekretnine.Api.Controllers.Shared;
 
 public abstract class RequestParameters
 {

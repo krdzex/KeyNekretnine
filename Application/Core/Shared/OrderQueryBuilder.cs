@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Text;
 
-namespace Shared.Halpers;
+namespace KeyNekretnine.Application.Core.Shared;
 public static class OrderQueryBuilder
 {
     public static string CreateOrderQuery<T>(string orderByQueryString, char alias)

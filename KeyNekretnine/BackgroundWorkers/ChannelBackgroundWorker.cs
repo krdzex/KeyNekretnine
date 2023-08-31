@@ -1,67 +1,67 @@
-﻿using Contracts;
-using Service.Contracts;
-using Shared;
-using System.Transactions;
+﻿//using Contracts;
+//using Service.Contracts;
+//using Shared;
+//using System.Transactions;
 
-namespace KeyNekretnine.Api.BackgroundWorkers;
-public class ChannelBackgroundWorker : BackgroundService
-{
-    private readonly IProcessingChannel _checkoutProcessingChannel;
-    private readonly IServiceProvider _serviceProvider;
+//namespace KeyNekretnine.Api.BackgroundWorkers;
+//public class ChannelBackgroundWorker : BackgroundService
+//{
+//    private readonly IProcessingChannel _checkoutProcessingChannel;
+//    private readonly IServiceProvider _serviceProvider;
 
-    public ChannelBackgroundWorker(IProcessingChannel checkoutProcessingChannel,
-                                   IServiceProvider serviceProvider)
-    {
-        _serviceProvider = serviceProvider;
-        _checkoutProcessingChannel = checkoutProcessingChannel;
-    }
+//    public ChannelBackgroundWorker(IProcessingChannel checkoutProcessingChannel,
+//                                   IServiceProvider serviceProvider)
+//    {
+//        _serviceProvider = serviceProvider;
+//        _checkoutProcessingChannel = checkoutProcessingChannel;
+//    }
 
-    public override async Task StopAsync(CancellationToken cancellationToken)
-    {
-        _checkoutProcessingChannel.TryCompleteWriter();
-        await base.StopAsync(cancellationToken);
-    }
+//    public override async Task StopAsync(CancellationToken cancellationToken)
+//    {
+//        _checkoutProcessingChannel.TryCompleteWriter();
+//        await base.StopAsync(cancellationToken);
+//    }
 
-    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
-    {
-        await foreach (var item in _checkoutProcessingChannel.ReadAllAsync(cancellationToken))
-        {
-            await ProcessItemAsync(item, cancellationToken);
-        }
-    }
+//    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
+//    {
+//        await foreach (var item in _checkoutProcessingChannel.ReadAllAsync(cancellationToken))
+//        {
+//            await ProcessItemAsync(item, cancellationToken);
+//        }
+//    }
 
-    private async Task ProcessItemAsync(QueueItem item, CancellationToken cancellationToken)
-    {
-        using (var scope = _serviceProvider.CreateScope())
-        {
-            var scopedServiceManager = scope.ServiceProvider.GetRequiredService<IServiceManager>();
-            var scopedRepositoryManager = scope.ServiceProvider.GetRequiredService<IRepositoryManager>();
+//    private async Task ProcessItemAsync(QueueItem item, CancellationToken cancellationToken)
+//    {
+//        using (var scope = _serviceProvider.CreateScope())
+//        {
+//            var scopedServiceManager = scope.ServiceProvider.GetRequiredService<IServiceManager>();
+//            var scopedRepositoryManager = scope.ServiceProvider.GetRequiredService<IRepositoryManager>();
 
-            using (var transaction = new TransactionScope(TransactionScopeOption.Required,
-                new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted },
-                TransactionScopeAsyncFlowOption.Enabled))
-            {
-                var coverImageData = await scopedRepositoryManager.TemporeryImageData.Get(item.AdvertId, true, cancellationToken);
-                var advertImagesData = await scopedRepositoryManager.TemporeryImageData.Get(item.AdvertId, false, cancellationToken);
+//            using (var transaction = new TransactionScope(TransactionScopeOption.Required,
+//                new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted },
+//                TransactionScopeAsyncFlowOption.Enabled))
+//            {
+//                var coverImageData = await scopedRepositoryManager.TemporeryImageData.Get(item.AdvertId, true, cancellationToken);
+//                var advertImagesData = await scopedRepositoryManager.TemporeryImageData.Get(item.AdvertId, false, cancellationToken);
 
-                var coverImageUrl = await scopedServiceManager.ImageService.UploadImageOnCloudinaryUsingDb(coverImageData.First(), $"advert-{item.AdvertId}");
+//                var coverImageUrl = await scopedServiceManager.ImageService.UploadImageOnCloudinaryUsingDb(coverImageData.First(), $"advert-{item.AdvertId}");
 
-                var imagesUrls = new List<string>();
+//                var imagesUrls = new List<string>();
 
-                foreach (var imageData in advertImagesData)
-                {
-                    var url = await scopedServiceManager.ImageService.UploadImageOnCloudinaryUsingDb(imageData, $"advert-{item.AdvertId}");
-                    imagesUrls.Add(url);
-                }
+//                foreach (var imageData in advertImagesData)
+//                {
+//                    var url = await scopedServiceManager.ImageService.UploadImageOnCloudinaryUsingDb(imageData, $"advert-{item.AdvertId}");
+//                    imagesUrls.Add(url);
+//                }
 
-                await scopedRepositoryManager.Advert.UpdateAdvertCoverImage(coverImageUrl, item.AdvertId, cancellationToken);
-                await scopedRepositoryManager.Image.InsertImages(imagesUrls, item.AdvertId, cancellationToken);
+//                await scopedRepositoryManager.Advert.UpdateAdvertCoverImage(coverImageUrl, item.AdvertId, cancellationToken);
+//                await scopedRepositoryManager.Image.InsertImages(imagesUrls, item.AdvertId, cancellationToken);
 
-                await scopedRepositoryManager.TemporeryImageData.DeleteAll(item.AdvertId, cancellationToken);
-                await scopedRepositoryManager.Advert.UpdateStatus(item.AdvertId, cancellationToken);
+//                await scopedRepositoryManager.TemporeryImageData.DeleteAll(item.AdvertId, cancellationToken);
+//                await scopedRepositoryManager.Advert.UpdateStatus(item.AdvertId, cancellationToken);
 
-                transaction.Complete();
-            }
-        }
-    }
-}
+//                transaction.Complete();
+//            }
+//        }
+//    }
+//}

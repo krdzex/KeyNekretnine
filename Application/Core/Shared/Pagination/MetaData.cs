@@ -1,5 +1,4 @@
-﻿namespace Shared.RequestFeatures;
-
+﻿namespace KeyNekretnine.Application.Core.Shared.Pagination;
 public class MetaData
 {
     public int CurrentPage { get; set; }

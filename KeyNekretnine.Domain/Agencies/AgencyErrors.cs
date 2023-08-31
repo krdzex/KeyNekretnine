@@ -3,11 +3,11 @@
 namespace KeyNekretnine.Domain.Agencies;
 public static class AgencyErrors
 {
-    public static Error AgencyNotFound => new Error(
+    public static Error NotFound => new(
             "Agency.NotFound",
             "Agency not found");
 
-    public static Error NotOwnerError => new Error(
+    public static Error NotOwner => new(
         "Agency.NotOwner",
         "Current user is not owner of agency");
 }
