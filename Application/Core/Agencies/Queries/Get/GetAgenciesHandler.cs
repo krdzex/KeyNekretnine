@@ -6,7 +6,7 @@ using KeyNekretnine.Application.Core.Shared.Pagination;
 using KeyNekretnine.Domain.Abstraction;
 using System.Data;
 
-namespace KeyNekretnine.Application.Core.Agencies.Queries.GetAgencies;
+namespace KeyNekretnine.Application.Core.Agencies.Queries.Get;
 internal sealed class GetAgenciesHandler : IQueryHandler<GetAgenciesQuery, Pagination<PaginationAgencyResponse>>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;
@@ -33,11 +33,11 @@ internal sealed class GetAgenciesHandler : IQueryHandler<GetAgenciesQuery, Pagin
                 COUNT(ad.id) AS numAdverts,
                 a.email,
                 a.image_url AS image,
-                a.address,
-                a.facebook_url AS facebook,
-                a.instagram_url AS instagram,
-                a.linkedin_url AS linkedin,
-                a.twitter_url AS twitter
+                a.location_address AS address,
+                a.social_media_facebook AS facebook,
+                a.social_media_instagram AS instagram,
+                a.social_media_linkedin AS linkedin,
+                a.social_media_twitter AS twitter
             FROM agencies AS a
             LEFT JOIN agents ag ON ag.agency_id = a.id
             LEFT JOIN adverts ad ON ag.id = ad.agent_id
@@ -61,12 +61,12 @@ internal sealed class GetAgenciesHandler : IQueryHandler<GetAgenciesQuery, Pagin
         var multi = await connection.QueryMultipleAsync(cmd);
         var count = await multi.ReadSingleAsync<int>();
 
-        var agencies = (multi.Read<PaginationAgencyResponse, SocialNetworkResponse, PaginationAgencyResponse>(
-        (agency, social) =>
+        var agencies = multi.Read<PaginationAgencyResponse, SocialMediaResponse, PaginationAgencyResponse>(
+        (agency, socialMedia) =>
         {
-            agency.SocialNetwork ??= social;
+            agency.SocialMedia ??= socialMedia;
             return agency;
-        }, splitOn: "facebook")).ToList();
+        }, splitOn: "facebook").ToList();
 
         var metadata = new PagedList<PaginationAgencyResponse>(agencies, count, request.PageNumber, request.PageSize);
 

@@ -6,27 +6,27 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Core\Adverts\**" />
-    <Compile Remove="Core\Agencies\Commands\**" />
     <Compile Remove="Core\Agents\Commands\**" />
-    <Compile Remove="Core\Auth\**" />
+    <Compile Remove="Core\Auth\Commands\FacebookLogin\**" />
+    <Compile Remove="Core\Auth\Commands\GoogleLogin\**" />
     <Compile Remove="Core\Email\**" />
     <Compile Remove="Core\Tokens\**" />
     <Compile Remove="Core\Users\**" />
     <Compile Remove="Queries\**" />
     <Compile Remove="Validators\**" />
     <EmbeddedResource Remove="Core\Adverts\**" />
-    <EmbeddedResource Remove="Core\Agencies\Commands\**" />
     <EmbeddedResource Remove="Core\Agents\Commands\**" />
-    <EmbeddedResource Remove="Core\Auth\**" />
+    <EmbeddedResource Remove="Core\Auth\Commands\FacebookLogin\**" />
+    <EmbeddedResource Remove="Core\Auth\Commands\GoogleLogin\**" />
     <EmbeddedResource Remove="Core\Email\**" />
     <EmbeddedResource Remove="Core\Tokens\**" />
     <EmbeddedResource Remove="Core\Users\**" />
     <EmbeddedResource Remove="Queries\**" />
     <EmbeddedResource Remove="Validators\**" />
     <None Remove="Core\Adverts\**" />
-    <None Remove="Core\Agencies\Commands\**" />
     <None Remove="Core\Agents\Commands\**" />
-    <None Remove="Core\Auth\**" />
+    <None Remove="Core\Auth\Commands\FacebookLogin\**" />
+    <None Remove="Core\Auth\Commands\GoogleLogin\**" />
     <None Remove="Core\Email\**" />
     <None Remove="Core\Tokens\**" />
     <None Remove="Core\Users\**" />
@@ -49,5 +49,16 @@
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
       <_Parameter1>Application.UnitTests</_Parameter1>
     </AssemblyAttribute>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Core\Users\Queries\GetCurrent\CurrentUserResponse.cs" />
+    <Compile Include="Core\Users\Queries\GetCurrent\GetCurrentUserHandler.cs" />
+    <Compile Include="Core\Users\Queries\GetCurrent\GetCurrentUserQuery.cs" />
+    <Compile Include="Core\Users\Queries\GetByIdQuery\GetUserByIdHandler.cs" />
+    <Compile Include="Core\Users\Queries\GetByIdQuery\GetUserByIdQuery.cs" />
+    <Compile Include="Core\Users\Queries\GetByIdQuery\UserResponse.cs" />
+    <Compile Include="Core\Users\Queries\Get\GetUsersHandler.cs" />
+    <Compile Include="Core\Users\Queries\Get\GetUsersQuery.cs" />
+    <Compile Include="Core\Users\Queries\Get\PaginationUserResponse.cs" />
   </ItemGroup>
 </Project>

@@ -1,12 +1,25 @@
 ﻿using Dapper;
+using KeyNekretnine.Application.Abstraction.Authentication;
 using KeyNekretnine.Application.Abstraction.Clock;
 using KeyNekretnine.Application.Abstraction.Data;
+using KeyNekretnine.Application.Abstraction.Email;
+using KeyNekretnine.Application.Abstraction.Image;
+using KeyNekretnine.Domain.Abstraction;
+using KeyNekretnine.Domain.Users;
+using KeyNekretnine.Infrastructure.Authentication;
 using KeyNekretnine.Infrastructure.Clock;
 using KeyNekretnine.Infrastructure.Data;
+using KeyNekretnine.Infrastructure.EmailProvider;
+using KeyNekretnine.Infrastructure.ImageProvider;
+using KeyNekretnine.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Npgsql;
+using System.Text;
 
 namespace KeyNekretnine.Infrastructure;
 public static class DependencyInjection
@@ -15,11 +28,12 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        services.AddTransient<IEmailService, EmailService>();
+        services.AddScoped<IImageService, ImageService>();
         services.AddTransient<IDateTimeProvider, DateTimeProvider>();
 
-        //services.AddTransient<IEmailService, EmailService>();
-
         AddPersistence(services, configuration);
+        AddAuthentication(services);
 
         return services;
     }
@@ -35,18 +49,64 @@ public static class DependencyInjection
             options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention();
         });
 
-        //services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<Domain.Agencies.IAgencyRepository, AgencyRepository>();
 
-        //services.AddScoped<IApartmentRepository, ApartmentRepository>();
-
-        //services.AddScoped<IBookingRepository, BookingRepository>();
-
-        //services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDbContext>());
+        services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
         services.AddSingleton<ISqlConnectionFactory>(_ =>
             new SqlConnectionFactory(connectionString));
 
         SqlMapper.AddTypeHandler(new DateOnlyTypeHandler());
+    }
+
+    private static void AddAuthentication(IServiceCollection services)
+    {
+        services.AddIdentity<User, IdentityRole>(o =>
+        {
+            o.Password.RequireDigit = true;
+            o.Password.RequireLowercase = true;
+            o.Password.RequireUppercase = true;
+            o.User.RequireUniqueEmail = true;
+            o.SignIn.RequireConfirmedEmail = true;
+        })
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddTokenProvider("KeyNekretnineAPI", typeof(DataProtectorTokenProvider<User>))
+            .AddDefaultTokenProviders();
+
+
+        services.AddAuthentication(o =>
+        {
+            o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddCookie(o =>
+        {
+            o.Cookie.Name = "X-Access-Token";
+        }).AddJwtBearer(o =>
+        {
+            o.RequireHttpsMetadata = false;
+            o.SaveToken = true;
+            o.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER"),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_KEY"))),
+                ValidateAudience = false,
+                ClockSkew = TimeSpan.FromSeconds(0)
+            };
+            o.Events = new JwtBearerEvents
+            {
+                OnMessageReceived = context =>
+                {
+                    context.Token = context.Request.Cookies["X-Access-Token"];
+                    return Task.CompletedTask;
+                }
+            };
+        });
+
+        services.AddScoped<IJwtService, JwtService>();
+
     }
 
     private static string GetConnectionString()

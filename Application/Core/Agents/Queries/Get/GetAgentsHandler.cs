@@ -1,14 +1,13 @@
 ﻿using Dapper;
 using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Messaging;
-using KeyNekretnine.Application.Core.Agents.Queries.Get;
 using KeyNekretnine.Application.Core.Agents.Queries.GetById;
 using KeyNekretnine.Application.Core.Shared;
 using KeyNekretnine.Application.Core.Shared.Pagination;
 using KeyNekretnine.Domain.Abstraction;
 using System.Data;
 
-namespace KeyNekretnine.Application.Core.Agents.Queries.GetAgents;
+namespace KeyNekretnine.Application.Core.Agents.Queries.Get;
 internal sealed class GetAgentsHandler : IQueryHandler<GetAgentsQuery, Pagination<PaginationAgentResponse>>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;
@@ -58,14 +57,14 @@ internal sealed class GetAgentsHandler : IQueryHandler<GetAgentsQuery, Paginatio
 
         var multi = await connection.QueryMultipleAsync(cmd);
         var count = await multi.ReadSingleAsync<int>();
-        var agents = (multi.Read<PaginationAgentResponse, SocialNetworkResponse, ShortAgencyResponse, PaginationAgentResponse>(
+        var agents = multi.Read<PaginationAgentResponse, SocialMediaResponse, ShortAgencyResponse, PaginationAgentResponse>(
         (agent, social, agency) =>
         {
 
             agent.SocialNetwork = agent.SocialNetwork ??= social;
             agent.Agency = agency;
             return agent;
-        }, splitOn: "twitter,agencyId")).ToList();
+        }, splitOn: "twitter,agencyId").ToList();
 
         var metadata = new PagedList<PaginationAgentResponse>(agents, count, request.PageNumber, request.PageSize);
 

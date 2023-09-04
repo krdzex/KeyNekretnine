@@ -37,8 +37,6 @@ app.UseSwaggerUI(c =>
     c.DisplayRequestDuration();
 });
 
-app.UseHttpsRedirection();
-
 app.UseCustomExceptionHandler();
 
 //app.UseIpRateLimiting();

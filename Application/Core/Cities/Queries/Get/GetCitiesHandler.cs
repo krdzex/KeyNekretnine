@@ -3,7 +3,7 @@ using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Domain.Abstraction;
 
-namespace KeyNekretnine.Application.Core.Cities.Queries.GetCities;
+namespace KeyNekretnine.Application.Core.Cities.Queries.Get;
 internal sealed class GetCitiesHandler : IQueryHandler<GetCitiesQuery, IReadOnlyList<CityReponse>>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;

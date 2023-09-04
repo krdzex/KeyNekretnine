@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Entities.Models;
+using KeyNekretnine.Domain.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Service.Contracts;

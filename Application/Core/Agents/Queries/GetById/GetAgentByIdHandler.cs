@@ -1,13 +1,12 @@
 ﻿using Dapper;
 using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Messaging;
-using KeyNekretnine.Application.Core.Agents.Queries.GetById;
 using KeyNekretnine.Application.Core.Language.Queries.Get;
 using KeyNekretnine.Application.Core.Shared;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Agents;
 
-namespace KeyNekretnine.Application.Core.Agents.Queries.GetAgentById;
+namespace KeyNekretnine.Application.Core.Agents.Queries.GetById;
 internal sealed class GetAgentByIdHandler : IQueryHandler<GetAgentByIdQuery, AgentResponse>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;
@@ -48,7 +47,7 @@ internal sealed class GetAgentByIdHandler : IQueryHandler<GetAgentByIdQuery, Age
             WHERE a.id = @AgentId;
             """;
 
-        var agent = await connection.QueryAsync<AgentResponse, SocialNetworkResponse, ShortAgencyResponse, LanguageResponse, AgentResponse>(
+        var agent = await connection.QueryAsync<AgentResponse, SocialMediaResponse, ShortAgencyResponse, LanguageResponse, AgentResponse>(
             sql,
             (agent, socialNetwork, agency, language) =>
         {

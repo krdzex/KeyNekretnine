@@ -1,6 +1,6 @@
 ﻿using KeyNekretnine.Application.Core.Shared;
 
-namespace KeyNekretnine.Application.Core.AdvertTypes.Queries.GetAdvertTypes;
+namespace KeyNekretnine.Application.Core.AdvertTypes.Queries.Get;
 public sealed class AdvertTypeResponse
 {
     public int Id { get; set; }

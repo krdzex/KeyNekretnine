@@ -1,11 +1,8 @@
-﻿using KeyNekretnine.Domain.AgencyLanguages;
-using KeyNekretnine.Domain.AgentLanguages;
-using KeyNekretnine.Domain.Models;
+﻿using KeyNekretnine.Domain.Agencies;
 
 namespace KeyNekretnine.Domain.Languages;
-public class Language : EntityBase
+public class Language
 {
-    public string Name { get; set; }
-    public IEnumerable<AgencyLanguage> AgencyLanguages { get; set; }
-    public IEnumerable<AgentLanguage> AgentLanguages { get; set; }
+    public int Id { get; set; }
+    public Name Name { get; set; }
 }

@@ -1,5 +1,4 @@
 ﻿using KeyNekretnine.Application.Abstraction.Messaging;
-using KeyNekretnine.Application.Core.Agencies.Queries.GetLocation;
 
-namespace KeyNekretnine.Application.Core.Agencies.Queries.GetAgencyLocation;
+namespace KeyNekretnine.Application.Core.Agencies.Queries.GetLocation;
 public sealed record GetAgencyLocationQuery(int AgencyId) : IQuery<AgencyLocationResponse>;

@@ -1,4 +1,4 @@
-﻿using KeyNekretnine.Application.Core.RejectReasons.Queries.GetRejectReasons;
+﻿using KeyNekretnine.Application.Core.RejectReasons.Queries.Get;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

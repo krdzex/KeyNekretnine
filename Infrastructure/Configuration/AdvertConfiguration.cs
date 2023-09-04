@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace KeyNekretnine.Infrastructure.Configuration;
-public class AdvertConfiguration : IEntityTypeConfiguration<Advert>
+internal sealed class AdvertConfiguration : IEntityTypeConfiguration<Advert>
 {
     public void Configure(EntityTypeBuilder<Advert> builder)
     {

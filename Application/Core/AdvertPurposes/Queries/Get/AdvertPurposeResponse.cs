@@ -1,6 +1,6 @@
 ﻿using KeyNekretnine.Application.Core.Shared;
 
-namespace KeyNekretnine.Application.Core.AdvertPurposes.Queries.GetAdvertPurposes;
+namespace KeyNekretnine.Application.Core.AdvertPurposes.Queries.Get;
 public sealed class AdvertPurposeResponse
 {
     public int Id { get; init; }

@@ -1,4 +1,5 @@
-﻿using KeyNekretnine.Domain.Users;
+﻿using KeyNekretnine.Domain.Agents;
+using KeyNekretnine.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -7,15 +8,34 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.HasKey(x => x.Id);
-        builder.Property(x => x.FirstName).IsRequired().HasMaxLength(50);
-        builder.Property(x => x.LastName).IsRequired().HasMaxLength(50);
+        builder.HasKey(user => user.Id);
+
+        builder.Property(user => user.FirstName)
+            .HasMaxLength(50)
+            .HasConversion(firstName => firstName.Value, value => new FirstName(value))
+            .IsRequired();
+
+        builder.Property(user => user.LastName)
+            .HasMaxLength(50)
+            .HasConversion(lastName => lastName.Value, value => new LastName(value))
+            .IsRequired();
+
         builder.Property(x => x.Email).IsRequired().HasMaxLength(100);
         builder.Property(x => x.AccountCreatedDate).IsRequired();
         builder.Property(x => x.PasswordHash).IsRequired(false);
-        builder.Property(x => x.IsBanned).IsRequired().HasDefaultValue(false);
+        builder.Property(x => x.IsBanned)
+            .IsRequired()
+            .HasDefaultValue(false);
         builder.Property(x => x.BanEnd).IsRequired(false);
-        builder.Property(x => x.ProfileImageUrl).HasMaxLength(150);
-        builder.Property(x => x.About).HasMaxLength(1000);
+
+        builder.Property(user => user.ProfileImageUrl)
+            .HasMaxLength(150)
+            .HasConversion(profileImageUrl => profileImageUrl.Value, value => new ProfileImageUrl(value))
+            .IsRequired(false);
+
+        builder.Property(user => user.About)
+            .HasMaxLength(150)
+            .HasConversion(about => about.Value, value => new About(value))
+            .IsRequired(false);
     }
 }

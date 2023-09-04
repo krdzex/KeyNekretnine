@@ -1,25 +1,17 @@
-﻿using KeyNekretnine.Domain.Adverts;
+﻿using KeyNekretnine.Domain.Abstraction;
+using KeyNekretnine.Domain.Adverts;
 using KeyNekretnine.Domain.Agencies;
-using KeyNekretnine.Domain.AgentLanguages;
-using KeyNekretnine.Domain.Models;
 
 namespace KeyNekretnine.Domain.Agents;
-public class Agent : EntityBase
+public class Agent : Entity
 {
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string PhoneNumber { get; set; }
-    public string ImageUrl { get; set; }
-    public string Description { get; set; }
-    public string Email { get; set; }
-    public string TwitterUrl { get; set; }
-    public string FacebookUrl { get; set; }
-    public string InstagramUrl { get; set; }
-    public string LinkedinUrl { get; set; }
+    public FirstName FirstName { get; set; }
+    public LastName LastName { get; set; }
+    public PhoneNumber PhoneNumber { get; set; }
+    public ImageUrl ImageUrl { get; set; }
+    public Description Description { get; set; }
+    public Email Email { get; set; }
+    public SocialMedia SocialMedia { get; set; }
+    public Guid AgencyId { get; set; }
     public IEnumerable<Advert> Adverts { get; set; }
-
-    public Agency Agency { get; set; }
-    public int AgencyId { get; set; }
-
-    public IEnumerable<AgentLanguage> AgentLanguages { get; set; }
 }

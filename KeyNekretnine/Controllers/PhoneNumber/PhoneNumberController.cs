@@ -1,4 +1,4 @@
-﻿using KeyNekretnine.Application.Core.PhoneNumbers.Queries.GetPhoneNumbers;
+﻿using KeyNekretnine.Application.Core.PhoneNumbers.Queries.Get;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

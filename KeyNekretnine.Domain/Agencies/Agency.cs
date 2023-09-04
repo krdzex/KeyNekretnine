@@ -1,30 +1,97 @@
-﻿using KeyNekretnine.Domain.AgencyLanguages;
-using KeyNekretnine.Domain.Agents;
-using KeyNekretnine.Domain.Models;
-using KeyNekretnine.Domain.Users;
+﻿using KeyNekretnine.Domain.Abstraction;
+using KeyNekretnine.Domain.AgencyLanguages;
 
 namespace KeyNekretnine.Domain.Agencies;
-public class Agency : EntityBase
+public class Agency : Entity
 {
-    public string Name { get; set; }
-    public DateTime CreatedDate { get; set; }
-    public string Address { get; set; }
-    public string Description { get; set; }
-    public string Email { get; set; }
-    public string WebsiteUrl { get; set; }
-    public string ImageUrl { get; set; }
-    public TimeOnly? WorkStartTime { get; set; }
-    public TimeOnly? WorkEndTime { get; set; }
-    public string TwitterUrl { get; set; }
-    public string FacebookUrl { get; set; }
-    public string InstagramUrl { get; set; }
-    public string LinkedinUrl { get; set; }
-    public double? Latitude { get; set; }
-    public double? Longitude { get; set; }
-    public IEnumerable<AgencyLanguage> AgencyLanguages { get; set; }
+    private readonly List<AgencyLanguage> _agencyLanguages = new();
+    public Agency(
+    Guid id,
+    Name name,
+    string userId,
+    DateTime createdDate
+        )
+    : base(id)
+    {
+        Name = name;
+        UserId = userId;
+        CreatedDate = createdDate;
+    }
 
-    public User User { get; set; }
-    public string UserId { get; set; }
+    private Agency()
+    {
+    }
 
-    public IEnumerable<Agent> Agents { get; set; }
+    public Name Name { get; private set; }
+    public Location Location { get; private set; }
+    public DateTime CreatedDate { get; private set; }
+    public Description Description { get; private set; }
+    public Email Email { get; private set; }
+    public WebsiteUrl WebsiteUrl { get; private set; }
+    public ImageUrl ImageUrl { get; private set; }
+    public TimeRange WorkHour { get; private set; }
+    public SocialMedia SocialMedia { get; private set; }
+    public string UserId { get; private set; }
+    public IReadOnlyCollection<AgencyLanguage> AgencyLanguages => _agencyLanguages;
+
+    public static Agency Create(
+        Name name,
+        string userId,
+        DateTime createdDate)
+    {
+        var agency = new Agency(
+            Guid.NewGuid(),
+            name,
+            userId,
+            createdDate
+        );
+
+        return agency;
+    }
+
+    public void Update(
+        Name name,
+        Location location,
+        Description description,
+        Email email,
+        WebsiteUrl websiteUrl,
+        TimeRange timeRange,
+        SocialMedia socialMedia,
+        List<int> languageIds)
+    {
+        Name = name;
+        Email = email;
+        Description = description;
+        WebsiteUrl = websiteUrl;
+        WorkHour = timeRange;
+        Location = location;
+        SocialMedia = socialMedia;
+
+        if (languageIds is not null)
+        {
+            UpdateLanguages(languageIds);
+        }
+    }
+
+    public void UpdateLanguages(List<int> languageIds)
+    {
+        _agencyLanguages.RemoveAll(al => !languageIds.Contains(al.LanguageId));
+
+        foreach (var languageId in languageIds)
+        {
+            if (!_agencyLanguages.Any(al => al.LanguageId == languageId))
+            {
+                _agencyLanguages.Add(new AgencyLanguage
+                {
+                    LanguageId = languageId,
+                    AgencyId = Id
+                });
+            }
+        }
+    }
+
+    public void UpdateImageUrl(ImageUrl imageUrl)
+    {
+        ImageUrl = imageUrl;
+    }
 }

@@ -6,7 +6,7 @@ using KeyNekretnine.Application.Core.Shared;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Agencies;
 
-namespace KeyNekretnine.Application.Core.Agencies.Queries.GetAgencyById;
+namespace KeyNekretnine.Application.Core.Agencies.Queries.GetById;
 internal sealed class GetAgencyByIdHandler : IQueryHandler<GetAgencyByIdQuery, AgencyResponse>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;
@@ -47,7 +47,7 @@ internal sealed class GetAgencyByIdHandler : IQueryHandler<GetAgencyByIdQuery, A
             WHERE a.id = @agencyId;
             """;
 
-        var agency = await connection.QueryAsync<AgencyResponse, SocialNetworkResponse, LanguageResponse, AgencyResponse>(sql, (agency, socialNetwork, language) =>
+        var agency = await connection.QueryAsync<AgencyResponse, SocialMediaResponse, LanguageResponse, AgencyResponse>(sql, (agency, socialNetwork, language) =>
         {
             if (agenciesDictionary.TryGetValue(agency.Id, out var existingAgency))
             {

@@ -1,7 +1,7 @@
 ﻿using KeyNekretnine.Application.Core.Language.Queries.Get;
 using KeyNekretnine.Application.Core.Shared;
 
-namespace KeyNekretnine.Application.Core.Agencies.Queries.GetAgencyById;
+namespace KeyNekretnine.Application.Core.Agencies.Queries.GetById;
 public sealed class AgencyResponse
 {
     public int Id { get; set; }
@@ -13,5 +13,5 @@ public sealed class AgencyResponse
     public TimeSpan? WorkStartTime { get; set; }
     public TimeSpan? WorkEndTime { get; set; }
     public List<LanguageResponse> Languages { get; set; } = new();
-    public SocialNetworkResponse SocialNetwork { get; set; }
+    public SocialMediaResponse SocialNetwork { get; set; }
 }

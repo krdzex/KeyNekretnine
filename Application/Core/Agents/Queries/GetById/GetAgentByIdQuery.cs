@@ -1,5 +1,4 @@
 ﻿using KeyNekretnine.Application.Abstraction.Messaging;
-using KeyNekretnine.Application.Core.Agents.Queries.GetById;
 
-namespace KeyNekretnine.Application.Core.Agents.Queries.GetAgentById;
+namespace KeyNekretnine.Application.Core.Agents.Queries.GetById;
 public sealed record GetAgentByIdQuery(int AgentId) : IQuery<AgentResponse>;

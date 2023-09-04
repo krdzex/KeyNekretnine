@@ -1,4 +1,4 @@
-﻿namespace KeyNekretnine.Application.Core.Cities.Queries.GetMostPopularCtities;
+﻿namespace KeyNekretnine.Application.Core.Cities.Queries.GetMostPopular;
 public sealed class PopularCityReponse
 {
     public int Id { get; set; }

@@ -3,7 +3,7 @@ using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Domain.Abstraction;
 
-namespace KeyNekretnine.Application.Core.Agencies.Queries.GetAgencyAdverts;
+namespace KeyNekretnine.Application.Core.Agencies.Queries.GetAdverts;
 internal sealed class GetAgencyAdvertsHandler : IQueryHandler<GetAgencyAdvertsQuery, IReadOnlyList<AgencyAdvertResponse>>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;

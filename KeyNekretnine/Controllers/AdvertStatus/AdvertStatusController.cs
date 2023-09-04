@@ -1,8 +1,8 @@
-﻿using KeyNekretnine.Application.Core.AdvertStatuses.Queries.GetAdvertStatuses;
+﻿using KeyNekretnine.Application.Core.AdvertStatuses.Queries.Get;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KeyNekretnine.Api.Controllers.AdvertStatuse;
+namespace KeyNekretnine.Api.Controllers.AdvertStatus;
 
 [ApiController]
 [Route("api/advert/statuses")]

@@ -1,4 +1,4 @@
-﻿namespace KeyNekretnine.Application.Core.Agencies.Queries.GetAgencyAgents;
+﻿namespace KeyNekretnine.Application.Core.Agencies.Queries.GetAgents;
 public sealed class AgencyAgentResponse
 {
     public string FirstName { get; set; }

@@ -1,4 +1,4 @@
-﻿namespace KeyNekretnine.Application.Core.Cities.Queries.GetCities;
+﻿namespace KeyNekretnine.Application.Core.Cities.Queries.Get;
 public sealed class CityReponse
 {
     public int Id { get; set; }

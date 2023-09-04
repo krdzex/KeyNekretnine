@@ -1,6 +1,6 @@
-﻿using KeyNekretnine.Application.Core.Agents.Queries.GetAgentAdverts;
-using KeyNekretnine.Application.Core.Agents.Queries.GetAgentById;
-using KeyNekretnine.Application.Core.Agents.Queries.GetAgents;
+﻿using KeyNekretnine.Application.Core.Agents.Queries.Get;
+using KeyNekretnine.Application.Core.Agents.Queries.GetAdverts;
+using KeyNekretnine.Application.Core.Agents.Queries.GetById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

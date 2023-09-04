@@ -1,10 +1,9 @@
 ﻿using Dapper;
 using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Messaging;
-using KeyNekretnine.Application.Core.PhoneNumbers.Queries.Get;
 using KeyNekretnine.Domain.Abstraction;
 
-namespace KeyNekretnine.Application.Core.PhoneNumbers.Queries.GetPhoneNumbers;
+namespace KeyNekretnine.Application.Core.PhoneNumbers.Queries.Get;
 internal sealed class GetPhoneNumbersHandler : IQueryHandler<GetPhoneNumbersQuery, IReadOnlyList<PhoneNumberResponse>>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;

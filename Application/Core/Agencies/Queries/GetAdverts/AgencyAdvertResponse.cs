@@ -1,4 +1,4 @@
-﻿namespace KeyNekretnine.Application.Core.Agencies.Queries.GetAgencyAdverts;
+﻿namespace KeyNekretnine.Application.Core.Agencies.Queries.GetAdverts;
 public sealed class AgencyAdvertResponse
 {
     public string Location { get; set; }

@@ -3,7 +3,7 @@ using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Domain.Abstraction;
 
-namespace KeyNekretnine.Application.Core.Cities.Queries.GetMostPopularCtities;
+namespace KeyNekretnine.Application.Core.Cities.Queries.GetMostPopular;
 internal sealed class GetMostPopularCitiesHandler : IQueryHandler<GetMostPopularCitiesQuery, IReadOnlyList<PopularCityReponse>>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;

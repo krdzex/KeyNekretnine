@@ -9,6 +9,8 @@ public class PhoneNumberConfiguration : IEntityTypeConfiguration<PhoneNumber>
 {
     public void Configure(EntityTypeBuilder<PhoneNumber> builder)
     {
+        builder.ToTable("phone_numbers");
+
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Code).IsRequired().HasMaxLength(100);
         builder.Property(x => x.Label).IsRequired().HasMaxLength(100);

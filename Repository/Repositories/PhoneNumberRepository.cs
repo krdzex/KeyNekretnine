@@ -13,21 +13,6 @@ internal class PhoneNumberRepository : IPhoneNumberRepository
         _dapperContext = dapperContext;
     }
 
-    public async Task<IEnumerable<PhoneNumberDto>> GetAll(CancellationToken cancellationToken)
-    {
-        var query = PhoneNumberQuery.AllPhoneNumbersQuery;
-
-        using (var connection = _dapperContext.CreateConnection())
-        {
-            var cmd = new CommandDefinition(query, cancellationToken: cancellationToken);
-
-            var numbers = await connection.QueryAsync<PhoneNumberDto>(cmd);
-
-            return numbers;
-        }
-    }
-
-
     public async Task<string> MakeNumber(CreateNumberDto numberDto, CancellationToken cancellationToken)
     {
         var query = PhoneNumberQuery.GetCountryPhone;

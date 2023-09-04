@@ -1,5 +1,5 @@
-﻿using Entities.Models;
-using Google.Apis.Auth;
+﻿using Google.Apis.Auth;
+using KeyNekretnine.Domain.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;

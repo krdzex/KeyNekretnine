@@ -18,13 +18,10 @@ public class UserQuery
                         THEN true 
                     ELSE false 
                 END AS is_banned,
-            COALESCE(a.num_adverts, 0) AS num_adverts
+                COUNT(a.id) AS num_adverts
             FROM asp_net_users AS u
-            LEFT JOIN (
-            SELECT user_id, COUNT(*) AS num_adverts
-            FROM adverts
-            GROUP BY user_id
-            ) AS a ON u.Id = a.user_id");
+            LEFT JOIN adverts a ON a.user_id = u.id
+            GROUP BY u.id");
 
         if (isBanned != null)
         {

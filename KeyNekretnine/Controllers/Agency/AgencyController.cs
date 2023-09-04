@@ -1,10 +1,14 @@
-﻿using KeyNekretnine.Application.Core.Agencies.Queries.GetAgencies;
-using KeyNekretnine.Application.Core.Agencies.Queries.GetAgencyAdverts;
-using KeyNekretnine.Application.Core.Agencies.Queries.GetAgencyAgents;
-using KeyNekretnine.Application.Core.Agencies.Queries.GetAgencyById;
-using KeyNekretnine.Application.Core.Agencies.Queries.GetAgencyLocation;
+﻿using KeyNekretnine.Application.Core.Agencies.Commands.Create;
+using KeyNekretnine.Application.Core.Agencies.Commands.Update;
+using KeyNekretnine.Application.Core.Agencies.Queries.Get;
+using KeyNekretnine.Application.Core.Agencies.Queries.GetAdverts;
+using KeyNekretnine.Application.Core.Agencies.Queries.GetAgents;
+using KeyNekretnine.Application.Core.Agencies.Queries.GetById;
+using KeyNekretnine.Application.Core.Agencies.Queries.GetLocation;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace KeyNekretnine.Api.Controllers.Agency;
 
@@ -18,9 +22,54 @@ public class AgencyController : ControllerBase
         _sender = sender;
     }
 
+    [HttpPost]
+    public async Task<IActionResult> CreateAgency([FromBody] CreateAgencyRequest createAgencyRequest, CancellationToken cancellationToken)
+    {
+        var command = new CreateAgencyCommand(
+            createAgencyRequest.FirstName,
+            createAgencyRequest.LastName,
+            createAgencyRequest.UserName,
+            createAgencyRequest.Email,
+            createAgencyRequest.Password,
+            createAgencyRequest.AgencyName);
+
+        await _sender.Send(command, cancellationToken);
+
+        return NoContent();
+    }
+
+    [Authorize]
+    [HttpPut("{agencyId}")]
+    public async Task<IActionResult> UpdateAgency([FromForm] UpdateAgencyRequest updateAgencyRequest, Guid agencyId, CancellationToken cancellationToken)
+    {
+        var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
+
+        var command = new UpdateAgencyCommand(
+            agencyId,
+            updateAgencyRequest.AgencyName,
+            userId,
+            updateAgencyRequest.Address,
+            updateAgencyRequest.Description,
+            updateAgencyRequest.Email,
+            updateAgencyRequest.WebsiteUrl,
+            updateAgencyRequest.WorkStartTime,
+            updateAgencyRequest.WorkEndTime,
+            updateAgencyRequest.TwitterUrl,
+            updateAgencyRequest.FacebookUrl,
+            updateAgencyRequest.InstagramUrl,
+            updateAgencyRequest.LinkedinUrl,
+            updateAgencyRequest.Latitude,
+            updateAgencyRequest.Longitude,
+            updateAgencyRequest.LanguageIds,
+            updateAgencyRequest.Image);
+
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? Accepted() : BadRequest(response.Error);
+    }
+
     [HttpGet("{agencyId}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAgencyById(int agencyId, CancellationToken cancellationToken)
     {
         var query = new GetAgencyByIdQuery(agencyId);
@@ -32,8 +81,6 @@ public class AgencyController : ControllerBase
 
 
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAgencies([FromQuery] AgencyPaginationParameters agencyPaginationParameters, CancellationToken cancellationToken)
     {
         var query = new GetAgenciesQuery(
@@ -48,8 +95,6 @@ public class AgencyController : ControllerBase
     }
 
     [HttpGet("{agencyId}/adverts")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAgencyAdverts(int agencyId, CancellationToken cancellationToken)
     {
         var query = new GetAgencyAdvertsQuery(agencyId);
@@ -60,8 +105,6 @@ public class AgencyController : ControllerBase
     }
 
     [HttpGet("{agencyId}/agents")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAgents(int agencyId, CancellationToken cancellationToken)
     {
         var query = new GetAgencyAgentsQuery(agencyId);
@@ -72,8 +115,6 @@ public class AgencyController : ControllerBase
     }
 
     [HttpGet("{agencyId}/location")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAgencyLocation(int agencyId, CancellationToken cancellationToken)
     {
         var query = new GetAgencyLocationQuery(agencyId);

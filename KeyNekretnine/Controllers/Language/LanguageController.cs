@@ -1,4 +1,4 @@
-﻿using KeyNekretnine.Application.Core.Language.Queries.GetAllLanguages;
+﻿using KeyNekretnine.Application.Core.Language.Queries.Get;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

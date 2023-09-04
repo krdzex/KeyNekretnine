@@ -1,4 +1,5 @@
-﻿using KeyNekretnine.Domain.Languages;
+﻿using KeyNekretnine.Domain.Agencies;
+using KeyNekretnine.Domain.Languages;
 using KeyNekretnine.Infrastructure.Configuration.SeedData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -8,8 +9,15 @@ public class LanguageConfiguration : IEntityTypeConfiguration<Language>
 {
     public void Configure(EntityTypeBuilder<Language> builder)
     {
-        builder.HasKey(x => x.Id);
-        builder.Property(x => x.Name).IsRequired().HasMaxLength(200);
+        builder.ToTable("languages");
+
+        builder.HasKey(language => language.Id);
+
+        builder.Property(language => language.Name)
+            .HasMaxLength(50)
+            .HasConversion(language => language.Value, value => new Name(value))
+            .IsRequired();
+
         builder.HasData(LanguageData.GetLanguages());
     }
 }

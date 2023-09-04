@@ -1,10 +1,9 @@
 ﻿using Dapper;
 using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Messaging;
-using KeyNekretnine.Application.Core.Language.Queries.Get;
 using KeyNekretnine.Domain.Abstraction;
 
-namespace KeyNekretnine.Application.Core.Language.Queries.GetAllLanguages;
+namespace KeyNekretnine.Application.Core.Language.Queries.Get;
 internal sealed class GetLanguagesHandler : IQueryHandler<GetLanguagesQuery, IReadOnlyList<LanguageResponse>>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;

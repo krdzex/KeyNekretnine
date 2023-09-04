@@ -57,6 +57,12 @@ public class ExceptionHandlingMiddleware
                 "Validation error",
                 "One or more validation errors has occurred",
                 validationException.Errors),
+            AuthenticationException authenticationException => new ExceptionDetails(
+                StatusCodes.Status400BadRequest,
+                "AuthenticationFailure",
+                "Authentication error",
+                "One or more errors has occurred",
+                authenticationException.Errors),
             _ => new ExceptionDetails(
                 StatusCodes.Status500InternalServerError,
                 "ServerError",

@@ -42,7 +42,7 @@ public class Advert : EntityBase
     public User User { get; set; }
 
 
-    public int? AgentId { get; set; }
+    public Guid? AgentId { get; set; }
     public Agent Agent { get; set; }
 
     public List<Image> Images { get; set; }

@@ -1,10 +1,9 @@
 ﻿using Dapper;
 using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Messaging;
-using KeyNekretnine.Application.Core.RejectReasons.Queries.Get;
 using KeyNekretnine.Domain.Abstraction;
 
-namespace KeyNekretnine.Application.Core.RejectReasons.Queries.GetRejectReasons;
+namespace KeyNekretnine.Application.Core.RejectReasons.Queries.Get;
 internal sealed class GetRejectReasonsHandler : IQueryHandler<GetRejectReasonsQuery, IReadOnlyList<RejectReasonResponse>>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;

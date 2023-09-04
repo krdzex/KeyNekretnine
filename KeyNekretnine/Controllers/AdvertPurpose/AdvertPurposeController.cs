@@ -1,4 +1,4 @@
-﻿using KeyNekretnine.Application.Core.AdvertPurposes.Queries.GetAdvertPurposes;
+﻿using KeyNekretnine.Application.Core.AdvertPurposes.Queries.Get;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,5 +1,5 @@
-﻿using KeyNekretnine.Application.Core.Cities.Queries.GetCities;
-using KeyNekretnine.Application.Core.Cities.Queries.GetMostPopularCtities;
+﻿using KeyNekretnine.Application.Core.Cities.Queries.Get;
+using KeyNekretnine.Application.Core.Cities.Queries.GetMostPopular;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

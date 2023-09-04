@@ -11,5 +11,5 @@ public sealed class PaginationAgentResponse
     public string ImageUrl { get; set; }
     public int NumAdverts { get; set; }
     public ShortAgencyResponse Agency { get; set; }
-    public SocialNetworkResponse SocialNetwork { get; set; } = new();
+    public SocialMediaResponse SocialNetwork { get; set; } = new();
 }

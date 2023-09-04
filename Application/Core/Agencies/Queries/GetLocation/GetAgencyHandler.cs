@@ -1,10 +1,9 @@
 ﻿using Dapper;
 using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Messaging;
-using KeyNekretnine.Application.Core.Agencies.Queries.GetLocation;
 using KeyNekretnine.Domain.Abstraction;
 
-namespace KeyNekretnine.Application.Core.Agencies.Queries.GetAgencyLocation;
+namespace KeyNekretnine.Application.Core.Agencies.Queries.GetLocation;
 internal sealed class GetAgencyHandler : IQueryHandler<GetAgencyLocationQuery, AgencyLocationResponse>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;
