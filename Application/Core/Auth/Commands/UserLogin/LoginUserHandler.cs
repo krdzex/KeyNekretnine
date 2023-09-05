@@ -40,8 +40,7 @@ internal sealed class LoginUserHandler : ICommandHandler<LoginUserCommand, Token
                 return Result.Failure<TokenResponse>(UserErrors.Banned(user.BanEnd));
             }
 
-            user.BanEnd = null;
-            user.IsBanned = false;
+            user.UnBan();
 
             await _userManager.UpdateAsync(user);
         }

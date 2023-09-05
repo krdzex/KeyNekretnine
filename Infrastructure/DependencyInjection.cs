@@ -11,6 +11,7 @@ using KeyNekretnine.Infrastructure.Clock;
 using KeyNekretnine.Infrastructure.Data;
 using KeyNekretnine.Infrastructure.EmailProvider;
 using KeyNekretnine.Infrastructure.ImageProvider;
+using KeyNekretnine.Infrastructure.Outbox;
 using KeyNekretnine.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -19,6 +20,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Npgsql;
+using Quartz;
 using System.Text;
 
 namespace KeyNekretnine.Infrastructure;
@@ -34,6 +36,7 @@ public static class DependencyInjection
 
         AddPersistence(services, configuration);
         AddAuthentication(services);
+        AddBackgroundJobs(services, configuration);
 
         return services;
     }
@@ -107,6 +110,17 @@ public static class DependencyInjection
 
         services.AddScoped<IJwtService, JwtService>();
 
+    }
+
+    private static void AddBackgroundJobs(IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<OutboxOptions>(configuration.GetSection("Outbox"));
+
+        services.AddQuartz(options => { options.UseMicrosoftDependencyInjectionJobFactory(); });
+
+        services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
+
+        services.ConfigureOptions<ProcessOutboxMessagesJobSetup>();
     }
 
     private static string GetConnectionString()

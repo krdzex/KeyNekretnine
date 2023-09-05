@@ -51,6 +51,10 @@
     </AssemblyAttribute>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Users\Commands\BanUser\BanUserCommand.cs" />
+    <Compile Include="Core\Users\Commands\BanUser\BanUserHandler.cs" />
+    <Compile Include="Core\Users\Commands\BanUser\SendBanEmailHandler.cs" />
+    <Compile Include="Core\Users\Commands\BanUser\UserBannedEvent.cs" />
     <Compile Include="Core\Users\Queries\GetCurrent\CurrentUserResponse.cs" />
     <Compile Include="Core\Users\Queries\GetCurrent\GetCurrentUserHandler.cs" />
     <Compile Include="Core\Users\Queries\GetCurrent\GetCurrentUserQuery.cs" />

@@ -35,7 +35,8 @@ internal sealed class CreateAgencyHandler : ICommandHandler<CreateAgencyCommand>
             new FirstName(request.FirstName),
             new LastName(request.LastName),
             request.Email,
-            request.UserName);
+            request.UserName,
+            _dateTimeProvider.UtcNow);
 
         var result = await _userManager.CreateAsync(user, request.Password);
 

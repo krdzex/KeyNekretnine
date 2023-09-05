@@ -41,7 +41,7 @@ internal sealed class GetUsersHandler : IQueryHandler<GetUsersQuery, Pagination<
                     WHEN u.is_banned = true AND u.ban_end >= now() 
                         THEN true 
                     ELSE false 
-                END AS is_banned,
+                END AS isBanned,
                 COUNT(a.id) AS numAdverts
             FROM asp_net_users AS u
             LEFT JOIN adverts a ON a.user_id = u.id

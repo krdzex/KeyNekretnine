@@ -1,42 +1,38 @@
-﻿using Application.Core.Users.Notifications.BanUser;
-using Contracts;
-using Entities.DomainErrors;
+﻿using KeyNekretnine.Application.Abstraction.Clock;
 using KeyNekretnine.Application.Abstraction.Messaging;
+using KeyNekretnine.Domain.Abstraction;
+using KeyNekretnine.Domain.Users;
 using MediatR;
-using Shared.Error;
+using Microsoft.AspNetCore.Identity;
 
 namespace KeyNekretnine.Application.Core.Users.Commands.BanUser;
-internal sealed class BanUserHandler : ICommandHandler<BanUserCommand, Unit>
+internal sealed class BanUserHandler : ICommandHandler<BanUserCommand>
 {
-    private readonly IRepositoryManager _repository;
-    private readonly IPublisher _publisher;
+    private readonly UserManager<User> _userManager;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IDateTimeProvider _dateTimeProvider;
+    //private readonly IPublisher _publisher;
 
-    public BanUserHandler(IRepositoryManager repository, IPublisher publisher)
+    public BanUserHandler(UserManager<User> userManager, IUnitOfWork unitOfWork, IDateTimeProvider dateTimeProvider)
     {
-        _repository = repository;
-        _publisher = publisher;
+        _userManager = userManager;
+        _unitOfWork = unitOfWork;
+        _dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task<Result<Unit>> Handle(BanUserCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(BanUserCommand request, CancellationToken cancellationToken)
     {
-        var user = await _repository.User.GetUserByEmail(request.Email);
+        var user = await _userManager.FindByIdAsync(request.UserId);
 
         if (user is null)
         {
-            return Result.Failure<Unit>(DomainErrors.User.UserNotFound);
+            return Result.Failure<Unit>(UserErrors.NotFound);
         }
+        user.Ban(_dateTimeProvider.UtcNow.AddDays(Convert.ToDouble(request.NoOfDays)));
 
-        var banResult = await _repository.User.BanUser(user, request.NoOfDays);
+        await _unitOfWork.SaveChangesAsync();
+        //await _publisher.Publish(new UserBannedEvent(user.Email, request.NoOfDays), cancellationToken);
 
-        if (!banResult.Succeeded)
-        {
-            var errors = banResult.Errors.Select(error => new Error(error.Code, error.Description)).ToArray();
-
-            return MultipleErrorsResult<Unit>.WithErrors(errors);
-        }
-
-        await _publisher.Publish(new UserBannedEvent(user.Email, request.NoOfDays), cancellationToken);
-
-        return Unit.Value;
+        return Result.Success();
     }
 }

@@ -22,7 +22,7 @@ internal sealed class GetUserByIdHandler : IQueryHandler<GetUserByIdQuery, UserR
             SELECT
                 u.first_name AS firstName,
                 u.last_name AS lastName,
-                u.account_created_date AS accounCreatedDate,
+                u.account_created_date AS accountCreatedDate,
                 u.id,
                 u.email,
                 CASE

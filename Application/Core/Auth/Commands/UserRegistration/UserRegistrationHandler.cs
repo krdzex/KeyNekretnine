@@ -1,4 +1,5 @@
-﻿using KeyNekretnine.Application.Abstraction.Messaging;
+﻿using KeyNekretnine.Application.Abstraction.Clock;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Application.Exceptions;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Agents;
@@ -9,10 +10,12 @@ namespace KeyNekretnine.Application.Core.Auth.Commands.UserRegistration;
 internal sealed class UserRegistrationHandler : ICommandHandler<UserRegistrationCommand>
 {
     private readonly UserManager<User> _userManager;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
-    public UserRegistrationHandler(UserManager<User> userManager)
+    public UserRegistrationHandler(UserManager<User> userManager, IDateTimeProvider dateTimeProvider)
     {
         _userManager = userManager;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<Result> Handle(UserRegistrationCommand request, CancellationToken cancellationToken)
@@ -21,7 +24,8 @@ internal sealed class UserRegistrationHandler : ICommandHandler<UserRegistration
            new FirstName(request.FirstName),
            new LastName(request.LastName),
            request.Email,
-           request.UserName);
+           request.UserName,
+           _dateTimeProvider.UtcNow);
 
         var result = await _userManager.CreateAsync(user, request.Password);
 

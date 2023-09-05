@@ -1,4 +1,5 @@
-﻿using KeyNekretnine.Application.Core.Users.Queries.Get;
+﻿using KeyNekretnine.Application.Core.Users.Commands.BanUser;
+using KeyNekretnine.Application.Core.Users.Queries.Get;
 using KeyNekretnine.Application.Core.Users.Queries.GetByIdQuery;
 using KeyNekretnine.Application.Core.Users.Queries.GetCurrent;
 using MediatR;
@@ -58,5 +59,17 @@ public sealed class UserController : ControllerBase
         var response = await _sender.Send(query, cancellationToken);
 
         return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
+
+    [Authorize(Roles = "Administrator")]
+    //[ServiceFilter(typeof(BanUserChack))]
+    [HttpPut("ban")]
+    public async Task<IActionResult> Ban([FromBody] BanUserRequest banUserRequest, CancellationToken cancellationToken)
+    {
+        var command = new BanUserCommand(banUserRequest.UserId, banUserRequest.Days);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : NotFound(response.Error);
     }
 }
