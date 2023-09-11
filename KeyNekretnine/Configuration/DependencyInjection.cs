@@ -229,7 +229,7 @@ public static class DependencyInjection
                     "https://keynekretnine-dev.vercel.app",
                     "https://keynekretnine-git-http-only-voi99.vercel.app",
                     "http://localhost:3000",
-                    "https://localhost:4200",
+                    "http://localhost:4200",
                     "https://key-nekretnine-admin.vercel.app"
                     )
                 .WithExposedHeaders("set-cookie")
