@@ -1,5 +1,5 @@
 ﻿using KeyNekretnine.Domain.Agencies;
-using KeyNekretnine.Domain.Agents;
+using KeyNekretnine.Domain.Shared;
 using KeyNekretnine.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -47,9 +47,5 @@ public class AgencyConfiguration : IEntityTypeConfiguration<Agency>
         builder.HasOne<User>()
             .WithOne()
             .HasForeignKey<Agency>(a => a.UserId);
-
-        builder.HasMany<Agent>()
-            .WithOne()
-            .HasForeignKey(agent => agent.AgencyId);
     }
 }

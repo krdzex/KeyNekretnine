@@ -1,5 +1,5 @@
-﻿using KeyNekretnine.Domain.Agencies;
-using KeyNekretnine.Domain.Agents;
+﻿using KeyNekretnine.Domain.Agents;
+using KeyNekretnine.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -41,6 +41,10 @@ public class AgentConfiguration : IEntityTypeConfiguration<Agent>
             .HasMaxLength(100)
             .HasConversion(email => email.Value, value => new Email(value))
             .IsRequired();
+
+        builder.HasOne(agent => agent.Agency)
+            .WithMany()
+            .HasForeignKey(agent => agent.AgencyId);
 
         builder.OwnsOne(agent => agent.SocialMedia);
     }

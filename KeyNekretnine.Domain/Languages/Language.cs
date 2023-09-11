@@ -1,4 +1,4 @@
-﻿using KeyNekretnine.Domain.Agencies;
+﻿using KeyNekretnine.Domain.Shared;
 
 namespace KeyNekretnine.Domain.Languages;
 public class Language

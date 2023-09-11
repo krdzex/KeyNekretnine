@@ -1,9 +1,8 @@
-﻿using KeyNekretnine.Domain.Abstraction;
+﻿using KeyNekretnine.Application.Abstraction.Clock;
+using KeyNekretnine.Application.Exceptions;
+using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.AdvertFeatures;
-using KeyNekretnine.Domain.AdvertPurposes;
 using KeyNekretnine.Domain.Adverts;
-using KeyNekretnine.Domain.AdvertStatuses;
-using KeyNekretnine.Domain.AdvertTypes;
 using KeyNekretnine.Domain.Cities;
 using KeyNekretnine.Domain.Images;
 using KeyNekretnine.Domain.Neighborhoods;
@@ -12,26 +11,32 @@ using KeyNekretnine.Domain.TemporeryImageDatas;
 using KeyNekretnine.Domain.UserAdvertFavorites;
 using KeyNekretnine.Domain.UserAdvertReports;
 using KeyNekretnine.Domain.Users;
-using MediatR;
+using KeyNekretnine.Infrastructure.BackgroundJobs.Outbox;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace KeyNekretnine.Infrastructure;
 public sealed class ApplicationDbContext : IdentityDbContext<User>, IUnitOfWork
 {
-    private readonly IPublisher _publisher;
+    private static readonly JsonSerializerSettings JsonSerializerSettings = new()
+    {
+        TypeNameHandling = TypeNameHandling.All
+    };
 
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IPublisher publisher)
+    private readonly IDateTimeProvider _dateTimeProvider;
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IDateTimeProvider dateTimeProvider)
         : base(options)
     {
-        _publisher = publisher;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public DbSet<Image> Images { get; set; }
-    public DbSet<AdvertStatus> AdvertStatuses { get; set; }
-    public DbSet<AdvertPurpose> AdvertPurposes { get; set; }
-    public DbSet<AdvertType> AdvertTypes { get; set; }
+    //public DbSet<AdvertStatus> AdvertStatuses { get; set; }
+    //public DbSet<AdvertPurpose> AdvertPurposes { get; set; }
+    //public DbSet<AdvertType> AdvertTypes { get; set; }
     public DbSet<Advert> Adverts { get; set; }
     public DbSet<City> Cities { get; set; }
     public DbSet<Neighborhood> Neighborhoods { get; set; }
@@ -40,7 +45,6 @@ public sealed class ApplicationDbContext : IdentityDbContext<User>, IUnitOfWork
     public DbSet<RejectReason> RejectReasons { get; set; }
     public DbSet<UserAdvertReport> UserAdvertReports { get; set; }
     public DbSet<AdvertFeature> AdvertFeatures { get; set; }
-    //public DbSet<PhoneNumber> PhoneNumbers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -59,38 +63,40 @@ public sealed class ApplicationDbContext : IdentityDbContext<User>, IUnitOfWork
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        //try
-        //{
-        var result = await base.SaveChangesAsync(cancellationToken);
+        try
+        {
+            AddDomainEventsAsOutboxMessages();
 
-        //await PublishDomainEventsAsync();
+            var result = await base.SaveChangesAsync(cancellationToken);
 
-        return result;
-        //}
-        //catch (DbUpdateConcurrencyException ex)
-        //{
-        //    throw new ConcurrencyException("Concurrency exception occurred.", ex);
-        //}
+            return result;
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            throw new ConcurrencyException("Concurrency exception occurred.", ex);
+        }
     }
 
-    //private async Task PublishDomainEventsAsync()
-    //{
-    //    var domainEvents = ChangeTracker
-    //        .Entries<Entity>()
-    //        .Select(entry => entry.Entity)
-    //        .SelectMany(entity =>
-    //        {
-    //            var domainEvents = entity.GetDomainEvents();
+    private void AddDomainEventsAsOutboxMessages()
+    {
+        var outboxMessages = ChangeTracker
+            .Entries<IEntity>()
+            .Select(entry => entry.Entity)
+            .SelectMany(entity =>
+            {
+                var domainEvents = entity.GetDomainEvents();
 
-    //            entity.ClearDomainEvents();
+                entity.ClearDomainEvents();
 
-    //            return domainEvents;
-    //        })
-    //        .ToList();
+                return domainEvents;
+            })
+            .Select(domainEvent => new OutboxMessage(
+                Guid.NewGuid(),
+                _dateTimeProvider.Now,
+                domainEvent.GetType().Name,
+                JsonConvert.SerializeObject(domainEvent, JsonSerializerSettings)))
+            .ToList();
 
-    //    foreach (var domainEvent in domainEvents)
-    //    {
-    //        await _publisher.Publish(domainEvent);
-    //    }
-    //}
+        AddRange(outboxMessages);
+    }
 }

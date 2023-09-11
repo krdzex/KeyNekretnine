@@ -1,5 +1,5 @@
-﻿using KeyNekretnine.Domain.Agencies;
-using KeyNekretnine.Domain.Languages;
+﻿using KeyNekretnine.Domain.Languages;
+using KeyNekretnine.Domain.Shared;
 
 namespace KeyNekretnine.Infrastructure.Configuration.SeedData;
 public class LanguageData

@@ -10,7 +10,6 @@
     <Compile Remove="Core\Auth\Commands\FacebookLogin\**" />
     <Compile Remove="Core\Auth\Commands\GoogleLogin\**" />
     <Compile Remove="Core\Email\**" />
-    <Compile Remove="Core\Tokens\**" />
     <Compile Remove="Core\Users\**" />
     <Compile Remove="Queries\**" />
     <Compile Remove="Validators\**" />
@@ -19,7 +18,6 @@
     <EmbeddedResource Remove="Core\Auth\Commands\FacebookLogin\**" />
     <EmbeddedResource Remove="Core\Auth\Commands\GoogleLogin\**" />
     <EmbeddedResource Remove="Core\Email\**" />
-    <EmbeddedResource Remove="Core\Tokens\**" />
     <EmbeddedResource Remove="Core\Users\**" />
     <EmbeddedResource Remove="Queries\**" />
     <EmbeddedResource Remove="Validators\**" />
@@ -28,7 +26,6 @@
     <None Remove="Core\Auth\Commands\FacebookLogin\**" />
     <None Remove="Core\Auth\Commands\GoogleLogin\**" />
     <None Remove="Core\Email\**" />
-    <None Remove="Core\Tokens\**" />
     <None Remove="Core\Users\**" />
     <None Remove="Queries\**" />
     <None Remove="Validators\**" />
@@ -51,10 +48,18 @@
     </AssemblyAttribute>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Agents\Commands\Create\CreateAgentCommand.cs" />
+    <Compile Include="Core\Agents\Commands\Create\CreateAgentHandler.cs" />
+    <Compile Include="Core\Agents\Commands\Update\UpdateAgentCommand.cs" />
+    <Compile Include="Core\Agents\Commands\Update\UpdateAgentHandler.cs" />
     <Compile Include="Core\Users\Commands\BanUser\BanUserCommand.cs" />
     <Compile Include="Core\Users\Commands\BanUser\BanUserHandler.cs" />
-    <Compile Include="Core\Users\Commands\BanUser\SendBanEmailHandler.cs" />
-    <Compile Include="Core\Users\Commands\BanUser\UserBannedEvent.cs" />
+    <Compile Include="Core\Users\Commands\BanUser\UserBannedDomainEventHandler.cs" />
+    <Compile Include="Core\Users\Commands\UnbanUser\UserUnbannedDomainEventHandler.cs" />
+    <Compile Include="Core\Users\Commands\UnbanUser\UnbanUserCommand.cs" />
+    <Compile Include="Core\Users\Commands\UnbanUser\UserUnbanHandler.cs" />
+    <Compile Include="Core\Users\Commands\UpdateUser\UpdateUserCommand.cs" />
+    <Compile Include="Core\Users\Commands\UpdateUser\UpdateUserHandler.cs" />
     <Compile Include="Core\Users\Queries\GetCurrent\CurrentUserResponse.cs" />
     <Compile Include="Core\Users\Queries\GetCurrent\GetCurrentUserHandler.cs" />
     <Compile Include="Core\Users\Queries\GetCurrent\GetCurrentUserQuery.cs" />

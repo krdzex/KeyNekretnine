@@ -1,5 +1,6 @@
 ﻿using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.AgencyLanguages;
+using KeyNekretnine.Domain.Shared;
 
 namespace KeyNekretnine.Domain.Agencies;
 public class Agency : Entity
@@ -90,7 +91,7 @@ public class Agency : Entity
         }
     }
 
-    public void UpdateImageUrl(ImageUrl imageUrl)
+    public void UpdateImage(ImageUrl imageUrl)
     {
         ImageUrl = imageUrl;
     }

@@ -1,4 +1,4 @@
-﻿using KeyNekretnine.Infrastructure.Outbox;
+﻿using KeyNekretnine.Infrastructure.BackgroundJobs.Outbox;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

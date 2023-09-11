@@ -33,10 +33,10 @@ internal sealed class GetAgentsHandler : IQueryHandler<GetAgentsQuery, Paginatio
                 a.last_Name AS lastName,
                 a.email,
                 a.image_Url AS imageUrl,
-                a.twitter_Url AS twitter,
-                a.facebook_Url AS facebook,
-                a.instagram_Url AS instagram,
-                a.linkedin_Url AS linkedin,
+                a.social_media_twitter AS twitter,
+                a.social_media_facebook AS facebook,
+                a.social_media_instagram AS instagram,
+                a.social_media_linkedin AS linkedin,
                 ag.id AS agencyId,
                 ag.name AS agencyName 
             FROM agents AS a
@@ -58,10 +58,10 @@ internal sealed class GetAgentsHandler : IQueryHandler<GetAgentsQuery, Paginatio
         var multi = await connection.QueryMultipleAsync(cmd);
         var count = await multi.ReadSingleAsync<int>();
         var agents = multi.Read<PaginationAgentResponse, SocialMediaResponse, ShortAgencyResponse, PaginationAgentResponse>(
-        (agent, social, agency) =>
+        (agent, socialMedia, agency) =>
         {
 
-            agent.SocialNetwork = agent.SocialNetwork ??= social;
+            agent.SocialMedia ??= socialMedia;
             agent.Agency = agency;
             return agent;
         }, splitOn: "twitter,agencyId").ToList();

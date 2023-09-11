@@ -1,66 +1,76 @@
-﻿namespace KeyNekretnine.Application.Core.Agents.Commands.Create;
-internal sealed class CreateAgentHandler : ICommandHandler<CreateAgentCommand, Unit>
-{
-    private readonly IRepositoryManager _repository;
-    private readonly IServiceManager _service;
+﻿using KeyNekretnine.Application.Abstraction.Clock;
+using KeyNekretnine.Application.Abstraction.Image;
+using KeyNekretnine.Application.Abstraction.Messaging;
+using KeyNekretnine.Domain.Abstraction;
+using KeyNekretnine.Domain.Agencies;
+using KeyNekretnine.Domain.Agents;
+using KeyNekretnine.Domain.Shared;
+using MediatR;
 
-    public CreateAgentHandler(IRepositoryManager repository, IServiceManager service)
+namespace KeyNekretnine.Application.Core.Agents.Commands.Create;
+internal sealed class CreateAgentHandler : ICommandHandler<CreateAgentCommand>
+{
+    private readonly IAgencyRepository _agencyRepository;
+    private readonly IImageService _imageService;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IAgentRepository _agentRepository;
+    private readonly IDateTimeProvider _dateTimeProvider;
+    public CreateAgentHandler(
+        IAgencyRepository agencyRepository,
+        IImageService imageService,
+        IUnitOfWork unitOfWork,
+        IAgentRepository agentRepository,
+        IDateTimeProvider dateTimeProvider)
     {
-        _repository = repository;
-        _service = service;
+        _agencyRepository = agencyRepository;
+        _imageService = imageService;
+        _unitOfWork = unitOfWork;
+        _agentRepository = agentRepository;
+        _dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task<Result<Unit>> Handle(CreateAgentCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(CreateAgentCommand request, CancellationToken cancellationToken)
     {
-        using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+        var agency = await _agencyRepository.GetByIdAsync(request.AgencyId, cancellationToken);
+
+        if (agency is null)
         {
-            var agencyExist = await _repository.Agency.DoesAgencyExist(request.Agent.AgencyId, cancellationToken);
-
-            if (!agencyExist)
-            {
-                return Result.Failure<Unit>(DomainErrors.Agency.AgencyNotFound);
-            }
-
-            var userId = await _repository.User.GetUserIdFromEmail(request.Email, cancellationToken);
-
-            if (userId is null)
-            {
-                return Result.Failure<Unit>(DomainErrors.User.UserNotFound);
-            }
-
-            var isUserAgencyOwner = await _repository.Agency.IsUserAgencyOwner(userId, request.Agent.AgencyId, cancellationToken);
-
-            if (!isUserAgencyOwner)
-            {
-                return Result.Failure<Unit>(DomainErrors.Agency.NotOwnerError);
-            }
-
-            var phoneNumber = await _repository.PhoneNumber.MakeNumber(request.Agent.NumberMaker, cancellationToken);
-
-            if (phoneNumber is null)
-            {
-                return Result.Failure<Unit>(DomainErrors.Agent.BadPhoneNumber);
-            }
-
-            request.Agent.PhoneNumber = phoneNumber;
-
-            if (request.Agent.Image?.Length > 0)
-            {
-                request.Agent.ImageUrl = await _service.ImageService.UploadImageOnCloudinary(request.Agent.Image);
-            }
-
-            var agentId = await _repository.Agent.CreateAgentAndReturnId(request.Agent, cancellationToken);
-
-            if (request.Agent.LanguageId is not null)
-            {
-                foreach (var languageId in request.Agent.LanguageId)
-                {
-                    await _repository.Agent.AddLanguageToAgent(languageId, agentId, cancellationToken);
-                }
-            }
-
-            transaction.Complete();
+            return Result.Failure<Unit>(AgencyErrors.NotFound);
         }
-        return Unit.Value;
+
+        if (agency.UserId != request.UserId)
+        {
+            return Result.Failure<Unit>(AgencyErrors.NotOwner);
+
+        }
+
+        var agent = Agent.Create(
+            new FirstName(request.FirstName),
+            new LastName(request.LastName),
+            new PhoneNumber(request.PhoneNumber),
+            new Description(request.Description),
+            new Email(request.Email),
+            new SocialMedia(
+                request.TwitterUrl,
+                request.FacebookUrl,
+                request.InstagramUrl,
+                request.LinkedinUrl),
+            agency.Id,
+            request.LanguageIds,
+            _dateTimeProvider.Now
+            );
+
+        if (request.Image?.Length > 0)
+        {
+            var imageUrl = await _imageService.UploadImageOnCloudinary(request.Image);
+
+            agent.UpdateImage(new ImageUrl(imageUrl));
+        }
+
+        _agentRepository.Add(agent);
+
+        await _unitOfWork.SaveChangesAsync();
+
+        return Result.Success();
     }
 }

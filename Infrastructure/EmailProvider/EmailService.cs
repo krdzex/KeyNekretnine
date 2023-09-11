@@ -105,7 +105,7 @@ internal sealed class EmailService : IEmailService
         return response.IsSuccessStatusCode;
     }
 
-    public async Task<bool> SendUserBanEmail(string email, DateTime banEnd, CancellationToken cancellationToken)
+    public async Task<bool> SendUserBanEmail(string email, DateTime? banEnd, CancellationToken cancellationToken)
     {
         var sendGridConfigSection = _configuration.GetSection("SendGridEmailSettings");
 

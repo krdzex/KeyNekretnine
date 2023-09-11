@@ -19,9 +19,9 @@ internal sealed class GetAgencyHandler : IQueryHandler<GetAgencyLocationQuery, A
 
         const string sql = """
             SELECT 
-                latitude,
-                longitude,
-                address
+                location_latitude AS latitude,
+                location_longitude AS longitude,
+                location_address AS address
             FROM agencies
             WHERE id = @agencyId;
             """;

@@ -1,4 +1,5 @@
 ﻿using KeyNekretnine.Application.Abstraction.Authentication;
+using KeyNekretnine.Application.Core.Auth.Commands.RefreshTokens;
 using KeyNekretnine.Domain.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -78,22 +79,30 @@ internal sealed class JwtService : IJwtService
         return newRefreshToken;
     }
 
-    //public async Task<TokenRequest> VerifyRefreshToken(TokenRequest request)
-    //{
-    //    var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
-    //    var tokenContent = jwtSecurityTokenHandler.ReadJwtToken(request.AccessToken);
-    //    var email = tokenContent.Claims.ToList().FirstOrDefault(q => q.Type == ClaimTypes.Email)?.Value;
-    //    var user = await _userManager.FindByEmailAsync(email);
+    public async Task<RefreshTokenResponse> VerifyRefreshToken(string accessToken, string refreshToken)
+    {
+        var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
+        var tokenContent = jwtSecurityTokenHandler.ReadJwtToken(accessToken);
+        var userId = tokenContent.Claims.ToList().FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier)?.Value;
+        var user = await _userManager.FindByIdAsync(userId);
 
-    //    var isValid = await _userManager.VerifyUserTokenAsync(user, "KeyNekretnineAPI", "RefreshToken", request.RefreshToken);
-    //    if (!isValid)
-    //    {
-    //        await _userManager.UpdateSecurityStampAsync(user);
-    //        return null;
-    //    }
+        var isValid = await _userManager.VerifyUserTokenAsync(
+            user,
+            "KeyNekretnineAPI",
+            "RefreshToken",
+            refreshToken);
 
-    //    return new TokenRequest { AccessToken = await CreateAccessToken(user), RefreshToken = await CreateRefreshToken(user) };
-    //}
+        if (!isValid)
+        {
+            await _userManager.UpdateSecurityStampAsync(user);
+            return null;
+        }
+
+        var newAccessToken = await CreateAccessToken(user);
+        var newRefreshToken = await CreateRefreshToken(user);
+
+        return new RefreshTokenResponse { AccessToken = newAccessToken, RefreshToken = newRefreshToken };
+    }
 
     //public async Task<GoogleJsonWebSignature.Payload> VerifyGoogleToken(GoogleLoginDto googleLoginDto)
     //{

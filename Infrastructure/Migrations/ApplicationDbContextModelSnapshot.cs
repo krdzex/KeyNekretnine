@@ -24,15 +24,13 @@ namespace KeyNekretnine.Infrastructure.Migrations
 
             modelBuilder.Entity("KeyNekretnine.Domain.AdvertFeatures.AdvertFeature", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AdvertId")
-                        .HasColumnType("integer")
+                    b.Property<Guid>("AdvertId")
+                        .HasColumnType("uuid")
                         .HasColumnName("advert_id");
 
                     b.Property<string>("Name")
@@ -50,169 +48,14 @@ namespace KeyNekretnine.Infrastructure.Migrations
                     b.ToTable("advert_features", (string)null);
                 });
 
-            modelBuilder.Entity("KeyNekretnine.Domain.AdvertPurposes.AdvertPurpose", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("NameEn")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name_en");
-
-                    b.Property<string>("NameSr")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("character varying(15)")
-                        .HasColumnName("name_sr");
-
-                    b.HasKey("Id")
-                        .HasName("pk_advert_purposes");
-
-                    b.ToTable("advert_purposes", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            NameEn = "Rent",
-                            NameSr = "Rentiranje"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            NameEn = "Sale",
-                            NameSr = "Prodaja"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            NameEn = "Short term rent",
-                            NameSr = "Stan na dan"
-                        });
-                });
-
-            modelBuilder.Entity("KeyNekretnine.Domain.AdvertStatuses.AdvertStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("NameEn")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)")
-                        .HasColumnName("name_en");
-
-                    b.Property<string>("NameSr")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)")
-                        .HasColumnName("name_sr");
-
-                    b.HasKey("Id")
-                        .HasName("pk_advert_statuses");
-
-                    b.ToTable("advert_statuses", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            NameEn = "Accepted",
-                            NameSr = "Prihvacen"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            NameEn = "Pending",
-                            NameSr = "Na cekanju"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            NameEn = "Declined",
-                            NameSr = "Odbijen"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            NameEn = "Uploading",
-                            NameSr = "Dodavanje u procesu"
-                        });
-                });
-
-            modelBuilder.Entity("KeyNekretnine.Domain.AdvertTypes.AdvertType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("NameEn")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)")
-                        .HasColumnName("name_en");
-
-                    b.Property<string>("NameSr")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)")
-                        .HasColumnName("name_sr");
-
-                    b.HasKey("Id")
-                        .HasName("pk_advert_types");
-
-                    b.ToTable("advert_types", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            NameEn = "House",
-                            NameSr = "Kuca"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            NameEn = "Apartman",
-                            NameSr = "Stan"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            NameEn = "Office space",
-                            NameSr = "Poslovni prostor"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            NameEn = "Land lot",
-                            NameSr = "Zemljiste"
-                        });
-                });
-
             modelBuilder.Entity("KeyNekretnine.Domain.Adverts.Advert", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
                     b.Property<Guid?>("AgentId")
-                        .IsRequired()
                         .HasColumnType("uuid")
                         .HasColumnName("agent_id");
 
@@ -226,21 +69,9 @@ namespace KeyNekretnine.Infrastructure.Migrations
                         .HasColumnType("character varying(150)")
                         .HasColumnName("cover_image_url");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime>("CreatedOnDate")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_date");
-
-                    b.Property<string>("DescriptionEn")
-                        .IsRequired()
-                        .HasMaxLength(10000)
-                        .HasColumnType("character varying(10000)")
-                        .HasColumnName("description_en");
-
-                    b.Property<string>("DescriptionSr")
-                        .IsRequired()
-                        .HasMaxLength(10000)
-                        .HasColumnType("character varying(10000)")
-                        .HasColumnName("description_sr");
+                        .HasColumnName("created_on_date");
 
                     b.Property<double>("FloorSpace")
                         .HasMaxLength(10000)
@@ -263,10 +94,6 @@ namespace KeyNekretnine.Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("has_wifi");
 
-                    b.Property<bool>("IsEmergency")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_emergency");
-
                     b.Property<bool>("IsFurnished")
                         .HasColumnType("boolean")
                         .HasColumnName("is_furnished");
@@ -275,18 +102,12 @@ namespace KeyNekretnine.Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("is_under_construction");
 
-                    b.Property<double>("Latitude")
-                        .HasColumnType("double precision")
-                        .HasColumnName("latitude");
-
-                    b.Property<double>("Longitude")
-                        .HasColumnType("double precision")
-                        .HasColumnName("longitude");
+                    b.Property<bool>("IsUrgent")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_urgent");
 
                     b.Property<int>("NeighborhoodId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasDefaultValue(1)
                         .HasColumnName("neighborhood_id");
 
                     b.Property<int>("NoOfBathrooms")
@@ -303,11 +124,9 @@ namespace KeyNekretnine.Infrastructure.Migrations
                         .HasColumnType("double precision")
                         .HasColumnName("price");
 
-                    b.Property<int>("PurposeId")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("Purpose")
                         .HasColumnType("integer")
-                        .HasDefaultValue(1)
-                        .HasColumnName("purpose_id");
+                        .HasColumnName("purpose");
 
                     b.Property<string>("ReferenceId")
                         .IsRequired()
@@ -315,23 +134,13 @@ namespace KeyNekretnine.Infrastructure.Migrations
                         .HasColumnType("character varying(10)")
                         .HasColumnName("reference_id");
 
-                    b.Property<int>("StatusId")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("Status")
                         .HasColumnType("integer")
-                        .HasDefaultValue(1)
-                        .HasColumnName("status_id");
+                        .HasColumnName("status");
 
-                    b.Property<string>("Street")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)")
-                        .HasColumnName("street");
-
-                    b.Property<int>("TypeId")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("Type")
                         .HasColumnType("integer")
-                        .HasDefaultValue(1)
-                        .HasColumnName("type_id");
+                        .HasColumnName("type");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -352,14 +161,9 @@ namespace KeyNekretnine.Infrastructure.Migrations
                     b.HasIndex("NeighborhoodId")
                         .HasDatabaseName("ix_adverts_neighborhood_id");
 
-                    b.HasIndex("PurposeId")
-                        .HasDatabaseName("ix_adverts_purpose_id");
-
-                    b.HasIndex("StatusId")
-                        .HasDatabaseName("ix_adverts_status_id");
-
-                    b.HasIndex("TypeId")
-                        .HasDatabaseName("ix_adverts_type_id");
+                    b.HasIndex("ReferenceId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_adverts_reference_id");
 
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_adverts_user_id");
@@ -467,6 +271,10 @@ namespace KeyNekretnine.Infrastructure.Migrations
                     b.Property<Guid>("AgencyId")
                         .HasColumnType("uuid")
                         .HasColumnName("agency_id");
+
+                    b.Property<DateTime>("CretedOnTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("creted_on_time");
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
@@ -723,14 +531,9 @@ namespace KeyNekretnine.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AdvertId")
-                        .HasColumnType("integer")
+                    b.Property<Guid>("AdvertId")
+                        .HasColumnType("uuid")
                         .HasColumnName("advert_id");
-
-                    b.Property<string>("PublicId")
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("public_id");
 
                     b.Property<string>("Url")
                         .IsRequired()
@@ -8908,1777 +8711,6 @@ namespace KeyNekretnine.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("KeyNekretnine.Domain.PhoneNumbers.PhoneNumber", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("code");
-
-                    b.Property<string>("Label")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("label");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("phone");
-
-                    b.HasKey("Id")
-                        .HasName("pk_phone_numbers");
-
-                    b.ToTable("phone_numbers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Code = "AD",
-                            Label = "Andorra",
-                            Phone = "376"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Code = "AE",
-                            Label = "United Arab Emirates",
-                            Phone = "971"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Code = "AF",
-                            Label = "Afghanistan",
-                            Phone = "93"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Code = "AG",
-                            Label = "Antigua and Barbuda",
-                            Phone = "1-268"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Code = "AI",
-                            Label = "Anguilla",
-                            Phone = "1-264"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Code = "AL",
-                            Label = "Albania",
-                            Phone = "355"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Code = "AM",
-                            Label = "Armenia",
-                            Phone = "374"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Code = "AO",
-                            Label = "Angola",
-                            Phone = "244"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Code = "AQ",
-                            Label = "Antarctica",
-                            Phone = "672"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Code = "AR",
-                            Label = "Argentina",
-                            Phone = "54"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Code = "AS",
-                            Label = "American Samoa",
-                            Phone = "1-684"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Code = "AT",
-                            Label = "Austria",
-                            Phone = "43"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Code = "AU",
-                            Label = "Australia",
-                            Phone = "61"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            Code = "AW",
-                            Label = "Aruba",
-                            Phone = "297"
-                        },
-                        new
-                        {
-                            Id = 15,
-                            Code = "AX",
-                            Label = "Alland Islands",
-                            Phone = "358"
-                        },
-                        new
-                        {
-                            Id = 16,
-                            Code = "AZ",
-                            Label = "Azerbaijan",
-                            Phone = "994"
-                        },
-                        new
-                        {
-                            Id = 17,
-                            Code = "BA",
-                            Label = "Bosnia and Herzegovina",
-                            Phone = "387"
-                        },
-                        new
-                        {
-                            Id = 18,
-                            Code = "BB",
-                            Label = "Barbados",
-                            Phone = "1-246"
-                        },
-                        new
-                        {
-                            Id = 19,
-                            Code = "BD",
-                            Label = "Bangladesh",
-                            Phone = "880"
-                        },
-                        new
-                        {
-                            Id = 20,
-                            Code = "BE",
-                            Label = "Belgium",
-                            Phone = "32"
-                        },
-                        new
-                        {
-                            Id = 21,
-                            Code = "BF",
-                            Label = "Burkina Faso",
-                            Phone = "226"
-                        },
-                        new
-                        {
-                            Id = 22,
-                            Code = "BG",
-                            Label = "Bulgaria",
-                            Phone = "359"
-                        },
-                        new
-                        {
-                            Id = 23,
-                            Code = "BH",
-                            Label = "Bahrain",
-                            Phone = "973"
-                        },
-                        new
-                        {
-                            Id = 24,
-                            Code = "BI",
-                            Label = "Burundi",
-                            Phone = "257"
-                        },
-                        new
-                        {
-                            Id = 25,
-                            Code = "BJ",
-                            Label = "Benin",
-                            Phone = "229"
-                        },
-                        new
-                        {
-                            Id = 26,
-                            Code = "BL",
-                            Label = "Saint Barthelemy",
-                            Phone = "590"
-                        },
-                        new
-                        {
-                            Id = 27,
-                            Code = "BM",
-                            Label = "Bermuda",
-                            Phone = "1-441"
-                        },
-                        new
-                        {
-                            Id = 28,
-                            Code = "BN",
-                            Label = "Brunei Darussalam",
-                            Phone = "673"
-                        },
-                        new
-                        {
-                            Id = 29,
-                            Code = "BO",
-                            Label = "Bolivia",
-                            Phone = "591"
-                        },
-                        new
-                        {
-                            Id = 30,
-                            Code = "BR",
-                            Label = "Brazil",
-                            Phone = "55"
-                        },
-                        new
-                        {
-                            Id = 31,
-                            Code = "BS",
-                            Label = "Bahamas",
-                            Phone = "1-242"
-                        },
-                        new
-                        {
-                            Id = 32,
-                            Code = "BT",
-                            Label = "Bhutan",
-                            Phone = "975"
-                        },
-                        new
-                        {
-                            Id = 33,
-                            Code = "BV",
-                            Label = "Bouvet Island",
-                            Phone = "47"
-                        },
-                        new
-                        {
-                            Id = 34,
-                            Code = "BW",
-                            Label = "Botswana",
-                            Phone = "267"
-                        },
-                        new
-                        {
-                            Id = 35,
-                            Code = "BY",
-                            Label = "Belarus",
-                            Phone = "375"
-                        },
-                        new
-                        {
-                            Id = 36,
-                            Code = "BZ",
-                            Label = "Belize",
-                            Phone = "501"
-                        },
-                        new
-                        {
-                            Id = 37,
-                            Code = "CA",
-                            Label = "Canada",
-                            Phone = "1"
-                        },
-                        new
-                        {
-                            Id = 38,
-                            Code = "CC",
-                            Label = "Cocos (Keeling) Islands",
-                            Phone = "61"
-                        },
-                        new
-                        {
-                            Id = 39,
-                            Code = "CD",
-                            Label = "Congo, Democratic Republic of the",
-                            Phone = "243"
-                        },
-                        new
-                        {
-                            Id = 40,
-                            Code = "CF",
-                            Label = "Central African Republic",
-                            Phone = "236"
-                        },
-                        new
-                        {
-                            Id = 41,
-                            Code = "CG",
-                            Label = "Congo, Republic of the",
-                            Phone = "242"
-                        },
-                        new
-                        {
-                            Id = 42,
-                            Code = "CH",
-                            Label = "Switzerland",
-                            Phone = "41"
-                        },
-                        new
-                        {
-                            Id = 43,
-                            Code = "CI",
-                            Label = "Cote d'Ivoire",
-                            Phone = "225"
-                        },
-                        new
-                        {
-                            Id = 44,
-                            Code = "CK",
-                            Label = "Cook Islands",
-                            Phone = "682"
-                        },
-                        new
-                        {
-                            Id = 45,
-                            Code = "CL",
-                            Label = "Chile",
-                            Phone = "56"
-                        },
-                        new
-                        {
-                            Id = 46,
-                            Code = "CM",
-                            Label = "Cameroon",
-                            Phone = "237"
-                        },
-                        new
-                        {
-                            Id = 47,
-                            Code = "CN",
-                            Label = "China",
-                            Phone = "86"
-                        },
-                        new
-                        {
-                            Id = 48,
-                            Code = "CO",
-                            Label = "Colombia",
-                            Phone = "57"
-                        },
-                        new
-                        {
-                            Id = 49,
-                            Code = "CR",
-                            Label = "Costa Rica",
-                            Phone = "506"
-                        },
-                        new
-                        {
-                            Id = 50,
-                            Code = "CU",
-                            Label = "Cuba",
-                            Phone = "53"
-                        },
-                        new
-                        {
-                            Id = 51,
-                            Code = "CV",
-                            Label = "Cape Verde",
-                            Phone = "238"
-                        },
-                        new
-                        {
-                            Id = 52,
-                            Code = "CW",
-                            Label = "Curacao",
-                            Phone = "599"
-                        },
-                        new
-                        {
-                            Id = 53,
-                            Code = "CX",
-                            Label = "Christmas Island",
-                            Phone = "61"
-                        },
-                        new
-                        {
-                            Id = 54,
-                            Code = "CY",
-                            Label = "Cyprus",
-                            Phone = "357"
-                        },
-                        new
-                        {
-                            Id = 55,
-                            Code = "CZ",
-                            Label = "Czech Republic",
-                            Phone = "420"
-                        },
-                        new
-                        {
-                            Id = 56,
-                            Code = "DE",
-                            Label = "Germany",
-                            Phone = "49"
-                        },
-                        new
-                        {
-                            Id = 57,
-                            Code = "DJ",
-                            Label = "Djibouti",
-                            Phone = "253"
-                        },
-                        new
-                        {
-                            Id = 58,
-                            Code = "DK",
-                            Label = "Denmark",
-                            Phone = "45"
-                        },
-                        new
-                        {
-                            Id = 59,
-                            Code = "DM",
-                            Label = "Dominica",
-                            Phone = "1-767"
-                        },
-                        new
-                        {
-                            Id = 60,
-                            Code = "DO",
-                            Label = "Dominican Republic",
-                            Phone = "1-809"
-                        },
-                        new
-                        {
-                            Id = 61,
-                            Code = "DZ",
-                            Label = "Algeria",
-                            Phone = "213"
-                        },
-                        new
-                        {
-                            Id = 62,
-                            Code = "EC",
-                            Label = "Ecuador",
-                            Phone = "593"
-                        },
-                        new
-                        {
-                            Id = 63,
-                            Code = "EE",
-                            Label = "Estonia",
-                            Phone = "372"
-                        },
-                        new
-                        {
-                            Id = 64,
-                            Code = "EG",
-                            Label = "Egypt",
-                            Phone = "20"
-                        },
-                        new
-                        {
-                            Id = 65,
-                            Code = "EH",
-                            Label = "Western Sahara",
-                            Phone = "212"
-                        },
-                        new
-                        {
-                            Id = 66,
-                            Code = "ER",
-                            Label = "Eritrea",
-                            Phone = "291"
-                        },
-                        new
-                        {
-                            Id = 67,
-                            Code = "ES",
-                            Label = "Spain",
-                            Phone = "34"
-                        },
-                        new
-                        {
-                            Id = 68,
-                            Code = "ET",
-                            Label = "Ethiopia",
-                            Phone = "251"
-                        },
-                        new
-                        {
-                            Id = 69,
-                            Code = "FI",
-                            Label = "Finland",
-                            Phone = "358"
-                        },
-                        new
-                        {
-                            Id = 70,
-                            Code = "FJ",
-                            Label = "Fiji",
-                            Phone = "679"
-                        },
-                        new
-                        {
-                            Id = 71,
-                            Code = "FK",
-                            Label = "Falkland Islands (Malvinas)",
-                            Phone = "500"
-                        },
-                        new
-                        {
-                            Id = 72,
-                            Code = "FM",
-                            Label = "Micronesia, Federated States of",
-                            Phone = "691"
-                        },
-                        new
-                        {
-                            Id = 73,
-                            Code = "FO",
-                            Label = "Faroe Islands",
-                            Phone = "298"
-                        },
-                        new
-                        {
-                            Id = 74,
-                            Code = "FR",
-                            Label = "France",
-                            Phone = "33"
-                        },
-                        new
-                        {
-                            Id = 75,
-                            Code = "GA",
-                            Label = "Gabon",
-                            Phone = "241"
-                        },
-                        new
-                        {
-                            Id = 76,
-                            Code = "GB",
-                            Label = "United Kingdom",
-                            Phone = "44"
-                        },
-                        new
-                        {
-                            Id = 77,
-                            Code = "GD",
-                            Label = "Grenada",
-                            Phone = "1-473"
-                        },
-                        new
-                        {
-                            Id = 78,
-                            Code = "GE",
-                            Label = "Georgia",
-                            Phone = "995"
-                        },
-                        new
-                        {
-                            Id = 79,
-                            Code = "GF",
-                            Label = "French Guiana",
-                            Phone = "594"
-                        },
-                        new
-                        {
-                            Id = 80,
-                            Code = "GG",
-                            Label = "Guernsey",
-                            Phone = "44"
-                        },
-                        new
-                        {
-                            Id = 81,
-                            Code = "GH",
-                            Label = "Ghana",
-                            Phone = "233"
-                        },
-                        new
-                        {
-                            Id = 82,
-                            Code = "GI",
-                            Label = "Gibraltar",
-                            Phone = "350"
-                        },
-                        new
-                        {
-                            Id = 83,
-                            Code = "GL",
-                            Label = "Greenland",
-                            Phone = "299"
-                        },
-                        new
-                        {
-                            Id = 84,
-                            Code = "GM",
-                            Label = "Gambia",
-                            Phone = "220"
-                        },
-                        new
-                        {
-                            Id = 85,
-                            Code = "GN",
-                            Label = "Guinea",
-                            Phone = "224"
-                        },
-                        new
-                        {
-                            Id = 86,
-                            Code = "GP",
-                            Label = "Guadeloupe",
-                            Phone = "590"
-                        },
-                        new
-                        {
-                            Id = 87,
-                            Code = "GQ",
-                            Label = "Equatorial Guinea",
-                            Phone = "240"
-                        },
-                        new
-                        {
-                            Id = 88,
-                            Code = "GR",
-                            Label = "Greece",
-                            Phone = "30"
-                        },
-                        new
-                        {
-                            Id = 89,
-                            Code = "GS",
-                            Label = "South Georgia and the South Sandwich Islands",
-                            Phone = "500"
-                        },
-                        new
-                        {
-                            Id = 90,
-                            Code = "GT",
-                            Label = "Guatemala",
-                            Phone = "502"
-                        },
-                        new
-                        {
-                            Id = 91,
-                            Code = "GU",
-                            Label = "Guam",
-                            Phone = "1-671"
-                        },
-                        new
-                        {
-                            Id = 92,
-                            Code = "GW",
-                            Label = "Guinea-Bissau",
-                            Phone = "245"
-                        },
-                        new
-                        {
-                            Id = 93,
-                            Code = "GY",
-                            Label = "Guyana",
-                            Phone = "592"
-                        },
-                        new
-                        {
-                            Id = 94,
-                            Code = "HK",
-                            Label = "Hong Kong",
-                            Phone = "852"
-                        },
-                        new
-                        {
-                            Id = 95,
-                            Code = "HM",
-                            Label = "Heard Island and McDonald Islands",
-                            Phone = "672"
-                        },
-                        new
-                        {
-                            Id = 96,
-                            Code = "HN",
-                            Label = "Honduras",
-                            Phone = "504"
-                        },
-                        new
-                        {
-                            Id = 97,
-                            Code = "HR",
-                            Label = "Croatia",
-                            Phone = "385"
-                        },
-                        new
-                        {
-                            Id = 98,
-                            Code = "HT",
-                            Label = "Haiti",
-                            Phone = "509"
-                        },
-                        new
-                        {
-                            Id = 99,
-                            Code = "HU",
-                            Label = "Hungary",
-                            Phone = "36"
-                        },
-                        new
-                        {
-                            Id = 100,
-                            Code = "ID",
-                            Label = "Indonesia",
-                            Phone = "62"
-                        },
-                        new
-                        {
-                            Id = 101,
-                            Code = "IE",
-                            Label = "Ireland",
-                            Phone = "353"
-                        },
-                        new
-                        {
-                            Id = 102,
-                            Code = "IL",
-                            Label = "Israel",
-                            Phone = "972"
-                        },
-                        new
-                        {
-                            Id = 103,
-                            Code = "IM",
-                            Label = "Isle of Man",
-                            Phone = "44"
-                        },
-                        new
-                        {
-                            Id = 104,
-                            Code = "IN",
-                            Label = "India",
-                            Phone = "91"
-                        },
-                        new
-                        {
-                            Id = 105,
-                            Code = "IO",
-                            Label = "British Indian Ocean Territory",
-                            Phone = "246"
-                        },
-                        new
-                        {
-                            Id = 106,
-                            Code = "IQ",
-                            Label = "Iraq",
-                            Phone = "964"
-                        },
-                        new
-                        {
-                            Id = 107,
-                            Code = "IR",
-                            Label = "Iran, Islamic Republic of",
-                            Phone = "98"
-                        },
-                        new
-                        {
-                            Id = 108,
-                            Code = "IS",
-                            Label = "Iceland",
-                            Phone = "354"
-                        },
-                        new
-                        {
-                            Id = 109,
-                            Code = "IT",
-                            Label = "Italy",
-                            Phone = "39"
-                        },
-                        new
-                        {
-                            Id = 110,
-                            Code = "JE",
-                            Label = "Jersey",
-                            Phone = "44"
-                        },
-                        new
-                        {
-                            Id = 111,
-                            Code = "JM",
-                            Label = "Jamaica",
-                            Phone = "1-876"
-                        },
-                        new
-                        {
-                            Id = 112,
-                            Code = "JO",
-                            Label = "Jordan",
-                            Phone = "962"
-                        },
-                        new
-                        {
-                            Id = 113,
-                            Code = "JP",
-                            Label = "Japan",
-                            Phone = "81"
-                        },
-                        new
-                        {
-                            Id = 114,
-                            Code = "KE",
-                            Label = "Kenya",
-                            Phone = "254"
-                        },
-                        new
-                        {
-                            Id = 115,
-                            Code = "KG",
-                            Label = "Kyrgyzstan",
-                            Phone = "996"
-                        },
-                        new
-                        {
-                            Id = 116,
-                            Code = "KH",
-                            Label = "Cambodia",
-                            Phone = "855"
-                        },
-                        new
-                        {
-                            Id = 117,
-                            Code = "KI",
-                            Label = "Kiribati",
-                            Phone = "686"
-                        },
-                        new
-                        {
-                            Id = 118,
-                            Code = "KM",
-                            Label = "Comoros",
-                            Phone = "269"
-                        },
-                        new
-                        {
-                            Id = 119,
-                            Code = "KN",
-                            Label = "Saint Kitts and Nevis",
-                            Phone = "1-869"
-                        },
-                        new
-                        {
-                            Id = 120,
-                            Code = "KP",
-                            Label = "Korea, Democratic People's Republic of",
-                            Phone = "850"
-                        },
-                        new
-                        {
-                            Id = 121,
-                            Code = "KR",
-                            Label = "Korea, Republic of",
-                            Phone = "82"
-                        },
-                        new
-                        {
-                            Id = 122,
-                            Code = "KW",
-                            Label = "Kuwait",
-                            Phone = "965"
-                        },
-                        new
-                        {
-                            Id = 123,
-                            Code = "KY",
-                            Label = "Cayman Islands",
-                            Phone = "1-345"
-                        },
-                        new
-                        {
-                            Id = 124,
-                            Code = "KZ",
-                            Label = "Kazakhstan",
-                            Phone = "7"
-                        },
-                        new
-                        {
-                            Id = 125,
-                            Code = "LA",
-                            Label = "Lao People's Democratic Republic",
-                            Phone = "856"
-                        },
-                        new
-                        {
-                            Id = 126,
-                            Code = "LB",
-                            Label = "Lebanon",
-                            Phone = "961"
-                        },
-                        new
-                        {
-                            Id = 127,
-                            Code = "LC",
-                            Label = "Saint Lucia",
-                            Phone = "1-758"
-                        },
-                        new
-                        {
-                            Id = 128,
-                            Code = "LI",
-                            Label = "Liechtenstein",
-                            Phone = "423"
-                        },
-                        new
-                        {
-                            Id = 129,
-                            Code = "LK",
-                            Label = "Sri Lanka",
-                            Phone = "94"
-                        },
-                        new
-                        {
-                            Id = 130,
-                            Code = "LR",
-                            Label = "Liberia",
-                            Phone = "231"
-                        },
-                        new
-                        {
-                            Id = 131,
-                            Code = "LS",
-                            Label = "Lesotho",
-                            Phone = "266"
-                        },
-                        new
-                        {
-                            Id = 132,
-                            Code = "LT",
-                            Label = "Lithuania",
-                            Phone = "370"
-                        },
-                        new
-                        {
-                            Id = 133,
-                            Code = "LU",
-                            Label = "Luxembourg",
-                            Phone = "352"
-                        },
-                        new
-                        {
-                            Id = 134,
-                            Code = "LV",
-                            Label = "Latvia",
-                            Phone = "371"
-                        },
-                        new
-                        {
-                            Id = 135,
-                            Code = "LY",
-                            Label = "Libya",
-                            Phone = "218"
-                        },
-                        new
-                        {
-                            Id = 136,
-                            Code = "MA",
-                            Label = "Morocco",
-                            Phone = "212"
-                        },
-                        new
-                        {
-                            Id = 137,
-                            Code = "MC",
-                            Label = "Monaco",
-                            Phone = "377"
-                        },
-                        new
-                        {
-                            Id = 138,
-                            Code = "MD",
-                            Label = "Moldova, Republic of",
-                            Phone = "373"
-                        },
-                        new
-                        {
-                            Id = 139,
-                            Code = "ME",
-                            Label = "Montenegro",
-                            Phone = "382"
-                        },
-                        new
-                        {
-                            Id = 140,
-                            Code = "MF",
-                            Label = "Saint Martin (French part)",
-                            Phone = "590"
-                        },
-                        new
-                        {
-                            Id = 141,
-                            Code = "MG",
-                            Label = "Madagascar",
-                            Phone = "261"
-                        },
-                        new
-                        {
-                            Id = 142,
-                            Code = "MH",
-                            Label = "Marshall Islands",
-                            Phone = "692"
-                        },
-                        new
-                        {
-                            Id = 143,
-                            Code = "MK",
-                            Label = "Macedonia, the Former Yugoslav Republic of",
-                            Phone = "389"
-                        },
-                        new
-                        {
-                            Id = 144,
-                            Code = "ML",
-                            Label = "Mali",
-                            Phone = "223"
-                        },
-                        new
-                        {
-                            Id = 145,
-                            Code = "MM",
-                            Label = "Myanmar",
-                            Phone = "95"
-                        },
-                        new
-                        {
-                            Id = 146,
-                            Code = "MN",
-                            Label = "Mongolia",
-                            Phone = "976"
-                        },
-                        new
-                        {
-                            Id = 147,
-                            Code = "MO",
-                            Label = "Macao",
-                            Phone = "853"
-                        },
-                        new
-                        {
-                            Id = 148,
-                            Code = "MP",
-                            Label = "Northern Mariana Islands",
-                            Phone = "1-670"
-                        },
-                        new
-                        {
-                            Id = 149,
-                            Code = "MQ",
-                            Label = "Martinique",
-                            Phone = "596"
-                        },
-                        new
-                        {
-                            Id = 150,
-                            Code = "MR",
-                            Label = "Mauritania",
-                            Phone = "222"
-                        },
-                        new
-                        {
-                            Id = 151,
-                            Code = "MS",
-                            Label = "Montserrat",
-                            Phone = "1-664"
-                        },
-                        new
-                        {
-                            Id = 152,
-                            Code = "MT",
-                            Label = "Malta",
-                            Phone = "356"
-                        },
-                        new
-                        {
-                            Id = 153,
-                            Code = "MU",
-                            Label = "Mauritius",
-                            Phone = "230"
-                        },
-                        new
-                        {
-                            Id = 154,
-                            Code = "MV",
-                            Label = "Maldives",
-                            Phone = "960"
-                        },
-                        new
-                        {
-                            Id = 155,
-                            Code = "MW",
-                            Label = "Malawi",
-                            Phone = "265"
-                        },
-                        new
-                        {
-                            Id = 156,
-                            Code = "MX",
-                            Label = "Mexico",
-                            Phone = "52"
-                        },
-                        new
-                        {
-                            Id = 157,
-                            Code = "MY",
-                            Label = "Malaysia",
-                            Phone = "60"
-                        },
-                        new
-                        {
-                            Id = 158,
-                            Code = "MZ",
-                            Label = "Mozambique",
-                            Phone = "258"
-                        },
-                        new
-                        {
-                            Id = 159,
-                            Code = "NA",
-                            Label = "Namibia",
-                            Phone = "264"
-                        },
-                        new
-                        {
-                            Id = 160,
-                            Code = "NC",
-                            Label = "New Caledonia",
-                            Phone = "687"
-                        },
-                        new
-                        {
-                            Id = 161,
-                            Code = "NE",
-                            Label = "Niger",
-                            Phone = "227"
-                        },
-                        new
-                        {
-                            Id = 162,
-                            Code = "NF",
-                            Label = "Norfolk Island",
-                            Phone = "672"
-                        },
-                        new
-                        {
-                            Id = 163,
-                            Code = "NG",
-                            Label = "Nigeria",
-                            Phone = "234"
-                        },
-                        new
-                        {
-                            Id = 164,
-                            Code = "NI",
-                            Label = "Nicaragua",
-                            Phone = "505"
-                        },
-                        new
-                        {
-                            Id = 165,
-                            Code = "NL",
-                            Label = "Netherlands",
-                            Phone = "31"
-                        },
-                        new
-                        {
-                            Id = 166,
-                            Code = "NO",
-                            Label = "Norway",
-                            Phone = "47"
-                        },
-                        new
-                        {
-                            Id = 167,
-                            Code = "NP",
-                            Label = "Nepal",
-                            Phone = "977"
-                        },
-                        new
-                        {
-                            Id = 168,
-                            Code = "NR",
-                            Label = "Nauru",
-                            Phone = "674"
-                        },
-                        new
-                        {
-                            Id = 169,
-                            Code = "NU",
-                            Label = "Niue",
-                            Phone = "683"
-                        },
-                        new
-                        {
-                            Id = 170,
-                            Code = "NZ",
-                            Label = "New Zealand",
-                            Phone = "64"
-                        },
-                        new
-                        {
-                            Id = 171,
-                            Code = "OM",
-                            Label = "Oman",
-                            Phone = "968"
-                        },
-                        new
-                        {
-                            Id = 172,
-                            Code = "PA",
-                            Label = "Panama",
-                            Phone = "507"
-                        },
-                        new
-                        {
-                            Id = 173,
-                            Code = "PE",
-                            Label = "Peru",
-                            Phone = "51"
-                        },
-                        new
-                        {
-                            Id = 174,
-                            Code = "PF",
-                            Label = "French Polynesia",
-                            Phone = "689"
-                        },
-                        new
-                        {
-                            Id = 175,
-                            Code = "PG",
-                            Label = "Papua New Guinea",
-                            Phone = "675"
-                        },
-                        new
-                        {
-                            Id = 176,
-                            Code = "PH",
-                            Label = "Philippines",
-                            Phone = "63"
-                        },
-                        new
-                        {
-                            Id = 177,
-                            Code = "PK",
-                            Label = "Pakistan",
-                            Phone = "92"
-                        },
-                        new
-                        {
-                            Id = 178,
-                            Code = "PL",
-                            Label = "Poland",
-                            Phone = "48"
-                        },
-                        new
-                        {
-                            Id = 179,
-                            Code = "PM",
-                            Label = "Saint Pierre and Miquelon",
-                            Phone = "508"
-                        },
-                        new
-                        {
-                            Id = 180,
-                            Code = "PN",
-                            Label = "Pitcairn",
-                            Phone = "870"
-                        },
-                        new
-                        {
-                            Id = 181,
-                            Code = "PR",
-                            Label = "Puerto Rico",
-                            Phone = "1"
-                        },
-                        new
-                        {
-                            Id = 182,
-                            Code = "PS",
-                            Label = "Palestine, State of",
-                            Phone = "970"
-                        },
-                        new
-                        {
-                            Id = 183,
-                            Code = "PT",
-                            Label = "Portugal",
-                            Phone = "351"
-                        },
-                        new
-                        {
-                            Id = 184,
-                            Code = "PW",
-                            Label = "Palau",
-                            Phone = "680"
-                        },
-                        new
-                        {
-                            Id = 185,
-                            Code = "PY",
-                            Label = "Paraguay",
-                            Phone = "595"
-                        },
-                        new
-                        {
-                            Id = 186,
-                            Code = "QA",
-                            Label = "Qatar",
-                            Phone = "974"
-                        },
-                        new
-                        {
-                            Id = 187,
-                            Code = "RE",
-                            Label = "Reunion",
-                            Phone = "262"
-                        },
-                        new
-                        {
-                            Id = 188,
-                            Code = "RO",
-                            Label = "Romania",
-                            Phone = "40"
-                        },
-                        new
-                        {
-                            Id = 189,
-                            Code = "RS",
-                            Label = "Serbia",
-                            Phone = "381"
-                        },
-                        new
-                        {
-                            Id = 190,
-                            Code = "RU",
-                            Label = "Russian Federation",
-                            Phone = "7"
-                        },
-                        new
-                        {
-                            Id = 191,
-                            Code = "RW",
-                            Label = "Rwanda",
-                            Phone = "250"
-                        },
-                        new
-                        {
-                            Id = 192,
-                            Code = "SA",
-                            Label = "Saudi Arabia",
-                            Phone = "966"
-                        },
-                        new
-                        {
-                            Id = 193,
-                            Code = "SB",
-                            Label = "Solomon Islands",
-                            Phone = "677"
-                        },
-                        new
-                        {
-                            Id = 194,
-                            Code = "SC",
-                            Label = "Seychelles",
-                            Phone = "248"
-                        },
-                        new
-                        {
-                            Id = 195,
-                            Code = "SD",
-                            Label = "Sudan",
-                            Phone = "249"
-                        },
-                        new
-                        {
-                            Id = 196,
-                            Code = "SE",
-                            Label = "Sweden",
-                            Phone = "46"
-                        },
-                        new
-                        {
-                            Id = 197,
-                            Code = "SG",
-                            Label = "Singapore",
-                            Phone = "65"
-                        },
-                        new
-                        {
-                            Id = 198,
-                            Code = "SH",
-                            Label = "Saint Helena",
-                            Phone = "290"
-                        },
-                        new
-                        {
-                            Id = 199,
-                            Code = "SI",
-                            Label = "Slovenia",
-                            Phone = "386"
-                        },
-                        new
-                        {
-                            Id = 200,
-                            Code = "SJ",
-                            Label = "Svalbard and Jan Mayen",
-                            Phone = "47"
-                        },
-                        new
-                        {
-                            Id = 201,
-                            Code = "SK",
-                            Label = "Slovakia",
-                            Phone = "421"
-                        },
-                        new
-                        {
-                            Id = 202,
-                            Code = "SL",
-                            Label = "Sierra Leone",
-                            Phone = "232"
-                        },
-                        new
-                        {
-                            Id = 203,
-                            Code = "SM",
-                            Label = "San Marino",
-                            Phone = "378"
-                        },
-                        new
-                        {
-                            Id = 204,
-                            Code = "SN",
-                            Label = "Senegal",
-                            Phone = "221"
-                        },
-                        new
-                        {
-                            Id = 205,
-                            Code = "SO",
-                            Label = "Somalia",
-                            Phone = "252"
-                        },
-                        new
-                        {
-                            Id = 206,
-                            Code = "SR",
-                            Label = "Suriname",
-                            Phone = "597"
-                        },
-                        new
-                        {
-                            Id = 207,
-                            Code = "SS",
-                            Label = "South Sudan",
-                            Phone = "211"
-                        },
-                        new
-                        {
-                            Id = 208,
-                            Code = "ST",
-                            Label = "Sao Tome and Principe",
-                            Phone = "239"
-                        },
-                        new
-                        {
-                            Id = 209,
-                            Code = "SV",
-                            Label = "El Salvador",
-                            Phone = "503"
-                        },
-                        new
-                        {
-                            Id = 210,
-                            Code = "SX",
-                            Label = "Sint Maarten (Dutch part)",
-                            Phone = "1-721"
-                        },
-                        new
-                        {
-                            Id = 211,
-                            Code = "SY",
-                            Label = "Syrian Arab Republic",
-                            Phone = "963"
-                        },
-                        new
-                        {
-                            Id = 212,
-                            Code = "SZ",
-                            Label = "Swaziland",
-                            Phone = "268"
-                        },
-                        new
-                        {
-                            Id = 213,
-                            Code = "TC",
-                            Label = "Turks and Caicos Islands",
-                            Phone = "1-649"
-                        },
-                        new
-                        {
-                            Id = 214,
-                            Code = "TD",
-                            Label = "Chad",
-                            Phone = "235"
-                        },
-                        new
-                        {
-                            Id = 215,
-                            Code = "TF",
-                            Label = "French Southern Territories",
-                            Phone = "262"
-                        },
-                        new
-                        {
-                            Id = 216,
-                            Code = "TG",
-                            Label = "Togo",
-                            Phone = "228"
-                        },
-                        new
-                        {
-                            Id = 217,
-                            Code = "TH",
-                            Label = "Thailand",
-                            Phone = "66"
-                        },
-                        new
-                        {
-                            Id = 218,
-                            Code = "TJ",
-                            Label = "Tajikistan",
-                            Phone = "992"
-                        },
-                        new
-                        {
-                            Id = 219,
-                            Code = "TK",
-                            Label = "Tokelau",
-                            Phone = "690"
-                        },
-                        new
-                        {
-                            Id = 220,
-                            Code = "TL",
-                            Label = "Timor-Leste",
-                            Phone = "670"
-                        },
-                        new
-                        {
-                            Id = 221,
-                            Code = "TM",
-                            Label = "Turkmenistan",
-                            Phone = "993"
-                        },
-                        new
-                        {
-                            Id = 222,
-                            Code = "TN",
-                            Label = "Tunisia",
-                            Phone = "216"
-                        },
-                        new
-                        {
-                            Id = 223,
-                            Code = "TO",
-                            Label = "Tonga",
-                            Phone = "676"
-                        },
-                        new
-                        {
-                            Id = 224,
-                            Code = "TR",
-                            Label = "Turkey",
-                            Phone = "90"
-                        },
-                        new
-                        {
-                            Id = 225,
-                            Code = "TT",
-                            Label = "Trinidad and Tobago",
-                            Phone = "1-868"
-                        },
-                        new
-                        {
-                            Id = 226,
-                            Code = "TV",
-                            Label = "Tuvalu",
-                            Phone = "688"
-                        },
-                        new
-                        {
-                            Id = 227,
-                            Code = "TW",
-                            Label = "Taiwan, Republic of China",
-                            Phone = "886"
-                        },
-                        new
-                        {
-                            Id = 228,
-                            Code = "TZ",
-                            Label = "United Republic of Tanzania",
-                            Phone = "255"
-                        },
-                        new
-                        {
-                            Id = 229,
-                            Code = "UA",
-                            Label = "Ukraine",
-                            Phone = "380"
-                        },
-                        new
-                        {
-                            Id = 230,
-                            Code = "UG",
-                            Label = "Uganda",
-                            Phone = "256"
-                        },
-                        new
-                        {
-                            Id = 231,
-                            Code = "US",
-                            Label = "United States",
-                            Phone = "1"
-                        },
-                        new
-                        {
-                            Id = 232,
-                            Code = "UY",
-                            Label = "Uruguay",
-                            Phone = "598"
-                        },
-                        new
-                        {
-                            Id = 233,
-                            Code = "UZ",
-                            Label = "Uzbekistan",
-                            Phone = "998"
-                        },
-                        new
-                        {
-                            Id = 234,
-                            Code = "VA",
-                            Label = "Holy See (Vatican City State)",
-                            Phone = "379"
-                        },
-                        new
-                        {
-                            Id = 235,
-                            Code = "VC",
-                            Label = "Saint Vincent and the Grenadines",
-                            Phone = "1-784"
-                        },
-                        new
-                        {
-                            Id = 236,
-                            Code = "VE",
-                            Label = "Venezuela",
-                            Phone = "58"
-                        },
-                        new
-                        {
-                            Id = 237,
-                            Code = "VG",
-                            Label = "British Virgin Islands",
-                            Phone = "1-284"
-                        },
-                        new
-                        {
-                            Id = 238,
-                            Code = "VI",
-                            Label = "US Virgin Islands",
-                            Phone = "1-340"
-                        },
-                        new
-                        {
-                            Id = 239,
-                            Code = "VN",
-                            Label = "Vietnam",
-                            Phone = "84"
-                        },
-                        new
-                        {
-                            Id = 240,
-                            Code = "VU",
-                            Label = "Vanuatu",
-                            Phone = "678"
-                        },
-                        new
-                        {
-                            Id = 241,
-                            Code = "WF",
-                            Label = "Wallis and Futuna",
-                            Phone = "681"
-                        },
-                        new
-                        {
-                            Id = 242,
-                            Code = "WS",
-                            Label = "Samoa",
-                            Phone = "685"
-                        },
-                        new
-                        {
-                            Id = 243,
-                            Code = "XK",
-                            Label = "Kosovo",
-                            Phone = "383"
-                        },
-                        new
-                        {
-                            Id = 244,
-                            Code = "YE",
-                            Label = "Yemen",
-                            Phone = "967"
-                        },
-                        new
-                        {
-                            Id = 245,
-                            Code = "YT",
-                            Label = "Mayotte",
-                            Phone = "262"
-                        },
-                        new
-                        {
-                            Id = 246,
-                            Code = "ZA",
-                            Label = "South Africa",
-                            Phone = "27"
-                        },
-                        new
-                        {
-                            Id = 247,
-                            Code = "ZM",
-                            Label = "Zambia",
-                            Phone = "260"
-                        },
-                        new
-                        {
-                            Id = 248,
-                            Code = "ZW",
-                            Label = "Zimbabwe",
-                            Phone = "263"
-                        });
-                });
-
             modelBuilder.Entity("KeyNekretnine.Domain.RejectReasons.RejectReason", b =>
                 {
                     b.Property<int>("Id")
@@ -10735,8 +8767,8 @@ namespace KeyNekretnine.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AdvertId")
-                        .HasColumnType("integer")
+                    b.Property<Guid>("AdvertId")
+                        .HasColumnType("uuid")
                         .HasColumnName("advert_id");
 
                     b.Property<byte[]>("ImageData")
@@ -10753,9 +8785,6 @@ namespace KeyNekretnine.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("pk_temporery_images_data");
 
-                    b.HasIndex("AdvertId")
-                        .HasDatabaseName("ix_temporery_images_data_advert_id");
-
                     b.ToTable("temporery_images_data", (string)null);
                 });
 
@@ -10765,8 +8794,8 @@ namespace KeyNekretnine.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("user_id");
 
-                    b.Property<int>("AdvertId")
-                        .HasColumnType("integer")
+                    b.Property<Guid>("AdvertId")
+                        .HasColumnType("uuid")
                         .HasColumnName("advert_id");
 
                     b.Property<DateTime>("CreatedFavoriteDate")
@@ -10788,8 +8817,8 @@ namespace KeyNekretnine.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("user_id");
 
-                    b.Property<int>("AdvertId")
-                        .HasColumnType("integer")
+                    b.Property<Guid>("AdvertId")
+                        .HasColumnType("uuid")
                         .HasColumnName("advert_id");
 
                     b.Property<int>("RejectReasonId")
@@ -10929,7 +8958,37 @@ namespace KeyNekretnine.Infrastructure.Migrations
                     b.ToTable("asp_net_users", (string)null);
                 });
 
-            modelBuilder.Entity("KeyNekretnine.Infrastructure.Outbox.OutboxMessage", b =>
+            modelBuilder.Entity("KeyNekretnine.Infrastructure.BackgroundJobs.ImageDeleter.ImageToDelete", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("AddedOnTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("added_on_time");
+
+                    b.Property<DateTime?>("DeletedOnTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deleted_on_time");
+
+                    b.Property<string>("Error")
+                        .HasColumnType("text")
+                        .HasColumnName("error");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("image_url");
+
+                    b.HasKey("Id")
+                        .HasName("pk_images_to_delete");
+
+                    b.ToTable("images_to_delete", (string)null);
+                });
+
+            modelBuilder.Entity("KeyNekretnine.Infrastructure.BackgroundJobs.Outbox.OutboxMessage", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -10945,13 +9004,13 @@ namespace KeyNekretnine.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("error");
 
-                    b.Property<DateTime>("OccurredOnUtc")
+                    b.Property<DateTime>("OccurredOnTime")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("occurred_on_utc");
+                        .HasColumnName("occurred_on_time");
 
-                    b.Property<DateTime?>("ProcessedOnUtc")
+                    b.Property<DateTime?>("ProcessedOnTime")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("processed_on_utc");
+                        .HasColumnName("processed_on_time");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -11150,71 +9209,87 @@ namespace KeyNekretnine.Infrastructure.Migrations
 
             modelBuilder.Entity("KeyNekretnine.Domain.AdvertFeatures.AdvertFeature", b =>
                 {
-                    b.HasOne("KeyNekretnine.Domain.Adverts.Advert", "Advert")
-                        .WithMany("Features")
+                    b.HasOne("KeyNekretnine.Domain.Adverts.Advert", null)
+                        .WithMany()
                         .HasForeignKey("AdvertId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_advert_features_adverts_advert_id");
-
-                    b.Navigation("Advert");
                 });
 
             modelBuilder.Entity("KeyNekretnine.Domain.Adverts.Advert", b =>
                 {
-                    b.HasOne("KeyNekretnine.Domain.Agents.Agent", "Agent")
-                        .WithMany("Adverts")
+                    b.HasOne("KeyNekretnine.Domain.Agents.Agent", null)
+                        .WithMany()
                         .HasForeignKey("AgentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
                         .HasConstraintName("fk_adverts_agent_agent_id");
 
-                    b.HasOne("KeyNekretnine.Domain.Neighborhoods.Neighborhood", "Neighborhood")
-                        .WithMany("Adverts")
+                    b.HasOne("KeyNekretnine.Domain.Neighborhoods.Neighborhood", null)
+                        .WithMany()
                         .HasForeignKey("NeighborhoodId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_adverts_neighborhoods_neighborhood_id");
 
-                    b.HasOne("KeyNekretnine.Domain.AdvertPurposes.AdvertPurpose", "Purpose")
-                        .WithMany("Adverts")
-                        .HasForeignKey("PurposeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_adverts_advert_purposes_purpose_id");
-
-                    b.HasOne("KeyNekretnine.Domain.AdvertStatuses.AdvertStatus", "Status")
-                        .WithMany("Adverts")
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_adverts_advert_statuses_status_id");
-
-                    b.HasOne("KeyNekretnine.Domain.AdvertTypes.AdvertType", "Type")
-                        .WithMany("Adverts")
-                        .HasForeignKey("TypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_adverts_advert_types_type_id");
-
-                    b.HasOne("KeyNekretnine.Domain.Users.User", "User")
-                        .WithMany("Adverts")
+                    b.HasOne("KeyNekretnine.Domain.Users.User", null)
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_adverts_users_user_id");
 
-                    b.Navigation("Agent");
+                    b.OwnsOne("KeyNekretnine.Domain.Agencies.Location", "Location", b1 =>
+                        {
+                            b1.Property<Guid>("AdvertId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
 
-                    b.Navigation("Neighborhood");
+                            b1.Property<string>("Address")
+                                .HasColumnType("text")
+                                .HasColumnName("location_address");
 
-                    b.Navigation("Purpose");
+                            b1.Property<double?>("Latitude")
+                                .HasColumnType("double precision")
+                                .HasColumnName("location_latitude");
 
-                    b.Navigation("Status");
+                            b1.Property<double?>("Longitude")
+                                .HasColumnType("double precision")
+                                .HasColumnName("location_longitude");
 
-                    b.Navigation("Type");
+                            b1.HasKey("AdvertId");
 
-                    b.Navigation("User");
+                            b1.ToTable("adverts");
+
+                            b1.WithOwner()
+                                .HasForeignKey("AdvertId")
+                                .HasConstraintName("fk_adverts_adverts_id");
+                        });
+
+                    b.OwnsOne("KeyNekretnine.Domain.Shared.Description", "Description", b1 =>
+                        {
+                            b1.Property<Guid>("AdvertId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("description_value");
+
+                            b1.HasKey("AdvertId");
+
+                            b1.ToTable("adverts");
+
+                            b1.WithOwner()
+                                .HasForeignKey("AdvertId")
+                                .HasConstraintName("fk_adverts_adverts_id");
+                        });
+
+                    b.Navigation("Description")
+                        .IsRequired();
+
+                    b.Navigation("Location")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("KeyNekretnine.Domain.Agencies.Agency", b =>
@@ -11226,7 +9301,34 @@ namespace KeyNekretnine.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_agencies_users_user_id");
 
-                    b.OwnsOne("KeyNekretnine.Domain.Agencies.SocialMedia", "SocialMedia", b1 =>
+                    b.OwnsOne("KeyNekretnine.Domain.Agencies.Location", "Location", b1 =>
+                        {
+                            b1.Property<Guid>("AgencyId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("Address")
+                                .HasColumnType("text")
+                                .HasColumnName("location_address");
+
+                            b1.Property<double?>("Latitude")
+                                .HasColumnType("double precision")
+                                .HasColumnName("location_latitude");
+
+                            b1.Property<double?>("Longitude")
+                                .HasColumnType("double precision")
+                                .HasColumnName("location_longitude");
+
+                            b1.HasKey("AgencyId");
+
+                            b1.ToTable("agencies");
+
+                            b1.WithOwner()
+                                .HasForeignKey("AgencyId")
+                                .HasConstraintName("fk_agencies_agencies_id");
+                        });
+
+                    b.OwnsOne("KeyNekretnine.Domain.Shared.SocialMedia", "SocialMedia", b1 =>
                         {
                             b1.Property<Guid>("AgencyId")
                                 .HasColumnType("uuid")
@@ -11247,33 +9349,6 @@ namespace KeyNekretnine.Infrastructure.Migrations
                             b1.Property<string>("Twitter")
                                 .HasColumnType("text")
                                 .HasColumnName("social_media_twitter");
-
-                            b1.HasKey("AgencyId");
-
-                            b1.ToTable("agencies");
-
-                            b1.WithOwner()
-                                .HasForeignKey("AgencyId")
-                                .HasConstraintName("fk_agencies_agencies_id");
-                        });
-
-                    b.OwnsOne("KeyNekretnine.Domain.Agencies.Location", "Location", b1 =>
-                        {
-                            b1.Property<Guid>("AgencyId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
-
-                            b1.Property<string>("Address")
-                                .HasColumnType("text")
-                                .HasColumnName("location_address");
-
-                            b1.Property<double?>("Latitude")
-                                .HasColumnType("double precision")
-                                .HasColumnName("location_latitude");
-
-                            b1.Property<double?>("Longitude")
-                                .HasColumnType("double precision")
-                                .HasColumnName("location_longitude");
 
                             b1.HasKey("AgencyId");
 
@@ -11337,7 +9412,7 @@ namespace KeyNekretnine.Infrastructure.Migrations
             modelBuilder.Entity("KeyNekretnine.Domain.AgentLanguages.AgentLanguage", b =>
                 {
                     b.HasOne("KeyNekretnine.Domain.Agents.Agent", null)
-                        .WithMany()
+                        .WithMany("AgentLanguages")
                         .HasForeignKey("AgentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
@@ -11353,14 +9428,14 @@ namespace KeyNekretnine.Infrastructure.Migrations
 
             modelBuilder.Entity("KeyNekretnine.Domain.Agents.Agent", b =>
                 {
-                    b.HasOne("KeyNekretnine.Domain.Agencies.Agency", null)
+                    b.HasOne("KeyNekretnine.Domain.Agencies.Agency", "Agency")
                         .WithMany()
                         .HasForeignKey("AgencyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_agents_agencies_agency_id");
 
-                    b.OwnsOne("KeyNekretnine.Domain.Agencies.SocialMedia", "SocialMedia", b1 =>
+                    b.OwnsOne("KeyNekretnine.Domain.Shared.SocialMedia", "SocialMedia", b1 =>
                         {
                             b1.Property<Guid>("AgentId")
                                 .HasColumnType("uuid")
@@ -11391,95 +9466,71 @@ namespace KeyNekretnine.Infrastructure.Migrations
                                 .HasConstraintName("fk_agents_agents_id");
                         });
 
+                    b.Navigation("Agency");
+
                     b.Navigation("SocialMedia")
                         .IsRequired();
                 });
 
             modelBuilder.Entity("KeyNekretnine.Domain.Images.Image", b =>
                 {
-                    b.HasOne("KeyNekretnine.Domain.Adverts.Advert", "Advert")
-                        .WithMany("Images")
+                    b.HasOne("KeyNekretnine.Domain.Adverts.Advert", null)
+                        .WithMany()
                         .HasForeignKey("AdvertId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_images_adverts_advert_id");
-
-                    b.Navigation("Advert");
                 });
 
             modelBuilder.Entity("KeyNekretnine.Domain.Neighborhoods.Neighborhood", b =>
                 {
-                    b.HasOne("KeyNekretnine.Domain.Cities.City", "City")
-                        .WithMany("Neighborhoods")
+                    b.HasOne("KeyNekretnine.Domain.Cities.City", null)
+                        .WithMany()
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_neighborhoods_cities_city_id");
-
-                    b.Navigation("City");
-                });
-
-            modelBuilder.Entity("KeyNekretnine.Domain.TemporeryImageDatas.TemporeryImageData", b =>
-                {
-                    b.HasOne("KeyNekretnine.Domain.Adverts.Advert", "Advert")
-                        .WithMany("TemporeryImageDatas")
-                        .HasForeignKey("AdvertId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_temporery_images_data_adverts_advert_id");
-
-                    b.Navigation("Advert");
                 });
 
             modelBuilder.Entity("KeyNekretnine.Domain.UserAdvertFavorites.UserAdvertFavorite", b =>
                 {
-                    b.HasOne("KeyNekretnine.Domain.Adverts.Advert", "Advert")
-                        .WithMany("UserAdvertFavorites")
+                    b.HasOne("KeyNekretnine.Domain.Adverts.Advert", null)
+                        .WithMany()
                         .HasForeignKey("AdvertId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_user_advert_favorites_adverts_advert_id");
 
-                    b.HasOne("KeyNekretnine.Domain.Users.User", "User")
-                        .WithMany("UserAdvertFavorites")
+                    b.HasOne("KeyNekretnine.Domain.Users.User", null)
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_user_advert_favorites_users_user_id");
-
-                    b.Navigation("Advert");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("KeyNekretnine.Domain.UserAdvertReports.UserAdvertReport", b =>
                 {
-                    b.HasOne("KeyNekretnine.Domain.Adverts.Advert", "Advert")
-                        .WithMany("UserAdvertReports")
+                    b.HasOne("KeyNekretnine.Domain.Adverts.Advert", null)
+                        .WithMany()
                         .HasForeignKey("AdvertId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_user_advert_reports_adverts_advert_id");
 
-                    b.HasOne("KeyNekretnine.Domain.RejectReasons.RejectReason", "RejectReason")
-                        .WithMany("UserAdvertReports")
+                    b.HasOne("KeyNekretnine.Domain.RejectReasons.RejectReason", null)
+                        .WithMany()
                         .HasForeignKey("RejectReasonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_user_advert_reports_reject_reasons_reject_reason_id");
 
-                    b.HasOne("KeyNekretnine.Domain.Users.User", "User")
-                        .WithMany("UserAdvertReports")
+                    b.HasOne("KeyNekretnine.Domain.Users.User", null)
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_user_advert_reports_users_user_id");
-
-                    b.Navigation("Advert");
-
-                    b.Navigation("RejectReason");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -11539,34 +9590,6 @@ namespace KeyNekretnine.Infrastructure.Migrations
                         .HasConstraintName("fk_asp_net_user_tokens_asp_net_users_user_id");
                 });
 
-            modelBuilder.Entity("KeyNekretnine.Domain.AdvertPurposes.AdvertPurpose", b =>
-                {
-                    b.Navigation("Adverts");
-                });
-
-            modelBuilder.Entity("KeyNekretnine.Domain.AdvertStatuses.AdvertStatus", b =>
-                {
-                    b.Navigation("Adverts");
-                });
-
-            modelBuilder.Entity("KeyNekretnine.Domain.AdvertTypes.AdvertType", b =>
-                {
-                    b.Navigation("Adverts");
-                });
-
-            modelBuilder.Entity("KeyNekretnine.Domain.Adverts.Advert", b =>
-                {
-                    b.Navigation("Features");
-
-                    b.Navigation("Images");
-
-                    b.Navigation("TemporeryImageDatas");
-
-                    b.Navigation("UserAdvertFavorites");
-
-                    b.Navigation("UserAdvertReports");
-                });
-
             modelBuilder.Entity("KeyNekretnine.Domain.Agencies.Agency", b =>
                 {
                     b.Navigation("AgencyLanguages");
@@ -11574,31 +9597,7 @@ namespace KeyNekretnine.Infrastructure.Migrations
 
             modelBuilder.Entity("KeyNekretnine.Domain.Agents.Agent", b =>
                 {
-                    b.Navigation("Adverts");
-                });
-
-            modelBuilder.Entity("KeyNekretnine.Domain.Cities.City", b =>
-                {
-                    b.Navigation("Neighborhoods");
-                });
-
-            modelBuilder.Entity("KeyNekretnine.Domain.Neighborhoods.Neighborhood", b =>
-                {
-                    b.Navigation("Adverts");
-                });
-
-            modelBuilder.Entity("KeyNekretnine.Domain.RejectReasons.RejectReason", b =>
-                {
-                    b.Navigation("UserAdvertReports");
-                });
-
-            modelBuilder.Entity("KeyNekretnine.Domain.Users.User", b =>
-                {
-                    b.Navigation("Adverts");
-
-                    b.Navigation("UserAdvertFavorites");
-
-                    b.Navigation("UserAdvertReports");
+                    b.Navigation("AgentLanguages");
                 });
 #pragma warning restore 612, 618
         }

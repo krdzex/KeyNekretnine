@@ -1,4 +1,6 @@
-﻿using KeyNekretnine.Domain.UserAdvertFavorites;
+﻿using KeyNekretnine.Domain.Adverts;
+using KeyNekretnine.Domain.UserAdvertFavorites;
+using KeyNekretnine.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -7,9 +9,18 @@ public class UserAdvertFavoriteConfiguration : IEntityTypeConfiguration<UserAdve
 {
     public void Configure(EntityTypeBuilder<UserAdvertFavorite> builder)
     {
+        builder.ToTable("user_advert_favorites");
+
         builder.HasKey(x => new { x.UserId, x.AdvertId });
-        builder.HasOne(x => x.Advert).WithMany(x => x.UserAdvertFavorites).HasForeignKey(x => x.AdvertId);
-        builder.HasOne(x => x.User).WithMany(x => x.UserAdvertFavorites).HasForeignKey(x => x.UserId);
+
         builder.Property(x => x.CreatedFavoriteDate).IsRequired();
+
+        builder.HasOne<Advert>()
+            .WithMany()
+            .HasForeignKey(favorite => favorite.AdvertId);
+
+        builder.HasOne<User>()
+            .WithMany()
+            .HasForeignKey(favorite => favorite.UserId);
     }
 }

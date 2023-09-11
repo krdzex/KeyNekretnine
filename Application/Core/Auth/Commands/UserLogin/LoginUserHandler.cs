@@ -35,7 +35,7 @@ internal sealed class LoginUserHandler : ICommandHandler<LoginUserCommand, Token
 
         if (user.IsBanned)
         {
-            if (user.BanEnd > _dateTimeProvider.UtcNow)
+            if (user.BanEnd > _dateTimeProvider.Now)
             {
                 return Result.Failure<TokenResponse>(UserErrors.Banned(user.BanEnd));
             }

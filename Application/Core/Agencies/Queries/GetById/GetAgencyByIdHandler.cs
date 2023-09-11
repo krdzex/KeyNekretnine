@@ -21,7 +21,7 @@ internal sealed class GetAgencyByIdHandler : IQueryHandler<GetAgencyByIdQuery, A
 
         using var connection = _sqlConnectionFactory.CreateConnection();
 
-        Dictionary<int, AgencyResponse> agenciesDictionary = new();
+        Dictionary<Guid, AgencyResponse> agenciesDictionary = new();
 
         const string sql = """
             SELECT 
@@ -29,16 +29,16 @@ internal sealed class GetAgencyByIdHandler : IQueryHandler<GetAgencyByIdQuery, A
                 a.name,
                 a.email,
                 a.description,
-                a.address,
+                a.location_address AS address,
                 a.website_url AS websiteUrl,
-                a.work_start_time AS workStartTime,
-                a.work_end_time AS workEndTime,
+                a.work_hour_start AS workStartTime,
+                a.work_hour_end AS workEndTime,
                 a.email,
                 a.image_url AS ImageUrl,
-                a.facebook_url AS facebook,
-                a.instagram_url AS instagram,
-                a.linkedin_url AS linkedin,
-                a.twitter_url AS twitter,
+                a.social_media_facebook AS facebook,
+                a.social_media_instagram AS instagram,
+                a.social_media_linkedin AS linkedin,
+                a.social_media_twitter AS twitter,
                 l.id,
                 l.name
             FROM agencies a
@@ -47,7 +47,7 @@ internal sealed class GetAgencyByIdHandler : IQueryHandler<GetAgencyByIdQuery, A
             WHERE a.id = @agencyId;
             """;
 
-        var agency = await connection.QueryAsync<AgencyResponse, SocialMediaResponse, LanguageResponse, AgencyResponse>(sql, (agency, socialNetwork, language) =>
+        var agency = await connection.QueryAsync<AgencyResponse, SocialMediaResponse, LanguageResponse, AgencyResponse>(sql, (agency, socialMedia, language) =>
         {
             if (agenciesDictionary.TryGetValue(agency.Id, out var existingAgency))
             {
@@ -57,7 +57,7 @@ internal sealed class GetAgencyByIdHandler : IQueryHandler<GetAgencyByIdQuery, A
             {
                 agenciesDictionary.Add(agency.Id, agency);
             }
-            agency.SocialNetwork ??= socialNetwork;
+            agency.SocialMedia ??= socialMedia;
 
             if (language is not null)
             {

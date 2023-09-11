@@ -1,65 +1,56 @@
-﻿using KeyNekretnine.Domain.AdvertFeatures;
-using KeyNekretnine.Domain.AdvertPurposes;
-using KeyNekretnine.Domain.AdvertStatuses;
-using KeyNekretnine.Domain.AdvertTypes;
-using KeyNekretnine.Domain.Agents;
-using KeyNekretnine.Domain.Images;
-using KeyNekretnine.Domain.Models;
-using KeyNekretnine.Domain.Neighborhoods;
-using KeyNekretnine.Domain.TemporeryImageDatas;
-using KeyNekretnine.Domain.UserAdvertFavorites;
-using KeyNekretnine.Domain.UserAdvertReports;
-using KeyNekretnine.Domain.Users;
+﻿using KeyNekretnine.Domain.Abstraction;
+using KeyNekretnine.Domain.Agencies;
+using KeyNekretnine.Domain.Shared;
 
 namespace KeyNekretnine.Domain.Adverts;
-public class Advert : EntityBase
+public class Advert : Entity
 {
-    public double Price { get; set; }
-    public string DescriptionSr { get; set; }
-    public string DescriptionEn { get; set; }
-    public int NoOfBedrooms { get; set; }
-    public double FloorSpace { get; set; }
-    public int NoOfBathrooms { get; set; }
-    public bool HasTerrace { get; set; }
-    public bool HasGarage { get; set; }
-    public bool IsFurnished { get; set; }
-    public bool HasWifi { get; set; }
-    public bool HasElevator { get; set; }
-    public int BuildingFloor { get; set; }
+    public double Price { get; private set; }
 
-    public int StatusId { get; set; } = 2;
-    public AdvertStatus Status { get; set; }
+    public Description Description { get; private set; }
 
-    public int PurposeId { get; set; }
-    public AdvertPurpose Purpose { get; set; }
+    public int NoOfBedrooms { get; private set; }
 
-    public int TypeId { get; set; }
-    public AdvertType Type { get; set; }
+    public double FloorSpace { get; private set; }
 
-    public DateTime CreatedDate { get; set; } = DateTime.Now;
+    public int NoOfBathrooms { get; private set; }
 
-    public string UserId { get; set; }
-    public User User { get; set; }
+    public bool HasTerrace { get; private set; }
 
+    public bool HasGarage { get; private set; }
 
-    public Guid? AgentId { get; set; }
-    public Agent Agent { get; set; }
+    public bool IsFurnished { get; private set; }
 
-    public List<Image> Images { get; set; }
-    public string CoverImageUrl { get; set; }
-    public double Latitude { get; set; }
-    public double Longitude { get; set; }
+    public bool HasWifi { get; private set; }
 
-    public Neighborhood Neighborhood { get; set; }
-    public int NeighborhoodId { get; set; }
+    public bool HasElevator { get; private set; }
 
-    public int? YearOfBuildingCreated { get; set; }
-    public string Street { get; set; }
-    public List<TemporeryImageData> TemporeryImageDatas { get; set; }
-    public string ReferenceId { get; set; }
-    public IEnumerable<UserAdvertFavorite> UserAdvertFavorites { get; set; }
-    public IEnumerable<UserAdvertReport> UserAdvertReports { get; set; }
-    public List<AdvertFeature> Features { get; set; }
-    public bool IsEmergency { get; set; }
-    public bool IsUnderConstruction { get; set; }
+    public int BuildingFloor { get; private set; }
+
+    public bool IsUrgent { get; private set; }
+
+    public bool IsUnderConstruction { get; private set; }
+
+    public int? YearOfBuildingCreated { get; private set; }
+
+    public AdvertStatus Status { get; private set; }
+
+    public AdvertPurpose Purpose { get; private set; }
+
+    public AdvertType Type { get; private set; }
+
+    public DateTime CreatedOnDate { get; private set; }
+
+    public string UserId { get; private set; }
+
+    public Guid? AgentId { get; private set; }
+
+    public int NeighborhoodId { get; private set; }
+
+    public ImageUrl CoverImageUrl { get; private set; }
+
+    public Location Location { get; private set; }
+
+    //public List<TemporeryImageData> TemporeryImageDatas { get; set; }
+    public string ReferenceId { get; private set; }
 }

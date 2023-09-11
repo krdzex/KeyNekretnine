@@ -11,6 +11,10 @@ public static class UserErrors
         "User.InvalidCredentials",
         "The provided credentials were invalid");
 
+    public static Error InvalidToken = new(
+        "User.Invalid token",
+        "Provided token is not valid");
+
     public static Error Banned(DateTime? banEndDate) => new(
         "User.Banned",
         $"USer is banned until {banEndDate}");

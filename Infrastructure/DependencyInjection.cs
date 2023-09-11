@@ -5,13 +5,16 @@ using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Email;
 using KeyNekretnine.Application.Abstraction.Image;
 using KeyNekretnine.Domain.Abstraction;
+using KeyNekretnine.Domain.Agencies;
+using KeyNekretnine.Domain.Agents;
 using KeyNekretnine.Domain.Users;
 using KeyNekretnine.Infrastructure.Authentication;
+using KeyNekretnine.Infrastructure.BackgroundJobs.ImageDeleter;
+using KeyNekretnine.Infrastructure.BackgroundJobs.Outbox;
 using KeyNekretnine.Infrastructure.Clock;
 using KeyNekretnine.Infrastructure.Data;
 using KeyNekretnine.Infrastructure.EmailProvider;
 using KeyNekretnine.Infrastructure.ImageProvider;
-using KeyNekretnine.Infrastructure.Outbox;
 using KeyNekretnine.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -52,7 +55,9 @@ public static class DependencyInjection
             options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention();
         });
 
-        services.AddScoped<Domain.Agencies.IAgencyRepository, AgencyRepository>();
+        services.AddScoped<IAgencyRepository, AgencyRepository>();
+        services.AddScoped<IAgentRepository, AgentRepository>();
+        services.AddScoped<IImageToDeleteRepository, ImageToDeleteRepository>();
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
@@ -115,12 +120,15 @@ public static class DependencyInjection
     private static void AddBackgroundJobs(IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<OutboxOptions>(configuration.GetSection("Outbox"));
+        services.Configure<ImageDeleteOptions>(configuration.GetSection("ImageDeleter"));
 
         services.AddQuartz(options => { options.UseMicrosoftDependencyInjectionJobFactory(); });
 
         services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
 
         services.ConfigureOptions<ProcessOutboxMessagesJobSetup>();
+        services.ConfigureOptions<ProcessImageDeleteJobSetup>();
+
     }
 
     private static string GetConnectionString()

@@ -3,7 +3,7 @@ using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Application.Exceptions;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Agencies;
-using KeyNekretnine.Domain.Agents;
+using KeyNekretnine.Domain.Shared;
 using KeyNekretnine.Domain.Users;
 using Microsoft.AspNetCore.Identity;
 using System.Transactions;
@@ -36,7 +36,7 @@ internal sealed class CreateAgencyHandler : ICommandHandler<CreateAgencyCommand>
             new LastName(request.LastName),
             request.Email,
             request.UserName,
-            _dateTimeProvider.UtcNow);
+            _dateTimeProvider.Now);
 
         var result = await _userManager.CreateAsync(user, request.Password);
 
@@ -54,8 +54,7 @@ internal sealed class CreateAgencyHandler : ICommandHandler<CreateAgencyCommand>
         var agency = Agency.Create(
             new Name(request.AgencyName),
             user.Id,
-            _dateTimeProvider.UtcNow
-            );
+            _dateTimeProvider.Now);
 
         _agencyRepository.Add(agency);
 

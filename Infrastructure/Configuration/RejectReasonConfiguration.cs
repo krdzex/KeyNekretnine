@@ -7,9 +7,14 @@ public class RejectReasonConfiguration : IEntityTypeConfiguration<RejectReason>
 {
     public void Configure(EntityTypeBuilder<RejectReason> builder)
     {
+        builder.ToTable("reject_reasons");
+
         builder.HasKey(x => x.Id);
+
         builder.Property(x => x.ReasonSr).IsRequired().HasMaxLength(100);
+
         builder.Property(x => x.ReasonEn).IsRequired().HasMaxLength(100);
+
         builder.HasData(
            new RejectReason
            {

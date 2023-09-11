@@ -1,4 +1,4 @@
-﻿using KeyNekretnine.Domain.Agents;
+﻿using KeyNekretnine.Domain.Shared;
 using KeyNekretnine.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

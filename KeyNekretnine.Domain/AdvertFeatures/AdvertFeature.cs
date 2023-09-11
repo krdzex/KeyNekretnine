@@ -1,10 +1,8 @@
-﻿using KeyNekretnine.Domain.Adverts;
-using KeyNekretnine.Domain.Models;
+﻿using KeyNekretnine.Domain.Abstraction;
 
 namespace KeyNekretnine.Domain.AdvertFeatures;
-public class AdvertFeature : EntityBase
+public class AdvertFeature : Entity
 {
     public string Name { get; set; }
-    public int AdvertId { get; set; }
-    public Advert Advert { get; set; }
+    public Guid AdvertId { get; set; }
 }

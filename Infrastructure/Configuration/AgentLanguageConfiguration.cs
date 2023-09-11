@@ -15,7 +15,7 @@ public class AgentLanguageConfiguration : IEntityTypeConfiguration<AgentLanguage
         builder.HasKey(x => new { x.AgentId, x.LanguageId });
 
         builder.HasOne<Agent>()
-            .WithMany()
+            .WithMany(agent => agent.AgentLanguages)
             .HasForeignKey(agentLanguage => agentLanguage.AgentId);
 
         builder.HasOne<Language>()

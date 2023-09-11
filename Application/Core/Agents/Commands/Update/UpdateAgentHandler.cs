@@ -1,87 +1,77 @@
-﻿using Contracts;
-using Entities.DomainErrors;
+﻿using KeyNekretnine.Application.Abstraction.Clock;
+using KeyNekretnine.Application.Abstraction.Image;
 using KeyNekretnine.Application.Abstraction.Messaging;
+using KeyNekretnine.Domain.Abstraction;
+using KeyNekretnine.Domain.Agencies;
+using KeyNekretnine.Domain.Agents;
+using KeyNekretnine.Domain.Shared;
+using KeyNekretnine.Infrastructure.BackgroundJobs.ImageDeleter;
 using MediatR;
-using Service.Contracts;
-using Shared.Error;
-using System.Net;
-using System.Transactions;
 
 namespace KeyNekretnine.Application.Core.Agents.Commands.Update;
-internal sealed class UpdateAgentHandler : ICommandHandler<UpdateAgentCommand, Unit>
+internal sealed class UpdateAgentHandler : ICommandHandler<UpdateAgentCommand>
 {
-    private readonly IRepositoryManager _repository;
-    private readonly IServiceManager _service;
+    private readonly IAgentRepository _agentRepository;
+    private readonly IImageService _imageService;
+    private readonly IImageToDeleteRepository _imageToDeleteRepository;
+    private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateAgentHandler(IRepositoryManager repository, IServiceManager service)
+    public UpdateAgentHandler(
+        IAgentRepository agentRepository,
+        IImageService imageService,
+        IImageToDeleteRepository imageToDeleteRepository,
+        IDateTimeProvider dateTimeProvider,
+        IUnitOfWork unitOfWork)
     {
-        _repository = repository;
-        _service = service;
+        _agentRepository = agentRepository;
+        _imageService = imageService;
+        _imageToDeleteRepository = imageToDeleteRepository;
+        _dateTimeProvider = dateTimeProvider;
+        _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result<Unit>> Handle(UpdateAgentCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(UpdateAgentCommand request, CancellationToken cancellationToken)
     {
-        using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+        var agent = await _agentRepository.GetByIdWithAgencyAndLanguagesAsync(request.AgentId, cancellationToken);
+
+        if (agent is null)
         {
-            var agentExist = await _repository.Agent.DoesAgentExist(request.AgentId, cancellationToken);
-
-            if (!agentExist)
-            {
-                return Result.Failure<Unit>(DomainErrors.Agent.AgentNotFound);
-            }
-
-            var userId = await _repository.User.GetUserIdFromEmail(request.Email, cancellationToken);
-
-            if (userId is null)
-            {
-                return Result.Failure<Unit>(DomainErrors.User.UserNotFound);
-            }
-
-            var agencyId = await _repository.Agent.AgencyIdOfAgent(request.AgentId, cancellationToken);
-
-            var isUserAgencyOwner = await _repository.Agency.IsUserAgencyOwner(userId, agencyId, cancellationToken);
-
-            if (!isUserAgencyOwner)
-            {
-                return Result.Failure<Unit>(DomainErrors.Agency.NotOwnerError);
-            }
-
-            request.Agent.ImageUrl = await _repository.Agent.GetAgentImage(request.AgentId, cancellationToken);
-
-            if (request.Agent.Image?.Length > 0)
-            {
-                var tempProfileImageUrl = request.Agent.ImageUrl;
-
-                request.Agent.ImageUrl = await _service.ImageService.UploadImageOnCloudinary(request.Agent.Image);
-
-                if (tempProfileImageUrl is not null)
-                {
-                    var publicId = _service.ImageService.GetPublicIdFromUrl(tempProfileImageUrl);
-
-                    var deleteResult = await _service.ImageService.DeleteImageFromCloudinary(publicId);
-
-                    if (deleteResult.StatusCode != HttpStatusCode.OK)
-                    {
-                        return Result.Failure<Unit>(DomainErrors.ImageService.ImageCouldntBeDeleted);
-                    }
-                }
-            }
-
-            await _repository.Agent.UpdateAgent(request.Agent, request.AgentId, cancellationToken);
-
-            await _repository.Agent.DeleteLanguagesForAgent(request.AgentId, cancellationToken);
-
-            if (request.Agent.LanguageId is not null)
-            {
-                foreach (var languageId in request.Agent.LanguageId)
-                {
-                    await _repository.Agent.AddLanguageToAgent(languageId, request.AgentId, cancellationToken);
-
-                }
-            }
-
-            transaction.Complete();
+            return Result.Failure<Unit>(AgentErrors.NotFound);
         }
-        return Unit.Value;
+
+        if (agent.Agency.UserId != request.UserId)
+        {
+            return Result.Failure<Unit>(AgencyErrors.NotOwner);
+        }
+
+        agent.Update(
+            new FirstName(request.FirstName),
+            new LastName(request.LastName),
+            new PhoneNumber(request.PhoneNumber),
+            new Description(request.Description),
+            new Email(request.Email),
+            new SocialMedia(
+                request.TwitterUrl,
+                request.FacebookUrl,
+                request.InstagramUrl,
+                request.LinkedinUrl),
+            request.LanguageIds);
+
+        if (request.Image?.Length > 0)
+        {
+            var oldImageUrl = agent.ImageUrl;
+            var imageUrl = await _imageService.UploadImageOnCloudinary(request.Image);
+
+            if (oldImageUrl is not null)
+            {
+                _imageToDeleteRepository.Add(oldImageUrl.Value, _dateTimeProvider.Now);
+            }
+            agent.UpdateImage(new ImageUrl(imageUrl));
+        }
+
+        await _unitOfWork.SaveChangesAsync();
+
+        return Result.Success();
     }
 }

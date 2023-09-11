@@ -22,8 +22,4 @@
     <ProjectReference Include="..\KeyNekretnine.Domain\KeyNekretnine.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>

@@ -2,7 +2,7 @@
 public sealed class ShortAgencyResponse
 {
 
-    public int AgencyId { get; set; }
+    public Guid AgencyId { get; set; }
 
     public string AgencyName { get; set; }
 }

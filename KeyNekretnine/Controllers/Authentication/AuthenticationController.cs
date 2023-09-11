@@ -1,4 +1,5 @@
-﻿using KeyNekretnine.Application.Core.Auth.Commands.UserLogin;
+﻿using KeyNekretnine.Application.Core.Auth.Commands.RefreshTokens;
+using KeyNekretnine.Application.Core.Auth.Commands.UserLogin;
 using KeyNekretnine.Application.Core.Auth.Commands.UserRegistration;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -65,7 +66,45 @@ public class AuthenticationController : ControllerBase
         return Accepted();
     }
 
+    [HttpPost("refresh")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> Refresh(CancellationToken cancellationToken)
+    {
+        var refreshToken = Request.Cookies["X-Refresh-Token"];
+        var accessToken = Request.Cookies["X-Access-Token"];
 
+        var command = new RefreshTokensCommand(accessToken, refreshToken);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        if (response.IsSuccess)
+        {
+            HttpContext.Response.Cookies.Append("X-Access-Token", response.Value.AccessToken,
+            new CookieOptions
+            {
+                Expires = DateTime.Now.AddDays(7),
+                HttpOnly = true,
+                Secure = true,
+                IsEssential = true,
+                SameSite = SameSiteMode.None,
+
+            });
+
+            HttpContext.Response.Cookies.Append("X-Refresh-Token", response.Value.RefreshToken,
+            new CookieOptions
+            {
+                Expires = DateTime.Now.AddDays(7),
+                HttpOnly = true,
+                Secure = true,
+                IsEssential = true,
+                SameSite = SameSiteMode.None,
+
+            });
+        }
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
     //[HttpPost("google-login")]
     //public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginDto googleLoginDto, CancellationToken cancellationToken)
     //{
@@ -152,4 +191,5 @@ public class AuthenticationController : ControllerBase
 
     //    return Ok();
     //}
+
 }

@@ -20,7 +20,7 @@ internal sealed class GetAgentByIdHandler : IQueryHandler<GetAgentByIdQuery, Age
     {
         using var connection = _sqlConnectionFactory.CreateConnection();
 
-        Dictionary<int, AgentResponse> agentsDictionary = new();
+        Dictionary<Guid, AgentResponse> agentsDictionary = new();
 
         const string sql = """
             SELECT
@@ -31,14 +31,13 @@ internal sealed class GetAgentByIdHandler : IQueryHandler<GetAgentByIdQuery, Age
                 a.image_Url AS imageUrl,
                 a.description,
                 a.phone_number AS phoneNumber,
-                a.twitter_Url AS twitter,
-                a.facebook_Url AS facebook,
-                a.instagram_Url AS instagram,
-                a.linkedin_Url AS linkedin,
-                a.linkedin_Url AS linkedin,
+                a.social_media_twitter AS twitter,
+                a.social_media_facebook AS facebook,
+                a.social_media_instagram AS instagram,
+                a.social_media_linkedin AS linkedin,
                 ag.id AS agencyId,
                 ag.name AS agencyName,
-                l.id AS languageId,
+                l.id,
                 l.name
             FROM agents AS a
             LEFT JOIN agencies as ag ON ag.id = a.agency_id
@@ -49,7 +48,7 @@ internal sealed class GetAgentByIdHandler : IQueryHandler<GetAgentByIdQuery, Age
 
         var agent = await connection.QueryAsync<AgentResponse, SocialMediaResponse, ShortAgencyResponse, LanguageResponse, AgentResponse>(
             sql,
-            (agent, socialNetwork, agency, language) =>
+            (agent, socialMedia, agency, language) =>
         {
             if (agentsDictionary.TryGetValue(agent.Id, out var existingAgent))
             {
@@ -59,7 +58,7 @@ internal sealed class GetAgentByIdHandler : IQueryHandler<GetAgentByIdQuery, Age
             {
                 agentsDictionary.Add(agent.Id, agent);
             }
-            agent.SocialNetwork ??= socialNetwork;
+            agent.SocialMedia ??= socialMedia;
             agent.Agency = agency;
 
             if (language is not null)
@@ -68,7 +67,7 @@ internal sealed class GetAgentByIdHandler : IQueryHandler<GetAgentByIdQuery, Age
             }
             return agent;
 
-        }, new { request.AgentId }, splitOn: "twitter,agencyId,languageId");
+        }, new { request.AgentId }, splitOn: "twitter,agencyId,id");
 
         if (agentsDictionary.Count <= 0)
         {

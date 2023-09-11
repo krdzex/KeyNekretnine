@@ -1,43 +1,35 @@
-﻿using Application.Core.Users.Commands.UnbanUser;
-using Contracts;
-using Entities.DomainErrors;
+﻿using KeyNekretnine.Application.Abstraction.Clock;
 using KeyNekretnine.Application.Abstraction.Messaging;
-using MediatR;
-using Shared.Error;
+using KeyNekretnine.Domain.Abstraction;
+using KeyNekretnine.Domain.Users;
+using Microsoft.AspNetCore.Identity;
 
 namespace KeyNekretnine.Application.Core.Users.Commands.UnbanUser;
-internal sealed class UserUnbanHandler : ICommandHandler<UnbanUserCommand, Unit>
+internal sealed class UserUnbanHandler : ICommandHandler<UnbanUserCommand>
 {
-    private readonly IRepositoryManager _repository;
-    private readonly IPublisher _publisher;
-
-    public UserUnbanHandler(IRepositoryManager repository, IPublisher publisher)
+    private readonly UserManager<User> _userManager;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IDateTimeProvider _dateTimeProvider;
+    public UserUnbanHandler(UserManager<User> userManager, IUnitOfWork unitOfWork, IDateTimeProvider dateTimeProvider)
     {
-        _repository = repository;
-        _publisher = publisher;
+        _userManager = userManager;
+        _unitOfWork = unitOfWork;
+        _dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task<Result<Unit>> Handle(UnbanUserCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(UnbanUserCommand request, CancellationToken cancellationToken)
     {
-        var user = await _repository.User.GetUserByEmail(request.Email);
+        var user = await _userManager.FindByIdAsync(request.UserId);
 
         if (user is null)
         {
-            return Result.Failure<Unit>(DomainErrors.User.UserNotFound);
-
+            return Result.Failure(UserErrors.NotFound);
         }
 
-        var unbanResult = await _repository.User.UnbanUser(user!);
+        user.UnBan();
 
-        if (!unbanResult.Succeeded)
-        {
-            var errors = unbanResult.Errors.Select(error => new Error(error.Code, error.Description)).ToArray();
+        await _unitOfWork.SaveChangesAsync();
 
-            return MultipleErrorsResult<Unit>.WithErrors(errors);
-        }
-
-        await _publisher.Publish(new UserUnbannedEvent(user!.Email), cancellationToken);
-
-        return Unit.Value;
+        return Result.Success();
     }
 }

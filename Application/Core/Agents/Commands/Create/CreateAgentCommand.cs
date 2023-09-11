@@ -1,6 +1,18 @@
 ﻿using KeyNekretnine.Application.Abstraction.Messaging;
-using MediatR;
-using Shared.DataTransferObjects.Agency;
+using Microsoft.AspNetCore.Http;
 
 namespace KeyNekretnine.Application.Core.Agents.Commands.Create;
-public sealed record CreateAgentCommand(CreateAgentDto Agent, string Email) : ICommand<Unit>;
+public sealed record CreateAgentCommand(
+    Guid AgencyId,
+    string UserId,
+    string FirstName,
+    string LastName,
+    string Description,
+    string Email,
+    string PhoneNumber,
+    string TwitterUrl,
+    string FacebookUrl,
+    string InstagramUrl,
+    string LinkedinUrl,
+    IFormFile Image,
+    List<int> LanguageIds) : ICommand;

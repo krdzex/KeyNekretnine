@@ -1,5 +1,5 @@
-﻿using KeyNekretnine.Domain.Agencies;
-using KeyNekretnine.Domain.Languages;
+﻿using KeyNekretnine.Domain.Languages;
+using KeyNekretnine.Domain.Shared;
 using KeyNekretnine.Infrastructure.Configuration.SeedData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

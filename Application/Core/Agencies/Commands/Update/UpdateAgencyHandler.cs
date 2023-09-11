@@ -1,7 +1,10 @@
-﻿using KeyNekretnine.Application.Abstraction.Image;
+﻿using KeyNekretnine.Application.Abstraction.Clock;
+using KeyNekretnine.Application.Abstraction.Image;
 using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Agencies;
+using KeyNekretnine.Domain.Shared;
+using KeyNekretnine.Infrastructure.BackgroundJobs.ImageDeleter;
 using MediatR;
 
 namespace KeyNekretnine.Application.Core.Agencies.Commands.Update;
@@ -10,11 +13,20 @@ internal sealed class UpdateAgencyHandler : ICommandHandler<UpdateAgencyCommand>
     private readonly IAgencyRepository _agencyRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IImageService _imageService;
-    public UpdateAgencyHandler(IAgencyRepository agencyRepository, IUnitOfWork unitOfWork, IImageService imageService)
+    private readonly IImageToDeleteRepository _imageToDeleteRepository;
+    private readonly IDateTimeProvider _dateTimeProvider;
+    public UpdateAgencyHandler(
+        IAgencyRepository agencyRepository,
+        IUnitOfWork unitOfWork,
+        IImageService imageService,
+        IImageToDeleteRepository imageToDeleteRepository,
+        IDateTimeProvider dateTimeProvider)
     {
         _agencyRepository = agencyRepository;
         _unitOfWork = unitOfWork;
         _imageService = imageService;
+        _imageToDeleteRepository = imageToDeleteRepository;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<Result> Handle(UpdateAgencyCommand request, CancellationToken cancellationToken)
@@ -51,13 +63,18 @@ internal sealed class UpdateAgencyHandler : ICommandHandler<UpdateAgencyCommand>
                 request.Linkedin),
             request.LanguageIds);
 
+        if (request.Image?.Length > 0)
+        {
+            var oldImageUrl = agency.ImageUrl;
 
-        var imageUrl = await _imageService.UploadImageOnCloudinary(request.Image);
+            var imageUrl = await _imageService.UploadImageOnCloudinary(request.Image);
 
-        //Dodati dio gdje dodajemo stari image url u bazu za brisanje slika
-        var oldImageUrl = agency.ImageUrl;
-
-        agency.UpdateImageUrl(new ImageUrl(imageUrl));
+            if (oldImageUrl is not null)
+            {
+                _imageToDeleteRepository.Add(oldImageUrl.Value, _dateTimeProvider.Now);
+            }
+            agency.UpdateImage(new ImageUrl(imageUrl));
+        }
 
         await _unitOfWork.SaveChangesAsync();
 

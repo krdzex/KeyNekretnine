@@ -1,4 +1,8 @@
 ﻿using KeyNekretnine.Domain.Adverts;
+using KeyNekretnine.Domain.Agents;
+using KeyNekretnine.Domain.Neighborhoods;
+using KeyNekretnine.Domain.Shared;
+using KeyNekretnine.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -7,39 +11,59 @@ internal sealed class AdvertConfiguration : IEntityTypeConfiguration<Advert>
 {
     public void Configure(EntityTypeBuilder<Advert> builder)
     {
-        builder.HasKey(x => x.Id);
-        builder.Property(x => x.Price).IsRequired();
-        builder.Property(x => x.DescriptionSr).IsRequired().HasMaxLength(10000);
-        builder.Property(x => x.DescriptionEn).HasMaxLength(10000);
-        builder.HasOne(x => x.Purpose).WithMany(x => x.Adverts).HasForeignKey(x => x.PurposeId).IsRequired();
-        builder.Property(x => x.PurposeId).HasDefaultValue(1);
-        builder.HasOne(x => x.Status).WithMany(x => x.Adverts).HasForeignKey(x => x.StatusId).IsRequired();
-        builder.Property(x => x.StatusId).HasDefaultValue(1);
-        builder.HasOne(x => x.Type).WithMany(x => x.Adverts).HasForeignKey(x => x.TypeId).IsRequired();
-        builder.Property(x => x.TypeId).HasDefaultValue(1);
-        builder.Property(x => x.NoOfBedrooms).IsRequired().HasMaxLength(100);
-        builder.Property(x => x.NoOfBathrooms).IsRequired().HasMaxLength(100);
-        builder.Property(x => x.FloorSpace).IsRequired().HasMaxLength(10000);
-        builder.Property(x => x.HasElevator).IsRequired();
-        builder.Property(x => x.HasGarage).IsRequired();
-        builder.Property(x => x.HasTerrace).IsRequired();
-        builder.Property(x => x.HasWifi).IsRequired();
-        builder.Property(x => x.IsEmergency).IsRequired();
-        builder.Property(x => x.IsUnderConstruction).IsRequired();
-        builder.Property(x => x.IsFurnished).IsRequired();
-        builder.Property(x => x.YearOfBuildingCreated).HasMaxLength(3000);
-        builder.Property(x => x.CoverImageUrl).IsRequired().HasMaxLength(150);
-        builder.Property(x => x.Street).IsRequired().HasMaxLength(300);
-        builder.Property(x => x.Latitude).IsRequired();
-        builder.Property(x => x.Longitude).IsRequired();
-        builder.HasOne(a => a.User).WithMany(u => u.Adverts).HasForeignKey(x => x.UserId);
-        builder.HasOne(a => a.Agent).WithMany(u => u.Adverts).HasForeignKey(x => x.AgentId);
-        builder.HasMany(a => a.Images).WithOne(i => i.Advert).HasForeignKey(x => x.AdvertId);
-        builder.HasOne(x => x.Neighborhood).WithMany(x => x.Adverts).HasForeignKey(x => x.NeighborhoodId).IsRequired();
-        builder.Property(x => x.NeighborhoodId).HasDefaultValue(1);
-        builder.HasMany(x => x.TemporeryImageDatas).WithOne(t => t.Advert).HasForeignKey(x => x.AdvertId);
-        builder.Property(x => x.ReferenceId).HasMaxLength(10);
-        builder.Property(x => x.CreatedDate).IsRequired();
-        builder.HasMany(a => a.Features).WithOne(i => i.Advert).HasForeignKey(x => x.AdvertId);
+        builder.ToTable("adverts");
+
+        builder.HasKey(advert => advert.Id);
+
+        builder.Property(advert => advert.Price).IsRequired();
+
+        builder.OwnsOne(advert => advert.Description);
+
+        builder.Property(advert => advert.NoOfBedrooms).IsRequired().HasMaxLength(100);
+
+        builder.Property(advert => advert.NoOfBathrooms).IsRequired().HasMaxLength(100);
+
+        builder.Property(advert => advert.FloorSpace).IsRequired().HasMaxLength(10000);
+
+        builder.Property(advert => advert.HasElevator).IsRequired();
+
+        builder.Property(advert => advert.HasGarage).IsRequired();
+
+        builder.Property(advert => advert.HasTerrace).IsRequired();
+
+        builder.Property(advert => advert.HasWifi).IsRequired();
+
+        builder.Property(advert => advert.IsUrgent).IsRequired();
+
+        builder.Property(advert => advert.IsUnderConstruction).IsRequired();
+
+        builder.Property(advert => advert.IsFurnished).IsRequired();
+
+        builder.Property(advert => advert.YearOfBuildingCreated).HasMaxLength(3000);
+
+        builder.Property(advert => advert.CoverImageUrl)
+            .HasMaxLength(150)
+            .HasConversion(imageUrl => imageUrl.Value, value => new ImageUrl(value))
+            .IsRequired();
+
+        builder.OwnsOne(advert => advert.Location);
+
+        builder.HasOne<User>()
+            .WithMany()
+            .HasForeignKey(advert => advert.UserId);
+
+        builder.HasOne<Agent>()
+            .WithMany()
+            .HasForeignKey(advert => advert.AgentId);
+
+        builder.HasOne<Neighborhood>()
+            .WithMany()
+            .HasForeignKey(advert => advert.NeighborhoodId)
+            .IsRequired();
+        //builder.HasMany(x => x.TemporeryImageDatas).WithOne(t => t.Advert).HasForeignKey(x => x.AdvertId);
+        builder.Property(advert => advert.ReferenceId).HasMaxLength(10);
+        builder.HasIndex(advert => advert.ReferenceId).IsUnique();
+
+        builder.Property(advert => advert.CreatedOnDate).IsRequired();
     }
 }

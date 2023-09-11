@@ -1,4 +1,6 @@
 ﻿using KeyNekretnine.Application.Core.Users.Commands.BanUser;
+using KeyNekretnine.Application.Core.Users.Commands.UnbanUser;
+using KeyNekretnine.Application.Core.Users.Commands.UpdateUser;
 using KeyNekretnine.Application.Core.Users.Queries.Get;
 using KeyNekretnine.Application.Core.Users.Queries.GetByIdQuery;
 using KeyNekretnine.Application.Core.Users.Queries.GetCurrent;
@@ -71,5 +73,37 @@ public sealed class UserController : ControllerBase
         var response = await _sender.Send(command, cancellationToken);
 
         return response.IsSuccess ? NoContent() : NotFound(response.Error);
+    }
+
+    [Authorize(Roles = "Administrator")]
+    //[ServiceFilter(typeof(BanUserChack))]
+    [HttpPut("unban")]
+    public async Task<IActionResult> Unban([FromBody] string userId, CancellationToken cancellationToken)
+    {
+        var command = new UnbanUserCommand(userId);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : NotFound(response.Error);
+    }
+
+
+    [Authorize]
+    //[ServiceFilter(typeof(BanUserChack))]
+    [HttpPut]
+    public async Task<IActionResult> UpdateUser([FromForm] UpdateUserRequest updateUserRequest, CancellationToken cancellationToken)
+    {
+        var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
+
+        var query = new UpdateUserCommand(
+            userId,
+            updateUserRequest.About,
+            updateUserRequest.FirstName,
+            updateUserRequest.LastName,
+            updateUserRequest.Image);
+
+        var response = await _sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Accepted() : BadRequest(response.Error);
     }
 }

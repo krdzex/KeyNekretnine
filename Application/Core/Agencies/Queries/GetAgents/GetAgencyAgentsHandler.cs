@@ -19,6 +19,7 @@ internal sealed class GetAgencyAgentsHandler : IQueryHandler<GetAgencyAgentsQuer
 
         const string sql = """
             SELECT 
+                a.id,
                 a.first_name AS FirstName,
                 a.last_name AS LastName,
                 a.image_url AS ImageUrl

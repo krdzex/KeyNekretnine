@@ -70,7 +70,7 @@ public class AgencyController : ControllerBase
     }
 
     [HttpGet("{agencyId}")]
-    public async Task<IActionResult> GetAgencyById(int agencyId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAgencyById(Guid agencyId, CancellationToken cancellationToken)
     {
         var query = new GetAgencyByIdQuery(agencyId);
 
@@ -95,7 +95,7 @@ public class AgencyController : ControllerBase
     }
 
     [HttpGet("{agencyId}/adverts")]
-    public async Task<IActionResult> GetAgencyAdverts(int agencyId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAgencyAdverts(Guid agencyId, CancellationToken cancellationToken)
     {
         var query = new GetAgencyAdvertsQuery(agencyId);
 
@@ -105,7 +105,7 @@ public class AgencyController : ControllerBase
     }
 
     [HttpGet("{agencyId}/agents")]
-    public async Task<IActionResult> GetAgents(int agencyId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAgents(Guid agencyId, CancellationToken cancellationToken)
     {
         var query = new GetAgencyAgentsQuery(agencyId);
 
@@ -115,7 +115,7 @@ public class AgencyController : ControllerBase
     }
 
     [HttpGet("{agencyId}/location")]
-    public async Task<IActionResult> GetAgencyLocation(int agencyId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAgencyLocation(Guid agencyId, CancellationToken cancellationToken)
     {
         var query = new GetAgencyLocationQuery(agencyId);
 

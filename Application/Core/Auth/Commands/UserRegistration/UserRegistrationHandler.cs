@@ -2,7 +2,7 @@
 using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Application.Exceptions;
 using KeyNekretnine.Domain.Abstraction;
-using KeyNekretnine.Domain.Agents;
+using KeyNekretnine.Domain.Shared;
 using KeyNekretnine.Domain.Users;
 using Microsoft.AspNetCore.Identity;
 
@@ -11,7 +11,6 @@ internal sealed class UserRegistrationHandler : ICommandHandler<UserRegistration
 {
     private readonly UserManager<User> _userManager;
     private readonly IDateTimeProvider _dateTimeProvider;
-
     public UserRegistrationHandler(UserManager<User> userManager, IDateTimeProvider dateTimeProvider)
     {
         _userManager = userManager;
@@ -25,7 +24,7 @@ internal sealed class UserRegistrationHandler : ICommandHandler<UserRegistration
            new LastName(request.LastName),
            request.Email,
            request.UserName,
-           _dateTimeProvider.UtcNow);
+           _dateTimeProvider.Now);
 
         var result = await _userManager.CreateAsync(user, request.Password);
 

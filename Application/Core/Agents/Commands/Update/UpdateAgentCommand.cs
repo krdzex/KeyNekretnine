@@ -1,6 +1,18 @@
 ﻿using KeyNekretnine.Application.Abstraction.Messaging;
-using MediatR;
-using Shared.DataTransferObjects.Agency;
+using Microsoft.AspNetCore.Http;
 
 namespace KeyNekretnine.Application.Core.Agents.Commands.Update;
-public sealed record UpdateAgentCommand(UpdateAgentDto Agent, int AgentId, string Email) : ICommand<Unit>;
+public sealed record UpdateAgentCommand(
+    Guid AgentId,
+    string UserId,
+    string FirstName,
+    string LastName,
+    string Description,
+    string Email,
+    string TwitterUrl,
+    string FacebookUrl,
+    string InstagramUrl,
+    string LinkedinUrl,
+    string PhoneNumber,
+    IFormFile Image,
+    List<int> LanguageIds) : ICommand;
