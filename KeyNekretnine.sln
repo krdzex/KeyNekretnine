@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyNekretnine.Api", "KeyNekretnine\KeyNekretnine.Api.csproj", "{6F839310-9B62-49E9-A1BA-BA52C14CCAD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyNekretnine.Api", "KeyNekretnine.Api\KeyNekretnine.Api.csproj", "{6F839310-9B62-49E9-A1BA-BA52C14CCAD2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contracts", "Contracts\Contracts.csproj", "{65010372-CA3A-43AE-8730-CFA24682F332}"
 EndProject
@@ -14,7 +14,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyNekretnine.Presentation", "KeyNekretnine.Presentation\KeyNekretnine.Presentation.csproj", "{C4441FB2-77F1-499E-84D8-F4E2FA527EDA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyNekretnine.Application", "Application\KeyNekretnine.Application.csproj", "{3C164FE5-DCFF-4C45-A6D4-EB84C9A22E27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyNekretnine.Application", "KeyNekretnine.Application\KeyNekretnine.Application.csproj", "{3C164FE5-DCFF-4C45-A6D4-EB84C9A22E27}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service", "Service\Service.csproj", "{9E1CBD98-D069-43E9-8918-BE7BFF57FE71}"
 EndProject
@@ -28,7 +28,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C3B70BF6-FB3
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{7B64448F-F9AB-4DC0-87F9-0DD47E5F4414}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyNekretnine.Infrastructure", "Infrastructure\KeyNekretnine.Infrastructure.csproj", "{344FAAA7-D077-40BE-B987-652955327CA0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyNekretnine.Infrastructure", "KeyNekretnine.Infrastructure\KeyNekretnine.Infrastructure.csproj", "{344FAAA7-D077-40BE-B987-652955327CA0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyNekretnine.Domain", "KeyNekretnine.Domain\KeyNekretnine.Domain.csproj", "{FFADCD17-18FF-4F95-BD80-E6E1A42A263B}"
 EndProject

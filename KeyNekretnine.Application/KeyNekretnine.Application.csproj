@@ -1,0 +1,74 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Core\Adverts\**" />
+    <Compile Remove="Core\Auth\Commands\FacebookLogin\**" />
+    <Compile Remove="Core\Auth\Commands\GoogleLogin\**" />
+    <Compile Remove="Core\Email\**" />
+    <Compile Remove="Core\Users\Commands\ConfirmUserEmail\**" />
+    <Compile Remove="Core\Users\Commands\MultipleUsersBan\**" />
+    <Compile Remove="Core\Users\Commands\MultipleUsersUnban\**" />
+    <Compile Remove="Queries\**" />
+    <Compile Remove="Validators\**" />
+    <EmbeddedResource Remove="Core\Adverts\**" />
+    <EmbeddedResource Remove="Core\Auth\Commands\FacebookLogin\**" />
+    <EmbeddedResource Remove="Core\Auth\Commands\GoogleLogin\**" />
+    <EmbeddedResource Remove="Core\Email\**" />
+    <EmbeddedResource Remove="Core\Users\Commands\ConfirmUserEmail\**" />
+    <EmbeddedResource Remove="Core\Users\Commands\MultipleUsersBan\**" />
+    <EmbeddedResource Remove="Core\Users\Commands\MultipleUsersUnban\**" />
+    <EmbeddedResource Remove="Queries\**" />
+    <EmbeddedResource Remove="Validators\**" />
+    <None Remove="Core\Adverts\**" />
+    <None Remove="Core\Auth\Commands\FacebookLogin\**" />
+    <None Remove="Core\Auth\Commands\GoogleLogin\**" />
+    <None Remove="Core\Email\**" />
+    <None Remove="Core\Users\Commands\ConfirmUserEmail\**" />
+    <None Remove="Core\Users\Commands\MultipleUsersBan\**" />
+    <None Remove="Core\Users\Commands\MultipleUsersUnban\**" />
+    <None Remove="Queries\**" />
+    <None Remove="Validators\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.151" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.7.1" />
+    <PackageReference Include="MediatR" Version="12.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Features" Version="7.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\KeyNekretnine.Domain\KeyNekretnine.Domain.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Application.UnitTests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Core\Adverts\Queries\GetPagedAdvertReportsForAdmin\GetPagedAdvertReportsForAdminHandler.cs" />
+    <Compile Include="Core\Adverts\Queries\GetPagedAdvertReportsForAdmin\GetPagedAdvertReportsForAdminQuery.cs" />
+    <Compile Include="Core\Adverts\Queries\GetPagedAdvertReportsForAdmin\PagedAdvertReport.cs" />
+    <Compile Include="Core\Adverts\Queries\GetPagedAdvertsForAdmin\PagedAdvertForAdminResponse.cs" />
+    <Compile Include="Core\Adverts\Queries\GetPagedAdvertsForAdmin\GetPagedAdvertsForAdminHandler.cs" />
+    <Compile Include="Core\Adverts\Queries\GetPagedAdvertsForAdmin\GetPagedAdvertsForAdminQuery.cs" />
+    <Compile Include="Core\Adverts\Queries\GetAdvertForAdminByReferenceId\AdvertForAdminResponse.cs" />
+    <Compile Include="Core\Adverts\Queries\GetAdvertForAdminByReferenceId\GetAdvertForAdminByReferenceIdHandler.cs" />
+    <Compile Include="Core\Adverts\Queries\GetAdvertForAdminByReferenceId\GetAdvertForAdminByReferenceIdQuery.cs" />
+    <Compile Include="Core\Adverts\Queries\GetAdvertByReferenceId\AdvertResponse.cs" />
+    <Compile Include="Core\Adverts\Queries\GetAdvertByReferenceId\GetAdvertByReferenceIdHandler.cs" />
+    <Compile Include="Core\Adverts\Queries\GetAdvertByReferenceId\GetAdvertByReferenceIdQuery.cs" />
+    <Compile Include="Core\Adverts\Queries\GetAdvertFromMapByReferenceId\GetAdvertFromMapByReferenceIdHandler.cs" />
+    <Compile Include="Core\Adverts\Queries\GetAdvertFromMapByReferenceId\GetAdvertFromMapByReferenceIdQuery.cs" />
+    <Compile Include="Core\Adverts\Queries\GetAdvertFromMapByReferenceId\AdvertFromMapResponse.cs" />
+    <Compile Include="Core\Adverts\Queries\GetAllAdvertCoordinates\AdvertCoordinateResponse.cs" />
+    <Compile Include="Core\Adverts\Queries\GetAllAdvertCoordinates\GetAllAdvertCoordinatesHandler.cs" />
+    <Compile Include="Core\Adverts\Queries\GetAllAdvertCoordinates\GetAllAdvertCoordinatesQuery.cs" />
+  </ItemGroup>
+  <ItemGroup>
+	 <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+</Project>

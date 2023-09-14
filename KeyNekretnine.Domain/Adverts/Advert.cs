@@ -7,7 +7,7 @@ public class Advert : Entity
 {
     public double Price { get; private set; }
 
-    public Description Description { get; private set; }
+    public AdvertDescription Description { get; private set; }
 
     public int NoOfBedrooms { get; private set; }
 
