@@ -2,11 +2,15 @@
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertForAdminByReferenceId;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertFromMapByReferenceId;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAllAdvertCoordinates;
+using KeyNekretnine.Application.Core.Adverts.Queries.GetFavoriteAdverts;
+using KeyNekretnine.Application.Core.Adverts.Queries.GetIsAdvertFavorite;
+using KeyNekretnine.Application.Core.Adverts.Queries.GetMyAdverts;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetPagedAdvertReportsForAdmin;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetPagedAdvertsForAdmin;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace KeyNekretnine.Api.Controllers.Adverts;
 
@@ -87,6 +91,59 @@ public class AdvertController : ControllerBase
             request.OrderBy,
             request.PageNumber,
             request.PageSize);
+
+        var response = await _sender.Send(query, cancellationToken);
+
+        return Ok(response.Value);
+    }
+
+    [Authorize]
+    [HttpGet("/api/advert/my-adverts")]
+    //[ServiceFilter(typeof(BanUserChack))]
+    public async Task<IActionResult> GetMyAdverts([FromQuery] MyAdvertsPaginationParameters request, CancellationToken cancellationToken)
+    {
+        var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
+
+        var query = new GetPagedMyAdvertsQuery(
+            request.OrderBy,
+            request.PageNumber,
+            request.PageSize,
+            userId,
+            request.Type,
+            request.Purpose,
+            request.Status);
+
+        var response = await _sender.Send(query, cancellationToken);
+
+        return Ok(response.Value);
+    }
+
+    [Authorize]
+    [HttpGet("{referenceId}/is-favorite")]
+    //[ServiceFilter(typeof(BanUserChack))]
+    public async Task<IActionResult> GetIsAdvertFavorite(string referenceId, CancellationToken cancellationToken)
+    {
+        var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
+
+        var query = new GetIsAdvertFavoriteQuery(referenceId, userId);
+
+        var response = await _sender.Send(query, cancellationToken);
+
+        return Ok(response.Value);
+    }
+
+    [Authorize]
+    [HttpGet("favorite")]
+    //[ServiceFilter(typeof(BanUserChack))]
+    public async Task<IActionResult> FavoriteAdverts([FromQuery] FavoriteAdvertsPaginationParameters request, CancellationToken cancellationToken)
+    {
+        var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
+
+        var query = new GetFavoriteAdvertsQuery(
+            request.OrderBy,
+            request.PageNumber,
+            request.PageSize,
+            userId);
 
         var response = await _sender.Send(query, cancellationToken);
 

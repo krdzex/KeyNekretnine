@@ -5,7 +5,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Core\Adverts\**" />
+    <Compile Remove="Core\Adverts\Commands\**" />
+    <Compile Remove="Core\Adverts\Queries\GetAdvertsCompare\**" />
+    <Compile Remove="Core\Adverts\Queries\GetAdverts\**" />
+    <Compile Remove="Core\Adverts\Queries\GetMyAdvertById\**" />
     <Compile Remove="Core\Auth\Commands\FacebookLogin\**" />
     <Compile Remove="Core\Auth\Commands\GoogleLogin\**" />
     <Compile Remove="Core\Email\**" />
@@ -14,7 +17,10 @@
     <Compile Remove="Core\Users\Commands\MultipleUsersUnban\**" />
     <Compile Remove="Queries\**" />
     <Compile Remove="Validators\**" />
-    <EmbeddedResource Remove="Core\Adverts\**" />
+    <EmbeddedResource Remove="Core\Adverts\Commands\**" />
+    <EmbeddedResource Remove="Core\Adverts\Queries\GetAdvertsCompare\**" />
+    <EmbeddedResource Remove="Core\Adverts\Queries\GetAdverts\**" />
+    <EmbeddedResource Remove="Core\Adverts\Queries\GetMyAdvertById\**" />
     <EmbeddedResource Remove="Core\Auth\Commands\FacebookLogin\**" />
     <EmbeddedResource Remove="Core\Auth\Commands\GoogleLogin\**" />
     <EmbeddedResource Remove="Core\Email\**" />
@@ -23,7 +29,10 @@
     <EmbeddedResource Remove="Core\Users\Commands\MultipleUsersUnban\**" />
     <EmbeddedResource Remove="Queries\**" />
     <EmbeddedResource Remove="Validators\**" />
-    <None Remove="Core\Adverts\**" />
+    <None Remove="Core\Adverts\Commands\**" />
+    <None Remove="Core\Adverts\Queries\GetAdvertsCompare\**" />
+    <None Remove="Core\Adverts\Queries\GetAdverts\**" />
+    <None Remove="Core\Adverts\Queries\GetMyAdvertById\**" />
     <None Remove="Core\Auth\Commands\FacebookLogin\**" />
     <None Remove="Core\Auth\Commands\GoogleLogin\**" />
     <None Remove="Core\Email\**" />
@@ -47,26 +56,6 @@
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
       <_Parameter1>Application.UnitTests</_Parameter1>
     </AssemblyAttribute>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Core\Adverts\Queries\GetPagedAdvertReportsForAdmin\GetPagedAdvertReportsForAdminHandler.cs" />
-    <Compile Include="Core\Adverts\Queries\GetPagedAdvertReportsForAdmin\GetPagedAdvertReportsForAdminQuery.cs" />
-    <Compile Include="Core\Adverts\Queries\GetPagedAdvertReportsForAdmin\PagedAdvertReport.cs" />
-    <Compile Include="Core\Adverts\Queries\GetPagedAdvertsForAdmin\PagedAdvertForAdminResponse.cs" />
-    <Compile Include="Core\Adverts\Queries\GetPagedAdvertsForAdmin\GetPagedAdvertsForAdminHandler.cs" />
-    <Compile Include="Core\Adverts\Queries\GetPagedAdvertsForAdmin\GetPagedAdvertsForAdminQuery.cs" />
-    <Compile Include="Core\Adverts\Queries\GetAdvertForAdminByReferenceId\AdvertForAdminResponse.cs" />
-    <Compile Include="Core\Adverts\Queries\GetAdvertForAdminByReferenceId\GetAdvertForAdminByReferenceIdHandler.cs" />
-    <Compile Include="Core\Adverts\Queries\GetAdvertForAdminByReferenceId\GetAdvertForAdminByReferenceIdQuery.cs" />
-    <Compile Include="Core\Adverts\Queries\GetAdvertByReferenceId\AdvertResponse.cs" />
-    <Compile Include="Core\Adverts\Queries\GetAdvertByReferenceId\GetAdvertByReferenceIdHandler.cs" />
-    <Compile Include="Core\Adverts\Queries\GetAdvertByReferenceId\GetAdvertByReferenceIdQuery.cs" />
-    <Compile Include="Core\Adverts\Queries\GetAdvertFromMapByReferenceId\GetAdvertFromMapByReferenceIdHandler.cs" />
-    <Compile Include="Core\Adverts\Queries\GetAdvertFromMapByReferenceId\GetAdvertFromMapByReferenceIdQuery.cs" />
-    <Compile Include="Core\Adverts\Queries\GetAdvertFromMapByReferenceId\AdvertFromMapResponse.cs" />
-    <Compile Include="Core\Adverts\Queries\GetAllAdvertCoordinates\AdvertCoordinateResponse.cs" />
-    <Compile Include="Core\Adverts\Queries\GetAllAdvertCoordinates\GetAllAdvertCoordinatesHandler.cs" />
-    <Compile Include="Core\Adverts\Queries\GetAllAdvertCoordinates\GetAllAdvertCoordinatesQuery.cs" />
   </ItemGroup>
   <ItemGroup>
 	 <FrameworkReference Include="Microsoft.AspNetCore.App" />

@@ -1,7 +1,9 @@
 ﻿using KeyNekretnine.Application.Abstraction.Messaging;
-using Shared.CustomResponses;
-using Shared.DataTransferObjects.Advert;
-using Shared.RequestFeatures;
+using KeyNekretnine.Application.Core.Shared.Pagination;
 
 namespace KeyNekretnine.Application.Core.Adverts.Queries.GetFavoriteAdverts;
-public sealed record GetFavoriteAdvertsQuery(FavoriteAdvertsParameters RequestParameters, string Email) : IQuery<Pagination<MinimalInformationsAboutAdvertDto>>;
+public sealed record GetFavoriteAdvertsQuery(
+    string OrderBy,
+    int PageNumber,
+    int PageSize,
+    string UserId) : IQuery<Pagination<FavoriteAdvertResponse>>;

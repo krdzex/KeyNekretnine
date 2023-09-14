@@ -1,0 +1,14 @@
+﻿namespace KeyNekretnine.Application.Core.Adverts.Queries.GetFavoriteAdverts;
+public class FavoriteAdvertResponse
+{
+    public string ReferenceId { get; set; }
+    public double Price { get; set; }
+    public double FloorSpace { get; set; }
+    public int NoOfBedrooms { get; set; }
+    public int NoOfBathrooms { get; set; }
+    public DateTime CreatedOnDate { get; set; }
+    public string CoverImageUrl { get; set; }
+    public string Location { get; set; }
+    public string Address { get; set; }
+    public bool IsUrgent { get; set; }
+}
