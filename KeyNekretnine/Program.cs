@@ -5,9 +5,6 @@ using KeyNekretnine.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddReverseProxy()
-    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
-
 builder.Services
     .AddCaching()
     .AddApplication()
@@ -49,7 +46,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.MapReverseProxy();
 
 app.Run();
