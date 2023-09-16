@@ -5,7 +5,6 @@ using Entities.Models;
 using FluentValidation;
 using KeyNekretnine.Attributes;
 using KeyNekretnine.BackgroundWorkers;
-using KeyNekretnine.Presentation.ActionFilters;
 using LoggerService;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -227,7 +226,7 @@ public static class DependencyInjection
                 builder
                 .WithOrigins(
                     "https://keynekretnine-dev.vercel.app",
-                    "https://keynekretnine-git-http-only-voi99.vercel.app",
+                    "https://testing-ui.keynekretnine.me",
                     "http://localhost:3000",
                     "http://localhost:4200",
                     "https://key-nekretnine-admin.vercel.app"
