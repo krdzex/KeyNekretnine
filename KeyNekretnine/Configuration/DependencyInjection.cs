@@ -5,6 +5,7 @@ using Entities.Models;
 using FluentValidation;
 using KeyNekretnine.Attributes;
 using KeyNekretnine.BackgroundWorkers;
+using KeyNekretnine.Presentation.ActionFilters;
 using LoggerService;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
