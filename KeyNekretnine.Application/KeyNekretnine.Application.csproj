@@ -6,9 +6,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Core\Adverts\Commands\**" />
-    <Compile Remove="Core\Adverts\Queries\GetAdvertsCompare\**" />
-    <Compile Remove="Core\Adverts\Queries\GetAdverts\**" />
-    <Compile Remove="Core\Adverts\Queries\GetMyAdvertById\**" />
     <Compile Remove="Core\Auth\Commands\FacebookLogin\**" />
     <Compile Remove="Core\Auth\Commands\GoogleLogin\**" />
     <Compile Remove="Core\Email\**" />
@@ -18,9 +15,6 @@
     <Compile Remove="Queries\**" />
     <Compile Remove="Validators\**" />
     <EmbeddedResource Remove="Core\Adverts\Commands\**" />
-    <EmbeddedResource Remove="Core\Adverts\Queries\GetAdvertsCompare\**" />
-    <EmbeddedResource Remove="Core\Adverts\Queries\GetAdverts\**" />
-    <EmbeddedResource Remove="Core\Adverts\Queries\GetMyAdvertById\**" />
     <EmbeddedResource Remove="Core\Auth\Commands\FacebookLogin\**" />
     <EmbeddedResource Remove="Core\Auth\Commands\GoogleLogin\**" />
     <EmbeddedResource Remove="Core\Email\**" />
@@ -30,9 +24,6 @@
     <EmbeddedResource Remove="Queries\**" />
     <EmbeddedResource Remove="Validators\**" />
     <None Remove="Core\Adverts\Commands\**" />
-    <None Remove="Core\Adverts\Queries\GetAdvertsCompare\**" />
-    <None Remove="Core\Adverts\Queries\GetAdverts\**" />
-    <None Remove="Core\Adverts\Queries\GetMyAdvertById\**" />
     <None Remove="Core\Auth\Commands\FacebookLogin\**" />
     <None Remove="Core\Auth\Commands\GoogleLogin\**" />
     <None Remove="Core\Email\**" />

@@ -1,5 +1,5 @@
-﻿namespace KeyNekretnine.Application.Core.Adverts.Queries.GetFavoriteAdverts;
-public class FavoriteAdvertResponse
+﻿namespace KeyNekretnine.Application.Core.Adverts.Queries.GetPagedAdverts;
+public class PagedAdvertResponse
 {
     public string ReferenceId { get; set; }
     public double Price { get; set; }

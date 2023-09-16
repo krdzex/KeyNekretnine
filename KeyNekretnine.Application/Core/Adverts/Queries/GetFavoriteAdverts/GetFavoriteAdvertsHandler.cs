@@ -37,6 +37,8 @@ internal sealed class GetFavoriteAdvertsHandler : IQueryHandler<GetFavoriteAdver
             	CONCAT(c.name, ', ', n.name) AS location,
             	a.location_address AS address,
             	a.is_urgent AS isUrgent,
+                a.type,
+                a.purpose
             	ua.created_favorite_date AS createdFavoriteDate
             FROM adverts a
             LEFT JOIN user_advert_favorites AS ua ON a.id = ua.advert_id

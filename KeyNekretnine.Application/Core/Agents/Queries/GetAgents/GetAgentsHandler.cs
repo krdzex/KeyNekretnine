@@ -40,7 +40,7 @@ internal sealed class GetAgentsHandler : IQueryHandler<GetAgentsQuery, Paginatio
                 ag.id AS agencyId,
                 ag.name AS agencyName 
             FROM agents AS a
-            LEFT JOIN adverts AS ad ON a.id = ad.agent_id AND ad.status_id = 1
+            LEFT JOIN adverts AS ad ON a.id = ad.agent_id AND ad.status = 1
             LEFT JOIN agencies as ag ON ag.id = a.agency_id
             GROUP BY a.id, ag.id
             ORDER BY {orderBy} OFFSET @Skip FETCH NEXT @Take ROWS ONLY;

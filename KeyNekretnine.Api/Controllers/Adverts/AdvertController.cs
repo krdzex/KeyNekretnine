@@ -1,9 +1,12 @@
 ﻿using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertByReferenceId;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertForAdminByReferenceId;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertFromMapByReferenceId;
+using KeyNekretnine.Application.Core.Adverts.Queries.GetAdverts;
+using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertsCompare;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAllAdvertCoordinates;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetFavoriteAdverts;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetIsAdvertFavorite;
+using KeyNekretnine.Application.Core.Adverts.Queries.GetMyAdvertById;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetMyAdverts;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetPagedAdvertReportsForAdmin;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetPagedAdvertsForAdmin;
@@ -25,7 +28,7 @@ public class AdvertController : ControllerBase
     }
 
     [HttpGet("{referenceId}")]
-    public async Task<IActionResult> Get(string referenceId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAdvertByReferenceId(string referenceId, CancellationToken cancellationToken)
     {
         var query = new GetAdvertByReferenceIdQuery(referenceId);
 
@@ -135,7 +138,7 @@ public class AdvertController : ControllerBase
     [Authorize]
     [HttpGet("favorite")]
     //[ServiceFilter(typeof(BanUserChack))]
-    public async Task<IActionResult> FavoriteAdverts([FromQuery] FavoriteAdvertsPaginationParameters request, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetFavoriteAdverts([FromQuery] FavoriteAdvertsPaginationParameters request, CancellationToken cancellationToken)
     {
         var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
 
@@ -144,6 +147,56 @@ public class AdvertController : ControllerBase
             request.PageNumber,
             request.PageSize,
             userId);
+
+        var response = await _sender.Send(query, cancellationToken);
+
+        return Ok(response.Value);
+    }
+
+    [Authorize]
+    [HttpGet("/api/advert/my-adverts/{referenceId}")]
+    //[ServiceFilter(typeof(BanUserChack))]
+    public async Task<IActionResult> GetMyAdvertByReferenceId(string referenceId, CancellationToken cancellationToken)
+    {
+        var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
+
+        var query = new GetMyAdvertByReferenceIdQuery(referenceId, userId);
+
+        var response = await _sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
+    }
+
+    [HttpGet("compare/{firstReferenceId}/{secondReferenceId}")]
+    public async Task<IActionResult> GetAdvertsCompare(string firstReferenceId, string secondReferenceId, CancellationToken cancellationToken)
+    {
+        var query = new GetAdvertsCompareQuery(firstReferenceId, secondReferenceId);
+
+        var response = await _sender.Send(query, cancellationToken);
+
+        return Ok(response.Value);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Get([FromQuery] AdvertsPaginationParameters request, CancellationToken cancellationToken)
+    {
+        var query = new GetPagedAdvertsQuery(
+            request.OrderBy,
+            request.PageNumber,
+            request.PageSize,
+            request.MinPrice,
+            request.MaxPrice,
+            request.MinFloorSpace,
+            request.MaxFloorSpace,
+            request.NoOfBedrooms,
+            request.NoOfBathrooms,
+            request.Types,
+            request.Purposes,
+            request.Neighborhoods,
+            request.CityId,
+            request.IsEmergency,
+            request.IsUnderConstruction,
+            request.IsFurnished);
 
         var response = await _sender.Send(query, cancellationToken);
 

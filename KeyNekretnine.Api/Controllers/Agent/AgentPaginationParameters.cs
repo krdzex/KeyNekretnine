@@ -5,5 +5,5 @@ namespace KeyNekretnine.Api.Controllers.Agent;
 public class AgentPaginationParameters : RequestParameters
 {
 
-    public AgentPaginationParameters() => OrderBy = "first_name";
+    public AgentPaginationParameters() => OrderBy = "firstName";
 }

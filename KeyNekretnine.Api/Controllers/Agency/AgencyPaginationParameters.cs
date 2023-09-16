@@ -4,6 +4,6 @@ namespace KeyNekretnine.Api.Controllers.Agency;
 
 public class AgencyPaginationParameters : RequestParameters
 {
-    public AgencyPaginationParameters() => OrderBy = "created_date";
+    public AgencyPaginationParameters() => OrderBy = "createdDate";
     public string? Name { get; set; }
 }

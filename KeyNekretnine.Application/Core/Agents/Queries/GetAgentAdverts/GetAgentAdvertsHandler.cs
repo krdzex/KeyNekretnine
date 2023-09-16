@@ -19,29 +19,25 @@ internal sealed class GetAgentAdvertsHandler : IQueryHandler<GetAgentAdvertsQuer
 
         const string sql = """
             SELECT
-                a.id,
+                a.reference_id AS referenceId,
                 a.price,
                 a.floor_space AS floorSpace,
                 a.no_of_bedrooms AS noOfBedrooms,
                 a.no_of_bathrooms AS noOfBathrooms,
-                a.created_date AS createdDate,
+                a.created_on_date AS createdOnDate,
                 a.cover_image_url AS coverImageUrl,
                 CONCAT(c.name, ', ', n.name) AS location,
-                p.name_en AS purposeNameEn,
-                p.name_sr AS purposeNameSr,
-                t.name_sr AS typeNameSr,
-                t.name_en AS typeNameEn,
-                a.street,
-                a.is_emergency AS isEmergency,
+                a.type,
+                a.purpose,
+                a.location_address AS address,
+                a.is_urgent AS isUrgent,
                 a.is_under_construction AS isUnderConstruction,
                 a.is_furnished AS isFurnished
             FROM adverts AS a
-            JOIN advert_types t ON a.type_id = t.id
-            JOIN advert_purposes p ON a.purpose_id = p.id
             JOIN neighborhoods n ON a.neighborhood_id = n.id
             JOIN cities c ON n.city_id = c.id
             WHERE a.agent_id = @agentId
-            AND a.status_id = 1;
+            AND a.status = 1;
             """;
 
         var cmd = new CommandDefinition(sql, new { request.AgentId }, cancellationToken: cancellationToken);
