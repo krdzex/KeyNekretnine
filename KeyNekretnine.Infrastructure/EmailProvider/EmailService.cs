@@ -61,7 +61,7 @@ internal sealed class EmailService : IEmailService
         return response.IsSuccessStatusCode;
     }
 
-    public async Task<bool> SendApproveAdvertEmail(string email, int advertId, CancellationToken cancellationToken)
+    public async Task<bool> SendApproveAdvertEmail(string email, string referenceId, CancellationToken cancellationToken)
     {
         var sendGridConfigSection = _configuration.GetSection("SendGridEmailSettings");
 
@@ -73,8 +73,8 @@ internal sealed class EmailService : IEmailService
         var msg = new SendGridMessage
         {
             From = new EmailAddress(fromEmail, fromName),
-            Subject = $"Approved advert {advertId}",
-            PlainTextContent = $"Your advert with id {advertId} is approved from admin"
+            Subject = $"Approved advert",
+            PlainTextContent = $"Your advert with reference id {referenceId} is approved from admin"
         };
 
         msg.AddTo(email);

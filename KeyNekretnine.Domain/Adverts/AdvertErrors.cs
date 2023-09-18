@@ -10,4 +10,8 @@ public static class AdvertErrors
     public static Error NotFoundForAdmin => new(
         "Advert.NotFound",
         "Advert doesn't exist in the database.");
+
+    public static Error AlreadyAccepted => new(
+        "Advert.AlreadyAccepted",
+        "Advert is already accepted");
 }

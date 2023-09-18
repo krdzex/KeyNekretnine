@@ -1,10 +1,20 @@
 ﻿using KeyNekretnine.Domain.Abstraction;
+using KeyNekretnine.Domain.Adverts.Events;
 using KeyNekretnine.Domain.Agencies;
 using KeyNekretnine.Domain.Shared;
 
 namespace KeyNekretnine.Domain.Adverts;
 public class Advert : Entity
 {
+    public Advert()
+    : base()
+    {
+    }
+
+    //private Advert()
+    //{
+    //}
+
     public double Price { get; private set; }
 
     public AdvertDescription Description { get; private set; }
@@ -53,4 +63,17 @@ public class Advert : Entity
 
     //public List<TemporeryImageData> TemporeryImageDatas { get; set; }
     public string ReferenceId { get; private set; }
+
+    public Result Approve()
+    {
+        if (Status == AdvertStatus.Accepted)
+        {
+            return Result.Failure(AdvertErrors.AlreadyAccepted);
+        }
+
+        Status = AdvertStatus.Accepted;
+
+        RaiseDomainEvent(new AdvertApprovedDomainEvent(Id, UserId));
+        return Result.Success();
+    }
 }

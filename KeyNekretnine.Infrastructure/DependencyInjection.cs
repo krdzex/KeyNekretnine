@@ -5,6 +5,7 @@ using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Email;
 using KeyNekretnine.Application.Abstraction.Image;
 using KeyNekretnine.Domain.Abstraction;
+using KeyNekretnine.Domain.Adverts;
 using KeyNekretnine.Domain.Agencies;
 using KeyNekretnine.Domain.Agents;
 using KeyNekretnine.Domain.Users;
@@ -58,6 +59,7 @@ public static class DependencyInjection
         services.AddScoped<IAgencyRepository, AgencyRepository>();
         services.AddScoped<IAgentRepository, AgentRepository>();
         services.AddScoped<IImageToDeleteRepository, ImageToDeleteRepository>();
+        services.AddScoped<IAdvertRepository, AdvertRepository>();
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDbContext>());
 

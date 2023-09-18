@@ -49,6 +49,11 @@
     </AssemblyAttribute>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Adverts\Commands\ApproveAdvert\ApproveAdvertCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\ApproveAdvert\ApproveAdvertHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\ApproveAdvert\AdvertApprovedDomainEventHandler.cs" />
+  </ItemGroup>
+  <ItemGroup>
 	 <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 </Project>

@@ -13,5 +13,5 @@ public sealed class AgencyResponse
     public TimeSpan? WorkStartTime { get; set; }
     public TimeSpan? WorkEndTime { get; set; }
     public List<LanguageResponse> Languages { get; set; } = new();
-    public SocialMediaResponse SocialMedia { get; set; }
+    public SocialMediaResponse SocialMedia { get; set; } = new();
 }
