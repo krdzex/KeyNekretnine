@@ -38,6 +38,11 @@ public class AgencyConfiguration : IEntityTypeConfiguration<Agency>
             .HasConversion(email => email.Value, value => new Email(value))
             .IsRequired(false);
 
+        builder.Property(agent => agent.PhoneNumber)
+            .HasMaxLength(50)
+            .HasConversion(phoneNumber => phoneNumber.Value, value => new PhoneNumber(value))
+            .IsRequired(false);
+
         builder.OwnsOne(agency => agency.WorkHour);
         builder.OwnsOne(agency => agency.SocialMedia);
         builder.OwnsOne(agency => agency.Location);

@@ -41,6 +41,8 @@ public class Advert : Entity
 
     public bool IsUnderConstruction { get; private set; }
 
+    public bool IsPremium { get; private set; }
+
     public int? YearOfBuildingCreated { get; private set; }
 
     public AdvertStatus Status { get; private set; }
@@ -49,9 +51,7 @@ public class Advert : Entity
 
     public AdvertType Type { get; private set; }
 
-    public DateTime CreatedOnDate { get; private set; }
-
-    public string UserId { get; private set; }
+    public string? UserId { get; private set; }
 
     public Guid? AgentId { get; private set; }
 
@@ -61,10 +61,18 @@ public class Advert : Entity
 
     public Location Location { get; private set; }
 
+    public DateTime CreatedOnDate { get; private set; }
+
+    public DateTime? ApprovedOnDate { get; private set; }
+
+    public DateTime? RejectedOnDate { get; private set; }
+
+    public DateTime? UpdatedOnDate { get; private set; }
+
     //public List<TemporeryImageData> TemporeryImageDatas { get; set; }
     public string ReferenceId { get; private set; }
 
-    public Result Approve()
+    public Result Approve(DateTime approvedDate)
     {
         if (Status == AdvertStatus.Accepted)
         {
@@ -72,6 +80,7 @@ public class Advert : Entity
         }
 
         Status = AdvertStatus.Accepted;
+        ApprovedOnDate = approvedDate;
 
         RaiseDomainEvent(new AdvertApprovedDomainEvent(Id, UserId));
         return Result.Success();

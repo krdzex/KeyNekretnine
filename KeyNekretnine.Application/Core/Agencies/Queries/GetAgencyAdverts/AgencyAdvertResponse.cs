@@ -1,17 +1,16 @@
 ﻿namespace KeyNekretnine.Application.Core.Agencies.Queries.GetAgencyAdverts;
 public sealed class AgencyAdvertResponse
 {
-    public string Location { get; set; }
-    public double Price { get; set; }
-    public string CoverImageUrl { get; set; }
-    public int NoOfBathrooms { get; set; }
-    public int NoOfBedrooms { get; set; }
-    public double FloorSpace { get; set; }
-    public DateTime CreatedOnDate { get; set; }
-    public string Address { get; set; }
-    public bool IsUrgent { get; set; }
-    public bool IsUnderConstruction { get; set; }
-    public bool IsFurnished { get; set; }
-    public int Type { get; set; }
-    public int Purpose { get; set; }
+    public string ReferenceId { get; init; }
+    public string Location { get; init; }
+    public double Price { get; init; }
+    public string CoverImageUrl { get; init; }
+    public int NoOfBathrooms { get; init; }
+    public int NoOfBedrooms { get; init; }
+    public double FloorSpace { get; init; }
+    public string Address { get; init; }
+    public bool IsUrgent { get; init; }
+    public bool IsPremium { get; init; }
+    public int Type { get; init; }
+    public int Purpose { get; init; }
 }

@@ -29,7 +29,7 @@ internal sealed class GetAgentsHandler : IQueryHandler<GetAgentsQuery, Paginatio
             SELECT 
                 a.id,
                 a.first_name AS firstName,
-                COUNT(ad.id) AS numAdverts,
+                COUNT(ad.id) AS numberOfAdverts,
                 a.last_Name AS lastName,
                 a.email,
                 a.image_Url AS imageUrl,

@@ -6,5 +6,5 @@ public class PaginationUserResponse
     public string Username { get; set; }
     public bool IsBanned { get; set; }
     public DateTime AccountCreatedDate { get; set; }
-    public int NumAdverts { get; set; }
+    public int NumberOfAdverts { get; set; }
 }

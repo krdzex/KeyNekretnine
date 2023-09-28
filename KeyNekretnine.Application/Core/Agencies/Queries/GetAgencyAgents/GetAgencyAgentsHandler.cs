@@ -20,11 +20,16 @@ internal sealed class GetAgencyAgentsHandler : IQueryHandler<GetAgencyAgentsQuer
         const string sql = """
             SELECT 
                 a.id,
-                a.first_name AS FirstName,
-                a.last_name AS LastName,
-                a.image_url AS ImageUrl
+                a.first_name AS firstName,
+                a.last_name AS lastName,
+                a.image_url AS image,
+                a.phone_number AS phoneNumber,
+                a.email,
+                COUNT(ad.id) AS numberOfAdverts
             FROM agents AS a
-            WHERE a.agency_id = @agencyId;
+            LEFT JOIN adverts AS ad ON a.id = ad.agent_id AND ad.status = 1
+            WHERE a.agency_id = @agencyId
+            GROUP BY a.id;
             """;
 
         var cmd = new CommandDefinition(sql, new { request.AgencyId }, cancellationToken: cancellationToken);

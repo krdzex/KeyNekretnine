@@ -19,20 +19,18 @@ internal sealed class GetAgencyAdvertsHandler : IQueryHandler<GetAgencyAdvertsQu
 
         const string sql = """
             SELECT
-                a.id,
+                a.reference_id AS referenceId,
                 a.price,
                 a.floor_space AS FloorSpace,
                 a.no_of_bedrooms AS NoOfBedrooms,
                 a.no_of_bathrooms AS NoOfBathrooms,
-                a.created_on_date AS CreatedOnDate,
                 a.cover_image_url AS CoverImageUrl,
                 CONCAT(c.name, ', ', n.name) AS location,
                 a.type,
                 a.purpose,
                 a.location_address AS address,
-                a.is_urgent AS IsUrgent,
-                a.is_under_construction AS IsUnderConstruction,
-                a.is_furnished AS IsFurnished
+                a.is_urgent AS isUrgent,
+                a.is_premium AS isPremium
             FROM adverts AS a
             JOIN agents AS ia ON a.agent_id = ia.id
             JOIN neighborhoods n ON a.neighborhood_id = n.id

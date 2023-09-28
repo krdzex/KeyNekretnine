@@ -13,5 +13,6 @@ public sealed record UpdateAgencyRequest(
     string LinkedinUrl,
     double? Latitude,
     double? Longitude,
+    string PhoneNumber,
     List<int> LanguageIds,
     IFormFile Image);

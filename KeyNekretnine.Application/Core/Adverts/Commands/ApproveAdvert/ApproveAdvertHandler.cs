@@ -1,4 +1,5 @@
-﻿using KeyNekretnine.Application.Abstraction.Messaging;
+﻿using KeyNekretnine.Application.Abstraction.Clock;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Adverts;
 
@@ -7,11 +8,16 @@ internal sealed class ApproveAdvertHandler : ICommandHandler<ApproveAdvertComman
 {
     private readonly IAdvertRepository _advertRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
-    public ApproveAdvertHandler(IAdvertRepository advertRepository, IUnitOfWork unitOfWork)
+    public ApproveAdvertHandler(
+        IAdvertRepository advertRepository,
+        IUnitOfWork unitOfWork,
+        IDateTimeProvider dateTimeProvider)
     {
         _advertRepository = advertRepository;
         _unitOfWork = unitOfWork;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<Result> Handle(ApproveAdvertCommand request, CancellationToken cancellationToken)
@@ -23,7 +29,7 @@ internal sealed class ApproveAdvertHandler : ICommandHandler<ApproveAdvertComman
             return Result.Failure(AdvertErrors.NotFoundForAdmin);
         }
 
-        var result = advert.Approve();
+        var result = advert.Approve(_dateTimeProvider.Now);
 
         if (result.IsFailure)
         {

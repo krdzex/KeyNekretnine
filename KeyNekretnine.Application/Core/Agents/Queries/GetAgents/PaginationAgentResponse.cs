@@ -9,7 +9,7 @@ public sealed class PaginationAgentResponse
     public string LastName { get; set; }
     public string Email { get; set; }
     public string ImageUrl { get; set; }
-    public int NumAdverts { get; set; }
+    public int NumberOfAdverts { get; set; }
     public ShortAgencyResponse Agency { get; set; }
     public SocialMediaResponse SocialMedia { get; set; } = new();
 }

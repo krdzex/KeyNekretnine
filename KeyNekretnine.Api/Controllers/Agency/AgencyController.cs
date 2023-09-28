@@ -23,15 +23,15 @@ public class AgencyController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAgency([FromBody] CreateAgencyRequest createAgencyRequest, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateAgency([FromBody] CreateAgencyRequest request, CancellationToken cancellationToken)
     {
         var command = new CreateAgencyCommand(
-            createAgencyRequest.FirstName,
-            createAgencyRequest.LastName,
-            createAgencyRequest.UserName,
-            createAgencyRequest.Email,
-            createAgencyRequest.Password,
-            createAgencyRequest.AgencyName);
+            request.FirstName,
+            request.LastName,
+            request.UserName,
+            request.Email,
+            request.Password,
+            request.AgencyName);
 
         await _sender.Send(command, cancellationToken);
 
@@ -40,28 +40,29 @@ public class AgencyController : ControllerBase
 
     [Authorize]
     [HttpPut("{agencyId}")]
-    public async Task<IActionResult> UpdateAgency([FromForm] UpdateAgencyRequest updateAgencyRequest, Guid agencyId, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateAgency([FromForm] UpdateAgencyRequest request, Guid agencyId, CancellationToken cancellationToken)
     {
         var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
 
         var command = new UpdateAgencyCommand(
             agencyId,
-            updateAgencyRequest.AgencyName,
+            request.AgencyName,
             userId,
-            updateAgencyRequest.Address,
-            updateAgencyRequest.Description,
-            updateAgencyRequest.Email,
-            updateAgencyRequest.WebsiteUrl,
-            updateAgencyRequest.WorkStartTime,
-            updateAgencyRequest.WorkEndTime,
-            updateAgencyRequest.TwitterUrl,
-            updateAgencyRequest.FacebookUrl,
-            updateAgencyRequest.InstagramUrl,
-            updateAgencyRequest.LinkedinUrl,
-            updateAgencyRequest.Latitude,
-            updateAgencyRequest.Longitude,
-            updateAgencyRequest.LanguageIds,
-            updateAgencyRequest.Image);
+            request.Address,
+            request.Description,
+            request.Email,
+            request.WebsiteUrl,
+            request.WorkStartTime,
+            request.WorkEndTime,
+            request.TwitterUrl,
+            request.FacebookUrl,
+            request.InstagramUrl,
+            request.LinkedinUrl,
+            request.Latitude,
+            request.Longitude,
+            request.PhoneNumber,
+            request.LanguageIds,
+            request.Image);
 
 
         var response = await _sender.Send(command, cancellationToken);
@@ -81,13 +82,13 @@ public class AgencyController : ControllerBase
 
 
     [HttpGet]
-    public async Task<IActionResult> GetAgencies([FromQuery] AgencyPaginationParameters agencyPaginationParameters, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAgencies([FromQuery] AgencyPaginationParameters request, CancellationToken cancellationToken)
     {
-        var query = new GetAgenciesQuery(
-            agencyPaginationParameters.OrderBy,
-            agencyPaginationParameters.PageNumber,
-            agencyPaginationParameters.PageSize,
-            agencyPaginationParameters.Name);
+        var query = new GetPagedAgenciesQuery(
+            request.OrderBy,
+            request.PageNumber,
+            request.PageSize,
+            request.Name);
 
         var response = await _sender.Send(query, cancellationToken);
 

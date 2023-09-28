@@ -18,5 +18,6 @@ public sealed record UpdateAgencyCommand(
     string Linkedin,
     double? Latitude,
     double? Longitude,
+    string PhoneNumber,
     List<int> LanguageIds,
     IFormFile Image) : ICommand;

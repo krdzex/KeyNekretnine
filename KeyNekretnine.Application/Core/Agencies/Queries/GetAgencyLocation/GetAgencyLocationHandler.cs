@@ -4,11 +4,11 @@ using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Domain.Abstraction;
 
 namespace KeyNekretnine.Application.Core.Agencies.Queries.GetAgencyLocation;
-internal sealed class GetAgencyHandler : IQueryHandler<GetAgencyLocationQuery, AgencyLocationResponse>
+internal sealed class GetAgencyLocationHandler : IQueryHandler<GetAgencyLocationQuery, AgencyLocationResponse>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-    public GetAgencyHandler(ISqlConnectionFactory sqlConnectionFactory)
+    public GetAgencyLocationHandler(ISqlConnectionFactory sqlConnectionFactory)
     {
         _sqlConnectionFactory = sqlConnectionFactory;
     }

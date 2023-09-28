@@ -38,7 +38,7 @@ public class AdvertController : ControllerBase
         return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
     }
 
-    [HttpGet("/map/coordinates")]
+    [HttpGet("map/coordinates")]
     public async Task<IActionResult> GetAllAdvertCoordinates(CancellationToken cancellationToken)
     {
         var query = new GetAllAdvertCoordinatesQuery();

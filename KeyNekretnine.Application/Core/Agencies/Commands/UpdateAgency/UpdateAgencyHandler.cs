@@ -60,6 +60,7 @@ internal sealed class UpdateAgencyHandler : ICommandHandler<UpdateAgencyCommand>
                 request.Facebook,
                 request.Instagram,
                 request.Linkedin),
+            new PhoneNumber(request.PhoneNumber),
             request.LanguageIds);
 
         if (request.Image?.Length > 0)

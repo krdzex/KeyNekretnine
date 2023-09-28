@@ -32,6 +32,8 @@ public class Agency : Entity
     public ImageUrl ImageUrl { get; private set; }
     public TimeRange WorkHour { get; private set; }
     public SocialMedia SocialMedia { get; private set; }
+    public PhoneNumber PhoneNumber { get; private set; }
+
     public string UserId { get; private set; }
     public IReadOnlyCollection<AgencyLanguage> AgencyLanguages => _agencyLanguages;
 
@@ -58,6 +60,7 @@ public class Agency : Entity
         WebsiteUrl websiteUrl,
         TimeRange timeRange,
         SocialMedia socialMedia,
+        PhoneNumber phoneNumber,
         List<int> languageIds)
     {
         Name = name;
@@ -67,6 +70,7 @@ public class Agency : Entity
         WorkHour = timeRange;
         Location = location;
         SocialMedia = socialMedia;
+        PhoneNumber = phoneNumber;
 
         if (languageIds is not null)
         {
