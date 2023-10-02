@@ -14,12 +14,14 @@ using KeyNekretnine.Application.Core.Adverts.Queries.GetPagedAdvertsForAdmin;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
 
 namespace KeyNekretnine.Api.Controllers.Adverts;
 
 [ApiController]
 [Route("api/[controller]")]
+[EnableRateLimiting("fixed-by-ip")]
 public class AdvertController : ControllerBase
 {
     private readonly ISender _sender;

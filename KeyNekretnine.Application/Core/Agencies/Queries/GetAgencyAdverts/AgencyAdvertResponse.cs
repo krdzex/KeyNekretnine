@@ -13,4 +13,5 @@ public sealed class AgencyAdvertResponse
     public bool IsPremium { get; init; }
     public int Type { get; init; }
     public int Purpose { get; init; }
+    public DateTime CreatedOnDate { get; init; }
 }

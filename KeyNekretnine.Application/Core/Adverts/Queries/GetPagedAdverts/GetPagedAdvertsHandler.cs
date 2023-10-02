@@ -62,6 +62,7 @@ internal sealed class GetPagedAdvertsHandler : IQueryHandler<GetPagedAdvertsQuer
             	CONCAT(c.name, ', ', n.name) AS location,
             	a.location_address AS address,
             	a.is_urgent AS isUrgent,
+                a.is_premium AS isPremium,
                 a.type,
                 a.purpose
             FROM adverts AS a

@@ -8,18 +8,18 @@ using KeyNekretnine.Domain.Abstraction;
 using System.Data;
 
 namespace KeyNekretnine.Application.Core.Agents.Queries.GetAgents;
-internal sealed class GetAgentsHandler : IQueryHandler<GetAgentsQuery, Pagination<PaginationAgentResponse>>
+internal sealed class GetPagedAgentsHandler : IQueryHandler<GetPagedAgentsQuery, Pagination<PagedAgentResponse>>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-    public GetAgentsHandler(ISqlConnectionFactory sqlConnectionFactory)
+    public GetPagedAgentsHandler(ISqlConnectionFactory sqlConnectionFactory)
     {
         _sqlConnectionFactory = sqlConnectionFactory;
     }
 
-    public async Task<Result<Pagination<PaginationAgentResponse>>> Handle(GetAgentsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<Pagination<PagedAgentResponse>>> Handle(GetPagedAgentsQuery request, CancellationToken cancellationToken)
     {
-        var orderBy = OrderQueryBuilder.CreateOrderQuery<PaginationAgentResponse>(request.OrderBy);
+        var orderBy = OrderQueryBuilder.CreateOrderQuery<PagedAgentResponse>(request.OrderBy);
 
         var sql = $"""
             SELECT
@@ -37,8 +37,8 @@ internal sealed class GetAgentsHandler : IQueryHandler<GetAgentsQuery, Paginatio
                 a.social_media_facebook AS facebook,
                 a.social_media_instagram AS instagram,
                 a.social_media_linkedin AS linkedin,
-                ag.id AS agencyId,
-                ag.name AS agencyName 
+                ag.id,
+                ag.name 
             FROM agents AS a
             LEFT JOIN adverts AS ad ON a.id = ad.agent_id AND ad.status = 1
             LEFT JOIN agencies as ag ON ag.id = a.agency_id
@@ -57,17 +57,17 @@ internal sealed class GetAgentsHandler : IQueryHandler<GetAgentsQuery, Paginatio
 
         var multi = await connection.QueryMultipleAsync(cmd);
         var count = await multi.ReadSingleAsync<int>();
-        var agents = multi.Read<PaginationAgentResponse, SocialMediaResponse, ShortAgencyResponse, PaginationAgentResponse>(
+        var agents = multi.Read<PagedAgentResponse, SocialMediaResponse, ShortAgencyResponse, PagedAgentResponse>(
         (agent, socialMedia, agency) =>
         {
 
             agent.SocialMedia ??= socialMedia;
             agent.Agency = agency;
             return agent;
-        }, splitOn: "twitter,agencyId").ToList();
+        }, splitOn: "twitter,id").ToList();
 
-        var metadata = new PagedList<PaginationAgentResponse>(agents, count, request.PageNumber, request.PageSize);
+        var metadata = new PagedList<PagedAgentResponse>(agents, count, request.PageNumber, request.PageSize);
 
-        return new Pagination<PaginationAgentResponse> { Data = agents, MetaData = metadata.MetaData };
+        return new Pagination<PagedAgentResponse> { Data = agents, MetaData = metadata.MetaData };
     }
 }

@@ -2,7 +2,7 @@
 using KeyNekretnine.Application.Core.Shared;
 
 namespace KeyNekretnine.Application.Core.Agents.Queries.GetAgents;
-public sealed class PaginationAgentResponse
+public sealed class PagedAgentResponse
 {
     public Guid Id { get; set; }
     public string FirstName { get; set; }

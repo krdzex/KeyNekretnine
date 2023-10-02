@@ -9,10 +9,8 @@ public sealed class AgentAdvertResponse
     public int NoOfBedrooms { get; set; }
     public double FloorSpace { get; set; }
     public string Address { get; set; }
-    public DateTime CreatedOnTime { get; set; }
     public bool IsUrgent { get; set; }
-    public bool IsUnderConstruction { get; set; }
-    public bool IsFurnished { get; set; }
+    public bool IsPremium { get; set; }
     public int Type { get; set; }
     public int Purpose { get; set; }
 }

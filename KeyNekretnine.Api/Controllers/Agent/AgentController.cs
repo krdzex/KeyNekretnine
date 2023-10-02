@@ -53,7 +53,7 @@ public class AgentController : ControllerBase
     public async Task<IActionResult> GetAll([FromQuery] AgentPaginationParameters agentPaginationParameters, CancellationToken cancellationToken)
     {
 
-        var command = new GetAgentsQuery(
+        var command = new GetPagedAgentsQuery(
             agentPaginationParameters.OrderBy,
             agentPaginationParameters.PageNumber,
             agentPaginationParameters.PageSize);

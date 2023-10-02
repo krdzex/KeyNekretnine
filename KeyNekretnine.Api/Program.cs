@@ -1,6 +1,7 @@
 using KeyNekretnine.Api.Extensions;
 using KeyNekretnine.Application;
 using KeyNekretnine.Infrastructure;
+using System.Threading.RateLimiting;
 
 //builder.Services
 //    .AddCaching()
@@ -25,6 +26,20 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    options.AddPolicy("fixed-by-ip", httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString(),
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 100,
+                Window = TimeSpan.FromMinutes(1)
+            }));
+});
+
 var app = builder.Build();
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -39,7 +54,7 @@ app.UseSwaggerUI(c =>
 
 app.UseCustomExceptionHandler();
 
-//app.UseIpRateLimiting();
+app.UseRateLimiter();
 
 app.UseHttpsRedirection();
 

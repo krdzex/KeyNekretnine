@@ -40,7 +40,6 @@ internal sealed class GetAgencyByIdHandler : IQueryHandler<GetAgencyByIdQuery, A
                 a.social_media_instagram AS instagram,
                 a.social_media_linkedin AS linkedin,
                 a.social_media_twitter AS twitter,
-                l.id,
                 l.name
             FROM agencies a
             LEFT JOIN agency_languages al ON al.agency_id = a.id
@@ -66,7 +65,7 @@ internal sealed class GetAgencyByIdHandler : IQueryHandler<GetAgencyByIdQuery, A
             }
             return agency;
 
-        }, new { request.AgencyId }, splitOn: "facebook,id");
+        }, new { request.AgencyId }, splitOn: "facebook,name");
 
         if (agenciesDictionary.Count <= 0)
         {

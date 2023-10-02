@@ -42,6 +42,7 @@ internal sealed class GetPagedMyAdvertsHandler : IQueryHandler<GetPagedMyAdverts
             	a.status,
             	a.type,
             	a.purpose,
+                a.updated_on_date AS updatedOnDate,
             	a.description_sr AS sr,
             	a.description_en AS en
             FROM adverts AS a

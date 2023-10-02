@@ -29,6 +29,7 @@ internal sealed class GetAgencyAdvertsHandler : IQueryHandler<GetAgencyAdvertsQu
                 a.type,
                 a.purpose,
                 a.location_address AS address,
+            	a.created_on_date AS createdOnDate,
                 a.is_urgent AS isUrgent,
                 a.is_premium AS isPremium
             FROM adverts AS a

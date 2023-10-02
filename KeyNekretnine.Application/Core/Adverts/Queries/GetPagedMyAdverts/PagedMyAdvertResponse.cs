@@ -11,4 +11,5 @@ public class PagedMyAdvertResponse
     public string CoverImageUrl { get; set; }
     public string Location { get; set; }
     public DateTime CreatedOnDate { get; set; }
+    public DateTime? UpdatedOnDate { get; set; }
 }

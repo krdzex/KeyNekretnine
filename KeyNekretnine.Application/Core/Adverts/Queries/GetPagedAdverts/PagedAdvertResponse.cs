@@ -11,6 +11,7 @@ public class PagedAdvertResponse
     public string Location { get; set; }
     public string Address { get; set; }
     public bool IsUrgent { get; set; }
+    public bool IsPremium { get; set; }
     public int Type { get; set; }
     public int Purpose { get; set; }
 }

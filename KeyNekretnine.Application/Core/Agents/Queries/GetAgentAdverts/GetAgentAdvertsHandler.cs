@@ -24,15 +24,13 @@ internal sealed class GetAgentAdvertsHandler : IQueryHandler<GetAgentAdvertsQuer
                 a.floor_space AS floorSpace,
                 a.no_of_bedrooms AS noOfBedrooms,
                 a.no_of_bathrooms AS noOfBathrooms,
-                a.created_on_date AS createdOnDate,
                 a.cover_image_url AS coverImageUrl,
                 CONCAT(c.name, ', ', n.name) AS location,
                 a.type,
                 a.purpose,
                 a.location_address AS address,
                 a.is_urgent AS isUrgent,
-                a.is_under_construction AS isUnderConstruction,
-                a.is_furnished AS isFurnished
+                a.is_premium AS isPremium
             FROM adverts AS a
             JOIN neighborhoods n ON a.neighborhood_id = n.id
             JOIN cities c ON n.city_id = c.id
