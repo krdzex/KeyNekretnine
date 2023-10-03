@@ -5,7 +5,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Core\Adverts\Commands\**" />
+    <Compile Remove="Core\Adverts\Commands\CreateAdvert\**" />
+    <Compile Remove="Core\Adverts\Commands\DeleteImagesCommand\**" />
+    <Compile Remove="Core\Adverts\Commands\MakeAdvertFavorite\**" />
+    <Compile Remove="Core\Adverts\Commands\RemoveAdvertFromFavorite\**" />
+    <Compile Remove="Core\Adverts\Commands\ReportAdvert\**" />
+    <Compile Remove="Core\Adverts\Commands\UpdateAdvertLocation\**" />
+    <Compile Remove="Core\Adverts\Commands\UpdateAdvert\**" />
     <Compile Remove="Core\Auth\Commands\FacebookLogin\**" />
     <Compile Remove="Core\Auth\Commands\GoogleLogin\**" />
     <Compile Remove="Core\Email\**" />
@@ -14,7 +20,13 @@
     <Compile Remove="Core\Users\Commands\MultipleUsersUnban\**" />
     <Compile Remove="Queries\**" />
     <Compile Remove="Validators\**" />
-    <EmbeddedResource Remove="Core\Adverts\Commands\**" />
+    <EmbeddedResource Remove="Core\Adverts\Commands\CreateAdvert\**" />
+    <EmbeddedResource Remove="Core\Adverts\Commands\DeleteImagesCommand\**" />
+    <EmbeddedResource Remove="Core\Adverts\Commands\MakeAdvertFavorite\**" />
+    <EmbeddedResource Remove="Core\Adverts\Commands\RemoveAdvertFromFavorite\**" />
+    <EmbeddedResource Remove="Core\Adverts\Commands\ReportAdvert\**" />
+    <EmbeddedResource Remove="Core\Adverts\Commands\UpdateAdvertLocation\**" />
+    <EmbeddedResource Remove="Core\Adverts\Commands\UpdateAdvert\**" />
     <EmbeddedResource Remove="Core\Auth\Commands\FacebookLogin\**" />
     <EmbeddedResource Remove="Core\Auth\Commands\GoogleLogin\**" />
     <EmbeddedResource Remove="Core\Email\**" />
@@ -23,7 +35,13 @@
     <EmbeddedResource Remove="Core\Users\Commands\MultipleUsersUnban\**" />
     <EmbeddedResource Remove="Queries\**" />
     <EmbeddedResource Remove="Validators\**" />
-    <None Remove="Core\Adverts\Commands\**" />
+    <None Remove="Core\Adverts\Commands\CreateAdvert\**" />
+    <None Remove="Core\Adverts\Commands\DeleteImagesCommand\**" />
+    <None Remove="Core\Adverts\Commands\MakeAdvertFavorite\**" />
+    <None Remove="Core\Adverts\Commands\RemoveAdvertFromFavorite\**" />
+    <None Remove="Core\Adverts\Commands\ReportAdvert\**" />
+    <None Remove="Core\Adverts\Commands\UpdateAdvertLocation\**" />
+    <None Remove="Core\Adverts\Commands\UpdateAdvert\**" />
     <None Remove="Core\Auth\Commands\FacebookLogin\**" />
     <None Remove="Core\Auth\Commands\GoogleLogin\**" />
     <None Remove="Core\Email\**" />
@@ -47,11 +65,6 @@
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
       <_Parameter1>Application.UnitTests</_Parameter1>
     </AssemblyAttribute>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Core\Adverts\Commands\ApproveAdvert\ApproveAdvertCommand.cs" />
-    <Compile Include="Core\Adverts\Commands\ApproveAdvert\ApproveAdvertHandler.cs" />
-    <Compile Include="Core\Adverts\Commands\ApproveAdvert\AdvertApprovedDomainEventHandler.cs" />
   </ItemGroup>
   <ItemGroup>
 	 <FrameworkReference Include="Microsoft.AspNetCore.App" />

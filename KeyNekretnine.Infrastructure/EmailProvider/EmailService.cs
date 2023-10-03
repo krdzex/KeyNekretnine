@@ -83,7 +83,7 @@ internal sealed class EmailService : IEmailService
         return response.IsSuccessStatusCode;
     }
 
-    public async Task<bool> SendDeclineAdvertEmail(string email, int advertId, CancellationToken cancellationToken)
+    public async Task<bool> SendDeclineAdvertEmail(string email, string referenceId, CancellationToken cancellationToken)
     {
         var sendGridConfigSection = _configuration.GetSection("SendGridEmailSettings");
 
@@ -95,8 +95,8 @@ internal sealed class EmailService : IEmailService
         var msg = new SendGridMessage
         {
             From = new EmailAddress(fromEmail, fromName),
-            Subject = $"Declined advert {advertId}",
-            PlainTextContent = $"Your advert with id {advertId} is declined from admin"
+            Subject = $"Rejected advert {referenceId}",
+            PlainTextContent = $"Your advert with reference id {referenceId} is rejected from admin"
         };
 
         msg.AddTo(email);

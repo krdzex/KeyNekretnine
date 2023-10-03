@@ -1,36 +1,43 @@
-﻿using Contracts;
-using Entities.DomainErrors;
+﻿using KeyNekretnine.Application.Abstraction.Clock;
 using KeyNekretnine.Application.Abstraction.Messaging;
-using MediatR;
-using Shared.Error;
+using KeyNekretnine.Domain.Abstraction;
+using KeyNekretnine.Domain.Adverts;
 
 namespace KeyNekretnine.Application.Core.Adverts.Commands.RejectAdvert;
-internal sealed class RejectAdvertHandler : ICommandHandler<RejectAdvertCommand, Unit>
+internal sealed class RejectAdvertHandler : ICommandHandler<RejectAdvertCommand>
 {
-    private readonly IRepositoryManager _repository;
-    private readonly IPublisher _publisher;
+    private readonly IAdvertRepository _advertRepository;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
-    public RejectAdvertHandler(IRepositoryManager repository, IPublisher publisher)
+    public RejectAdvertHandler(
+        IAdvertRepository advertRepository,
+        IUnitOfWork unitOfWork,
+        IDateTimeProvider dateTimeProvider)
     {
-        _repository = repository;
-        _publisher = publisher;
+        _advertRepository = advertRepository;
+        _unitOfWork = unitOfWork;
+        _dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task<Result<Unit>> Handle(RejectAdvertCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(RejectAdvertCommand request, CancellationToken cancellationToken)
     {
-        var advertExist = await _repository.Advert.ChackIfAdvertExist(request.AdvertId, cancellationToken);
+        var advert = await _advertRepository.GetByReferenceIdAsync(request.ReferenceId, cancellationToken);
 
-        if (!advertExist)
+        if (advert is null)
         {
-            return Result.Failure<Unit>(DomainErrors.Advert.AdvertNotFound(request.AdvertId));
+            return Result.Failure(AdvertErrors.NotFoundForAdmin);
         }
 
-        await _repository.Advert.DeclineAdvert(request.AdvertId, cancellationToken);
+        var result = advert.Reject(_dateTimeProvider.Now);
 
-        var userEmail = await _repository.Advert.GetUserEmailFromAdvertId(request.AdvertId, cancellationToken);
+        if (result.IsFailure)
+        {
+            return result;
+        }
 
-        await _publisher.Publish(new AdvertRejectedEvent(userEmail, request.AdvertId), cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Unit.Value;
+        return Result.Success();
     }
 }

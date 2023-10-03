@@ -1,4 +1,5 @@
 ﻿using KeyNekretnine.Application.Core.Adverts.Commands.ApproveAdvert;
+using KeyNekretnine.Application.Core.Adverts.Commands.RejectAdvert;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertByReferenceId;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertForAdminByReferenceId;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertFromMapByReferenceId;
@@ -215,6 +216,18 @@ public class AdvertController : ControllerBase
 
         var response = await _sender.Send(command, cancellationToken);
 
-        return response.IsSuccess ? NoContent() : BadRequest(response);
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
+    [Authorize(Roles = "Administrator")]
+    [HttpPut("{referenceId}/reject")]
+    //[ServiceFilter(typeof(BanUserChack))]
+    public async Task<IActionResult> RejectAdvert(string referenceId, CancellationToken cancellationToken)
+    {
+        var command = new RejectAdvertCommand(referenceId);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
     }
 }

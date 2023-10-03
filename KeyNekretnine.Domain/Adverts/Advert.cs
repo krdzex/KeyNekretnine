@@ -85,4 +85,18 @@ public class Advert : Entity
         RaiseDomainEvent(new AdvertApprovedDomainEvent(Id, UserId));
         return Result.Success();
     }
+
+    public Result Reject(DateTime rejectedDate)
+    {
+        if (Status == AdvertStatus.Rejected)
+        {
+            return Result.Failure(AdvertErrors.AlreadyAccepted);
+        }
+
+        Status = AdvertStatus.Rejected;
+        RejectedOnDate = rejectedDate;
+
+        RaiseDomainEvent(new AdvertRejectedDomainEvent(Id, UserId));
+        return Result.Success();
+    }
 }
