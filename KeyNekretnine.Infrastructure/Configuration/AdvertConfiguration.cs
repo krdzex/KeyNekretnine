@@ -29,20 +29,6 @@ internal sealed class AdvertConfiguration : IEntityTypeConfiguration<Advert>
 
         builder.Property(advert => advert.FloorSpace).IsRequired().HasMaxLength(10000);
 
-        builder.Property(advert => advert.HasElevator).IsRequired();
-
-        builder.Property(advert => advert.HasGarage).IsRequired();
-
-        builder.Property(advert => advert.HasTerrace).IsRequired();
-
-        builder.Property(advert => advert.HasWifi).IsRequired();
-
-        builder.Property(advert => advert.IsUrgent).IsRequired();
-
-        builder.Property(advert => advert.IsUnderConstruction).IsRequired();
-
-        builder.Property(advert => advert.IsFurnished).IsRequired();
-
         builder.Property(advert => advert.YearOfBuildingCreated).HasMaxLength(3000);
 
         builder.Property(advert => advert.CoverImageUrl)

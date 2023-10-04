@@ -1,4 +1,4 @@
-﻿namespace KeyNekretnine.Domain.Agencies;
+﻿namespace KeyNekretnine.Domain.Shared;
 public record Location(
     string? Address,
     double? Latitude,

@@ -1,30 +1,59 @@
-﻿using Contracts;
-using Entities.DomainErrors;
+﻿using KeyNekretnine.Application.Abstraction.Clock;
 using KeyNekretnine.Application.Abstraction.Messaging;
-using MediatR;
-using Shared.Error;
+using KeyNekretnine.Domain.Abstraction;
+using KeyNekretnine.Domain.Adverts;
+using KeyNekretnine.Domain.Agents;
+using KeyNekretnine.Domain.Shared;
 
 namespace KeyNekretnine.Application.Core.Adverts.Commands.UpdateAdvertLocation;
-internal sealed class UpdateAdvertLocationHandler : ICommandHandler<UpdateAdvertLocationCommand, Unit>
+internal sealed class UpdateAdvertLocationHandler : ICommandHandler<UpdateAdvertLocationCommand>
 {
-    private readonly IRepositoryManager _repository;
+    private readonly IAdvertRepository _advertRepository;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly IAgentRepository _agentRepository;
 
-    public UpdateAdvertLocationHandler(IRepositoryManager repository)
+    public UpdateAdvertLocationHandler(
+        IAdvertRepository advertRepository,
+        IUnitOfWork unitOfWork,
+        IDateTimeProvider dateTimeProvider,
+        IAgentRepository agentRepository)
     {
-        _repository = repository;
+        _advertRepository = advertRepository;
+        _unitOfWork = unitOfWork;
+        _dateTimeProvider = dateTimeProvider;
+        _agentRepository = agentRepository;
     }
 
-    public async Task<Result<Unit>> Handle(UpdateAdvertLocationCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(UpdateAdvertLocationCommand request, CancellationToken cancellationToken)
     {
-        var advertExist = await _repository.Advert.ChackIfAdvertExist(request.AdvertId, cancellationToken);
+        var advert = await _advertRepository.GetByReferenceIdAsync(request.ReferenceId, cancellationToken);
 
-        if (!advertExist)
+        if (advert is null)
         {
-            return Result.Failure<Unit>(DomainErrors.Advert.AdvertNotFound(request.AdvertId));
+            return Result.Failure(AdvertErrors.NotFoundForAdmin);
         }
 
-        await _repository.Advert.UpdateAdvertLocation(request.UpdateAdvertLocationDto, request.AdvertId, cancellationToken);
+        var canUserEditResult = await advert.CanCurrentUserUpdateAdvert(
+            request.isAgency,
+            request.UserId,
+            _agentRepository);
 
-        return Unit.Value;
+        if (!canUserEditResult.IsSuccess)
+        {
+            return canUserEditResult;
+        }
+
+        advert.UpdateLocation(
+            _dateTimeProvider.Now,
+            new Location(
+                request.Address,
+                request.Latitude,
+                request.Longitude),
+            request.NeighborhoodId);
+
+        await _unitOfWork.SaveChangesAsync();
+
+        return Result.Success();
     }
 }

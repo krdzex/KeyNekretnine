@@ -22,7 +22,9 @@ internal sealed class GetCurrentUserHandler : IQueryHandler<GetCurrentUserQuery,
             SELECT
                 u.first_name AS firstName,
                 u.last_name AS lastName,
-                u.profile_image_url AS profileImageUrl
+                u.profile_image_url AS profileImageUrl,
+                u.email,
+                u.is_agency AS IsAgency
             FROM asp_net_users AS u
             WHERE id = @UserId
             """;

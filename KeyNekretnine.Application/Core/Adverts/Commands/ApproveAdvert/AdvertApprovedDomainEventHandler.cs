@@ -30,7 +30,7 @@ internal sealed class AdvertApprovedDomainEventHandler : INotificationHandler<Ad
         {
             return;
         }
-        var advert = await _advertRepository.GetByIdAsync(notification.AdvertId);
+        var advert = await _advertRepository.GetByIdAsync(notification.AdvertId, cancellationToken);
 
         if (advert is null)
         {

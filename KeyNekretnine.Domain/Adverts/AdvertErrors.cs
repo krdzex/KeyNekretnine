@@ -14,4 +14,12 @@ public static class AdvertErrors
     public static Error AlreadyAccepted => new(
         "Advert.AlreadyAccepted",
         "Advert is already accepted");
+
+    public static Error AlreadyRejected => new(
+        "Advert.AlreadyRejected",
+        "Advert is already rejected");
+
+    public static Error NotOwner => new(
+        "Advert.NotOwner",
+        "Current user is not owner of advert");
 }

@@ -5,13 +5,20 @@ using KeyNekretnine.Domain.Users.Events;
 namespace KeyNekretnine.Domain.Users;
 public class User : UserEntity
 {
-    private User(FirstName firstName, LastName lastName, string email, string userName, DateTime accountCreatedDate)
+    private User(
+        FirstName firstName,
+        LastName lastName,
+        string email,
+        string userName,
+        DateTime accountCreatedDate,
+        bool isAgency)
     {
         FirstName = firstName;
         LastName = lastName;
         Email = email;
         UserName = userName;
         AccountCreatedDate = accountCreatedDate;
+        IsAgency = isAgency;
     }
 
     private User()
@@ -25,20 +32,23 @@ public class User : UserEntity
     public About About { get; private set; }
     public bool IsBanned { get; private set; }
     public DateTime? BanEnd { get; private set; }
+    public bool IsAgency { get; private set; }
 
     public static User Create(
         FirstName firstName,
         LastName lastName,
         string email,
         string userName,
-        DateTime createdDate)
+        DateTime createdDate,
+        bool isAgency)
     {
         var user = new User(
             firstName,
             lastName,
             email,
             userName,
-            createdDate);
+            createdDate,
+            isAgency);
 
         user.RaiseDomainEvent(new UserCreatedDomainEvent(user.Id));
 

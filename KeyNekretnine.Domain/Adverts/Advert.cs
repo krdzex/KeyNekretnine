@@ -1,6 +1,6 @@
 ﻿using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Adverts.Events;
-using KeyNekretnine.Domain.Agencies;
+using KeyNekretnine.Domain.Agents;
 using KeyNekretnine.Domain.Shared;
 
 namespace KeyNekretnine.Domain.Adverts;
@@ -90,7 +90,7 @@ public class Advert : Entity
     {
         if (Status == AdvertStatus.Rejected)
         {
-            return Result.Failure(AdvertErrors.AlreadyAccepted);
+            return Result.Failure(AdvertErrors.AlreadyRejected);
         }
 
         Status = AdvertStatus.Rejected;
@@ -99,4 +99,47 @@ public class Advert : Entity
         RaiseDomainEvent(new AdvertRejectedDomainEvent(Id, UserId));
         return Result.Success();
     }
+
+    public async Task<Result> CanCurrentUserUpdateAdvert(
+        bool isAgency,
+        string loggedUserId,
+        IAgentRepository agentRepository
+        )
+    {
+        if (!isAgency)
+        {
+            if (loggedUserId != UserId)
+            {
+                return Result.Failure(AdvertErrors.NotOwner);
+            }
+        }
+        else
+        {
+            if (AgentId is null)
+            {
+                return Result.Failure(AdvertErrors.NotOwner);
+            }
+            var isAgentInsideLoggedAgency = await agentRepository.IsAgentInLoggedAgency(AgentId, loggedUserId);
+
+            if (!isAgentInsideLoggedAgency)
+            {
+                return Result.Failure(AdvertErrors.NotOwner);
+            }
+        }
+
+        return Result.Success();
+    }
+
+    public void UpdateLocation(
+        DateTime updatedOnDate,
+        Location location,
+        int neighborhoodId
+        )
+    {
+        UpdatedOnDate = updatedOnDate;
+        Location = location;
+        NeighborhoodId = neighborhoodId;
+    }
+
+
 }

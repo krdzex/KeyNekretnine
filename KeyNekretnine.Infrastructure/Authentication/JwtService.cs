@@ -50,7 +50,8 @@ internal sealed class JwtService : IJwtService
     {
         var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id)
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim("isAgency", user.IsAgency.ToString())
             };
 
         var roles = await _userManager.GetRolesAsync(user);

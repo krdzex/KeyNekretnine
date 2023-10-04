@@ -19,4 +19,15 @@ internal sealed class AgentRepository : Repository<Agent>, IAgentRepository
             .Include(agent => agent.AgentLanguages)
             .FirstOrDefaultAsync(agent => agent.Id == id, cancellationToken);
     }
+
+    public async Task<bool> IsAgentInLoggedAgency(
+    Guid? agentId,
+    string agencyOwnerId,
+    CancellationToken cancellationToken = default)
+    {
+        return await DbContext
+        .Set<Agent>()
+        .Include(agent => agent.Agency)
+        .AnyAsync(agent => agent.Id == agentId && agent.Agency.UserId == agencyOwnerId, cancellationToken);
+    }
 }

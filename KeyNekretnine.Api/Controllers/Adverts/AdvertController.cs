@@ -1,5 +1,6 @@
 ﻿using KeyNekretnine.Application.Core.Adverts.Commands.ApproveAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.RejectAdvert;
+using KeyNekretnine.Application.Core.Adverts.Commands.UpdateAdvertLocation;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertByReferenceId;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertForAdminByReferenceId;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertFromMapByReferenceId;
@@ -225,6 +226,28 @@ public class AdvertController : ControllerBase
     public async Task<IActionResult> RejectAdvert(string referenceId, CancellationToken cancellationToken)
     {
         var command = new RejectAdvertCommand(referenceId);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
+    [HttpPut("{referenceId}/location")]
+    [Authorize]
+    //[ServiceFilter(typeof(BanUserChack))]
+    public async Task<IActionResult> UpdateLocation([FromBody] UpdateAdvertLocationRequest request, string referenceId, CancellationToken cancellationToken)
+    {
+        var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
+        var isAgency = bool.Parse(User.Claims.FirstOrDefault(q => q.Type == "isAgency").Value);
+
+        var command = new UpdateAdvertLocationCommand(
+            referenceId,
+            userId,
+            request.Latitude,
+            request.Longitude,
+            request.Address,
+            request.NeighborhoodId,
+            isAgency);
 
         var response = await _sender.Send(command, cancellationToken);
 

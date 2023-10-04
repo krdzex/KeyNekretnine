@@ -24,7 +24,8 @@ internal sealed class UserRegistrationHandler : ICommandHandler<UserRegistration
            new LastName(request.LastName),
            request.Email,
            request.UserName,
-           _dateTimeProvider.Now);
+           _dateTimeProvider.Now,
+           false);
 
         var result = await _userManager.CreateAsync(user, request.Password);
 
