@@ -2,7 +2,7 @@
 using KeyNekretnine.Application.Core.Agents.Commands.UpdateAgent;
 using KeyNekretnine.Application.Core.Agents.Queries.GetAgentAdverts;
 using KeyNekretnine.Application.Core.Agents.Queries.GetAgentById;
-using KeyNekretnine.Application.Core.Agents.Queries.GetAgents;
+using KeyNekretnine.Application.Core.Agents.Queries.GetPagedAgents;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -1,10 +1,10 @@
 ﻿using KeyNekretnine.Application.Core.Agencies.Commands.CreateAgency;
 using KeyNekretnine.Application.Core.Agencies.Commands.UpdateAgency;
-using KeyNekretnine.Application.Core.Agencies.Queries.GetAgencies;
 using KeyNekretnine.Application.Core.Agencies.Queries.GetAgencyAdverts;
 using KeyNekretnine.Application.Core.Agencies.Queries.GetAgencyAgents;
 using KeyNekretnine.Application.Core.Agencies.Queries.GetAgencyById;
 using KeyNekretnine.Application.Core.Agencies.Queries.GetAgencyLocation;
+using KeyNekretnine.Application.Core.Agencies.Queries.GetPagedAgencies;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

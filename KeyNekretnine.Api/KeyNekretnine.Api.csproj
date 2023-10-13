@@ -15,6 +15,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KeyNekretnine.Infrastructure\KeyNekretnine.Infrastructure.csproj" />
-    <ProjectReference Include="..\KeyNekretnine.Application\KeyNekretnine.Application.csproj" />
+	<ProjectReference Include="..\KeyNekretnine.Application\KeyNekretnine.Application.csproj" />
   </ItemGroup>
 </Project>
