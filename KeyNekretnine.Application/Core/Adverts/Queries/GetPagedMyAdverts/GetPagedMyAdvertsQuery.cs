@@ -1,8 +1,7 @@
 ﻿using KeyNekretnine.Application.Abstraction.Messaging;
-using KeyNekretnine.Application.Core.Adverts.Queries.GetPagedMyAdverts;
 using KeyNekretnine.Application.Core.Shared.Pagination;
 
-namespace KeyNekretnine.Application.Core.Adverts.Queries.GetMyAdverts;
+namespace KeyNekretnine.Application.Core.Adverts.Queries.GetPagedMyAdverts;
 public sealed record GetPagedMyAdvertsQuery(
     string OrderBy,
     int PageNumber,

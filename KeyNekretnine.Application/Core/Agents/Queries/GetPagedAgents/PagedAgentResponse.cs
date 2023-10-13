@@ -1,7 +1,7 @@
 ﻿using KeyNekretnine.Application.Core.Agents.Queries.GetAgentById;
 using KeyNekretnine.Application.Core.Shared;
 
-namespace KeyNekretnine.Application.Core.Agents.Queries.GetAgents;
+namespace KeyNekretnine.Application.Core.Agents.Queries.GetPagedAgents;
 public sealed class PagedAgentResponse
 {
     public Guid Id { get; set; }

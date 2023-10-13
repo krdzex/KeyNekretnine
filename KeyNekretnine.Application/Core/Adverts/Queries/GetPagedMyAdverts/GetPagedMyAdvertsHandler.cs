@@ -1,13 +1,12 @@
 ﻿using Dapper;
 using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Messaging;
-using KeyNekretnine.Application.Core.Adverts.Queries.GetPagedMyAdverts;
 using KeyNekretnine.Application.Core.Shared;
 using KeyNekretnine.Application.Core.Shared.Pagination;
 using KeyNekretnine.Domain.Abstraction;
 using System.Data;
 
-namespace KeyNekretnine.Application.Core.Adverts.Queries.GetMyAdverts;
+namespace KeyNekretnine.Application.Core.Adverts.Queries.GetPagedMyAdverts;
 internal sealed class GetPagedMyAdvertsHandler : IQueryHandler<GetPagedMyAdvertsQuery, Pagination<PagedMyAdvertResponse>>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;

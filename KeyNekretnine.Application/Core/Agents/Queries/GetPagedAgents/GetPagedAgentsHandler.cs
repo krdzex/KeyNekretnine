@@ -7,7 +7,7 @@ using KeyNekretnine.Application.Core.Shared.Pagination;
 using KeyNekretnine.Domain.Abstraction;
 using System.Data;
 
-namespace KeyNekretnine.Application.Core.Agents.Queries.GetAgents;
+namespace KeyNekretnine.Application.Core.Agents.Queries.GetPagedAgents;
 internal sealed class GetPagedAgentsHandler : IQueryHandler<GetPagedAgentsQuery, Pagination<PagedAgentResponse>>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;

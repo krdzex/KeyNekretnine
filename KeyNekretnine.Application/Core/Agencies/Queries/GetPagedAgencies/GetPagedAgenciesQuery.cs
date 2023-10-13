@@ -1,7 +1,7 @@
 ﻿using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Application.Core.Shared.Pagination;
 
-namespace KeyNekretnine.Application.Core.Agencies.Queries.GetAgencies;
+namespace KeyNekretnine.Application.Core.Agencies.Queries.GetPagedAgencies;
 public sealed record GetPagedAgenciesQuery(
     string OrderBy,
     int PageNumber,

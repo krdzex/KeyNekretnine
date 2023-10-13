@@ -1,12 +1,11 @@
 ﻿using Dapper;
 using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Messaging;
-using KeyNekretnine.Application.Core.Adverts.Queries.GetMyAdvertByReferenceId;
 using KeyNekretnine.Application.Core.Shared;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Adverts;
 
-namespace KeyNekretnine.Application.Core.Adverts.Queries.GetMyAdvertById;
+namespace KeyNekretnine.Application.Core.Adverts.Queries.GetMyAdvertByReferenceId;
 internal sealed class GetMyAdvertByReferenceIdHandler : IQueryHandler<GetMyAdvertByReferenceIdQuery, MyAdvertResponse>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;

@@ -2,13 +2,12 @@
 using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetFavoriteAdverts;
-using KeyNekretnine.Application.Core.Adverts.Queries.GetPagedAdverts;
 using KeyNekretnine.Application.Core.Shared;
 using KeyNekretnine.Application.Core.Shared.Pagination;
 using KeyNekretnine.Domain.Abstraction;
 using System.Data;
 
-namespace KeyNekretnine.Application.Core.Adverts.Queries.GetAdverts;
+namespace KeyNekretnine.Application.Core.Adverts.Queries.GetPagedAdverts;
 internal sealed class GetPagedAdvertsHandler : IQueryHandler<GetPagedAdvertsQuery, Pagination<PagedAdvertResponse>>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;

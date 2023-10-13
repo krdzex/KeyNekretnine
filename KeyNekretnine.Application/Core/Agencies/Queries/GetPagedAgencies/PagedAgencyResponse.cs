@@ -1,6 +1,6 @@
 ﻿using KeyNekretnine.Application.Core.Shared;
 
-namespace KeyNekretnine.Application.Core.Agencies.Queries.GetAgencies;
+namespace KeyNekretnine.Application.Core.Agencies.Queries.GetPagedAgencies;
 public sealed class PagedAgencyResponse
 {
     public Guid Id { get; init; }
