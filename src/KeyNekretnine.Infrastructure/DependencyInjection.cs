@@ -10,8 +10,6 @@ using KeyNekretnine.Domain.Agencies;
 using KeyNekretnine.Domain.Agents;
 using KeyNekretnine.Domain.Users;
 using KeyNekretnine.Infrastructure.Authentication;
-using KeyNekretnine.Infrastructure.BackgroundJobs.ImageDeleter;
-using KeyNekretnine.Infrastructure.BackgroundJobs.Outbox;
 using KeyNekretnine.Infrastructure.Clock;
 using KeyNekretnine.Infrastructure.Data;
 using KeyNekretnine.Infrastructure.EmailProvider;
@@ -24,7 +22,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Npgsql;
-using Quartz;
 using System.Text;
 
 namespace KeyNekretnine.Infrastructure;
@@ -121,15 +118,15 @@ public static class DependencyInjection
 
     private static void AddBackgroundJobs(IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<OutboxOptions>(configuration.GetSection("Outbox"));
-        services.Configure<ImageDeleteOptions>(configuration.GetSection("ImageDeleter"));
+        //services.Configure<OutboxOptions>(configuration.GetSection("Outbox"));
+        //services.Configure<ImageDeleteOptions>(configuration.GetSection("ImageDeleter"));
 
-        services.AddQuartz(options => { options.UseMicrosoftDependencyInjectionJobFactory(); });
+        //services.AddQuartz(options => { options.UseMicrosoftDependencyInjectionJobFactory(); });
 
-        services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
+        //services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
 
-        services.ConfigureOptions<ProcessOutboxMessagesJobSetup>();
-        services.ConfigureOptions<ProcessImageDeleteJobSetup>();
+        //services.ConfigureOptions<ProcessOutboxMessagesJobSetup>();
+        //services.ConfigureOptions<ProcessImageDeleteJobSetup>();
 
     }
 
