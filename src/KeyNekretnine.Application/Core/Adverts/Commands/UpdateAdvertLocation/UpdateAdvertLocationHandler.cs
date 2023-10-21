@@ -31,11 +31,11 @@ internal sealed class UpdateAdvertLocationHandler : ICommandHandler<UpdateAdvert
 
         if (advert is null)
         {
-            return Result.Failure(AdvertErrors.NotFoundForAdmin);
+            return Result.Failure(AdvertErrors.NotFound);
         }
 
         var canUserEditResult = await advert.CanCurrentUserUpdateAdvert(
-            request.isAgency,
+            request.IsAgency,
             request.UserId,
             _agentRepository);
 

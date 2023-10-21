@@ -2,10 +2,13 @@
 using KeyNekretnine.Domain.Adverts.Events;
 using KeyNekretnine.Domain.Agents;
 using KeyNekretnine.Domain.Shared;
+using KeyNekretnine.Domain.UserAdvertReports;
 
 namespace KeyNekretnine.Domain.Adverts;
 public class Advert : Entity
 {
+    private readonly List<UserAdvertReport> _reports = new();
+
     public Advert()
     : base()
     {
@@ -68,6 +71,8 @@ public class Advert : Entity
     public DateTime? RejectedOnDate { get; private set; }
 
     public DateTime? UpdatedOnDate { get; private set; }
+
+    public IReadOnlyCollection<UserAdvertReport> UserAdvertReports => _reports;
 
     //public List<TemporeryImageData> TemporeryImageDatas { get; set; }
     public string ReferenceId { get; private set; }
@@ -140,6 +145,4 @@ public class Advert : Entity
         Location = location;
         NeighborhoodId = neighborhoodId;
     }
-
-
 }

@@ -9,7 +9,6 @@
     <Compile Remove="Core\Adverts\Commands\DeleteImagesCommand\**" />
     <Compile Remove="Core\Adverts\Commands\MakeAdvertFavorite\**" />
     <Compile Remove="Core\Adverts\Commands\RemoveAdvertFromFavorite\**" />
-    <Compile Remove="Core\Adverts\Commands\ReportAdvert\**" />
     <Compile Remove="Core\Adverts\Commands\UpdateAdvert\**" />
     <Compile Remove="Core\Auth\Commands\FacebookLogin\**" />
     <Compile Remove="Core\Auth\Commands\GoogleLogin\**" />
@@ -23,7 +22,6 @@
     <EmbeddedResource Remove="Core\Adverts\Commands\DeleteImagesCommand\**" />
     <EmbeddedResource Remove="Core\Adverts\Commands\MakeAdvertFavorite\**" />
     <EmbeddedResource Remove="Core\Adverts\Commands\RemoveAdvertFromFavorite\**" />
-    <EmbeddedResource Remove="Core\Adverts\Commands\ReportAdvert\**" />
     <EmbeddedResource Remove="Core\Adverts\Commands\UpdateAdvert\**" />
     <EmbeddedResource Remove="Core\Auth\Commands\FacebookLogin\**" />
     <EmbeddedResource Remove="Core\Auth\Commands\GoogleLogin\**" />
@@ -37,7 +35,6 @@
     <None Remove="Core\Adverts\Commands\DeleteImagesCommand\**" />
     <None Remove="Core\Adverts\Commands\MakeAdvertFavorite\**" />
     <None Remove="Core\Adverts\Commands\RemoveAdvertFromFavorite\**" />
-    <None Remove="Core\Adverts\Commands\ReportAdvert\**" />
     <None Remove="Core\Adverts\Commands\UpdateAdvert\**" />
     <None Remove="Core\Auth\Commands\FacebookLogin\**" />
     <None Remove="Core\Auth\Commands\GoogleLogin\**" />

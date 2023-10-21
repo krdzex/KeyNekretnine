@@ -1,44 +1,42 @@
-﻿using Contracts;
-using Entities.DomainErrors;
-using KeyNekretnine.Application.Abstraction.Messaging;
-using MediatR;
-using Shared.Error;
+﻿using KeyNekretnine.Application.Abstraction.Messaging;
+using KeyNekretnine.Domain.Abstraction;
+using KeyNekretnine.Domain.Adverts;
 
 namespace KeyNekretnine.Application.Core.Adverts.Commands.ReportAdvert;
-internal sealed class ReportAdvertHandler : ICommandHandler<ReportAdvertCommand, Unit>
+internal sealed class ReportAdvertHandler : ICommandHandler<ReportAdvertCommand>
 {
-    private readonly IRepositoryManager _repository;
+    private readonly IAdvertRepository _advertRepository;
 
-    public ReportAdvertHandler(IRepositoryManager repository)
+    public ReportAdvertHandler(IAdvertRepository advertRepository)
     {
-        _repository = repository;
+        _advertRepository = advertRepository;
     }
 
-    public async Task<Result<Unit>> Handle(ReportAdvertCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(ReportAdvertCommand request, CancellationToken cancellationToken)
     {
-        var advertExist = await _repository.Advert.ChackIfAdvertExistAndItsApproved(request.AdvertId, cancellationToken);
+        var advert = await _advertRepository.GetByReferenceIdAsync(request.ReferenceId, cancellationToken);
 
-        if (!advertExist)
+        if (advert is null)
         {
-            return Result.Failure<Unit>(DomainErrors.Advert.AdvertNotFound(request.AdvertId));
+            return Result.Failure(AdvertErrors.NotFoundForAdmin);
         }
 
-        var userId = await _repository.User.GetUserIdFromEmail(request.UserEmail, cancellationToken);
+        //var advertExist = await _repository.Advert.ChackIfAdvertExistAndItsApproved(request.AdvertId, cancellationToken);
 
-        if (userId is null)
-        {
-            return Result.Failure<Unit>(DomainErrors.User.UserNotFound);
-        }
+        //if (!advertExist)
+        //{
+        //    return Result.Failure<Unit>(DomainErrors.Advert.AdvertNotFound(request.AdvertId));
+        //}
 
-        var isReported = await _repository.Advert.ChackIfAdvertWithThisReasonUserAlreadyReported(userId, request.AdvertId, request.RejectReasonId, cancellationToken);
+        //var isReported = await _repository.Advert.ChackIfAdvertWithThisReasonUserAlreadyReported(userId, request.AdvertId, request.RejectReasonId, cancellationToken);
 
-        if (isReported)
-        {
-            return Unit.Value;
-        }
+        //if (isReported)
+        //{
+        //    return Unit.Value;
+        //}
 
-        await _repository.Advert.ReportAdvert(userId, request.AdvertId, request.RejectReasonId, cancellationToken);
+        //await _repository.Advert.ReportAdvert(userId, request.AdvertId, request.RejectReasonId, cancellationToken);
 
-        return Unit.Value;
+        return Result.Success();
     }
 }

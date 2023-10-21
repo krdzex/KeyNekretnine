@@ -19,6 +19,7 @@ public class AdvertResponse
     public bool IsUnderConstruction { get; set; }
     public int Type { get; set; }
     public int Purpose { get; set; }
+    public int Price { get; set; }
 
     [JsonIgnore]
     public string CoverImageUrl { get; set; }
