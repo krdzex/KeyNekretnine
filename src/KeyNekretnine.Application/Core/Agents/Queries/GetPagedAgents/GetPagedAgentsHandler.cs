@@ -60,8 +60,10 @@ internal sealed class GetPagedAgentsHandler : IQueryHandler<GetPagedAgentsQuery,
         var agents = multi.Read<PagedAgentResponse, SocialMediaResponse, ShortAgencyResponse, PagedAgentResponse>(
         (agent, socialMedia, agency) =>
         {
-
-            agent.SocialMedia ??= socialMedia;
+            if (socialMedia is not null)
+            {
+                agent.SocialMedia = socialMedia;
+            }
             agent.Agency = agency;
             return agent;
         }, splitOn: "twitter,id").ToList();

@@ -11,7 +11,7 @@ public sealed class AgentResponse
     public string ImageUrl { get; set; }
     public string Description { get; set; }
     public string Email { get; set; }
-    public SocialMediaResponse SocialMedia { get; set; }
+    public SocialMediaResponse SocialMedia { get; set; } = new();
     public List<LanguageResponse> Languages { get; set; } = new();
     public ShortAgencyResponse Agency { get; set; }
 }
