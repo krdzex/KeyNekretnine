@@ -103,12 +103,12 @@ internal sealed class GetMyAdvertByReferenceIdHandler : IQueryHandler<GetMyAdver
 
             }, new { request.ReferenceId, request.UserId }, splitOn: "sr,address,firstName,url,id");
 
-        if (advertDictionary.Count <= 0)
+        var advertResponse = advertDictionary.Values.FirstOrDefault();
+
+        if (advertResponse is null)
         {
             return Result.Failure<MyAdvertResponse>(AdvertErrors.NotFound);
         }
-
-        var advertResponse = advertDictionary[request.ReferenceId];
 
         return advertResponse;
     }

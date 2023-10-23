@@ -70,12 +70,12 @@ internal sealed class GetAgentByIdHandler : IQueryHandler<GetAgentByIdQuery, Age
 
         }, new { request.AgentId }, splitOn: "twitter,id,name");
 
-        if (agentsDictionary.Count <= 0)
+        var agentResponse = agentsDictionary.Values.FirstOrDefault();
+
+        if (agentResponse is null)
         {
             return Result.Failure<AgentResponse>(AgentErrors.NotFound);
         }
-
-        var agentResponse = agentsDictionary[request.AgentId];
 
         return agentResponse;
     }

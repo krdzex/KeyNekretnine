@@ -68,12 +68,12 @@ internal sealed class GetAgencyByIdHandler : IQueryHandler<GetAgencyByIdQuery, A
 
         }, new { request.AgencyId }, splitOn: "facebook,name");
 
-        if (agenciesDictionary.Count <= 0)
+        var agencyResponse = agenciesDictionary.Values.FirstOrDefault();
+
+        if (agencyResponse is null)
         {
             return Result.Failure<AgencyResponse>(AgencyErrors.NotFound);
         }
-
-        var agencyResponse = agenciesDictionary[request.AgencyId];
 
         return agencyResponse;
     }
