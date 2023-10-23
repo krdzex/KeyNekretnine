@@ -57,10 +57,8 @@ internal sealed class GetAgentByIdHandler : IQueryHandler<GetAgentByIdQuery, Age
             {
                 agentsDictionary.Add(agent.Id, agent);
             }
-            if (socialMedia is not null)
-            {
-                agent.SocialMedia = socialMedia;
-            }
+
+            agent.SocialMedia = socialMedia;
 
             agent.Agency = agency;
 
