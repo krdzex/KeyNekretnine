@@ -1,5 +1,6 @@
 ﻿using KeyNekretnine.Application.Core.Adverts.Commands.ApproveAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.RejectAdvert;
+using KeyNekretnine.Application.Core.Adverts.Commands.ReportAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.UpdateAdvertLocation;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertByReferenceId;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertForAdminByReferenceId;
@@ -252,5 +253,20 @@ public class AdvertController : ControllerBase
         var response = await _sender.Send(command, cancellationToken);
 
         return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
+    [Authorize]
+    [HttpPost("{referenceId}/report")]
+    //[ServiceFilter(typeof(BanUserChack))]
+    public async Task<IActionResult> ReportAdvert(string referenceId, [FromBody] ReportAdvertRequest request, CancellationToken cancellationToken)
+    {
+        var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
+
+        var command = new ReportAdvertCommand(referenceId, userId, request.RejectReasonId);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+
     }
 }

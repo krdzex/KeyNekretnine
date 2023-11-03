@@ -16,6 +16,16 @@ internal sealed class AdvertRepository : Repository<Advert>, IAdvertRepository
     {
         return await DbContext
             .Set<Advert>()
-            .FirstOrDefaultAsync(advert => advert.ReferenceId == referenceId, cancellationToken);
+            .FirstOrDefaultAsync(advert => advert.ReferenceId == referenceId && advert.Status != AdvertStatus.Uploading, cancellationToken);
+    }
+
+    public async Task<Advert?> GetByReferenceIdWithReportsAsync(
+    string referenceId,
+    CancellationToken cancellationToken = default)
+    {
+        return await DbContext
+            .Set<Advert>()
+            .Include(advert => advert.UserAdvertReports)
+            .FirstOrDefaultAsync(advert => advert.ReferenceId == referenceId && advert.Status == AdvertStatus.Accepted, cancellationToken);
     }
 }

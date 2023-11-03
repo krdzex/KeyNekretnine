@@ -145,4 +145,24 @@ public class Advert : Entity
         Location = location;
         NeighborhoodId = neighborhoodId;
     }
+
+    public Result ReportAdvert(string userId, int rejectReasonId, DateTime timeNow)
+    {
+        if (_reports.Any(report => report.UserId == userId && report.RejectReasonId == rejectReasonId))
+        {
+            return Result.Failure(Error.EmptyError);
+        }
+
+        var report = new UserAdvertReport
+        {
+            UserId = userId,
+            AdvertId = Id,
+            RejectReasonId = rejectReasonId,
+            CreatedReportDate = timeNow
+        };
+
+        _reports.Add(report);
+
+        return Result.Success();
+    }
 }
