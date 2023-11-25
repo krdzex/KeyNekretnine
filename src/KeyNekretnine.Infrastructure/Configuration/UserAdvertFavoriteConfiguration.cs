@@ -20,7 +20,8 @@ public class UserAdvertFavoriteConfiguration : IEntityTypeConfiguration<UserAdve
             .HasForeignKey(favorite => favorite.AdvertId);
 
         builder.HasOne<User>()
-            .WithMany()
+            .WithMany(user => user.UserAdvertFavorites)
             .HasForeignKey(favorite => favorite.UserId);
+
     }
 }

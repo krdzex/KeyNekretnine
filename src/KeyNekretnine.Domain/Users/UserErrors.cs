@@ -17,5 +17,13 @@ public static class UserErrors
 
     public static Error Banned(DateTime? banEndDate) => new(
         "User.Banned",
-        $"USer is banned until {banEndDate}");
+        $"User is banned until {banEndDate}");
+
+    public static Error AlreadyFavorite => new(
+        "User.AlreadyFavorite",
+        $"Advert is already favorite");
+
+    public static Error NotFavorite => new(
+        "User.NotFavorite",
+        $"Advert is not favorite");
 }

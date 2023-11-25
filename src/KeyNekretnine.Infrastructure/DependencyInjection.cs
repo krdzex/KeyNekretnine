@@ -57,6 +57,7 @@ public static class DependencyInjection
         services.AddScoped<IAgentRepository, AgentRepository>();
         services.AddScoped<IImageToDeleteRepository, ImageToDeleteRepository>();
         services.AddScoped<IAdvertRepository, AdvertRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
