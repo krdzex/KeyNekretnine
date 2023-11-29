@@ -1,6 +1,7 @@
 ﻿using KeyNekretnine.Application.Abstraction.Authentication;
 using KeyNekretnine.Application.Abstraction.Clock;
 using KeyNekretnine.Application.Abstraction.Messaging;
+using KeyNekretnine.Application.Core.Shared;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Users;
 using Microsoft.AspNetCore.Identity;

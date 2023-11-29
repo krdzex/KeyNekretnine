@@ -6,8 +6,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Core\Adverts\Commands\**" />
-    <Compile Remove="Core\Auth\Commands\FacebookLogin\**" />
-    <Compile Remove="Core\Auth\Commands\GoogleLogin\**" />
     <Compile Remove="Core\Email\**" />
     <Compile Remove="Core\Users\Commands\ConfirmUserEmail\**" />
     <Compile Remove="Core\Users\Commands\MultipleUsersBan\**" />
@@ -15,8 +13,6 @@
     <Compile Remove="Queries\**" />
     <Compile Remove="Validators\**" />
     <EmbeddedResource Remove="Core\Adverts\Commands\**" />
-    <EmbeddedResource Remove="Core\Auth\Commands\FacebookLogin\**" />
-    <EmbeddedResource Remove="Core\Auth\Commands\GoogleLogin\**" />
     <EmbeddedResource Remove="Core\Email\**" />
     <EmbeddedResource Remove="Core\Users\Commands\ConfirmUserEmail\**" />
     <EmbeddedResource Remove="Core\Users\Commands\MultipleUsersBan\**" />
@@ -24,8 +20,6 @@
     <EmbeddedResource Remove="Queries\**" />
     <EmbeddedResource Remove="Validators\**" />
     <None Remove="Core\Adverts\Commands\**" />
-    <None Remove="Core\Auth\Commands\FacebookLogin\**" />
-    <None Remove="Core\Auth\Commands\GoogleLogin\**" />
     <None Remove="Core\Email\**" />
     <None Remove="Core\Users\Commands\ConfirmUserEmail\**" />
     <None Remove="Core\Users\Commands\MultipleUsersBan\**" />
@@ -39,6 +33,7 @@
     <PackageReference Include="MediatR" Version="12.1.1" />
     <PackageReference Include="Microsoft.Extensions.Features" Version="7.0.10" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KeyNekretnine.Domain\KeyNekretnine.Domain.csproj" />

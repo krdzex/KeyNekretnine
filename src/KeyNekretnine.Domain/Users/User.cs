@@ -14,7 +14,8 @@ public class User : UserEntity
         string email,
         string userName,
         DateTime accountCreatedDate,
-        bool isAgency)
+        bool isAgency,
+        bool emailConfirmed)
     {
         FirstName = firstName;
         LastName = lastName;
@@ -22,6 +23,7 @@ public class User : UserEntity
         UserName = userName;
         AccountCreatedDate = accountCreatedDate;
         IsAgency = isAgency;
+        EmailConfirmed = emailConfirmed;
     }
 
     private User()
@@ -44,7 +46,8 @@ public class User : UserEntity
         string email,
         string userName,
         DateTime createdDate,
-        bool isAgency)
+        bool isAgency,
+        bool emailConfirmed)
     {
         var user = new User(
             firstName,
@@ -52,7 +55,8 @@ public class User : UserEntity
             email,
             userName,
             createdDate,
-            isAgency);
+            isAgency,
+            emailConfirmed);
 
         user.RaiseDomainEvent(new UserCreatedDomainEvent(user.Id));
 

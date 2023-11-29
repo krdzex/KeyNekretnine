@@ -1,4 +1,4 @@
-﻿namespace KeyNekretnine.Application.Core.Auth.Commands.UserLogin;
+﻿namespace KeyNekretnine.Application.Core.Shared;
 public sealed class TokenResponse
 {
     public string AccessToken { get; set; }

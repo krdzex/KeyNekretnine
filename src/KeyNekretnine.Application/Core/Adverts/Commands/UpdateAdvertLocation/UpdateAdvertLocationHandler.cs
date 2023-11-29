@@ -52,7 +52,7 @@ internal sealed class UpdateAdvertLocationHandler : ICommandHandler<UpdateAdvert
                 request.Longitude),
             request.NeighborhoodId);
 
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
     }
