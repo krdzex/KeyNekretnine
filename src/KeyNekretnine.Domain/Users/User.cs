@@ -1,17 +1,21 @@
 ﻿using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Shared;
+using KeyNekretnine.Domain.UserAdvertFavorites;
 using KeyNekretnine.Domain.Users.Events;
 
 namespace KeyNekretnine.Domain.Users;
 public class User : UserEntity
 {
+    private readonly List<UserAdvertFavorite> _favorites = new();
+
     private User(
         FirstName firstName,
         LastName lastName,
         string email,
         string userName,
         DateTime accountCreatedDate,
-        bool isAgency)
+        bool isAgency,
+        bool emailConfirmed)
     {
         FirstName = firstName;
         LastName = lastName;
@@ -19,6 +23,7 @@ public class User : UserEntity
         UserName = userName;
         AccountCreatedDate = accountCreatedDate;
         IsAgency = isAgency;
+        EmailConfirmed = emailConfirmed;
     }
 
     private User()
@@ -33,6 +38,7 @@ public class User : UserEntity
     public bool IsBanned { get; private set; }
     public DateTime? BanEnd { get; private set; }
     public bool IsAgency { get; private set; }
+    public IReadOnlyCollection<UserAdvertFavorite> UserAdvertFavorites => _favorites;
 
     public static User Create(
         FirstName firstName,
@@ -40,7 +46,8 @@ public class User : UserEntity
         string email,
         string userName,
         DateTime createdDate,
-        bool isAgency)
+        bool isAgency,
+        bool emailConfirmed)
     {
         var user = new User(
             firstName,
@@ -48,7 +55,8 @@ public class User : UserEntity
             email,
             userName,
             createdDate,
-            isAgency);
+            isAgency,
+            emailConfirmed);
 
         user.RaiseDomainEvent(new UserCreatedDomainEvent(user.Id));
 
@@ -85,5 +93,37 @@ public class User : UserEntity
     public void UpdateImage(ProfileImageUrl imageUrl)
     {
         ProfileImageUrl = imageUrl;
+    }
+
+    public Result AddAdvertToFavorites(Guid advertId, DateTime createdOnTime)
+    {
+        if (_favorites.Any(f => f.AdvertId == advertId))
+        {
+            return Result.Failure(UserErrors.AlreadyFavorite);
+        }
+
+        var favorite = new UserAdvertFavorite
+        {
+            UserId = Id,
+            AdvertId = advertId,
+            CreatedFavoriteDate = createdOnTime
+        };
+        _favorites.Add(favorite);
+
+        return Result.Success();
+    }
+
+    public Result RemoveAdvertFromFavorites(Guid advertId)
+    {
+        var favorite = _favorites.FirstOrDefault(f => f.AdvertId == advertId);
+
+        if (favorite == null)
+        {
+            return Result.Failure(UserErrors.NotFavorite);
+        }
+
+        _favorites.Remove(favorite);
+
+        return Result.Success();
     }
 }

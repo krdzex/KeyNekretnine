@@ -1,36 +1,41 @@
-﻿using Contracts;
-using Entities.DomainErrors;
-using KeyNekretnine.Application.Abstraction.Messaging;
-using Shared.Error;
+﻿using KeyNekretnine.Application.Abstraction.Messaging;
+using KeyNekretnine.Application.Exceptions;
+using KeyNekretnine.Domain.Abstraction;
+using KeyNekretnine.Domain.Users;
+using Microsoft.AspNetCore.Identity;
 
 namespace KeyNekretnine.Application.Core.Users.Commands.ConfirmUserEmail;
-internal sealed class ConfirmUserEmailHandler : ICommandHandler<ConfirmUserEmailCommand, bool>
+internal sealed class ConfirmUserEmailHandler : ICommandHandler<ConfirmUserEmailCommand>
 {
-    private readonly IRepositoryManager _repository;
+    private readonly UserManager<User> _userManager;
 
-    public ConfirmUserEmailHandler(IRepositoryManager repository)
+    public ConfirmUserEmailHandler(UserManager<User> userManager)
     {
-        _repository = repository;
+        _userManager = userManager;
     }
 
-    public async Task<Result<bool>> Handle(ConfirmUserEmailCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(ConfirmUserEmailCommand request, CancellationToken cancellationToken)
     {
-        var user = await _repository.User.GetUserByEmail(request.Email);
+        var user = await _userManager.FindByEmailAsync(request.Email);
 
         if (user is null)
         {
-            return Result.Failure<bool>(DomainErrors.User.UserNotFound);
+            return Result.Failure<bool>(UserErrors.NotFound);
         }
 
-        var result = await _repository.User.ConfrimUserEmail(user, request.Email);
+        var result = await _userManager.ConfirmEmailAsync(user, request.Token);
 
         if (!result.Succeeded)
         {
-            var errors = result.Errors.Select(error => new Error(error.Code, error.Description)).ToArray();
+            var errors = result.Errors
+                .Select(authenticationFailure => new AuthenticationError(
+                    authenticationFailure.Code,
+                    authenticationFailure.Description))
+                .ToList();
 
-            return MultipleErrorsResult<bool>.WithErrors(errors);
+            throw new AuthenticationException(errors);
         }
 
-        return true;
+        return Result.Success();
     }
 }

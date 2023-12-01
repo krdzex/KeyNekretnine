@@ -1,44 +1,40 @@
-﻿using Contracts;
-using Entities.DomainErrors;
+﻿using KeyNekretnine.Application.Abstraction.Clock;
 using KeyNekretnine.Application.Abstraction.Messaging;
-using MediatR;
-using Shared.Error;
+using KeyNekretnine.Domain.Abstraction;
+using KeyNekretnine.Domain.Adverts;
 
 namespace KeyNekretnine.Application.Core.Adverts.Commands.ReportAdvert;
-internal sealed class ReportAdvertHandler : ICommandHandler<ReportAdvertCommand, Unit>
+internal sealed class ReportAdvertHandler : ICommandHandler<ReportAdvertCommand>
 {
-    private readonly IRepositoryManager _repository;
-
-    public ReportAdvertHandler(IRepositoryManager repository)
+    private readonly IAdvertRepository _advertRepository;
+    private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly IUnitOfWork _unitOfWork;
+    public ReportAdvertHandler(
+        IAdvertRepository advertRepository,
+        IDateTimeProvider dateTimeProvider,
+        IUnitOfWork unitOfWork)
     {
-        _repository = repository;
+        _advertRepository = advertRepository;
+        _dateTimeProvider = dateTimeProvider;
+        _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result<Unit>> Handle(ReportAdvertCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(ReportAdvertCommand request, CancellationToken cancellationToken)
     {
-        var advertExist = await _repository.Advert.ChackIfAdvertExistAndItsApproved(request.AdvertId, cancellationToken);
+        var advert = await _advertRepository.GetByReferenceIdWithReportsAsync(request.ReferenceId, cancellationToken);
 
-        if (!advertExist)
+        if (advert is null)
         {
-            return Result.Failure<Unit>(DomainErrors.Advert.AdvertNotFound(request.AdvertId));
+            return Result.Failure(AdvertErrors.NotFoundForAdmin);
         }
 
-        var userId = await _repository.User.GetUserIdFromEmail(request.UserEmail, cancellationToken);
+        var reportResult = advert.ReportAdvert(request.UserId, request.RejectReasonId, _dateTimeProvider.Now);
 
-        if (userId is null)
+        if (reportResult.IsSuccess)
         {
-            return Result.Failure<Unit>(DomainErrors.User.UserNotFound);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
-        var isReported = await _repository.Advert.ChackIfAdvertWithThisReasonUserAlreadyReported(userId, request.AdvertId, request.RejectReasonId, cancellationToken);
-
-        if (isReported)
-        {
-            return Unit.Value;
-        }
-
-        await _repository.Advert.ReportAdvert(userId, request.AdvertId, request.RejectReasonId, cancellationToken);
-
-        return Unit.Value;
+        return Result.Success();
     }
 }

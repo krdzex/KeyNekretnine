@@ -25,6 +25,7 @@ internal sealed class UserRegistrationHandler : ICommandHandler<UserRegistration
            request.Email,
            request.UserName,
            _dateTimeProvider.Now,
+           false,
            false);
 
         var result = await _userManager.CreateAsync(user, request.Password);
@@ -40,11 +41,11 @@ internal sealed class UserRegistrationHandler : ICommandHandler<UserRegistration
             throw new AuthenticationException(errors);
         }
 
-        var addRoleRsult = await _userManager.AddToRoleAsync(user, "User");
+        var addRoleResult = await _userManager.AddToRoleAsync(user, "User");
 
-        if (!addRoleRsult.Succeeded)
+        if (!addRoleResult.Succeeded)
         {
-            var errors = result.Errors
+            var errors = addRoleResult.Errors
             .Select(authenticationFailure => new AuthenticationError(
                 authenticationFailure.Code,
                 authenticationFailure.Description))

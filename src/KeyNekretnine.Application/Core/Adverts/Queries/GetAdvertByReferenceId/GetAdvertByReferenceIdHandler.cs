@@ -101,12 +101,12 @@ internal sealed class GetAdvertByReferenceIdHandler : IQueryHandler<GetAdvertByR
 
             }, new { request.ReferenceId }, splitOn: "sr,address,firstName,url,id");
 
-        if (advertDictionary.Count <= 0)
+        var advertResponse = advertDictionary.Values.FirstOrDefault();
+
+        if (advertResponse is null)
         {
             return Result.Failure<AdvertResponse>(AdvertErrors.NotFound);
         }
-
-        var advertResponse = advertDictionary[request.ReferenceId];
 
         return advertResponse;
     }

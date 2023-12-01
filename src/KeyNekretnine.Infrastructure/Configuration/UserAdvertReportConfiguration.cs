@@ -17,7 +17,7 @@ public class UserAdvertReportConfiguration : IEntityTypeConfiguration<UserAdvert
         builder.Property(x => x.CreatedReportDate).IsRequired();
 
         builder.HasOne<Advert>()
-            .WithMany()
+            .WithMany(advert => advert.UserAdvertReports)
             .HasForeignKey(reports => reports.AdvertId);
 
         builder.HasOne<User>()

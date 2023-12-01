@@ -38,14 +38,14 @@ internal sealed class GetFavoriteAdvertsHandler : IQueryHandler<GetFavoriteAdver
             	a.location_address AS address,
             	a.is_urgent AS isUrgent,
                 a.type,
-                a.purpose
+                a.purpose,
             	ua.created_favorite_date AS createdFavoriteDate
             FROM adverts a
             LEFT JOIN user_advert_favorites AS ua ON a.id = ua.advert_id
             INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
             INNER JOIN cities c ON n.city_id = c.id
             WHERE ua.user_id = @UserId
-            ORDER BY {orderBy} OFFSET 0 FETCH NEXT 5 ROWS ONLY;
+            ORDER BY {orderBy} OFFSET @skip FETCH NEXT @take ROWS ONLY;
             """;
 
         var skip = (request.PageNumber - 1) * request.PageSize;

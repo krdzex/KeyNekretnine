@@ -5,44 +5,20 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Core\Adverts\Commands\CreateAdvert\**" />
-    <Compile Remove="Core\Adverts\Commands\DeleteImagesCommand\**" />
-    <Compile Remove="Core\Adverts\Commands\MakeAdvertFavorite\**" />
-    <Compile Remove="Core\Adverts\Commands\RemoveAdvertFromFavorite\**" />
-    <Compile Remove="Core\Adverts\Commands\ReportAdvert\**" />
-    <Compile Remove="Core\Adverts\Commands\UpdateAdvert\**" />
-    <Compile Remove="Core\Auth\Commands\FacebookLogin\**" />
-    <Compile Remove="Core\Auth\Commands\GoogleLogin\**" />
+    <Compile Remove="Core\Adverts\Commands\**" />
     <Compile Remove="Core\Email\**" />
-    <Compile Remove="Core\Users\Commands\ConfirmUserEmail\**" />
     <Compile Remove="Core\Users\Commands\MultipleUsersBan\**" />
     <Compile Remove="Core\Users\Commands\MultipleUsersUnban\**" />
     <Compile Remove="Queries\**" />
     <Compile Remove="Validators\**" />
-    <EmbeddedResource Remove="Core\Adverts\Commands\CreateAdvert\**" />
-    <EmbeddedResource Remove="Core\Adverts\Commands\DeleteImagesCommand\**" />
-    <EmbeddedResource Remove="Core\Adverts\Commands\MakeAdvertFavorite\**" />
-    <EmbeddedResource Remove="Core\Adverts\Commands\RemoveAdvertFromFavorite\**" />
-    <EmbeddedResource Remove="Core\Adverts\Commands\ReportAdvert\**" />
-    <EmbeddedResource Remove="Core\Adverts\Commands\UpdateAdvert\**" />
-    <EmbeddedResource Remove="Core\Auth\Commands\FacebookLogin\**" />
-    <EmbeddedResource Remove="Core\Auth\Commands\GoogleLogin\**" />
+    <EmbeddedResource Remove="Core\Adverts\Commands\**" />
     <EmbeddedResource Remove="Core\Email\**" />
-    <EmbeddedResource Remove="Core\Users\Commands\ConfirmUserEmail\**" />
     <EmbeddedResource Remove="Core\Users\Commands\MultipleUsersBan\**" />
     <EmbeddedResource Remove="Core\Users\Commands\MultipleUsersUnban\**" />
     <EmbeddedResource Remove="Queries\**" />
     <EmbeddedResource Remove="Validators\**" />
-    <None Remove="Core\Adverts\Commands\CreateAdvert\**" />
-    <None Remove="Core\Adverts\Commands\DeleteImagesCommand\**" />
-    <None Remove="Core\Adverts\Commands\MakeAdvertFavorite\**" />
-    <None Remove="Core\Adverts\Commands\RemoveAdvertFromFavorite\**" />
-    <None Remove="Core\Adverts\Commands\ReportAdvert\**" />
-    <None Remove="Core\Adverts\Commands\UpdateAdvert\**" />
-    <None Remove="Core\Auth\Commands\FacebookLogin\**" />
-    <None Remove="Core\Auth\Commands\GoogleLogin\**" />
+    <None Remove="Core\Adverts\Commands\**" />
     <None Remove="Core\Email\**" />
-    <None Remove="Core\Users\Commands\ConfirmUserEmail\**" />
     <None Remove="Core\Users\Commands\MultipleUsersBan\**" />
     <None Remove="Core\Users\Commands\MultipleUsersUnban\**" />
     <None Remove="Queries\**" />
@@ -54,6 +30,7 @@
     <PackageReference Include="MediatR" Version="12.1.1" />
     <PackageReference Include="Microsoft.Extensions.Features" Version="7.0.10" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KeyNekretnine.Domain\KeyNekretnine.Domain.csproj" />
@@ -62,6 +39,22 @@
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
       <_Parameter1>Application.UnitTests</_Parameter1>
     </AssemblyAttribute>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Core\Adverts\Commands\ApproveAdvert\AdvertApprovedDomainEventHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\ApproveAdvert\ApproveAdvertCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\ApproveAdvert\ApproveAdvertHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\MakeAdvertFavorite\MakeAdvertFavoriteCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\MakeAdvertFavorite\MakeAdvertFavoriteHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\RejectAdvert\AdvertRejectedDomainEventHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\RejectAdvert\RejectAdvertCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\RejectAdvert\RejectAdvertHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\RemoveAdvertFromFavorite\RemoveAdvertFromFavoriteCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\RemoveAdvertFromFavorite\RemoveAdvertFromFavoriteHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\ReportAdvert\ReportAdvertCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\ReportAdvert\ReportAdvertHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\UpdateAdvertLocation\UpdateAdvertLocationCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\UpdateAdvertLocation\UpdateAdvertLocationHandler.cs" />
   </ItemGroup>
   <ItemGroup>
 	 <FrameworkReference Include="Microsoft.AspNetCore.App" />

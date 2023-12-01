@@ -1,44 +1,54 @@
-﻿using Contracts;
-using Entities.DomainErrors;
+﻿using KeyNekretnine.Application.Abstraction.Clock;
 using KeyNekretnine.Application.Abstraction.Messaging;
-using MediatR;
-using Shared.Error;
+using KeyNekretnine.Domain.Abstraction;
+using KeyNekretnine.Domain.Adverts;
+using KeyNekretnine.Domain.Users;
 
 namespace KeyNekretnine.Application.Core.Adverts.Commands.MakeAdvertFavorite;
-internal sealed class MakeAdvertFavoriteHandler : ICommandHandler<MakeAdvertFavoriteCommand, Unit>
+internal sealed class MakeAdvertFavoriteHandler : ICommandHandler<MakeAdvertFavoriteCommand>
 {
-    private readonly IRepositoryManager _repository;
+    private readonly IAdvertRepository _advertRepository;
+    private readonly IUserRepository _userRepository;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IDateTimeProvider _timeProvider;
 
-    public MakeAdvertFavoriteHandler(IRepositoryManager repository)
+    public MakeAdvertFavoriteHandler(
+        IAdvertRepository advertRepository,
+        IUserRepository userRepository,
+        IUnitOfWork unitOfWork,
+        IDateTimeProvider timeProvider)
     {
-        _repository = repository;
+        _advertRepository = advertRepository;
+        _userRepository = userRepository;
+        _unitOfWork = unitOfWork;
+        _timeProvider = timeProvider;
     }
 
-    public async Task<Result<Unit>> Handle(MakeAdvertFavoriteCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(MakeAdvertFavoriteCommand request, CancellationToken cancellationToken)
     {
-        var advertExist = await _repository.Advert.ChackIfAdvertExistAndItsApproved(request.AdvertId, cancellationToken);
+        var advert = await _advertRepository.GetAcceptedAdvertByReferenceIdAsync(request.ReferenceId, cancellationToken);
 
-        if (!advertExist)
+        if (advert is null)
         {
-            return Result.Failure<Unit>(DomainErrors.Advert.AdvertNotFound(request.AdvertId));
+            return Result.Failure(AdvertErrors.NotFound);
         }
 
-        var userId = await _repository.User.GetUserIdFromEmail(request.UserEmail, cancellationToken);
+        var user = await _userRepository.GetByIdWithFavoriteAdvertsAsync(request.UserId, cancellationToken);
 
-        if (userId is null)
+        if (user is null)
         {
-            return Result.Failure<Unit>(DomainErrors.User.UserNotFound);
+            return Result.Failure(UserErrors.NotFound);
         }
 
-        var isFavorite = await _repository.Advert.ChackIfAdvertIsFavorite(userId, request.AdvertId, cancellationToken);
+        var result = user.AddAdvertToFavorites(advert.Id, _timeProvider.Now);
 
-        if (isFavorite)
+        if (!result.IsSuccess)
         {
-            return Result.Failure<Unit>(DomainErrors.Advert.AdvertAlreadyFavorite);
+            return result;
         }
 
-        await _repository.Advert.MakeAdvertFavorite(userId, request.AdvertId, cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Unit.Value;
+        return Result.Success();
     }
 }

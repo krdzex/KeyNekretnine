@@ -1,6 +1,5 @@
 ﻿using KeyNekretnine.Application.Abstraction.Messaging;
-using Shared.DataTransferObjects.Auth;
-using Shared.RequestFeatures;
+using KeyNekretnine.Application.Core.Shared;
 
 namespace KeyNekretnine.Application.Core.Auth.Commands.GoogleLogin;
-public sealed record GoogleLoginCommand(GoogleLoginDto GoogleLoginDto) : ICommand<TokenRequest>;
+public sealed record GoogleLoginCommand(string GoogleIdToken) : ICommand<TokenResponse>;

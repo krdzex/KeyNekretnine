@@ -1,5 +1,8 @@
 ﻿using KeyNekretnine.Application.Core.Adverts.Commands.ApproveAdvert;
+using KeyNekretnine.Application.Core.Adverts.Commands.MakeAdvertFavorite;
 using KeyNekretnine.Application.Core.Adverts.Commands.RejectAdvert;
+using KeyNekretnine.Application.Core.Adverts.Commands.RemoveAdvertFromFavorite;
+using KeyNekretnine.Application.Core.Adverts.Commands.ReportAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.UpdateAdvertLocation;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertByReferenceId;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertForAdminByReferenceId;
@@ -248,6 +251,49 @@ public class AdvertController : ControllerBase
             request.Address,
             request.NeighborhoodId,
             isAgency);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
+    [Authorize]
+    [HttpPost("{referenceId}/report")]
+    //[ServiceFilter(typeof(BanUserChack))]
+    public async Task<IActionResult> ReportAdvert(string referenceId, [FromBody] ReportAdvertRequest request, CancellationToken cancellationToken)
+    {
+        var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
+
+        var command = new ReportAdvertCommand(referenceId, userId, request.RejectReasonId);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+
+    }
+
+    [Authorize]
+    [HttpPost("{referenceId}/favorite")]
+    //[ServiceFilter(typeof(BanUserChack))]
+    public async Task<IActionResult> MakeAdvertToFavorite(string referenceId, CancellationToken cancellationToken)
+    {
+        var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
+
+        var command = new MakeAdvertFavoriteCommand(referenceId, userId);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
+    [Authorize]
+    [HttpDelete("{referenceId}/favorite")]
+    //[ServiceFilter(typeof(BanUserChack))]
+    public async Task<IActionResult> RemoveAdvertFromFavorite(string referenceId, CancellationToken cancellationToken)
+    {
+        var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
+
+        var command = new RemoveAdvertFromFavoriteCommand(referenceId, userId);
 
         var response = await _sender.Send(command, cancellationToken);
 

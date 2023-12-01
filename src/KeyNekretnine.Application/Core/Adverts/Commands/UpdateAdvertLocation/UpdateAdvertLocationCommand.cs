@@ -8,4 +8,4 @@ public sealed record UpdateAdvertLocationCommand(
     double Longitude,
     string Address,
     int NeighborhoodId,
-    bool isAgency) : ICommand;
+    bool IsAgency) : ICommand;
