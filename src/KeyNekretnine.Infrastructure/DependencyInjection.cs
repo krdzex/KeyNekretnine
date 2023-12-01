@@ -90,6 +90,8 @@ public static class DependencyInjection
             .AddTokenProvider("KeyNekretnineAPI", typeof(DataProtectorTokenProvider<User>))
             .AddDefaultTokenProviders();
 
+        services.Configure<DataProtectionTokenProviderOptions>(o =>
+        o.TokenLifespan = TimeSpan.FromHours(3));
 
         services.AddAuthentication(o =>
         {

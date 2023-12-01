@@ -21,7 +21,7 @@ internal sealed class EmailService : IEmailService
         var fromName = sendGridConfigSection.GetSection("FromName").Value;
         var templateId = sendGridConfigSection.GetSection("EmailTemplateId").Value;
 
-        var confirmationlink = "https://agencija108.fly.dev/api/user/ConfirmEmail?token=" + token + "&email=" + email;
+        var confirmationlink = "http://localhost:8080/api/user/confirm-email?token=" + token + "&email=" + email;
 
         var client = new SendGridClient(Environment.GetEnvironmentVariable("SEND_GRID_API_KEY"));
 

@@ -1,4 +1,6 @@
 ﻿using KeyNekretnine.Application.Core.Users.Commands.BanUser;
+using KeyNekretnine.Application.Core.Users.Commands.ConfirmUserEmail;
+using KeyNekretnine.Application.Core.Users.Commands.RequestEmailConfirmation;
 using KeyNekretnine.Application.Core.Users.Commands.UnbanUser;
 using KeyNekretnine.Application.Core.Users.Commands.UpdateUser;
 using KeyNekretnine.Application.Core.Users.Queries.GetCurrentUser;
@@ -105,5 +107,28 @@ public sealed class UserController : ControllerBase
         var response = await _sender.Send(query, cancellationToken);
 
         return response.IsSuccess ? Accepted() : BadRequest(response.Error);
+    }
+
+    [Authorize]
+    [HttpPost("request-email-confirmation")]
+    public async Task<IActionResult> RequestEmailConfirmation(CancellationToken cancellationToken)
+    {
+        var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
+
+        var command = new RequestEmailConfirmationCommand(userId);
+
+        var result = await _sender.Send(command, cancellationToken);
+
+        return result.IsSuccess ? NoContent() : BadRequest(result.Error);
+    }
+
+    [HttpGet("confirm-email")]
+    public async Task<IActionResult> ConfirmEmail([FromQuery] string token, string email, CancellationToken cancellationToken)
+    {
+        var query = new ConfirmUserEmailCommand(token, email);
+
+        var response = await _sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? RedirectToPage("https://testing-ui.keynekretnine.me") : BadRequest(response.Error);
     }
 }

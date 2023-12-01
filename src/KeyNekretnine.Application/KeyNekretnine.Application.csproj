@@ -7,21 +7,18 @@
   <ItemGroup>
     <Compile Remove="Core\Adverts\Commands\**" />
     <Compile Remove="Core\Email\**" />
-    <Compile Remove="Core\Users\Commands\ConfirmUserEmail\**" />
     <Compile Remove="Core\Users\Commands\MultipleUsersBan\**" />
     <Compile Remove="Core\Users\Commands\MultipleUsersUnban\**" />
     <Compile Remove="Queries\**" />
     <Compile Remove="Validators\**" />
     <EmbeddedResource Remove="Core\Adverts\Commands\**" />
     <EmbeddedResource Remove="Core\Email\**" />
-    <EmbeddedResource Remove="Core\Users\Commands\ConfirmUserEmail\**" />
     <EmbeddedResource Remove="Core\Users\Commands\MultipleUsersBan\**" />
     <EmbeddedResource Remove="Core\Users\Commands\MultipleUsersUnban\**" />
     <EmbeddedResource Remove="Queries\**" />
     <EmbeddedResource Remove="Validators\**" />
     <None Remove="Core\Adverts\Commands\**" />
     <None Remove="Core\Email\**" />
-    <None Remove="Core\Users\Commands\ConfirmUserEmail\**" />
     <None Remove="Core\Users\Commands\MultipleUsersBan\**" />
     <None Remove="Core\Users\Commands\MultipleUsersUnban\**" />
     <None Remove="Queries\**" />
