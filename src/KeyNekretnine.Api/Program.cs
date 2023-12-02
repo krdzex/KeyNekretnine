@@ -10,6 +10,11 @@
 //    .AddHttpConfiguration()
 //    .AddServicesRegistration();
 
+using KeyNekretnine.Api.Extensions;
+using KeyNekretnine.Application;
+using KeyNekretnine.Infrastructure;
+using System.Threading.RateLimiting;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
