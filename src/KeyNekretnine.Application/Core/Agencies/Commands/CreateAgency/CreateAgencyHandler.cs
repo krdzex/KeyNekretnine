@@ -3,8 +3,8 @@ using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Application.Exceptions;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Agencies;
-using KeyNekretnine.Domain.Shared;
 using KeyNekretnine.Domain.Users;
+using KeyNekretnine.Domain.ValueObjects;
 using Microsoft.AspNetCore.Identity;
 using System.Transactions;
 
@@ -32,10 +32,7 @@ internal sealed class CreateAgencyHandler : ICommandHandler<CreateAgencyCommand>
         using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 
         var user = User.Create(
-            new FirstName(request.FirstName),
-            new LastName(request.LastName),
             request.Email,
-            request.UserName,
             _dateTimeProvider.Now,
             true,
             false);
@@ -54,7 +51,7 @@ internal sealed class CreateAgencyHandler : ICommandHandler<CreateAgencyCommand>
         }
 
         var agency = Agency.Create(
-            new Name(request.AgencyName),
+            AgencyName.Create(request.AgencyName),
             user.Id,
             _dateTimeProvider.Now);
 

@@ -8900,7 +8900,6 @@ namespace KeyNekretnine.Infrastructure.Migrations
                         .HasColumnName("email_confirmed");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
                         .HasColumnName("first_name");
@@ -8916,7 +8915,6 @@ namespace KeyNekretnine.Infrastructure.Migrations
                         .HasColumnName("is_banned");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
                         .HasColumnName("last_name");
@@ -9286,14 +9284,15 @@ namespace KeyNekretnine.Infrastructure.Migrations
                                 .HasConstraintName("fk_adverts_adverts_id");
                         });
 
-                    b.OwnsOne("KeyNekretnine.Domain.Adverts.Advert.Location#KeyNekretnine.Domain.Shared.Location", "Location", b1 =>
+                    b.OwnsOne("KeyNekretnine.Domain.Adverts.Advert.Location#KeyNekretnine.Domain.ValueObjects.Location", "Location", b1 =>
                         {
                             b1.Property<Guid>("AdvertId")
                                 .HasColumnType("uuid")
                                 .HasColumnName("id");
 
                             b1.Property<string>("Address")
-                                .HasColumnType("text")
+                                .HasMaxLength(300)
+                                .HasColumnType("character varying(300)")
                                 .HasColumnName("location_address");
 
                             b1.Property<double?>("Latitude")
@@ -9329,14 +9328,15 @@ namespace KeyNekretnine.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_agencies_users_user_id");
 
-                    b.OwnsOne("KeyNekretnine.Domain.Agencies.Agency.Location#KeyNekretnine.Domain.Shared.Location", "Location", b1 =>
+                    b.OwnsOne("KeyNekretnine.Domain.Agencies.Agency.Location#KeyNekretnine.Domain.ValueObjects.Location", "Location", b1 =>
                         {
                             b1.Property<Guid>("AgencyId")
                                 .HasColumnType("uuid")
                                 .HasColumnName("id");
 
                             b1.Property<string>("Address")
-                                .HasColumnType("text")
+                                .HasMaxLength(300)
+                                .HasColumnType("character varying(300)")
                                 .HasColumnName("location_address");
 
                             b1.Property<double?>("Latitude")
@@ -9356,26 +9356,30 @@ namespace KeyNekretnine.Infrastructure.Migrations
                                 .HasConstraintName("fk_agencies_agencies_id");
                         });
 
-                    b.OwnsOne("KeyNekretnine.Domain.Agencies.Agency.SocialMedia#KeyNekretnine.Domain.Shared.SocialMedia", "SocialMedia", b1 =>
+                    b.OwnsOne("KeyNekretnine.Domain.Agencies.Agency.SocialMedia#KeyNekretnine.Domain.ValueObjects.SocialMedia", "SocialMedia", b1 =>
                         {
                             b1.Property<Guid>("AgencyId")
                                 .HasColumnType("uuid")
                                 .HasColumnName("id");
 
                             b1.Property<string>("Facebook")
-                                .HasColumnType("text")
+                                .HasMaxLength(300)
+                                .HasColumnType("character varying(300)")
                                 .HasColumnName("social_media_facebook");
 
                             b1.Property<string>("Instagram")
-                                .HasColumnType("text")
+                                .HasMaxLength(300)
+                                .HasColumnType("character varying(300)")
                                 .HasColumnName("social_media_instagram");
 
                             b1.Property<string>("Linkedin")
-                                .HasColumnType("text")
+                                .HasMaxLength(300)
+                                .HasColumnType("character varying(300)")
                                 .HasColumnName("social_media_linkedin");
 
                             b1.Property<string>("Twitter")
-                                .HasColumnType("text")
+                                .HasMaxLength(300)
+                                .HasColumnType("character varying(300)")
                                 .HasColumnName("social_media_twitter");
 
                             b1.HasKey("AgencyId");
@@ -9387,7 +9391,7 @@ namespace KeyNekretnine.Infrastructure.Migrations
                                 .HasConstraintName("fk_agencies_agencies_id");
                         });
 
-                    b.OwnsOne("KeyNekretnine.Domain.Agencies.Agency.WorkHour#KeyNekretnine.Domain.Agencies.TimeRange", "WorkHour", b1 =>
+                    b.OwnsOne("KeyNekretnine.Domain.Agencies.Agency.WorkHour#KeyNekretnine.Domain.ValueObjects.TimeRange", "WorkHour", b1 =>
                         {
                             b1.Property<Guid>("AgencyId")
                                 .HasColumnType("uuid")
@@ -9463,26 +9467,30 @@ namespace KeyNekretnine.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_agents_agencies_agency_id");
 
-                    b.OwnsOne("KeyNekretnine.Domain.Agents.Agent.SocialMedia#KeyNekretnine.Domain.Shared.SocialMedia", "SocialMedia", b1 =>
+                    b.OwnsOne("KeyNekretnine.Domain.Agents.Agent.SocialMedia#KeyNekretnine.Domain.ValueObjects.SocialMedia", "SocialMedia", b1 =>
                         {
                             b1.Property<Guid>("AgentId")
                                 .HasColumnType("uuid")
                                 .HasColumnName("id");
 
                             b1.Property<string>("Facebook")
-                                .HasColumnType("text")
+                                .HasMaxLength(300)
+                                .HasColumnType("character varying(300)")
                                 .HasColumnName("social_media_facebook");
 
                             b1.Property<string>("Instagram")
-                                .HasColumnType("text")
+                                .HasMaxLength(300)
+                                .HasColumnType("character varying(300)")
                                 .HasColumnName("social_media_instagram");
 
                             b1.Property<string>("Linkedin")
-                                .HasColumnType("text")
+                                .HasMaxLength(300)
+                                .HasColumnType("character varying(300)")
                                 .HasColumnName("social_media_linkedin");
 
                             b1.Property<string>("Twitter")
-                                .HasColumnType("text")
+                                .HasMaxLength(300)
+                                .HasColumnType("character varying(300)")
                                 .HasColumnName("social_media_twitter");
 
                             b1.HasKey("AgentId");
@@ -9530,7 +9538,7 @@ namespace KeyNekretnine.Infrastructure.Migrations
                         .HasConstraintName("fk_user_advert_favorites_adverts_advert_id");
 
                     b.HasOne("KeyNekretnine.Domain.Users.User", null)
-                        .WithMany()
+                        .WithMany("UserAdvertFavorites")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
@@ -9540,7 +9548,7 @@ namespace KeyNekretnine.Infrastructure.Migrations
             modelBuilder.Entity("KeyNekretnine.Domain.UserAdvertReports.UserAdvertReport", b =>
                 {
                     b.HasOne("KeyNekretnine.Domain.Adverts.Advert", null)
-                        .WithMany()
+                        .WithMany("UserAdvertReports")
                         .HasForeignKey("AdvertId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
@@ -9618,6 +9626,11 @@ namespace KeyNekretnine.Infrastructure.Migrations
                         .HasConstraintName("fk_asp_net_user_tokens_asp_net_users_user_id");
                 });
 
+            modelBuilder.Entity("KeyNekretnine.Domain.Adverts.Advert", b =>
+                {
+                    b.Navigation("UserAdvertReports");
+                });
+
             modelBuilder.Entity("KeyNekretnine.Domain.Agencies.Agency", b =>
                 {
                     b.Navigation("AgencyLanguages");
@@ -9626,6 +9639,11 @@ namespace KeyNekretnine.Infrastructure.Migrations
             modelBuilder.Entity("KeyNekretnine.Domain.Agents.Agent", b =>
                 {
                     b.Navigation("AgentLanguages");
+                });
+
+            modelBuilder.Entity("KeyNekretnine.Domain.Users.User", b =>
+                {
+                    b.Navigation("UserAdvertFavorites");
                 });
 #pragma warning restore 612, 618
         }

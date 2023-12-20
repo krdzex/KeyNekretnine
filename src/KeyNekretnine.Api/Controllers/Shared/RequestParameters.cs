@@ -1,8 +1,8 @@
 ﻿namespace KeyNekretnine.Api.Controllers.Shared;
 
-public abstract class RequestParameters
+public abstract record RequestParameters
 {
-    public int PageNumber { get; set; } = 1;
-    public int PageSize { get; set; } = 6;
-    public string? OrderBy { get; set; }
+    public int PageNumber { get; init; } = 1;
+    public int PageSize { get; init; } = 6;
+    public string? OrderBy { get; init; }
 }

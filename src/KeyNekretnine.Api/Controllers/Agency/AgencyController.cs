@@ -26,16 +26,13 @@ public class AgencyController : ControllerBase
     public async Task<IActionResult> CreateAgency([FromBody] CreateAgencyRequest request, CancellationToken cancellationToken)
     {
         var command = new CreateAgencyCommand(
-            request.FirstName,
-            request.LastName,
-            request.UserName,
             request.Email,
             request.Password,
             request.AgencyName);
 
-        await _sender.Send(command, cancellationToken);
+        var result = await _sender.Send(command, cancellationToken);
 
-        return NoContent();
+        return result.IsSuccess ? NoContent() : BadRequest(result.Error);
     }
 
     [Authorize]

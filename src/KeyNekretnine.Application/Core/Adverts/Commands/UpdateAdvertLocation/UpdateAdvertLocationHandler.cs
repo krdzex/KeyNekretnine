@@ -3,7 +3,7 @@ using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Adverts;
 using KeyNekretnine.Domain.Agents;
-using KeyNekretnine.Domain.Shared;
+using KeyNekretnine.Domain.ValueObjects;
 
 namespace KeyNekretnine.Application.Core.Adverts.Commands.UpdateAdvertLocation;
 internal sealed class UpdateAdvertLocationHandler : ICommandHandler<UpdateAdvertLocationCommand>
@@ -44,13 +44,12 @@ internal sealed class UpdateAdvertLocationHandler : ICommandHandler<UpdateAdvert
             return canUserEditResult;
         }
 
+        var location = Location.Create(request.Address, request.Latitude, request.Longitude);
+
         advert.UpdateLocation(
             _dateTimeProvider.Now,
-            new Location(
-                request.Address,
-                request.Latitude,
-                request.Longitude),
-            request.NeighborhoodId);
+            location,
+            request.NeighborhoodId ?? advert.NeighborhoodId);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

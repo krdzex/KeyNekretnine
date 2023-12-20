@@ -4,7 +4,7 @@ using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Agencies;
 using KeyNekretnine.Domain.Shared;
-using MediatR;
+using KeyNekretnine.Domain.ValueObjects;
 
 namespace KeyNekretnine.Application.Core.Agencies.Commands.UpdateAgency;
 internal sealed class UpdateAgencyHandler : ICommandHandler<UpdateAgencyCommand>
@@ -34,46 +34,47 @@ internal sealed class UpdateAgencyHandler : ICommandHandler<UpdateAgencyCommand>
 
         if (agency is null)
         {
-            return Result.Failure<Unit>(AgencyErrors.NotFound);
+            return Result.Failure(AgencyErrors.NotFound);
         }
 
         if (agency.UserId != request.UserId)
         {
-            return Result.Failure<Unit>(AgencyErrors.NotOwner);
+            return Result.Failure(AgencyErrors.NotOwner);
 
         }
 
-        var workHour = TimeRange.Create(request.WorkStartTime, request.WorkEndTime);
-
         agency.Update(
-            new Name(request.Name),
-            new Location(
-                request.Address,
-                request.Latitude,
-                request.Longitude),
-            new Description(request.Description),
-            new Email(request.Email),
-            new WebsiteUrl(request.WebsiteUrl),
-            workHour,
-            new SocialMedia(
-                request.Twitter,
-                request.Facebook,
-                request.Instagram,
-                request.Linkedin),
-            new PhoneNumber(request.PhoneNumber),
+            AgencyName.Create(request.Name ?? agency.Name.Value),
+            Location.Create(
+                request.Address ?? agency.Location.Address,
+                request.Latitude ?? agency.Location.Latitude,
+                request.Longitude ?? agency.Location.Longitude),
+            Description.Create(request.Description ?? agency.Description?.Value)!,
+            Email.Create(request.Email ?? request.Email ?? agency.Email?.Value)!,
+            WebsiteUrl.Create(request.WebsiteUrl ?? agency.WebsiteUrl?.Value)!,
+            TimeRange.Create(
+                request.WorkStartTime ?? agency.WorkHour?.Start,
+                request.WorkEndTime ?? agency.WorkHour?.End),
+            SocialMedia.Create(
+                request.Twitter ?? agency.SocialMedia?.Twitter,
+                request.Facebook ?? agency.SocialMedia?.Facebook,
+                request.Instagram ?? agency.SocialMedia?.Instagram,
+                request.Linkedin ?? agency.SocialMedia?.Linkedin),
+            PhoneNumber.Create(request.PhoneNumber ?? agency.PhoneNumber?.Value)!,
             request.LanguageIds);
 
         if (request.Image?.Length > 0)
         {
             var oldImageUrl = agency.ImageUrl;
 
-            var imageUrl = await _imageService.UploadImageOnCloudinary(request.Image);
+            var cloudinaryImgUrl = await _imageService.UploadImageOnCloudinary(request.Image);
 
             if (oldImageUrl is not null)
             {
                 _imageToDeleteRepository.Add(oldImageUrl.Value, _dateTimeProvider.Now);
             }
-            agency.UpdateImage(new ImageUrl(imageUrl));
+            var imageUrl = ImageUrl.Create(cloudinaryImgUrl);
+            agency.UpdateImage(imageUrl.Value);
         }
 
         await _unitOfWork.SaveChangesAsync();

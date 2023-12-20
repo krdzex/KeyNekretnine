@@ -1,8 +1,8 @@
 ﻿using KeyNekretnine.Domain.Adverts;
 using KeyNekretnine.Domain.Agents;
 using KeyNekretnine.Domain.Neighborhoods;
-using KeyNekretnine.Domain.Shared;
 using KeyNekretnine.Domain.Users;
+using KeyNekretnine.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -33,10 +33,21 @@ internal sealed class AdvertConfiguration : IEntityTypeConfiguration<Advert>
 
         builder.Property(advert => advert.CoverImageUrl)
             .HasMaxLength(150)
-            .HasConversion(imageUrl => imageUrl.Value, value => new ImageUrl(value))
+            .HasConversion(imageUrl => imageUrl.Value, value => ImageUrl.Create(value).Value)
             .IsRequired();
 
-        builder.OwnsOne(advert => advert.Location);
+        builder.OwnsOne(advert => advert.Location, location =>
+        {
+            location.Property(location => location.Address)
+                .HasMaxLength(300)
+                .IsRequired(false);
+
+            location.Property(location => location.Longitude)
+                .IsRequired(false);
+
+            location.Property(location => location.Latitude)
+                .IsRequired(false);
+        });
 
         builder.HasOne<User>()
             .WithMany()

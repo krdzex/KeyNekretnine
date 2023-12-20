@@ -7,4 +7,6 @@ public interface IEmailService
     Task<bool> SendDeclineAdvertEmail(string email, string referenceId, CancellationToken cancellationToken);
     Task<bool> SendUserBanEmail(string email, DateTime? banEnd, CancellationToken cancellationToken);
     Task<bool> SendUserUnbanEmail(string email, CancellationToken cancellationToken);
+    Task<bool> SendResetPasswordLink(string email, string token, CancellationToken cancellationToken);
+
 }

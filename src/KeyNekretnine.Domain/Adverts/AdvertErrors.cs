@@ -22,4 +22,12 @@ public static class AdvertErrors
     public static Error NotOwner => new(
         "Advert.NotOwner",
         "Current user is not owner of advert");
+
+    public static Error AlreadyPremium => new(
+        "Advert.AlreadyPremium",
+        "Advert is already premium");
+
+    public static Error NotPremium => new(
+        "Advert.NotPremium",
+        "Advert is not premium");
 }

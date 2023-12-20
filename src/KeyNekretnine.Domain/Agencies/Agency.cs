@@ -1,6 +1,7 @@
 ﻿using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.AgencyLanguages;
 using KeyNekretnine.Domain.Shared;
+using KeyNekretnine.Domain.ValueObjects;
 
 namespace KeyNekretnine.Domain.Agencies;
 public class Agency : Entity
@@ -8,7 +9,7 @@ public class Agency : Entity
     private readonly List<AgencyLanguage> _agencyLanguages = new();
     public Agency(
     Guid id,
-    Name name,
+    AgencyName name,
     string userId,
     DateTime createdDate
         )
@@ -23,7 +24,7 @@ public class Agency : Entity
     {
     }
 
-    public Name Name { get; private set; }
+    public AgencyName Name { get; private set; }
     public Location Location { get; private set; }
     public DateTime CreatedDate { get; private set; }
     public Description Description { get; private set; }
@@ -38,13 +39,13 @@ public class Agency : Entity
     public IReadOnlyCollection<AgencyLanguage> AgencyLanguages => _agencyLanguages;
 
     public static Agency Create(
-        Name name,
+        AgencyName agencyName,
         string userId,
         DateTime createdDate)
     {
         var agency = new Agency(
             Guid.NewGuid(),
-            name,
+            agencyName,
             userId,
             createdDate
         );
@@ -53,7 +54,7 @@ public class Agency : Entity
     }
 
     public void Update(
-        Name name,
+        AgencyName name,
         Location location,
         Description description,
         Email email,

@@ -26,4 +26,8 @@ public static class UserErrors
     public static Error NotFavorite => new(
         "User.NotFavorite",
         $"Advert is not favorite");
+
+    public static Error CantChangePassword => new(
+        "User.CantChangePassword",
+        $"User cant change passwrd");
 }

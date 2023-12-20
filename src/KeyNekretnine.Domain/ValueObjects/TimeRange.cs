@@ -1,4 +1,4 @@
-﻿namespace KeyNekretnine.Domain.Agencies;
+﻿namespace KeyNekretnine.Domain.ValueObjects;
 public record TimeRange
 {
     private TimeRange()

@@ -2,8 +2,8 @@
 using KeyNekretnine.Application.Abstraction.Image;
 using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Domain.Abstraction;
-using KeyNekretnine.Domain.Shared;
 using KeyNekretnine.Domain.Users;
+using KeyNekretnine.Domain.ValueObjects;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
@@ -39,8 +39,8 @@ internal sealed class UpdateUserHandler : ICommandHandler<UpdateUserCommand>
         }
 
         user.Update(
-            new FirstName(request.FirstName),
-            new LastName(request.LastName),
+            UserFirstName.Create(request.FirstName),
+            UserLastName.Create(request.LastName),
             new About(request.About));
 
         if (request.Image?.Length > 0)

@@ -3,6 +3,7 @@ using KeyNekretnine.Application.Exceptions;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Users;
 using Microsoft.AspNetCore.Identity;
+using System.Web;
 
 namespace KeyNekretnine.Application.Core.Users.Commands.ConfirmUserEmail;
 internal sealed class ConfirmUserEmailHandler : ICommandHandler<ConfirmUserEmailCommand>
@@ -23,7 +24,9 @@ internal sealed class ConfirmUserEmailHandler : ICommandHandler<ConfirmUserEmail
             return Result.Failure<bool>(UserErrors.NotFound);
         }
 
-        var result = await _userManager.ConfirmEmailAsync(user, request.Token);
+        var decodedToken = HttpUtility.UrlDecode(request.Token);
+
+        var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
 
         if (!result.Succeeded)
         {

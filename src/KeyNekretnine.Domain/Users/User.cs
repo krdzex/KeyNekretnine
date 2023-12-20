@@ -1,7 +1,7 @@
 ﻿using KeyNekretnine.Domain.Abstraction;
-using KeyNekretnine.Domain.Shared;
 using KeyNekretnine.Domain.UserAdvertFavorites;
 using KeyNekretnine.Domain.Users.Events;
+using KeyNekretnine.Domain.ValueObjects;
 
 namespace KeyNekretnine.Domain.Users;
 public class User : UserEntity
@@ -9,16 +9,12 @@ public class User : UserEntity
     private readonly List<UserAdvertFavorite> _favorites = new();
 
     private User(
-        FirstName firstName,
-        LastName lastName,
         string email,
         string userName,
         DateTime accountCreatedDate,
         bool isAgency,
         bool emailConfirmed)
     {
-        FirstName = firstName;
-        LastName = lastName;
         Email = email;
         UserName = userName;
         AccountCreatedDate = accountCreatedDate;
@@ -29,9 +25,8 @@ public class User : UserEntity
     private User()
     {
     }
-
-    public FirstName FirstName { get; private set; }
-    public LastName LastName { get; private set; }
+    public UserFirstName FirstName { get; private set; }
+    public UserLastName LastName { get; private set; }
     public DateTime AccountCreatedDate { get; private set; }
     public ProfileImageUrl ProfileImageUrl { get; private set; }
     public About About { get; private set; }
@@ -41,19 +36,14 @@ public class User : UserEntity
     public IReadOnlyCollection<UserAdvertFavorite> UserAdvertFavorites => _favorites;
 
     public static User Create(
-        FirstName firstName,
-        LastName lastName,
         string email,
-        string userName,
         DateTime createdDate,
         bool isAgency,
         bool emailConfirmed)
     {
         var user = new User(
-            firstName,
-            lastName,
             email,
-            userName,
+            email,
             createdDate,
             isAgency,
             emailConfirmed);
@@ -81,8 +71,8 @@ public class User : UserEntity
     }
 
     public void Update(
-        FirstName firstName,
-        LastName lastName,
+        UserFirstName firstName,
+        UserLastName lastName,
         About about)
     {
         FirstName = firstName;

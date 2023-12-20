@@ -1,5 +1,4 @@
 ﻿using KeyNekretnine.Domain.Languages;
-using KeyNekretnine.Domain.Shared;
 using KeyNekretnine.Infrastructure.Configuration.SeedData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -15,7 +14,6 @@ public class LanguageConfiguration : IEntityTypeConfiguration<Language>
 
         builder.Property(language => language.Name)
             .HasMaxLength(50)
-            .HasConversion(language => language.Value, value => new Name(value))
             .IsRequired();
 
         builder.HasData(LanguageData.GetLanguages());

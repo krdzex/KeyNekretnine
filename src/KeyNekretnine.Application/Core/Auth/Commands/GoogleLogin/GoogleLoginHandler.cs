@@ -4,7 +4,6 @@ using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Application.Core.Shared;
 using KeyNekretnine.Application.Exceptions;
 using KeyNekretnine.Domain.Abstraction;
-using KeyNekretnine.Domain.Shared;
 using KeyNekretnine.Domain.Users;
 using Microsoft.AspNetCore.Identity;
 
@@ -41,19 +40,16 @@ internal sealed class GoogleLoginHandler : ICommandHandler<GoogleLoginCommand, T
             if (user is null)
             {
                 user = User.Create(
-                    new FirstName(googleResponse.FirstName),
-                    new LastName(googleResponse.LastName),
-                    googleResponse.Email,
                     googleResponse.Email,
                     _dateTimeProvider.Now,
                     false,
                     true);
 
-                var createUserResult = await _userManager.CreateAsync(user);
+                var createUserIdentityResult = await _userManager.CreateAsync(user);
 
-                if (!createUserResult.Succeeded)
+                if (!createUserIdentityResult.Succeeded)
                 {
-                    var errors = createUserResult.Errors
+                    var errors = createUserIdentityResult.Errors
                     .Select(authenticationFailure => new AuthenticationError(
                         authenticationFailure.Code,
                         authenticationFailure.Description))
@@ -86,7 +82,9 @@ internal sealed class GoogleLoginHandler : ICommandHandler<GoogleLoginCommand, T
 
         if (user is null)
         {
-            return Result.Failure<TokenResponse>(new Error("Token.CantVarifyToken", "Cant varify token."));
+            return Result.Failure<TokenResponse>(new Error(
+                "Token.CantVarifyToken",
+                "Cant varify token."));
         }
 
         if (user.IsBanned)

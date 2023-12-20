@@ -2,7 +2,6 @@
 using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Application.Exceptions;
 using KeyNekretnine.Domain.Abstraction;
-using KeyNekretnine.Domain.Shared;
 using KeyNekretnine.Domain.Users;
 using Microsoft.AspNetCore.Identity;
 
@@ -20,19 +19,16 @@ internal sealed class UserRegistrationHandler : ICommandHandler<UserRegistration
     public async Task<Result> Handle(UserRegistrationCommand request, CancellationToken cancellationToken)
     {
         var user = User.Create(
-           new FirstName(request.FirstName),
-           new LastName(request.LastName),
            request.Email,
-           request.UserName,
            _dateTimeProvider.Now,
            false,
            false);
 
-        var result = await _userManager.CreateAsync(user, request.Password);
+        var createUserIdentityResult = await _userManager.CreateAsync(user, request.Password);
 
-        if (!result.Succeeded)
+        if (!createUserIdentityResult.Succeeded)
         {
-            var errors = result.Errors
+            var errors = createUserIdentityResult.Errors
             .Select(authenticationFailure => new AuthenticationError(
                 authenticationFailure.Code,
                 authenticationFailure.Description))

@@ -1,8 +1,8 @@
 ﻿using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Adverts.Events;
 using KeyNekretnine.Domain.Agents;
-using KeyNekretnine.Domain.Shared;
 using KeyNekretnine.Domain.UserAdvertReports;
+using KeyNekretnine.Domain.ValueObjects;
 
 namespace KeyNekretnine.Domain.Adverts;
 public class Advert : Entity
@@ -162,6 +162,32 @@ public class Advert : Entity
         };
 
         _reports.Add(report);
+
+        return Result.Success();
+    }
+
+    public Result MakePremium(DateTime updatedOnDate)
+    {
+        if (IsPremium)
+        {
+            return Result.Failure(AdvertErrors.AlreadyPremium);
+        }
+
+        IsPremium = true;
+        UpdatedOnDate = updatedOnDate;
+
+        return Result.Success();
+    }
+
+    public Result RemovePremium(DateTime updatedOnDate)
+    {
+        if (!IsPremium)
+        {
+            return Result.Failure(AdvertErrors.NotPremium);
+        }
+
+        IsPremium = false;
+        UpdatedOnDate = updatedOnDate;
 
         return Result.Success();
     }

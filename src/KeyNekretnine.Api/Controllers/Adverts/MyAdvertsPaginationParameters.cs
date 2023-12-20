@@ -1,10 +1,10 @@
 ﻿using KeyNekretnine.Api.Controllers.Shared;
 
 namespace KeyNekretnine.Api.Controllers.Adverts;
-public class MyAdvertsPaginationParameters : RequestParameters
+public record MyAdvertsPaginationParameters : RequestParameters
 {
     public MyAdvertsPaginationParameters() => OrderBy = "createdOnDate";
-    public int? Type { get; set; }
-    public int? Purpose { get; set; }
-    public int? Status { get; set; }
+    public int? Type { get; init; }
+    public int? Purpose { get; init; }
+    public int? Status { get; init; }
 }

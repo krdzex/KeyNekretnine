@@ -1,7 +1,9 @@
 ﻿using KeyNekretnine.Application.Core.Adverts.Commands.ApproveAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.MakeAdvertFavorite;
+using KeyNekretnine.Application.Core.Adverts.Commands.MakeAdvertPremium;
 using KeyNekretnine.Application.Core.Adverts.Commands.RejectAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.RemoveAdvertFromFavorite;
+using KeyNekretnine.Application.Core.Adverts.Commands.RemoveAdvertPremium;
 using KeyNekretnine.Application.Core.Adverts.Commands.ReportAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.UpdateAdvertLocation;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertByReferenceId;
@@ -10,6 +12,7 @@ using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertFromMapByReference
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertsCompare;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAllAdvertCoordinates;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetFavoriteAdverts;
+using KeyNekretnine.Application.Core.Adverts.Queries.GetFilteredAdvertCoordinates;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetIsAdvertFavorite;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetMyAdvertByReferenceId;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetPagedAdvertReportsForAdmin;
@@ -211,6 +214,29 @@ public class AdvertController : ControllerBase
         return Ok(response.Value);
     }
 
+    [HttpGet("filtered-coordinates")]
+    public async Task<IActionResult> GetFilteredAdvertCoordinates([FromQuery] AdvertMapParameters request, CancellationToken cancellationToken)
+    {
+        var query = new GetFilteredAdvertCoordinatesQuery(
+            request.MinPrice,
+            request.MaxPrice,
+            request.MinFloorSpace,
+            request.MaxFloorSpace,
+            request.NoOfBedrooms,
+            request.NoOfBathrooms,
+            request.Types,
+            request.Purposes,
+            request.Neighborhoods,
+            request.CityId,
+            request.IsEmergency,
+            request.IsUnderConstruction,
+            request.IsFurnished);
+
+        var response = await _sender.Send(query, cancellationToken);
+
+        return Ok(response.Value);
+    }
+
     [Authorize(Roles = "Administrator")]
     [HttpPut("{referenceId}/approve")]
     //[ServiceFilter(typeof(BanUserChack))]
@@ -294,6 +320,30 @@ public class AdvertController : ControllerBase
         var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
 
         var command = new RemoveAdvertFromFavoriteCommand(referenceId, userId);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
+    [Authorize(Roles = "Administrator")]
+    [HttpPut("{referenceId}/make-premium")]
+    //[ServiceFilter(typeof(BanUserChack))]
+    public async Task<IActionResult> MakeAdvertPremium(string referenceId, CancellationToken cancellationToken)
+    {
+        var command = new MakeAdvertPremiumCommand(referenceId);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
+    [Authorize(Roles = "Administrator")]
+    [HttpPut("{referenceId}/remove-premium")]
+    //[ServiceFilter(typeof(BanUserChack))]
+    public async Task<IActionResult> RemoveAdvertPremium(string referenceId, CancellationToken cancellationToken)
+    {
+        var command = new RemoveAdvertPremiumCommand(referenceId);
 
         var response = await _sender.Send(command, cancellationToken);
 

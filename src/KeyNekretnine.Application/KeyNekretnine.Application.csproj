@@ -46,11 +46,15 @@
     <Compile Include="Core\Adverts\Commands\ApproveAdvert\ApproveAdvertHandler.cs" />
     <Compile Include="Core\Adverts\Commands\MakeAdvertFavorite\MakeAdvertFavoriteCommand.cs" />
     <Compile Include="Core\Adverts\Commands\MakeAdvertFavorite\MakeAdvertFavoriteHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\MakeAdvertPremium\MakeAdvertPremiumCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\MakeAdvertPremium\MakeAdvertPremiumHander.cs" />
     <Compile Include="Core\Adverts\Commands\RejectAdvert\AdvertRejectedDomainEventHandler.cs" />
     <Compile Include="Core\Adverts\Commands\RejectAdvert\RejectAdvertCommand.cs" />
     <Compile Include="Core\Adverts\Commands\RejectAdvert\RejectAdvertHandler.cs" />
     <Compile Include="Core\Adverts\Commands\RemoveAdvertFromFavorite\RemoveAdvertFromFavoriteCommand.cs" />
     <Compile Include="Core\Adverts\Commands\RemoveAdvertFromFavorite\RemoveAdvertFromFavoriteHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\RemoveAdvertPremium\RemoveAdvertPremiumCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\RemoveAdvertPremium\RemoveAdvertPremiumHandler.cs" />
     <Compile Include="Core\Adverts\Commands\ReportAdvert\ReportAdvertCommand.cs" />
     <Compile Include="Core\Adverts\Commands\ReportAdvert\ReportAdvertHandler.cs" />
     <Compile Include="Core\Adverts\Commands\UpdateAdvertLocation\UpdateAdvertLocationCommand.cs" />

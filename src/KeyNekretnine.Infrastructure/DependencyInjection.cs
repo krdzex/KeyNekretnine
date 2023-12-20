@@ -69,11 +69,6 @@ public static class DependencyInjection
             new SqlConnectionFactory(connectionString));
 
         SqlMapper.AddTypeHandler(new DateOnlyTypeHandler());
-
-        services.AddHttpClient("facebook", (serviceProvider, client) =>
-        {
-            client.BaseAddress = new Uri("https://graph.facebook.com");
-        });
     }
 
     private static void AddAuthentication(IServiceCollection services)
@@ -84,7 +79,6 @@ public static class DependencyInjection
             o.Password.RequireLowercase = true;
             o.Password.RequireUppercase = true;
             o.User.RequireUniqueEmail = true;
-            o.SignIn.RequireConfirmedEmail = true;
         })
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddTokenProvider("KeyNekretnineAPI", typeof(DataProtectorTokenProvider<User>))

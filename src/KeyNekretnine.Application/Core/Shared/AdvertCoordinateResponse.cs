@@ -1,4 +1,4 @@
-﻿namespace KeyNekretnine.Application.Core.Adverts.Queries.GetAllAdvertCoordinates;
+﻿namespace KeyNekretnine.Application.Core.Shared;
 public class AdvertCoordinateResponse
 {
     public string ReferenceId { get; set; }

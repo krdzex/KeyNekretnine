@@ -10,9 +10,9 @@ public sealed record CreateAgentCommand(
     string Description,
     string Email,
     string PhoneNumber,
-    string TwitterUrl,
-    string FacebookUrl,
-    string InstagramUrl,
-    string LinkedinUrl,
+    string Twitter,
+    string Facebook,
+    string Instagram,
+    string Linkedin,
     IFormFile Image,
     List<int> LanguageIds) : ICommand;

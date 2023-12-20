@@ -27,6 +27,10 @@ internal sealed class GetCurrentUserHandler : IQueryHandler<GetCurrentUserQuery,
                 u.profile_image_url AS profileImageUrl,
                 u.email,
                 u.is_agency AS IsAgency,
+                CASE 
+                    WHEN u.password_hash IS NULL THEN 'false'
+                    ELSE 'true'
+                END AS CanChangePassword,
                 r.name AS name
             FROM asp_net_users AS u
             LEFT JOIN asp_net_user_roles ur ON u.id = ur.user_id

@@ -22,9 +22,6 @@ public class AuthenticationController : ControllerBase
     public async Task<IActionResult> Register([FromBody] RegisterUserRequest registerUserRequest, CancellationToken cancellationToken)
     {
         var command = new UserRegistrationCommand(
-            registerUserRequest.FirstName,
-            registerUserRequest.LastName,
-            registerUserRequest.UserName,
             registerUserRequest.Email,
             registerUserRequest.Password);
 

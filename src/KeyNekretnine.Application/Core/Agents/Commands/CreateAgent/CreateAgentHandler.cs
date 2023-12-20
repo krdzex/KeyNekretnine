@@ -4,7 +4,7 @@ using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Agencies;
 using KeyNekretnine.Domain.Agents;
-using KeyNekretnine.Domain.Shared;
+using KeyNekretnine.Domain.ValueObjects;
 using MediatR;
 
 namespace KeyNekretnine.Application.Core.Agents.Commands.CreateAgent;
@@ -45,16 +45,16 @@ internal sealed class CreateAgentHandler : ICommandHandler<CreateAgentCommand>
         }
 
         var agent = Agent.Create(
-            new FirstName(request.FirstName),
-            new LastName(request.LastName),
-            new PhoneNumber(request.PhoneNumber),
-            new Description(request.Description),
-            new Email(request.Email),
-            new SocialMedia(
-                request.TwitterUrl,
-                request.FacebookUrl,
-                request.InstagramUrl,
-                request.LinkedinUrl),
+            AgentFirstName.Create(request.FirstName)!,
+            AgentLastName.Create(request.LastName),
+            AgentPhoneNumber.Create(request.PhoneNumber)!,
+            Description.Create(request.Description)!,
+            AgentEmail.Create(request.Email)!,
+            SocialMedia.Create(
+                request.Twitter,
+                request.Facebook,
+                request.Instagram,
+                request.Linkedin),
             agency.Id,
             request.LanguageIds,
             _dateTimeProvider.Now
@@ -62,9 +62,11 @@ internal sealed class CreateAgentHandler : ICommandHandler<CreateAgentCommand>
 
         if (request.Image?.Length > 0)
         {
-            var imageUrl = await _imageService.UploadImageOnCloudinary(request.Image);
+            var cloudinaryImgUrl = await _imageService.UploadImageOnCloudinary(request.Image);
 
-            agent.UpdateImage(new ImageUrl(imageUrl));
+            var imageUrl = ImageUrl.Create(cloudinaryImgUrl);
+
+            agent.UpdateImage(imageUrl.Value);
         }
 
         _agentRepository.Add(agent);

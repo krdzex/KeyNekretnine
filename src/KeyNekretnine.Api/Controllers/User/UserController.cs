@@ -1,6 +1,9 @@
 ﻿using KeyNekretnine.Application.Core.Users.Commands.BanUser;
+using KeyNekretnine.Application.Core.Users.Commands.ChangeUserPassword;
 using KeyNekretnine.Application.Core.Users.Commands.ConfirmUserEmail;
+using KeyNekretnine.Application.Core.Users.Commands.PasswordForgot;
 using KeyNekretnine.Application.Core.Users.Commands.RequestEmailConfirmation;
+using KeyNekretnine.Application.Core.Users.Commands.RequestPasswordForgot;
 using KeyNekretnine.Application.Core.Users.Commands.UnbanUser;
 using KeyNekretnine.Application.Core.Users.Commands.UpdateUser;
 using KeyNekretnine.Application.Core.Users.Queries.GetCurrentUser;
@@ -130,5 +133,39 @@ public sealed class UserController : ControllerBase
         var response = await _sender.Send(query, cancellationToken);
 
         return response.IsSuccess ? RedirectToPage("https://testing-ui.keynekretnine.me") : BadRequest(response.Error);
+    }
+
+    [Authorize]
+    [HttpPost("change-password")]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request, CancellationToken cancellationToken)
+    {
+        var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
+
+        var command = new ChangeUserPasswordCommand(userId, request.CurrentPassword, request.NewPassword);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
+
+    [HttpPost("request-password-forgot")]
+    public async Task<IActionResult> RequestPasswordForgot([FromBody] PasswordForgotLinkRequest request, CancellationToken cancellationToken)
+    {
+        var command = new RequestPasswordForgotCommand(request.Email);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
+    [HttpPost("password-forgot")]
+    public async Task<IActionResult> ForgotPassword([FromBody] PasswordForgotRequest request, CancellationToken cancellationToken)
+    {
+        var command = new PasswordForgotCommand(request.Email, request.Token, request.NewPassword);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
     }
 }

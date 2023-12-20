@@ -1,8 +1,6 @@
-﻿using KeyNekretnine.Domain.Shared;
-
-namespace KeyNekretnine.Domain.Languages;
+﻿namespace KeyNekretnine.Domain.Languages;
 public class Language
 {
     public int Id { get; set; }
-    public Name Name { get; set; }
+    public string Name { get; set; }
 }

@@ -9,7 +9,7 @@ public sealed record UpdateAgencyCommand(
     string Address,
     string Description,
     string Email,
-    string WebsiteUrl,
+    string? WebsiteUrl,
     TimeOnly? WorkStartTime,
     TimeOnly? WorkEndTime,
     string Twitter,
