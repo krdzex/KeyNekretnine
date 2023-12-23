@@ -1,4 +1,5 @@
 ﻿using KeyNekretnine.Domain.Abstraction;
+using KeyNekretnine.Domain.Adverts;
 using KeyNekretnine.Domain.UserAdvertFavorites;
 using KeyNekretnine.Domain.Users.Events;
 using KeyNekretnine.Domain.ValueObjects;
@@ -7,6 +8,7 @@ namespace KeyNekretnine.Domain.Users;
 public class User : UserEntity
 {
     private readonly List<UserAdvertFavorite> _favorites = new();
+    private readonly List<Advert> _adverts = new();
 
     private User(
         string email,
@@ -34,7 +36,7 @@ public class User : UserEntity
     public DateTime? BanEnd { get; private set; }
     public bool IsAgency { get; private set; }
     public IReadOnlyCollection<UserAdvertFavorite> UserAdvertFavorites => _favorites;
-
+    public IReadOnlyCollection<Advert> Adverts => _adverts;
     public static User Create(
         string email,
         DateTime createdDate,
@@ -98,6 +100,7 @@ public class User : UserEntity
             AdvertId = advertId,
             CreatedFavoriteDate = createdOnTime
         };
+
         _favorites.Add(favorite);
 
         return Result.Success();

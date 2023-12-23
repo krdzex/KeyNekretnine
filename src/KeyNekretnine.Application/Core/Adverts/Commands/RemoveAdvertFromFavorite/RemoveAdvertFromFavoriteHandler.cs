@@ -40,11 +40,11 @@ internal sealed class RemoveAdvertFromFavoriteHandler : ICommandHandler<RemoveAd
             return Result.Failure(UserErrors.NotFound);
         }
 
-        var result = user.RemoveAdvertFromFavorites(advert.Id);
+        var removeAdvertFromAdvertResult = user.RemoveAdvertFromFavorites(advert.Id);
 
-        if (!result.IsSuccess)
+        if (removeAdvertFromAdvertResult.IsFailure)
         {
-            return result;
+            return removeAdvertFromAdvertResult;
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);

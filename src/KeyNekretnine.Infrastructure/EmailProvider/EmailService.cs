@@ -172,4 +172,32 @@ internal sealed class EmailService : IEmailService
         var response = await client.SendEmailAsync(msg, cancellationToken);
         return response.IsSuccessStatusCode;
     }
+
+    public async Task<bool> SendMessageToAdvertOwner(
+        string advertOwnerEmail,
+        string senderFullName,
+        string senderPhoneNumber,
+        string senderEmailAddress,
+        string stringsenderMessage,
+        CancellationToken cancellationToken)
+    {
+        var sendGridConfigSection = _configuration.GetSection("SendGridEmailSettings");
+
+        var fromEmail = sendGridConfigSection.GetSection("FromEmail").Value;
+        var fromName = sendGridConfigSection.GetSection("FromName").Value;
+
+        var client = new SendGridClient(Environment.GetEnvironmentVariable("SEND_GRID_API_KEY"));
+
+        var msg = new SendGridMessage
+        {
+            From = new EmailAddress(fromEmail, fromName),
+            Subject = $"{senderFullName} vam salje poruku",
+            PlainTextContent = $"{senderFullName}, ${senderEmailAddress}, ${senderPhoneNumber}. Poruka ${stringsenderMessage}"
+        };
+
+        msg.AddTo(advertOwnerEmail);
+
+        var response = await client.SendEmailAsync(msg, cancellationToken);
+        return response.IsSuccessStatusCode;
+    }
 }

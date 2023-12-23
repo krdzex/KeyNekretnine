@@ -40,11 +40,11 @@ internal sealed class MakeAdvertFavoriteHandler : ICommandHandler<MakeAdvertFavo
             return Result.Failure(UserErrors.NotFound);
         }
 
-        var result = user.AddAdvertToFavorites(advert.Id, _timeProvider.Now);
+        var addAdvertToFavoriteResult = user.AddAdvertToFavorites(advert.Id, _timeProvider.Now);
 
-        if (!result.IsSuccess)
+        if (addAdvertToFavoriteResult.IsFailure)
         {
-            return result;
+            return addAdvertToFavoriteResult;
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);

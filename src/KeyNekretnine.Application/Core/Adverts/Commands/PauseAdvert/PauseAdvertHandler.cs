@@ -3,17 +3,16 @@ using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Adverts;
 using KeyNekretnine.Domain.Agents;
-using KeyNekretnine.Domain.ValueObjects;
 
-namespace KeyNekretnine.Application.Core.Adverts.Commands.UpdateAdvertLocation;
-internal sealed class UpdateAdvertLocationHandler : ICommandHandler<UpdateAdvertLocationCommand>
+namespace KeyNekretnine.Application.Core.Adverts.Commands.PauseAdvert;
+internal sealed class PauseAdvertHandler : ICommandHandler<PauseAdvertCommand>
 {
     private readonly IAdvertRepository _advertRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IAgentRepository _agentRepository;
 
-    public UpdateAdvertLocationHandler(
+    public PauseAdvertHandler(
         IAdvertRepository advertRepository,
         IUnitOfWork unitOfWork,
         IDateTimeProvider dateTimeProvider,
@@ -25,7 +24,7 @@ internal sealed class UpdateAdvertLocationHandler : ICommandHandler<UpdateAdvert
         _agentRepository = agentRepository;
     }
 
-    public async Task<Result> Handle(UpdateAdvertLocationCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(PauseAdvertCommand request, CancellationToken cancellationToken)
     {
         var advert = await _advertRepository.GetByReferenceIdAsync(request.ReferenceId, cancellationToken);
 
@@ -44,12 +43,13 @@ internal sealed class UpdateAdvertLocationHandler : ICommandHandler<UpdateAdvert
             return canUserEditResult;
         }
 
-        var location = Location.Create(request.Address, request.Latitude, request.Longitude);
 
-        advert.UpdateLocation(
-            _dateTimeProvider.Now,
-            location,
-            request.NeighborhoodId ?? advert.NeighborhoodId);
+        var pauseResult = advert.Pause(_dateTimeProvider.Now);
+
+        if (pauseResult.IsFailure)
+        {
+            return pauseResult;
+        }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

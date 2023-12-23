@@ -2,6 +2,7 @@
 using KeyNekretnine.Domain.Adverts.Events;
 using KeyNekretnine.Domain.Agents;
 using KeyNekretnine.Domain.UserAdvertReports;
+using KeyNekretnine.Domain.Users;
 using KeyNekretnine.Domain.ValueObjects;
 
 namespace KeyNekretnine.Domain.Adverts;
@@ -54,6 +55,7 @@ public class Advert : Entity
 
     public AdvertType Type { get; private set; }
 
+    public User? User { get; private set; }
     public string? UserId { get; private set; }
 
     public Guid? AgentId { get; private set; }
@@ -105,7 +107,7 @@ public class Advert : Entity
         return Result.Success();
     }
 
-    public async Task<Result> CanCurrentUserUpdateAdvert(
+    public async Task<Result> CanCurrentUserUpdate(
         bool isAgency,
         string loggedUserId,
         IAgentRepository agentRepository
@@ -146,7 +148,7 @@ public class Advert : Entity
         NeighborhoodId = neighborhoodId;
     }
 
-    public Result ReportAdvert(string userId, int rejectReasonId, DateTime timeNow)
+    public Result Report(string userId, int rejectReasonId, DateTime timeNow)
     {
         if (_reports.Any(report => report.UserId == userId && report.RejectReasonId == rejectReasonId))
         {
@@ -187,6 +189,32 @@ public class Advert : Entity
         }
 
         IsPremium = false;
+        UpdatedOnDate = updatedOnDate;
+
+        return Result.Success();
+    }
+
+    public Result Pause(DateTime updatedOnDate)
+    {
+        if (Status == AdvertStatus.Paused)
+        {
+            return Result.Failure(AdvertErrors.AlreadyPaused);
+        }
+
+        Status = AdvertStatus.Paused;
+        UpdatedOnDate = updatedOnDate;
+
+        return Result.Success();
+    }
+
+    public Result Activate(DateTime updatedOnDate)
+    {
+        if (Status != AdvertStatus.Paused)
+        {
+            return Result.Failure(AdvertErrors.NotPaused);
+        }
+
+        Status = AdvertStatus.Accepted;
         UpdatedOnDate = updatedOnDate;
 
         return Result.Success();

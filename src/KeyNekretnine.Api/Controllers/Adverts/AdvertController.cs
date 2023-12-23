@@ -1,6 +1,8 @@
-﻿using KeyNekretnine.Application.Core.Adverts.Commands.ApproveAdvert;
+﻿using KeyNekretnine.Application.Core.Adverts.Commands.ActivateAdvert;
+using KeyNekretnine.Application.Core.Adverts.Commands.ApproveAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.MakeAdvertFavorite;
 using KeyNekretnine.Application.Core.Adverts.Commands.MakeAdvertPremium;
+using KeyNekretnine.Application.Core.Adverts.Commands.PauseAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.RejectAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.RemoveAdvertFromFavorite;
 using KeyNekretnine.Application.Core.Adverts.Commands.RemoveAdvertPremium;
@@ -19,6 +21,7 @@ using KeyNekretnine.Application.Core.Adverts.Queries.GetPagedAdvertReportsForAdm
 using KeyNekretnine.Application.Core.Adverts.Queries.GetPagedAdverts;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetPagedAdvertsForAdmin;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetPagedMyAdverts;
+using KeyNekretnine.Application.Core.Adverts.Queries.GetRecommendedAdverts;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -348,5 +351,45 @@ public class AdvertController : ControllerBase
         var response = await _sender.Send(command, cancellationToken);
 
         return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
+    [Authorize]
+    [HttpPut("{referenceId}/pause")]
+    //[ServiceFilter(typeof(BanUserChack))]
+    public async Task<IActionResult> PauseAdvert(string referenceId, CancellationToken cancellationToken)
+    {
+        var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
+        var isAgency = bool.Parse(User.Claims.FirstOrDefault(q => q.Type == "isAgency").Value);
+
+        var command = new PauseAdvertCommand(referenceId, userId, isAgency);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
+    [Authorize]
+    [HttpPut("{referenceId}/activate")]
+    //[ServiceFilter(typeof(BanUserChack))]
+    public async Task<IActionResult> ActivateAdvert(string referenceId, CancellationToken cancellationToken)
+    {
+        var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
+        var isAgency = bool.Parse(User.Claims.FirstOrDefault(q => q.Type == "isAgency").Value);
+
+        var command = new ActivateAdvertCommand(referenceId, userId, isAgency);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
+    [HttpGet("{referenceId}/recommended")]
+    public async Task<IActionResult> GetRecommendedAdverts(string referenceId, CancellationToken cancellationToken)
+    {
+        var query = new GetRecommendedAdvertsQuery(referenceId);
+
+        var response = await _sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : NotFound(response);
     }
 }

@@ -41,6 +41,8 @@
     </AssemblyAttribute>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Adverts\Commands\ActivateAdvert\ActivateAdvertCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\ActivateAdvert\ActivateAdvertHandler.cs" />
     <Compile Include="Core\Adverts\Commands\ApproveAdvert\AdvertApprovedDomainEventHandler.cs" />
     <Compile Include="Core\Adverts\Commands\ApproveAdvert\ApproveAdvertCommand.cs" />
     <Compile Include="Core\Adverts\Commands\ApproveAdvert\ApproveAdvertHandler.cs" />
@@ -48,6 +50,8 @@
     <Compile Include="Core\Adverts\Commands\MakeAdvertFavorite\MakeAdvertFavoriteHandler.cs" />
     <Compile Include="Core\Adverts\Commands\MakeAdvertPremium\MakeAdvertPremiumCommand.cs" />
     <Compile Include="Core\Adverts\Commands\MakeAdvertPremium\MakeAdvertPremiumHander.cs" />
+    <Compile Include="Core\Adverts\Commands\PauseAdvert\PauseAdvertCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\PauseAdvert\PauseAdvertHandler.cs" />
     <Compile Include="Core\Adverts\Commands\RejectAdvert\AdvertRejectedDomainEventHandler.cs" />
     <Compile Include="Core\Adverts\Commands\RejectAdvert\RejectAdvertCommand.cs" />
     <Compile Include="Core\Adverts\Commands\RejectAdvert\RejectAdvertHandler.cs" />
@@ -57,6 +61,8 @@
     <Compile Include="Core\Adverts\Commands\RemoveAdvertPremium\RemoveAdvertPremiumHandler.cs" />
     <Compile Include="Core\Adverts\Commands\ReportAdvert\ReportAdvertCommand.cs" />
     <Compile Include="Core\Adverts\Commands\ReportAdvert\ReportAdvertHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\SendEmailToOwner\SendEmailToOwnerCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\SendEmailToOwner\SendEmailToOwnerHandler.cs" />
     <Compile Include="Core\Adverts\Commands\UpdateAdvertLocation\UpdateAdvertLocationCommand.cs" />
     <Compile Include="Core\Adverts\Commands\UpdateAdvertLocation\UpdateAdvertLocationHandler.cs" />
   </ItemGroup>

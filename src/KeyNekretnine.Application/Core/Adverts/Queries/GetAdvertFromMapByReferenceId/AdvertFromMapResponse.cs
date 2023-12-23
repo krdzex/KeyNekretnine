@@ -11,4 +11,5 @@ public class AdvertFromMapResponse
     public bool IsUrgent { get; set; }
     public int Type { get; set; }
     public int Purpose { get; set; }
+    public bool IsPremium { get; set; }
 }

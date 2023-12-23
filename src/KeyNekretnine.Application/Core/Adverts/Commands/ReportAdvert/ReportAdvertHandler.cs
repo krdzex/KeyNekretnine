@@ -28,7 +28,7 @@ internal sealed class ReportAdvertHandler : ICommandHandler<ReportAdvertCommand>
             return Result.Failure(AdvertErrors.NotFoundForAdmin);
         }
 
-        var reportResult = advert.ReportAdvert(request.UserId, request.RejectReasonId, _dateTimeProvider.Now);
+        var reportResult = advert.Report(request.UserId, request.RejectReasonId, _dateTimeProvider.Now);
 
         if (reportResult.IsSuccess)
         {

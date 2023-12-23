@@ -31,7 +31,8 @@ internal sealed class GetAdvertFromMapByReferenceIdHandler : IQueryHandler<GetAd
             	a.purpose,
             	a.type,
             	a.location_address AS address,
-            	a.is_urgent AS isUrgent
+            	a.is_urgent AS isUrgent,
+                a.is_premium AS isPremium
             FROM adverts AS a
             INNER JOIN neighborhoods AS n ON a.neighborhood_id = n.id
             INNER JOIN cities AS c ON n.city_id = c.id

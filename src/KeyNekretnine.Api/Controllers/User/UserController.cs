@@ -6,6 +6,7 @@ using KeyNekretnine.Application.Core.Users.Commands.RequestEmailConfirmation;
 using KeyNekretnine.Application.Core.Users.Commands.RequestPasswordForgot;
 using KeyNekretnine.Application.Core.Users.Commands.UnbanUser;
 using KeyNekretnine.Application.Core.Users.Commands.UpdateUser;
+using KeyNekretnine.Application.Core.Users.Queries.GetAboutUser;
 using KeyNekretnine.Application.Core.Users.Queries.GetCurrentUser;
 using KeyNekretnine.Application.Core.Users.Queries.GetUserById;
 using KeyNekretnine.Application.Core.Users.Queries.GetUsers;
@@ -167,5 +168,18 @@ public sealed class UserController : ControllerBase
         var response = await _sender.Send(command, cancellationToken);
 
         return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
+    [Authorize]
+    [HttpGet("about")]
+    public async Task<IActionResult> AboutUser(CancellationToken cancellationToken)
+    {
+        var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
+
+        var query = new GetAboutUserQuery(userId);
+
+        var response = await _sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
     }
 }

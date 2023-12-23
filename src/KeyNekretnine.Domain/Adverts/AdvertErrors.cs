@@ -30,4 +30,12 @@ public static class AdvertErrors
     public static Error NotPremium => new(
         "Advert.NotPremium",
         "Advert is not premium");
+
+    public static Error AlreadyPaused => new(
+        "Advert.AlreadyPaused",
+        "Advert is already paused");
+
+    public static Error NotPaused => new(
+        "Advert.NotPaused",
+        "Advert is not paused");
 }
