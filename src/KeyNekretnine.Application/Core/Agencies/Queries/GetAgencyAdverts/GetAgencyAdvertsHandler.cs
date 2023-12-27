@@ -25,7 +25,7 @@ internal sealed class GetAgencyAdvertsHandler : IQueryHandler<GetAgencyAdvertsQu
                 a.no_of_bedrooms AS NoOfBedrooms,
                 a.no_of_bathrooms AS NoOfBathrooms,
                 a.cover_image_url AS CoverImageUrl,
-                CONCAT(c.name, ', ', n.name) AS location,
+                CONCAT(c.name, ', ', n.name) AS cityAndNeighborhood,
                 a.type,
                 a.purpose,
                 a.location_address AS address,

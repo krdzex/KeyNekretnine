@@ -49,8 +49,8 @@ internal sealed class AdvertConfiguration : IEntityTypeConfiguration<Advert>
                 .IsRequired(false);
         });
 
-        builder.HasOne<User>()
-            .WithMany()
+        builder.HasOne<User>(advert => advert.User)
+            .WithMany(user => user.Adverts)
             .HasForeignKey(advert => advert.UserId);
 
         builder.HasOne<Agent>()
@@ -61,6 +61,7 @@ internal sealed class AdvertConfiguration : IEntityTypeConfiguration<Advert>
             .WithMany()
             .HasForeignKey(advert => advert.NeighborhoodId)
             .IsRequired();
+
         //builder.HasMany(x => x.TemporeryImageDatas).WithOne(t => t.Advert).HasForeignKey(x => x.AdvertId);
         builder.Property(advert => advert.ReferenceId).HasMaxLength(10);
         builder.HasIndex(advert => advert.ReferenceId).IsUnique();

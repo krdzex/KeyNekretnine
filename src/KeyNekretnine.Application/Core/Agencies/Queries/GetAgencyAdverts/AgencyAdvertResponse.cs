@@ -2,7 +2,7 @@
 public sealed class AgencyAdvertResponse
 {
     public string ReferenceId { get; init; }
-    public string Location { get; init; }
+    public string CityAndNeighborhood { get; init; }
     public double Price { get; init; }
     public string CoverImageUrl { get; init; }
     public int NoOfBathrooms { get; init; }

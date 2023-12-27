@@ -9,7 +9,7 @@ public class PagedMyAdvertResponse
     public int Status { get; set; }
     public AdvertDescriptionResponse Description { get; set; }
     public string CoverImageUrl { get; set; }
-    public string Location { get; set; }
+    public string CityAndNeighborhood { get; set; }
     public DateTime CreatedOnDate { get; set; }
     public DateTime? UpdatedOnDate { get; set; }
 }

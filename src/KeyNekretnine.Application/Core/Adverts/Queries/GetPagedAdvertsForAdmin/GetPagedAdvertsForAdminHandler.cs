@@ -42,7 +42,7 @@ internal sealed class GetPagedAdvertsForAdminHandler : IQueryHandler<GetPagedAdv
             	a.purpose,
             	a.type,
             	a.status,
-            	CONCAT(c.name, ', ', n.name) AS location
+            	CONCAT(c.name, ', ', n.name) AS cityAndNeighborhood
             FROM adverts AS a
             INNER JOIN neighborhoods AS n ON a.neighborhood_id = n.id
             INNER JOIN cities AS c ON n.city_id = c.id

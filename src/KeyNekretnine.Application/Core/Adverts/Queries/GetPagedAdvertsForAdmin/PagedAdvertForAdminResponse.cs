@@ -9,5 +9,5 @@ public class PagedAdvertForAdminResponse
     public int Purpose { get; set; }
     public int Type { get; set; }
     public int Status { get; set; }
-    public string Location { get; set; }
+    public string CityAndNeighborhood { get; set; }
 }

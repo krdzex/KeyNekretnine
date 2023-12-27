@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace KeyNekretnine.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231223171456_AddingFunctionForRecommendedAdverts")]
-    partial class AddingFunctionForRecommendedAdverts
+    [Migration("20231227005110_AddStoredProcedureForSimularAdverts")]
+    partial class AddStoredProcedureForSimularAdverts
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -9256,8 +9256,8 @@ namespace KeyNekretnine.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_adverts_neighborhoods_neighborhood_id");
 
-                    b.HasOne("KeyNekretnine.Domain.Users.User", null)
-                        .WithMany()
+                    b.HasOne("KeyNekretnine.Domain.Users.User", "User")
+                        .WithMany("Adverts")
                         .HasForeignKey("UserId")
                         .HasConstraintName("fk_adverts_users_user_id");
 
@@ -9320,6 +9320,8 @@ namespace KeyNekretnine.Infrastructure.Migrations
 
                     b.Navigation("Location")
                         .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("KeyNekretnine.Domain.Agencies.Agency", b =>
@@ -9646,6 +9648,8 @@ namespace KeyNekretnine.Infrastructure.Migrations
 
             modelBuilder.Entity("KeyNekretnine.Domain.Users.User", b =>
                 {
+                    b.Navigation("Adverts");
+
                     b.Navigation("UserAdvertFavorites");
                 });
 #pragma warning restore 612, 618

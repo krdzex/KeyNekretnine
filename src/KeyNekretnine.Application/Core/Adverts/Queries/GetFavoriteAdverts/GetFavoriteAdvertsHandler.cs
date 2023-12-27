@@ -34,7 +34,7 @@ internal sealed class GetFavoriteAdvertsHandler : IQueryHandler<GetFavoriteAdver
             	a.no_of_bathrooms AS noOfBathrooms,
             	a.created_on_date AS createdOnDate,
             	a.cover_image_url AS coverImageUrl,
-            	CONCAT(c.name, ', ', n.name) AS location,
+            	CONCAT(c.name, ', ', n.name) AS cityAndNeighborhood,
             	a.location_address AS address,
             	a.is_urgent AS isUrgent,
                 a.type,

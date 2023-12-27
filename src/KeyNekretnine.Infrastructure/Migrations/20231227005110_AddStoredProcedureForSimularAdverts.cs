@@ -5,7 +5,7 @@
 namespace KeyNekretnine.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddingFunctionForRecommendedAdverts : Migration
+    public partial class AddStoredProcedureForSimularAdverts : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,7 +22,7 @@ namespace KeyNekretnine.Infrastructure.Migrations
 					noOfBathrooms INT,
 					createdOnDate TIMESTAMP WITH TIME ZONE,
 					coverImageUrl VARCHAR,
-					locationa TEXT,
+					cityAndNeighborhood TEXT,
 					address VARCHAR,
 					isUrgent BOOL,
 					is_premium BOOL,
@@ -51,7 +51,7 @@ namespace KeyNekretnine.Infrastructure.Migrations
 						a.no_of_bathrooms AS noOfBathrooms,
 						a.created_on_date AS createdOnDate,
 						a.cover_image_url AS  coverImageUrl,
-						CONCAT(c.name, ', ', n.name) AS locationa,
+						CONCAT(c.name, ', ', n.name) AS cityAndNeighborhood,
 						a.location_address AS address,
 						a.is_urgent AS isUrgent,
 						a.is_premium AS isPremium,
@@ -77,6 +77,7 @@ namespace KeyNekretnine.Infrastructure.Migrations
 
             migrationBuilder.Sql(functionSql);
         }
+
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)

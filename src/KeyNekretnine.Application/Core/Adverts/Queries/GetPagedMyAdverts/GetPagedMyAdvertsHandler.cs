@@ -37,7 +37,7 @@ internal sealed class GetPagedMyAdvertsHandler : IQueryHandler<GetPagedMyAdverts
             	a.reference_id AS referenceId,
             	a.created_on_date AS createdOnDate,
             	a.cover_image_url AS coverImageUrl,
-            	CONCAT(c.name, ', ', n.name) AS location,
+            	CONCAT(c.name, ', ', n.name) AS cityAndNeighborhood,
             	a.status,
             	a.type,
             	a.purpose,

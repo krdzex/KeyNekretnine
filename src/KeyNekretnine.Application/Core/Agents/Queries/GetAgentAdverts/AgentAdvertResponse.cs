@@ -2,7 +2,7 @@
 public sealed class AgentAdvertResponse
 {
     public string ReferenceId { get; set; }
-    public string Location { get; set; }
+    public string CityAndNeighborhood { get; set; }
     public double Price { get; set; }
     public string CoverImageUrl { get; set; }
     public int NoOfBathrooms { get; set; }

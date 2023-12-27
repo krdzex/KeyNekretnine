@@ -8,7 +8,7 @@ public class PagedAdvertResponse
     public int NoOfBathrooms { get; set; }
     public DateTime CreatedOnDate { get; set; }
     public string CoverImageUrl { get; set; }
-    public string Location { get; set; }
+    public string CityAndNeighborhood { get; set; }
     public string Address { get; set; }
     public bool IsUrgent { get; set; }
     public bool IsPremium { get; set; }
