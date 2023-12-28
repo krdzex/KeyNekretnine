@@ -7,6 +7,7 @@ using KeyNekretnine.Application.Core.Adverts.Commands.RejectAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.RemoveAdvertFromFavorite;
 using KeyNekretnine.Application.Core.Adverts.Commands.RemoveAdvertPremium;
 using KeyNekretnine.Application.Core.Adverts.Commands.ReportAdvert;
+using KeyNekretnine.Application.Core.Adverts.Commands.SendEmailToOwner;
 using KeyNekretnine.Application.Core.Adverts.Commands.UpdateAdvertLocation;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertByReferenceId;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertForAdminByReferenceId;
@@ -390,6 +391,17 @@ public class AdvertController : ControllerBase
 
         var response = await _sender.Send(query, cancellationToken);
 
-        return response.IsSuccess ? Ok(response.Value) : NotFound(response);
+        return Ok(response.Value);
     }
+
+    [HttpPost("{referenceId}/send-email")]
+    public async Task<IActionResult> SendMessageToOwner([FromBody] SendMessageToOwnerRequest request, string referenceId, CancellationToken cancellationToken)
+    {
+        var command = new SendEmailToOwnerCommand(referenceId, request.FullName, request.PhoneNumber, request.SenderEmail, request.Message);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response);
+    }
+
 }
