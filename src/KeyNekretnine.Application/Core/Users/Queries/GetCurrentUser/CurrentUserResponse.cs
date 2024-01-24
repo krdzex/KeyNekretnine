@@ -6,6 +6,8 @@ public class CurrentUserResponse
     public string ProfileImageUrl { get; init; }
     public string Email { get; init; }
     public bool IsAgency { get; init; }
+    public int AgencyId { get; set; }
+    public string AgencyName { get; set; }
     public List<string> Roles { get; set; } = new List<string>();
 }
 

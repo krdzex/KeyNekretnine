@@ -11,5 +11,6 @@ public class AboutUserResponse
     public bool IsEmailConfirmed { get; set; }
     public string PhoneNumber { get; set; }
     public bool IsAgency { get; set; }
+    public string AgencyName { get; set; }
     public bool CanChangePassword { get; set; }
 }
