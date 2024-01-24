@@ -1,4 +1,3 @@
-# Use the ASP.NET Core runtime as the base image
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
 
@@ -6,15 +5,15 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 
-# Copy the CSPROJ files and restore any dependencies
-COPY ["src/KeyNekretnine.Api/KeyNekretnine2.Api.csproj", "src/KeyNekretnine.Api/"]
-COPY ["src/KeyNekretnine.Application/KeyNekretnine.Application.csproj", "src/KeyNekretnine.Application/"]
-COPY ["src/KeyNekretnine.Domain/KeyNekretnine.Domain.csproj", "src/KeyNekretnine.Domain/"]
-COPY ["src/KeyNekretnine.Infrastructure/KeyNekretnine.Infrastructure.csproj", "src/KeyNekretnine.Infrastructure/"]
-RUN dotnet restore "src/KeyNekretnine.Api/KeyNekretnine.Api.csproj"
+# Copy the .csproj file and restore any dependencies
+COPY ["KeyNekretnine.Api/KeyNekretnine.Api.csproj", "KeyNekretnine.Api/"]
+COPY ["KeyNekretnine.Application/KeyNekretnine.Application.csproj", "KeyNekretnine.Application/"]
+COPY ["KeyNekretnine.Domain/KeyNekretnine.Domain.csproj", "KeyNekretnine.Domain/"]
+COPY ["KeyNekretnine.Infrastructure/KeyNekretnine.Infrastructure.csproj", "KeyNekretnine.Infrastructure/"]
+RUN dotnet restore "KeyNekretnine.Api/KeyNekretnine.Api.csproj"
 
 # Copy the project files
-COPY src/ src/
+COPY . .
 
 # Build the project
 WORKDIR "/src/KeyNekretnine.Api"
