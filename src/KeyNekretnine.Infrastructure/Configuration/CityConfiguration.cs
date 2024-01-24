@@ -18,6 +18,8 @@ public class CityConfiguration : IEntityTypeConfiguration<City>
 
         builder.Property(x => x.ImageUrl).IsRequired().HasMaxLength(200);
 
+        builder.Property(x => x.Slug).IsRequired().HasMaxLength(200);
+
         builder.HasData(CitiesData.GetCities());
     }
 }
