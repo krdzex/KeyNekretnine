@@ -205,10 +205,10 @@ public class AdvertController : ControllerBase
             request.MaxFloorSpace,
             request.NoOfBedrooms,
             request.NoOfBathrooms,
-            request.Types,
-            request.Purposes,
+            request.Type,
+            request.Purpose,
             request.Neighborhoods,
-            request.CityId,
+            request.CitySlug,
             request.IsEmergency,
             request.IsUnderConstruction,
             request.IsFurnished);

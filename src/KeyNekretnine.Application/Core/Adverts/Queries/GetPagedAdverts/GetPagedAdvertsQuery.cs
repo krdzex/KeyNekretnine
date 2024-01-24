@@ -12,10 +12,10 @@ public sealed record GetPagedAdvertsQuery(
     int MaxFloorSpace,
     List<int> NoOfBedrooms,
     List<int> NoOfBathrooms,
-    List<int> Types,
-    List<int> Purposes,
+    int? Type,
+    int? Purpose,
     List<int> Neighborhoods,
-    int? CityId,
+    string CitySlug,
     bool? IsUrgent,
     bool? IsUnderConstruction,
     bool? IsFurnished) : IQuery<Pagination<PagedAdvertResponse>>;

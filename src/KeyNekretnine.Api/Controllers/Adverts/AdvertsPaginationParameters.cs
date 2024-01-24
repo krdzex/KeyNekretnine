@@ -10,9 +10,9 @@ public record class AdvertsPaginationParameters : RequestParameters
     public int MaxFloorSpace { get; init; } = int.MaxValue;
     public List<int> NoOfBedrooms { get; init; }
     public List<int> NoOfBathrooms { get; init; }
-    public List<int> Types { get; init; }
-    public List<int> Purposes { get; init; }
-    public int? CityId { get; init; }
+    public int? Type { get; init; }
+    public int? Purpose { get; init; }
+    public string CitySlug { get; init; }
     public List<int> Neighborhoods { get; init; }
     public bool? IsEmergency { get; init; }
     public bool? IsUnderConstruction { get; init; }

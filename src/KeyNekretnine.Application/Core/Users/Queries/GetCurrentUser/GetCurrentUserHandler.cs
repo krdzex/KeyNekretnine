@@ -27,10 +27,13 @@ internal sealed class GetCurrentUserHandler : IQueryHandler<GetCurrentUserQuery,
                 u.profile_image_url AS profileImageUrl,
                 u.email,
                 u.is_agency AS IsAgency,
-                r.name AS name
+                r.name AS name,
+                a.name as AgencyName,
+                a.id as AgencyId
             FROM asp_net_users AS u
             LEFT JOIN asp_net_user_roles ur ON u.id = ur.user_id
             LEFT JOIN asp_net_roles r ON ur.role_id = r.id
+            LEFT JOIN agencies a ON a.user_id = u.id
             WHERE u.id = @UserId
             """;
 

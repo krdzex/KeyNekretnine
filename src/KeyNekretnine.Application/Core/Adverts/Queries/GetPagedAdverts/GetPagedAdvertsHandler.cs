@@ -1,7 +1,6 @@
 ﻿using Dapper;
 using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Messaging;
-using KeyNekretnine.Application.Core.Adverts.Queries.GetFavoriteAdverts;
 using KeyNekretnine.Application.Core.Shared;
 using KeyNekretnine.Application.Core.Shared.Pagination;
 using KeyNekretnine.Domain.Abstraction;
@@ -19,17 +18,17 @@ internal sealed class GetPagedAdvertsHandler : IQueryHandler<GetPagedAdvertsQuer
 
     public async Task<Result<Pagination<PagedAdvertResponse>>> Handle(GetPagedAdvertsQuery request, CancellationToken cancellationToken)
     {
-        var orderBy = OrderQueryBuilder.CreateOrderQuery<FavoriteAdvertResponse>(request.OrderBy);
+        var orderBy = OrderQueryBuilder.CreateOrderQuery<PagedAdvertResponse>(request.OrderBy);
 
-        var purposeFilter = request.Purposes is not null ? $" AND a.purpose = ANY(@Purposes)" : "";
-        var typeFilter = request.Types is not null ? $" AND a.purpose = ANY(@Types)" : "";
+        var purposeFilter = request.Purpose is not null ? $" AND a.purpose = @Purpose" : "";
+        var typeFilter = request.Type is not null ? $" AND a.type = @Type" : "";
         var bedroomsFilter = request.NoOfBedrooms is not null ? $" AND a.no_of_bedrooms = ANY(@NoOfBedrooms)" : "";
         var bathroomsFilter = request.NoOfBathrooms is not null ? $" AND a.no_of_bathrooms = ANY(@NoOfBathrooms)" : "";
         var neighborhoodFilter = request.Neighborhoods is not null ? $" AND a.neighborhood_id = ANY(@Neighborhoods)" : "";
         var urgentFilter = request.IsUrgent is not null ? $" AND a.is_urgent = @IsUrgent" : "";
         var underConstructionFilter = request.IsUnderConstruction is not null ? $" AND a.is_under_construction = @IsUnderConstruction" : "";
         var furnishedFilter = request.IsFurnished is not null ? $" AND a.is_furnished = @IsFurnished" : "";
-        var cityFilter = request.CityId is not null ? $" AND c.id = @CityId" : "";
+        var cityFilter = request.CitySlug is not null ? $" AND c.slug = @CitySlug" : "";
 
         var sql = $"""
             SELECT
@@ -91,8 +90,8 @@ internal sealed class GetPagedAdvertsHandler : IQueryHandler<GetPagedAdvertsQuer
         param.Add("maxPrice", request.MaxPrice, DbType.Int32);
         param.Add("minFloorSpace", request.MinFloorSpace, DbType.Int32);
         param.Add("maxFloorSpace", request.MaxFloorSpace, DbType.Int32);
-        param.Add("types", request.Types);
-        param.Add("purposes", request.Purposes);
+        param.Add("type", request.Type);
+        param.Add("purpose", request.Purpose);
         param.Add("noOfBedrooms", request.NoOfBedrooms);
         param.Add("noOfBathrooms", request.NoOfBathrooms);
         param.Add("noOfBathrooms", request.NoOfBathrooms);
@@ -100,7 +99,7 @@ internal sealed class GetPagedAdvertsHandler : IQueryHandler<GetPagedAdvertsQuer
         param.Add("isUrgent", request.IsUrgent);
         param.Add("isUnderConstruction", request.IsUnderConstruction);
         param.Add("isFurnished", request.IsFurnished);
-        param.Add("cityId", request.CityId, DbType.Int32);
+        param.Add("citySlug", request.CitySlug, DbType.String);
 
 
         using var connection = _sqlConnectionFactory.CreateConnection();

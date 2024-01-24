@@ -20,6 +20,8 @@ public class CityConfiguration : IEntityTypeConfiguration<City>
 
         builder.Property(x => x.Slug).IsRequired().HasMaxLength(200);
 
+        builder.HasIndex(x => x.Slug).IsUnique();
+
         builder.HasData(CitiesData.GetCities());
     }
 }

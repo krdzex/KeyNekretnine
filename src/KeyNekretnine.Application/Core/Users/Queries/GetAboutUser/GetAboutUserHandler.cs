@@ -30,12 +30,14 @@ internal sealed class GetAboutUserHandler : IQueryHandler<GetAboutUserQuery, Abo
                 u.email_confirmed AS isEmailConfirmed,
                 u.phone_number AS phoneNumber,
                 u.is_agency AS isAgency,
+                a.name AS agencyName,
                 CASE 
                     WHEN u.password_hash IS NULL THEN 'false'
                     ELSE 'true'
                 END AS canChangePassword
             FROM asp_net_users AS u
-            WHERE id = @UserId
+            LEFT JOIN agencies a ON a.user_id = u.id
+            WHERE u.id = @UserId
             """;
 
         var cmd = new CommandDefinition(sql, new { request.UserId }, cancellationToken: cancellationToken);
