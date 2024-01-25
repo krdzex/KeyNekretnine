@@ -33,7 +33,7 @@ namespace KeyNekretnine.Api.Controllers.Adverts;
 
 [ApiController]
 [Route("api/[controller]")]
-[EnableRateLimiting("fixed-by-ip")]
+[EnableRateLimiting("high-rating")]
 public class AdvertController : ControllerBase
 {
     private readonly ISender _sender;
@@ -42,6 +42,7 @@ public class AdvertController : ControllerBase
         _sender = sender;
     }
 
+    [AllowAnonymous]
     [HttpGet("{referenceId}")]
     public async Task<IActionResult> GetAdvertByReferenceId(string referenceId, CancellationToken cancellationToken)
     {
@@ -52,6 +53,7 @@ public class AdvertController : ControllerBase
         return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
     }
 
+    [AllowAnonymous]
     [HttpGet("map/coordinates")]
     public async Task<IActionResult> GetAllAdvertCoordinates(CancellationToken cancellationToken)
     {
@@ -182,6 +184,7 @@ public class AdvertController : ControllerBase
         return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
     }
 
+    [AllowAnonymous]
     [HttpGet("compare/{firstReferenceId}/{secondReferenceId}")]
     public async Task<IActionResult> GetAdvertsCompare(string firstReferenceId, string secondReferenceId, CancellationToken cancellationToken)
     {
@@ -192,6 +195,7 @@ public class AdvertController : ControllerBase
         return Ok(response.Value);
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> Get([FromQuery] AdvertsPaginationParameters request, CancellationToken cancellationToken)
     {
@@ -218,6 +222,7 @@ public class AdvertController : ControllerBase
         return Ok(response.Value);
     }
 
+    [AllowAnonymous]
     [HttpGet("filtered-coordinates")]
     public async Task<IActionResult> GetFilteredAdvertCoordinates([FromQuery] AdvertMapParameters request, CancellationToken cancellationToken)
     {
@@ -384,6 +389,7 @@ public class AdvertController : ControllerBase
         return response.IsSuccess ? NoContent() : BadRequest(response.Error);
     }
 
+    [AllowAnonymous]
     [HttpGet("{referenceId}/recommended")]
     public async Task<IActionResult> GetRecommendedAdverts(string referenceId, CancellationToken cancellationToken)
     {
@@ -394,6 +400,8 @@ public class AdvertController : ControllerBase
         return Ok(response.Value);
     }
 
+    [AllowAnonymous]
+    [EnableRateLimiting("low-rating")]
     [HttpPost("{referenceId}/send-email")]
     public async Task<IActionResult> SendMessageToOwner([FromBody] SendMessageToOwnerRequest request, string referenceId, CancellationToken cancellationToken)
     {

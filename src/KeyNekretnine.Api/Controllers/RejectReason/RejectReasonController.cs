@@ -1,10 +1,13 @@
 ﻿using KeyNekretnine.Application.Core.RejectReasons.Queries.GetRejectReasons;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace KeyNekretnine.Api.Controllers.RejectReason;
 
 [ApiController]
+[EnableRateLimiting("high-rating")]
 [Route("api/reject-reason")]
 public class RejectReasonController : ControllerBase
 {
@@ -15,6 +18,7 @@ public class RejectReasonController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     [ResponseCache(Duration = 120)]
     public async Task<IActionResult> Get(CancellationToken cancellationToken)
     {

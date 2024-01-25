@@ -1,11 +1,14 @@
 ﻿using KeyNekretnine.Application.Core.Cities.Queries.GetCities;
 using KeyNekretnine.Application.Core.Cities.Queries.GetMostPopularCities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace KeyNekretnine.Api.Controllers.City;
 
 [ApiController]
+[EnableRateLimiting("high-rating")]
 [Route("api/[controller]")]
 public class CityController : ControllerBase
 {
@@ -16,6 +19,7 @@ public class CityController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     [ResponseCache(Duration = 120)]
     public async Task<IActionResult> Get(CancellationToken cancellationToken)
     {
@@ -27,6 +31,7 @@ public class CityController : ControllerBase
     }
 
     [HttpGet("popular")]
+    [AllowAnonymous]
     [ResponseCache(Duration = 120)]
     public async Task<IActionResult> GetMostPopular(CancellationToken cancellationToken)
     {

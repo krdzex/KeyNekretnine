@@ -18,6 +18,7 @@ public class AuthenticationController : ControllerBase
         _sender = sender;
     }
 
+    [AllowAnonymous]
     [HttpPost("registration")]
     public async Task<IActionResult> Register([FromBody] RegisterUserRequest registerUserRequest, CancellationToken cancellationToken)
     {
@@ -30,6 +31,7 @@ public class AuthenticationController : ControllerBase
         return response.IsSuccess ? StatusCode(201) : BadRequest(response.Error);
     }
 
+    [AllowAnonymous]
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LogInUserRequest request, CancellationToken cancellationToken)
     {
@@ -66,8 +68,7 @@ public class AuthenticationController : ControllerBase
     }
 
     [HttpPost("refresh")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [AllowAnonymous]
     public async Task<IActionResult> Refresh(CancellationToken cancellationToken)
     {
         var refreshToken = Request.Cookies["X-Refresh-Token"];
@@ -105,6 +106,7 @@ public class AuthenticationController : ControllerBase
         return response.IsSuccess ? NoContent() : BadRequest(response.Error);
     }
 
+    [AllowAnonymous]
     [HttpPost("google-login")]
     public async Task<IActionResult> GoogleLogin([FromBody] GoogleAuthRequest request, CancellationToken cancellationToken)
     {

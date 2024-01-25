@@ -1,10 +1,13 @@
 ﻿using KeyNekretnine.Application.Core.Language.Queries.GetLanguages;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace KeyNekretnine.Api.Controllers.Language;
 
 [ApiController]
+[EnableRateLimiting("high-rating")]
 [Route("api/[controller]")]
 public class LanguageController : ControllerBase
 {
@@ -15,6 +18,7 @@ public class LanguageController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     [ResponseCache(Duration = 120)]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {

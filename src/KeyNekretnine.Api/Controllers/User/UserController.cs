@@ -13,11 +13,13 @@ using KeyNekretnine.Application.Core.Users.Queries.GetUsers;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
 
 namespace KeyNekretnine.Api.Controllers.User;
 
 [ApiController]
+[EnableRateLimiting("high-rating")]
 [Route("api/[controller]")]
 public sealed class UserController : ControllerBase
 {
@@ -114,6 +116,7 @@ public sealed class UserController : ControllerBase
     }
 
     [Authorize]
+    [EnableRateLimiting("low-rating")]
     [HttpPost("request-email-confirmation")]
     public async Task<IActionResult> RequestEmailConfirmation(CancellationToken cancellationToken)
     {
@@ -149,7 +152,7 @@ public sealed class UserController : ControllerBase
         return response.IsSuccess ? NoContent() : BadRequest(response.Error);
     }
 
-
+    [EnableRateLimiting("low-rating")]
     [HttpPost("request-password-forgot")]
     public async Task<IActionResult> RequestPasswordForgot([FromBody] PasswordForgotLinkRequest request, CancellationToken cancellationToken)
     {

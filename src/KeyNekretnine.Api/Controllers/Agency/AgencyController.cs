@@ -8,11 +8,13 @@ using KeyNekretnine.Application.Core.Agencies.Queries.GetPagedAgencies;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
 
 namespace KeyNekretnine.Api.Controllers.Agency;
 
 [ApiController]
+[EnableRateLimiting("high-rating")]
 [Route("api/[controller]")]
 public class AgencyController : ControllerBase
 {
@@ -22,6 +24,7 @@ public class AgencyController : ControllerBase
         _sender = sender;
     }
 
+    [AllowAnonymous]
     [HttpPost]
     public async Task<IActionResult> CreateAgency([FromBody] CreateAgencyRequest request, CancellationToken cancellationToken)
     {
@@ -67,6 +70,7 @@ public class AgencyController : ControllerBase
         return response.IsSuccess ? Accepted() : BadRequest(response.Error);
     }
 
+    [AllowAnonymous]
     [HttpGet("{agencyId}")]
     public async Task<IActionResult> GetAgencyById(Guid agencyId, CancellationToken cancellationToken)
     {
@@ -77,7 +81,7 @@ public class AgencyController : ControllerBase
         return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
     }
 
-
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetAgencies([FromQuery] AgencyPaginationParameters request, CancellationToken cancellationToken)
     {
@@ -92,6 +96,7 @@ public class AgencyController : ControllerBase
         return Ok(response.Value);
     }
 
+    [AllowAnonymous]
     [HttpGet("{agencyId}/adverts")]
     public async Task<IActionResult> GetAgencyAdverts(Guid agencyId, CancellationToken cancellationToken)
     {
@@ -102,6 +107,7 @@ public class AgencyController : ControllerBase
         return Ok(response.Value);
     }
 
+    [AllowAnonymous]
     [HttpGet("{agencyId}/agents")]
     public async Task<IActionResult> GetAgents(Guid agencyId, CancellationToken cancellationToken)
     {
@@ -112,6 +118,7 @@ public class AgencyController : ControllerBase
         return Ok(response.Value);
     }
 
+    [AllowAnonymous]
     [HttpGet("{agencyId}/location")]
     public async Task<IActionResult> GetAgencyLocation(Guid agencyId, CancellationToken cancellationToken)
     {

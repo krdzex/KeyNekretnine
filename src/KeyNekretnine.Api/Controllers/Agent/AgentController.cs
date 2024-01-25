@@ -6,11 +6,13 @@ using KeyNekretnine.Application.Core.Agents.Queries.GetPagedAgents;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
 
 namespace KeyNekretnine.Api.Controllers.Agent;
 
 [ApiController]
+[EnableRateLimiting("high-rating")]
 [Route("api/[controller]")]
 public class AgentController : ControllerBase
 {
@@ -23,8 +25,6 @@ public class AgentController : ControllerBase
     [Authorize]
     //[ServiceFilter(typeof(BanUserChack))]
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Create([FromForm] CreateAgentRequest createAgentRequest, CancellationToken cancellationToken)
     {
         var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
@@ -49,6 +49,7 @@ public class AgentController : ControllerBase
         return response.IsSuccess ? NoContent() : BadRequest(response.Error);
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] AgentPaginationParameters agentPaginationParameters, CancellationToken cancellationToken)
     {
@@ -63,6 +64,7 @@ public class AgentController : ControllerBase
         return Ok(response.Value);
     }
 
+    [AllowAnonymous]
     [HttpGet("{agentId}")]
     public async Task<IActionResult> GetById(Guid agentId, CancellationToken cancellationToken)
     {
@@ -73,6 +75,7 @@ public class AgentController : ControllerBase
         return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
     }
 
+    [AllowAnonymous]
     [HttpGet("{agentId}/adverts")]
     public async Task<IActionResult> GetAgentAdverts(Guid agentId, CancellationToken cancellationToken)
     {
