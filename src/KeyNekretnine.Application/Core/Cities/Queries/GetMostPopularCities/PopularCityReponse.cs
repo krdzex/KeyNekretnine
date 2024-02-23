@@ -1,8 +1,8 @@
 ﻿namespace KeyNekretnine.Application.Core.Cities.Queries.GetMostPopularCities;
 public sealed class PopularCityReponse
 {
-    public int Id { get; set; }
-    public int AdvertsCount { get; set; }
-    public string Name { get; set; }
-    public string ImageUrl { get; set; }
+    public string Slug { get; init; }
+    public int AdvertsCount { get; init; }
+    public string Name { get; init; }
+    public string ImageUrl { get; init; }
 }

@@ -20,7 +20,7 @@ internal sealed class GetMostPopularCitiesHandler : IQueryHandler<GetMostPopular
         const string sql = """
              WITH cte AS (
                     SELECT 
-                        c.id,
+                        c.slug,
                         c.name, 
                         c.image_url, 
                         count(a.id) AS adverts_count
@@ -31,7 +31,7 @@ internal sealed class GetMostPopularCitiesHandler : IQueryHandler<GetMostPopular
                     GROUP BY c.name, c.image_url,c.id
                     )
                     SELECT 
-                        id,
+                        slug,
                         name, 
                         adverts_count AS AdvertsCount, 
                         image_url AS ImageUrl
