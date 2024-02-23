@@ -1,27 +1,18 @@
 ﻿using FluentValidation;
-using KeyNekretnine.Application.Core.Auth.Commands.UserRegistration;
 
-namespace KeyNekretnine.Application.Validators;
-public sealed class RegisterUserCommandValidator :
+namespace KeyNekretnine.Application.Core.Auth.Commands.UserRegistration;
+internal class UserRegistrationCommandValidator :
     AbstractValidator<UserRegistrationCommand>
 {
-    public RegisterUserCommandValidator()
+    public UserRegistrationCommandValidator()
     {
-        RuleFor(u => u.RegistrationUser.FirstName)
-            .NotEmpty()
-            .WithMessage("Field First Name cant be empty");
-
-        RuleFor(u => u.RegistrationUser.LastName)
-            .NotEmpty()
-            .WithMessage("Field Last Name cant be empty");
-
-        RuleFor(u => u.RegistrationUser.Email)
+        RuleFor(c => c.Email)
             .NotEmpty()
                 .WithMessage("Email is required field")
             .EmailAddress()
                 .WithMessage("Email adress is not valid");
 
-        RuleFor(x => x.RegistrationUser.Password)
+        RuleFor(c => c.Password)
             .Custom((password, context) =>
             {
                 var errors = new List<string>();
@@ -34,6 +25,5 @@ public sealed class RegisterUserCommandValidator :
                 if (errors.Any())
                     context.AddFailure(string.Join(" ", errors));
             });
-
     }
 }

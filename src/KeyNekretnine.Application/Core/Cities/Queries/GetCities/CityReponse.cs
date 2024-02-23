@@ -1,7 +1,7 @@
 ﻿namespace KeyNekretnine.Application.Core.Cities.Queries.GetCities;
 public sealed class CityReponse
 {
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public string GeoId { get; set; }
+    public string Slug { get; init; }
+    public string Name { get; init; }
+    public string GeoId { get; init; }
 }

@@ -110,6 +110,6 @@ public class AgentController : ControllerBase
 
         var response = await _sender.Send(command, cancellationToken);
 
-        return response.IsSuccess ? Accepted() : BadRequest(response);
+        return response.IsSuccess ? Accepted() : BadRequest(response.Error);
     }
 }

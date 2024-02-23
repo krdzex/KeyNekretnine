@@ -409,7 +409,7 @@ public class AdvertController : ControllerBase
 
         var response = await _sender.Send(command, cancellationToken);
 
-        return response.IsSuccess ? NoContent() : BadRequest(response);
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
     }
 
 }

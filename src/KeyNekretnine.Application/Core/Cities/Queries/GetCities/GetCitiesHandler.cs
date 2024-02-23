@@ -19,8 +19,8 @@ internal sealed class GetCitiesHandler : IQueryHandler<GetCitiesQuery, IReadOnly
 
         const string sql = """
             SELECT
-                id AS Id,
                 name AS Name,
+                slug,
                 geo_id AS GeoId
             FROM cities
             """;

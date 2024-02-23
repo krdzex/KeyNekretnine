@@ -34,9 +34,6 @@ public sealed class ApplicationDbContext : IdentityDbContext<User>, IUnitOfWork
     }
 
     public DbSet<Image> Images { get; set; }
-    //public DbSet<AdvertStatus> AdvertStatuses { get; set; }
-    //public DbSet<AdvertPurpose> AdvertPurposes { get; set; }
-    //public DbSet<AdvertType> AdvertTypes { get; set; }
     public DbSet<Advert> Adverts { get; set; }
     public DbSet<City> Cities { get; set; }
     public DbSet<Neighborhood> Neighborhoods { get; set; }
