@@ -25,7 +25,7 @@ internal sealed class GetFilteredAdvertCoordinatesHandler : IQueryHandler<GetFil
         var urgentFilter = request.IsUrgent is not null ? $" AND a.is_urgent = @IsUrgent" : "";
         var underConstructionFilter = request.IsUnderConstruction is not null ? $" AND a.is_under_construction = @IsUnderConstruction" : "";
         var furnishedFilter = request.IsFurnished is not null ? $" AND a.is_furnished = @IsFurnished" : "";
-        var cityFilter = request.CityId is not null ? $" AND c.id = @CityId" : "";
+        var cityFilter = request.CitySlug is not null ? $" AND c.slug = @CitySlug" : "";
 
         var sql = $"""
             SELECT
@@ -63,7 +63,7 @@ internal sealed class GetFilteredAdvertCoordinatesHandler : IQueryHandler<GetFil
         param.Add("isUrgent", request.IsUrgent);
         param.Add("isUnderConstruction", request.IsUnderConstruction);
         param.Add("isFurnished", request.IsFurnished);
-        param.Add("cityId", request.CityId, DbType.Int32);
+        param.Add("citySlug", request.CitySlug, DbType.String);
 
 
         using var connection = _sqlConnectionFactory.CreateConnection();

@@ -236,7 +236,7 @@ public class AdvertController : ControllerBase
             request.Types,
             request.Purposes,
             request.Neighborhoods,
-            request.CityId,
+            request.CitySlug,
             request.IsEmergency,
             request.IsUnderConstruction,
             request.IsFurnished);

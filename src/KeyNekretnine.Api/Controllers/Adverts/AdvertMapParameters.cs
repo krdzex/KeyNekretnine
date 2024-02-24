@@ -10,7 +10,7 @@ public record AdvertMapParameters
     public List<int> NoOfBathrooms { get; init; }
     public List<int> Types { get; init; }
     public List<int> Purposes { get; init; }
-    public int? CityId { get; init; }
+    public string CitySlug { get; init; }
     public List<int> Neighborhoods { get; init; }
     public bool? IsEmergency { get; init; }
     public bool? IsUnderConstruction { get; init; }

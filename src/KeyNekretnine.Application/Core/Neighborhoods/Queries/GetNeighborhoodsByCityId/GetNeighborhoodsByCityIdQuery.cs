@@ -2,4 +2,4 @@
 
 namespace KeyNekretnine.Application.Core.Neighborhoods.Queries.GetNeighborhoodsByCityId;
 
-public sealed record GetNeighborhoodsByCityIdQuery(int CityId) : IQuery<IReadOnlyList<NeighborhoodResponse>>;
+public sealed record GetNeighborhoodsByCityIdQuery(string CitySlug) : IQuery<IReadOnlyList<NeighborhoodResponse>>;

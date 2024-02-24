@@ -49,7 +49,7 @@ internal sealed class GetMyAdvertByReferenceIdHandler : IQueryHandler<GetMyAdver
             	a.location_longitude AS longitude,
             	n.id AS neighborhoodId,
             	n.name AS neighborhoodName,
-            	c.id AS cityId,
+            	c.slug AS citySlug,
             	c.name as cityName,
                 u.first_name AS firstName,
                 u.last_name AS lastName,

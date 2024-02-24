@@ -12,7 +12,7 @@ public sealed record GetFilteredAdvertCoordinatesQuery(
     List<int> Types,
     List<int> Purposes,
     List<int> Neighborhoods,
-    int? CityId,
+    string? CitySlug,
     bool? IsUrgent,
     bool? IsUnderConstruction,
     bool? IsFurnished) : IQuery<IReadOnlyList<AdvertCoordinateResponse>>;

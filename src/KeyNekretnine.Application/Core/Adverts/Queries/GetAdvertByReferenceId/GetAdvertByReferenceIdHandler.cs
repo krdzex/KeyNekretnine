@@ -48,7 +48,7 @@ internal sealed class GetAdvertByReferenceIdHandler : IQueryHandler<GetAdvertByR
             	a.location_longitude AS longitude,
             	n.id AS neighborhoodId,
             	n.name AS neighborhoodName,
-            	c.id AS cityId,
+            	c.slug AS citySlug,
             	c.name as cityName,
                 CASE 
                     WHEN a.user_id IS NOT NULL THEN u.first_name

@@ -17,12 +17,12 @@ public class NeighborhoodController : ControllerBase
         _sender = sender;
     }
 
-    [HttpGet("{cityId}")]
+    [HttpGet("{citySlug}")]
     [AllowAnonymous]
     [ResponseCache(Duration = 120)]
-    public async Task<IActionResult> Get(int cityId, CancellationToken cancellationToken)
+    public async Task<IActionResult> Get(string citySlug, CancellationToken cancellationToken)
     {
-        var query = new GetNeighborhoodsByCityIdQuery(cityId);
+        var query = new GetNeighborhoodsByCityIdQuery(citySlug);
 
         var response = await _sender.Send(query, cancellationToken);
 

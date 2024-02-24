@@ -46,7 +46,7 @@ internal sealed class GetAdvertsCompareHandler : IQueryHandler<GetAdvertsCompare
             	a.location_longitude AS longitude,
             	n.id AS neighborhoodId,
             	n.name AS neighborhoodName,
-            	c.id AS cityId,
+            	c.slug AS citySlug,
             	c.name as cityName
             FROM adverts a
             INNER JOIN neighborhoods n ON a.neighborhood_id = n.id

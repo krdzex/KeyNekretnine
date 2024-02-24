@@ -19,13 +19,14 @@ internal sealed class GetNeighborhoodsByCityIdHandler : IQueryHandler<GetNeighbo
 
         const string sql = """
             SELECT
-                id AS Id,
-                name AS Name
-            FROM neighborhoods
-            WHERE city_id = @CityId
+                n.id AS Id,
+                n.name AS Name
+            FROM neighborhoods n
+            LEFT JOIN cities c ON c.id = n.city_id
+            WHERE c.slug = @CitySlug
             """;
 
-        var cmd = new CommandDefinition(sql, new { request.CityId }, cancellationToken: cancellationToken);
+        var cmd = new CommandDefinition(sql, new { request.CitySlug }, cancellationToken: cancellationToken);
 
         var neighborhoods = await connection.QueryAsync<NeighborhoodResponse>(cmd);
 
