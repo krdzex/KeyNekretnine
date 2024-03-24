@@ -38,4 +38,12 @@ public static class AdvertErrors
     public static Error NotPaused => new(
         "Advert.NotPaused",
         "Advert is not paused");
+
+    public static Error BasicUpdateAlredyExist => new(
+        "Advert.BasicUpdateAlredyExist",
+        "Basic update already exist, wait untill admin approve or reject your update");
+
+    public static Error BasicUpdateNotFound => new(
+        "Advert.BasicUpdateNotFound",
+        "Basic update with this id doesnt exist");
 }

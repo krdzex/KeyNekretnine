@@ -1,54 +1,83 @@
-﻿using Contracts;
-using Entities.DomainErrors;
+﻿
+using KeyNekretnine.Application.Abstraction.Authentication;
+using KeyNekretnine.Application.Abstraction.Clock;
 using KeyNekretnine.Application.Abstraction.Messaging;
-using MediatR;
-using Shared.Error;
-using System.Transactions;
+using KeyNekretnine.Domain.Abstraction;
+using KeyNekretnine.Domain.Adverts;
+using KeyNekretnine.Domain.TemporeryImageDatas;
+using KeyNekretnine.Domain.ValueObjects;
 
 namespace KeyNekretnine.Application.Core.Adverts.Commands.CreateAdvert;
-internal sealed class CreateAdvertHandler : ICommandHandler<CreateAdvertCommand, Unit>
+internal sealed class CreateAdvertHandler : ICommandHandler<CreateAdvertCommand>
 {
-    private readonly IRepositoryManager _repository;
-    private readonly IPublisher _publisher;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IAdvertRepository _advertRepository;
+    private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly IUserContext _userContext;
+    private readonly ITemporeryImageDataRepository _temporeryImageDataRepository;
 
-    public CreateAdvertHandler(IRepositoryManager repository, IPublisher publisher)
+    public CreateAdvertHandler(
+        IUnitOfWork unitOfWork,
+        IAdvertRepository advertRepository,
+        IDateTimeProvider dateTimeProvider,
+        IUserContext userContext,
+        ITemporeryImageDataRepository temporeryImageDataRepository)
     {
-        _repository = repository;
-        _publisher = publisher;
+        _unitOfWork = unitOfWork;
+        _advertRepository = advertRepository;
+        _dateTimeProvider = dateTimeProvider;
+        _userContext = userContext;
+        _temporeryImageDataRepository = temporeryImageDataRepository;
     }
 
-    public async Task<Result<Unit>> Handle(CreateAdvertCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(CreateAdvertCommand request, CancellationToken cancellationToken)
     {
-        var advertId = -1;
+        var advert = Advert.Create(
+            request.AdvertForCreating.Price,
+            AdvertDescription.Create(
+                request.AdvertForCreating.DescriptionSr,
+                request.AdvertForCreating.DescriptionEn),
+            request.AdvertForCreating.NoOfBedrooms,
+            request.AdvertForCreating.FloorSpace,
+            request.AdvertForCreating.NoOfBathrooms,
+            request.AdvertForCreating.HasTerrace,
+            request.AdvertForCreating.HasGarage,
+            request.AdvertForCreating.IsFurnished,
+            request.AdvertForCreating.HasWifi,
+            request.AdvertForCreating.HasElevator,
+            request.AdvertForCreating.BuildingFloor,
+            request.AdvertForCreating.IsUrgent,
+            request.AdvertForCreating.IsUnderConstruction,
+            false,
+            request.AdvertForCreating.YearOfBuildingCreated,
+            AdvertStatus.Uploading,
+            (AdvertPurpose)request.AdvertForCreating.Purpose,
+            (AdvertType)request.AdvertForCreating.Type,
+            request.AdvertForCreating.NeighborhoodId,
+            Location.Create(
+                request.AdvertForCreating.Address,
+                request.AdvertForCreating.Latitude,
+                request.AdvertForCreating.Longitude),
+            _dateTimeProvider.Now,
+            !_userContext.IsAgency ? _userContext.UserId : null,
+            _userContext.IsAgency ? request.AdvertForCreating.AgentId : null);
 
-        using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+        advert.AddFeatures(request.AdvertForCreating.Features);
+
+        var coverImage = await _temporeryImageDataRepository.GetById(request.AdvertForCreating.CoverImageUrl, cancellationToken);
+
+        if (coverImage is not null)
         {
-            var userId = await _repository.User.GetUserIdFromEmail(request.UserEmail, cancellationToken);
-
-            if (userId is null)
-            {
-                return Result.Failure<Unit>(DomainErrors.User.UserNotFound);
-            }
-
-            advertId = await _repository.Advert.CreateAdvert(request.AdvertForCreating, userId, cancellationToken);
-
-            await _repository.TemporeryImageData.Insert(request.AdvertForCreating.CoverImage, advertId, true, cancellationToken);
-
-            foreach (var image in request.AdvertForCreating.ImageFiles)
-            {
-                await _repository.TemporeryImageData.Insert(image, advertId, false, cancellationToken);
-            }
-
-            foreach (var feature in request.AdvertForCreating.Features)
-            {
-                await _repository.AdvertFeature.InsertFeature(feature, advertId, cancellationToken);
-            }
-
-            transaction.Complete();
+            coverImage.AdvertId = advert.Id;
+            coverImage.IsCover = true;
         }
 
-        await _publisher.Publish(new AdvertCreatedEvent(advertId), cancellationToken);
+        _advertRepository.Add(advert);
 
-        return Unit.Value;
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        await _temporeryImageDataRepository.BulkUpdate(request.AdvertForCreating.ImageIds, advert.Id, cancellationToken);
+
+        return Result.Success();
     }
 }

@@ -1,6 +1,5 @@
 ﻿using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.AgencyLanguages;
-using KeyNekretnine.Domain.Shared;
 using KeyNekretnine.Domain.ValueObjects;
 
 namespace KeyNekretnine.Domain.Agencies;

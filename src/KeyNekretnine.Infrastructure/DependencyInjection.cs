@@ -6,11 +6,14 @@ using KeyNekretnine.Application.Abstraction.Email;
 using KeyNekretnine.Application.Abstraction.Image;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Adverts;
+using KeyNekretnine.Domain.AdvertUpdates;
 using KeyNekretnine.Domain.Agencies;
 using KeyNekretnine.Domain.Agents;
+using KeyNekretnine.Domain.TemporeryImageDatas;
 using KeyNekretnine.Domain.Users;
 using KeyNekretnine.Infrastructure.Authentication;
 using KeyNekretnine.Infrastructure.BackgroundJobs.ImageDeleter;
+using KeyNekretnine.Infrastructure.BackgroundJobs.ImageUploader;
 using KeyNekretnine.Infrastructure.BackgroundJobs.Outbox;
 using KeyNekretnine.Infrastructure.Clock;
 using KeyNekretnine.Infrastructure.Data;
@@ -62,7 +65,8 @@ public static class DependencyInjection
         services.AddScoped<IImageToDeleteRepository, ImageToDeleteRepository>();
         services.AddScoped<IAdvertRepository, AdvertRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
-
+        services.AddScoped<IAdvertUpdateRepository, AdvertUpdateRepository>();
+        services.AddScoped<ITemporeryImageDataRepository, TemporeryImageDataRepository>();
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
         services.AddSingleton<ISqlConnectionFactory>(_ =>
@@ -120,20 +124,25 @@ public static class DependencyInjection
 
         services.AddScoped<IJwtService, JwtService>();
 
+        services.AddHttpContextAccessor();
+
+        services.AddScoped<IUserContext, UserContext>();
+
     }
 
     private static void AddBackgroundJobs(IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<OutboxOptions>(configuration.GetSection("Outbox"));
         services.Configure<ImageDeleteOptions>(configuration.GetSection("ImageDeleter"));
+        services.Configure<ImageUploadOptions>(configuration.GetSection("ImageUploader"));
 
-        services.AddQuartz(options => { options.UseMicrosoftDependencyInjectionJobFactory(); });
+        services.AddQuartz();
 
         services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
 
         services.ConfigureOptions<ProcessOutboxMessagesJobSetup>();
         services.ConfigureOptions<ProcessImageDeleteJobSetup>();
-
+        services.ConfigureOptions<ProcessImageUploadJobSetup>();
     }
 
     private static string GetConnectionString()

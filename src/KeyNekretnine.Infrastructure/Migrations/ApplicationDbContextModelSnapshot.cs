@@ -17,7 +17,7 @@ namespace KeyNekretnine.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.10")
+                .HasAnnotation("ProductVersion", "8.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -48,6 +48,47 @@ namespace KeyNekretnine.Infrastructure.Migrations
                     b.ToTable("advert_features", (string)null);
                 });
 
+            modelBuilder.Entity("KeyNekretnine.Domain.AdvertUpdates.AdvertUpdate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("AdvertId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("advert_id");
+
+                    b.Property<DateTime?>("ApprovedOnDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("approved_on_date");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("json")
+                        .HasColumnName("content");
+
+                    b.Property<DateTime?>("CreatedOnDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_on_date");
+
+                    b.Property<DateTime?>("RejectedOnDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("rejected_on_date");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer")
+                        .HasColumnName("type");
+
+                    b.HasKey("Id")
+                        .HasName("pk_advert_updates");
+
+                    b.HasIndex("AdvertId")
+                        .HasDatabaseName("ix_advert_updates_advert_id");
+
+                    b.ToTable("advert_updates", (string)null);
+                });
+
             modelBuilder.Entity("KeyNekretnine.Domain.Adverts.Advert", b =>
                 {
                     b.Property<Guid>("Id")
@@ -68,7 +109,6 @@ namespace KeyNekretnine.Infrastructure.Migrations
                         .HasColumnName("building_floor");
 
                     b.Property<string>("CoverImageUrl")
-                        .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("character varying(150)")
                         .HasColumnName("cover_image_url");
@@ -8814,16 +8854,18 @@ namespace KeyNekretnine.Infrastructure.Migrations
 
             modelBuilder.Entity("KeyNekretnine.Domain.TemporeryImageDatas.TemporeryImageData", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<Guid>("AdvertId")
+                    b.Property<Guid?>("AdvertId")
                         .HasColumnType("uuid")
                         .HasColumnName("advert_id");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_date");
 
                     b.Property<byte[]>("ImageData")
                         .IsRequired()
@@ -8838,6 +8880,9 @@ namespace KeyNekretnine.Infrastructure.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_temporery_images_data");
+
+                    b.HasIndex("AdvertId")
+                        .HasDatabaseName("ix_temporery_images_data_advert_id");
 
                     b.ToTable("temporery_images_data", (string)null);
                 });
@@ -9273,6 +9318,18 @@ namespace KeyNekretnine.Infrastructure.Migrations
                         .HasConstraintName("fk_advert_features_adverts_advert_id");
                 });
 
+            modelBuilder.Entity("KeyNekretnine.Domain.AdvertUpdates.AdvertUpdate", b =>
+                {
+                    b.HasOne("KeyNekretnine.Domain.Adverts.Advert", "Advert")
+                        .WithMany()
+                        .HasForeignKey("AdvertId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_advert_updates_adverts_advert_id");
+
+                    b.Navigation("Advert");
+                });
+
             modelBuilder.Entity("KeyNekretnine.Domain.Adverts.Advert", b =>
                 {
                     b.HasOne("KeyNekretnine.Domain.Agents.Agent", null)
@@ -9320,7 +9377,7 @@ namespace KeyNekretnine.Infrastructure.Migrations
                                 .HasConstraintName("fk_adverts_adverts_id");
                         });
 
-                    b.OwnsOne("KeyNekretnine.Domain.Adverts.AdvertDescription", "Description", b1 =>
+                    b.OwnsOne("KeyNekretnine.Domain.ValueObjects.AdvertDescription", "Description", b1 =>
                         {
                             b1.Property<Guid>("AdvertId")
                                 .HasColumnType("uuid")
@@ -9562,6 +9619,14 @@ namespace KeyNekretnine.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_neighborhoods_cities_city_id");
+                });
+
+            modelBuilder.Entity("KeyNekretnine.Domain.TemporeryImageDatas.TemporeryImageData", b =>
+                {
+                    b.HasOne("KeyNekretnine.Domain.Adverts.Advert", null)
+                        .WithMany()
+                        .HasForeignKey("AdvertId")
+                        .HasConstraintName("fk_temporery_images_data_adverts_advert_id");
                 });
 
             modelBuilder.Entity("KeyNekretnine.Domain.UserAdvertFavorites.UserAdvertFavorite", b =>

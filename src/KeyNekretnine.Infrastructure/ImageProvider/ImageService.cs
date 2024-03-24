@@ -8,7 +8,16 @@ namespace KeyNekretnine.Infrastructure.ImageProvider;
 internal sealed class ImageService : IImageService
 {
     private readonly Cloudinary _cloudinary;
-    private static readonly RecyclableMemoryStreamManager manager = new RecyclableMemoryStreamManager(128 * 1024, 13 * 1024 * 1024);
+    private static readonly RecyclableMemoryStreamManager manager = new RecyclableMemoryStreamManager(new RecyclableMemoryStreamManager.Options()
+    {
+        BlockSize = 1024,
+        LargeBufferMultiple = 1024 * 1024,
+        MaximumBufferSize = 16 * 1024 * 1024,
+        GenerateCallStacks = true,
+        AggressiveBufferReturn = true,
+        MaximumLargePoolFreeBytes = 16 * 1024 * 1024 * 4,
+        MaximumSmallPoolFreeBytes = 100 * 1024,
+    });
 
     public ImageService()
     {

@@ -72,7 +72,7 @@ internal sealed class UpdateAgentHandler : ICommandHandler<UpdateAgentCommand>
             agent.UpdateImage(imageUrl.Value);
         }
 
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
     }

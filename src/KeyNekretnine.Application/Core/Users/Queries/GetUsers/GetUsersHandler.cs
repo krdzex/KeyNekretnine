@@ -52,7 +52,7 @@ internal sealed class GetUsersHandler : IQueryHandler<GetUsersQuery, Pagination<
             """;
 
         var username = !string.IsNullOrEmpty(request.Username) ?
-request.Username.Trim().ToLower() : string.Empty;
+            request.Username.Trim().ToLower() : string.Empty;
 
         var skip = (request.PageNumber - 1) * request.PageSize;
 

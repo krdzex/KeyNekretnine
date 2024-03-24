@@ -1,69 +1,64 @@
-﻿//using Contracts;
-//using Dapper;
-//using Microsoft.AspNetCore.Http;
-//using Microsoft.IO;
-//using Repository.RawQuery;
-//using System.Data;
+﻿
+using KeyNekretnine.Domain.TemporeryImageDatas;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IO;
 
-//namespace KeyNekretnine.Infrastructure.Repositories;
-//internal class TemporeryImageDataRepository : ITemporeryImageDataRepository
-//{
-//    private readonly DapperContext _dapperContext;
-//    private static readonly RecyclableMemoryStreamManager manager = new RecyclableMemoryStreamManager(128 * 1024, 13 * 1024 * 1024);
-//    public TemporeryImageDataRepository(DapperContext dapperContext)
-//    {
-//        _dapperContext = dapperContext;
-//    }
+namespace KeyNekretnine.Infrastructure.Repositories;
+internal class TemporeryImageDataRepository : ITemporeryImageDataRepository
+{
+    private static readonly RecyclableMemoryStreamManager manager = new RecyclableMemoryStreamManager(new RecyclableMemoryStreamManager.Options()
+    {
+        BlockSize = 1024,
+        LargeBufferMultiple = 1024 * 1024,
+        MaximumBufferSize = 16 * 1024 * 1024,
+        GenerateCallStacks = true,
+        AggressiveBufferReturn = true,
+        MaximumLargePoolFreeBytes = 16 * 1024 * 1024 * 4,
+        MaximumSmallPoolFreeBytes = 100 * 1024,
+    });
 
-//    public async Task<IEnumerable<byte[]>> Get(int advertId, bool isCover, CancellationToken cancellationToken)
-//    {
-//        using (var connection = _dapperContext.CreateConnection())
-//        {
-//            var query = TemporeryImageDataQuery.GetAdvertPurposesQuery;
+    public readonly ApplicationDbContext _dbContext;
+    public TemporeryImageDataRepository(ApplicationDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
 
-//            var param = new DynamicParameters();
-//            param.Add("@advert_id", advertId, DbType.Int32);
-//            param.Add("@is_cover", isCover, DbType.Boolean);
+    public async Task BulkUpdate(List<Guid> ids, Guid? advertId, CancellationToken cancellationToken)
+    {
+        await _dbContext.TemporeryImagesData
+            .Where(x => ids.Contains(x.Id))
+            .ExecuteUpdateAsync(x => x.SetProperty(
+                x => x.AdvertId, advertId), cancellationToken: cancellationToken);
+    }
 
-//            var imagesData = await connection.QueryAsync<byte[]>(query, param);
-//            return imagesData;
-//        }
-//    }
+    public async Task<TemporeryImageData?> GetById(Guid id, CancellationToken cancellationToken)
+    {
+        var img = await _dbContext.TemporeryImagesData.Where(x => x.Id == id).FirstOrDefaultAsync();
 
-//    public async Task DeleteAll(int advertId, CancellationToken cancellationToken)
-//    {
-//        using (var connection = _dapperContext.CreateConnection())
-//        {
-//            var query = TemporeryImageDataQuery.DeleteTemporeryImageDataQuery;
+        return img;
+    }
 
-//            var param = new DynamicParameters();
-//            param.Add("@advert_id", advertId);
+    public async Task<Guid> Insert(IFormFile image, DateTime dateTime, CancellationToken cancellationToken)
+    {
 
-//            await connection.ExecuteAsync(query, param);
-//        }
-//    }
+        using var memoryStream = manager.GetStream("test");
 
-//    public async Task Insert(IFormFile image, int advertId, bool is_cover, CancellationToken cancellationToken)
-//    {
+        await image.CopyToAsync(memoryStream, cancellationToken);
+        memoryStream.Position = 0;
+        var buffer = new byte[memoryStream.Length];
+        await memoryStream.ReadAsync(buffer, 0, buffer.Length, cancellationToken);
 
-//        using (var memoryStream = manager.GetStream("test"))
-//        {
-//            await image.CopyToAsync(memoryStream);
-//            memoryStream.Position = 0;
-//            var buffer = new byte[memoryStream.Length];
-//            await memoryStream.ReadAsync(buffer, 0, buffer.Length);
+        var newImage = new TemporeryImageData
+        {
+            Id = Guid.NewGuid(),
+            ImageData = buffer,
+            IsCover = false,
+            CreatedDate = dateTime
+        };
 
-//            using (var connection = _dapperContext.CreateConnection())
-//            {
-//                var query = TemporeryImageDataQuery.InsertTemporeryImageDataQuery;
+        _dbContext.TemporeryImagesData.Add(newImage);
 
-//                var param = new DynamicParameters();
-//                param.Add("@image_data", buffer);
-//                param.Add("@advert_id", advertId, DbType.Int64);
-//                param.Add("@is_cover", is_cover, DbType.Boolean);
-
-//                await connection.ExecuteAsync(query, param);
-//            }
-//        }
-//    }
-//}
+        return newImage.Id;
+    }
+}

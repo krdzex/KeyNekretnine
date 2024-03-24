@@ -1,5 +1,4 @@
 ﻿using KeyNekretnine.Domain.Agencies;
-using KeyNekretnine.Domain.Shared;
 using KeyNekretnine.Domain.Users;
 using KeyNekretnine.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;

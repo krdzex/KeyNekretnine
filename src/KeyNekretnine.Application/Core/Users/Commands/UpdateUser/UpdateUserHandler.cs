@@ -55,7 +55,7 @@ internal sealed class UpdateUserHandler : ICommandHandler<UpdateUserCommand>
             user.UpdateImage(new ProfileImageUrl(imageUrl));
         }
 
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
     }

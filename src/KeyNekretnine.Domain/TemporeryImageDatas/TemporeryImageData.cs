@@ -1,9 +1,10 @@
-﻿using KeyNekretnine.Domain.Models;
+﻿using KeyNekretnine.Domain.Abstraction;
 
 namespace KeyNekretnine.Domain.TemporeryImageDatas;
-public class TemporeryImageData : EntityBase
+public class TemporeryImageData : Entity
 {
-    public Guid AdvertId { get; set; }
+    public Guid? AdvertId { get; set; }
     public byte[] ImageData { get; set; }
     public bool IsCover { get; set; }
+    public DateTime CreatedDate { get; set; }
 }

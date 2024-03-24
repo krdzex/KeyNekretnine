@@ -3,7 +3,6 @@ using KeyNekretnine.Application.Abstraction.Image;
 using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Agencies;
-using KeyNekretnine.Domain.Shared;
 using KeyNekretnine.Domain.ValueObjects;
 
 namespace KeyNekretnine.Application.Core.Agencies.Commands.UpdateAgency;
@@ -77,7 +76,7 @@ internal sealed class UpdateAgencyHandler : ICommandHandler<UpdateAgencyCommand>
             agency.UpdateImage(imageUrl.Value);
         }
 
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
 

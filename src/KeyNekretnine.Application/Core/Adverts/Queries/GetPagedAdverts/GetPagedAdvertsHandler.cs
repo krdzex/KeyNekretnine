@@ -78,7 +78,15 @@ internal sealed class GetPagedAdvertsHandler : IQueryHandler<GetPagedAdvertsQuer
             {urgentFilter}
             {underConstructionFilter}
             {furnishedFilter}
-            ORDER BY {orderBy} OFFSET @skip FETCH NEXT @take ROWS ONLY;
+            ORDER BY 
+            CASE 
+                WHEN is_premium = 'true' AND agent_id IS NOT NULL THEN 1
+                WHEN agent_id IS NOT NULL THEN 2
+                WHEN is_premium = 'true' THEN 3
+                ELSE 4
+            END,
+            {orderBy} 
+            OFFSET @skip FETCH NEXT @take ROWS ONLY;
             """;
 
         var skip = (request.PageNumber - 1) * request.PageSize;

@@ -27,7 +27,7 @@ internal sealed class BanUserHandler : ICommandHandler<BanUserCommand>
         }
         user.Ban(_dateTimeProvider.Now.AddDays(Convert.ToDouble(request.NoOfDays)));
 
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
     }

@@ -1,4 +1,4 @@
-﻿namespace KeyNekretnine.Domain.Shared;
+﻿namespace KeyNekretnine.Domain.ValueObjects;
 public record Email
 {
     public const int MaxLength = 100;

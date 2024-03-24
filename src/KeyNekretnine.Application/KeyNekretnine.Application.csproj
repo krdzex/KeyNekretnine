@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -25,11 +25,11 @@
     <None Remove="Validators\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.0.151" />
-    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.7.1" />
-    <PackageReference Include="MediatR" Version="12.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Features" Version="7.0.10" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
+    <PackageReference Include="Dapper" Version="2.1.28" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.0" />
+    <PackageReference Include="MediatR" Version="12.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Features" Version="8.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   <ItemGroup>
@@ -46,6 +46,11 @@
     <Compile Include="Core\Adverts\Commands\ApproveAdvert\AdvertApprovedDomainEventHandler.cs" />
     <Compile Include="Core\Adverts\Commands\ApproveAdvert\ApproveAdvertCommand.cs" />
     <Compile Include="Core\Adverts\Commands\ApproveAdvert\ApproveAdvertHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\ApproveBasicUpdate\ApproveBasicUpdateCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\ApproveBasicUpdate\ApproveBasicUpdateHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\CreateAdvert\CreateAdvertCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\CreateAdvert\CreateAdvertHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\CreateAdvert\CreateAdvertRequest.cs" />
     <Compile Include="Core\Adverts\Commands\MakeAdvertFavorite\MakeAdvertFavoriteCommand.cs" />
     <Compile Include="Core\Adverts\Commands\MakeAdvertFavorite\MakeAdvertFavoriteHandler.cs" />
     <Compile Include="Core\Adverts\Commands\MakeAdvertPremium\MakeAdvertPremiumCommand.cs" />
@@ -63,11 +68,17 @@
     <Compile Include="Core\Adverts\Commands\ReportAdvert\ReportAdvertHandler.cs" />
     <Compile Include="Core\Adverts\Commands\SendEmailToOwner\SendEmailToOwnerCommand.cs" />
     <Compile Include="Core\Adverts\Commands\SendEmailToOwner\SendEmailToOwnerHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\UpdateAdvertBasic\AdvertBasicUpdateRequest.cs" />
+    <Compile Include="Core\Adverts\Commands\UpdateAdvertBasic\UpdateAdvertBasicCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\UpdateAdvertBasic\UpdateAdvertBasicHandler.cs" />
     <Compile Include="Core\Adverts\Commands\UpdateAdvertLocation\UpdateAdvertLocationCommand.cs" />
     <Compile Include="Core\Adverts\Commands\UpdateAdvertLocation\UpdateAdvertLocationHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\UploadAdvertImage\CreateAdvertImageHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\UploadAdvertImage\CreateAdvertImageCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\UploadAdvertImage\CreateAdvertImageResponse.cs" />
   </ItemGroup>
   <ItemGroup>
-	 <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Validators\" />

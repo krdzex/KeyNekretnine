@@ -71,7 +71,7 @@ internal sealed class CreateAgentHandler : ICommandHandler<CreateAgentCommand>
 
         _agentRepository.Add(agent);
 
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
     }

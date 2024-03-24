@@ -3,6 +3,7 @@ using KeyNekretnine.Application.Exceptions;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.AdvertFeatures;
 using KeyNekretnine.Domain.Adverts;
+using KeyNekretnine.Domain.AdvertUpdates;
 using KeyNekretnine.Domain.Cities;
 using KeyNekretnine.Domain.Images;
 using KeyNekretnine.Domain.Neighborhoods;
@@ -42,6 +43,7 @@ public sealed class ApplicationDbContext : IdentityDbContext<User>, IUnitOfWork
     public DbSet<RejectReason> RejectReasons { get; set; }
     public DbSet<UserAdvertReport> UserAdvertReports { get; set; }
     public DbSet<AdvertFeature> AdvertFeatures { get; set; }
+    public DbSet<AdvertUpdate> AdvertUpdates { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

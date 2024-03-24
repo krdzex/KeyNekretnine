@@ -14,8 +14,9 @@ public class AdvertFeatureConfiguration : IEntityTypeConfiguration<AdvertFeature
 
         builder.Property(x => x.Name).IsRequired().HasMaxLength(200);
 
+
         builder.HasOne<Advert>()
-            .WithMany()
+            .WithMany(advert => advert.AdvertFeatures)
             .HasForeignKey(feature => feature.AdvertId);
     }
 }

@@ -1,5 +1,7 @@
 ﻿using KeyNekretnine.Application.Core.Adverts.Commands.ActivateAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.ApproveAdvert;
+using KeyNekretnine.Application.Core.Adverts.Commands.ApproveBasicUpdate;
+using KeyNekretnine.Application.Core.Adverts.Commands.CreateAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.MakeAdvertFavorite;
 using KeyNekretnine.Application.Core.Adverts.Commands.MakeAdvertPremium;
 using KeyNekretnine.Application.Core.Adverts.Commands.PauseAdvert;
@@ -8,12 +10,16 @@ using KeyNekretnine.Application.Core.Adverts.Commands.RemoveAdvertFromFavorite;
 using KeyNekretnine.Application.Core.Adverts.Commands.RemoveAdvertPremium;
 using KeyNekretnine.Application.Core.Adverts.Commands.ReportAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.SendEmailToOwner;
+using KeyNekretnine.Application.Core.Adverts.Commands.UpdateAdvertBasic;
 using KeyNekretnine.Application.Core.Adverts.Commands.UpdateAdvertLocation;
+using KeyNekretnine.Application.Core.Adverts.Commands.UploadAdvertImage;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertByReferenceId;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertForAdminByReferenceId;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertFromMapByReferenceId;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertsCompare;
+using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertUpdates;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAllAdvertCoordinates;
+using KeyNekretnine.Application.Core.Adverts.Queries.GetBasicUpdate;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetFavoriteAdverts;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetFilteredAdvertCoordinates;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetIsAdvertFavorite;
@@ -412,4 +418,75 @@ public class AdvertController : ControllerBase
         return response.IsSuccess ? NoContent() : BadRequest(response.Error);
     }
 
+
+    [Authorize]
+    [HttpPut("{referenceId}/basic-informations")]
+    public async Task<IActionResult> UpdateBasicInformations([FromBody] AdvertBasicUpdateRequest request, string referenceId, CancellationToken cancellationToken)
+    {
+        var command = new UpdateAdvertBasicCommand(referenceId, request);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
+    [Authorize(Roles = "Administrator")]
+    [HttpGet("updates")]
+    public async Task<IActionResult> GetAdvertUpdates([FromQuery] AdvertUpdatesPaginationParameters request, string referenceId, CancellationToken cancellationToken)
+    {
+        var query = new GetAdvertUpdatesQuery(
+            request.OrderBy,
+            request.PageNumber,
+            request.PageSize,
+            request.UpdateType,
+            request.ReferenceId);
+
+        var response = await _sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
+    }
+
+    [Authorize(Roles = "Administrator")]
+    [HttpGet("basic-update/{updateId}")]
+    public async Task<IActionResult> GetBasicUpdate(Guid updateId, CancellationToken cancellationToken)
+    {
+        var query = new GetBasicUpdateQuery(updateId);
+
+        var response = await _sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
+    }
+
+    [Authorize(Roles = "Administrator")]
+    [HttpPut("basic-update/{updateId}/approve")]
+    public async Task<IActionResult> ApproveBasicUpdate(Guid updateId, CancellationToken cancellationToken)
+    {
+        var command = new ApproveBasicUpdateCommand(updateId);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
+    [Authorize]
+    [HttpPost("upload-image")]
+    public async Task<IActionResult> UploadImage(IFormFile image, CancellationToken cancellationToken)
+    {
+        var command = new CreateAdvertImageCommand(image);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
+    }
+
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> Create(CreateAdvertRequest request, CancellationToken cancellationToken)
+    {
+        var command = new CreateAdvertCommand(request);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
 }

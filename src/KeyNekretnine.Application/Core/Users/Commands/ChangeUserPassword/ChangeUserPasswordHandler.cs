@@ -41,7 +41,7 @@ internal sealed class ChangeUserPasswordHandler : ICommandHandler<ChangeUserPass
 
             throw new AuthenticationException(errors);
         }
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
     }

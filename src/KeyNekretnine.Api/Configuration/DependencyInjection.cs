@@ -1,6 +1,6 @@
 ﻿using System.Threading.RateLimiting;
 
-namespace KeyNekretnine.Configuration;
+namespace KeyNekretnine.Api.Configuration;
 public static class DependencyInjection
 {
     public static IServiceCollection AddApi(this IServiceCollection services)

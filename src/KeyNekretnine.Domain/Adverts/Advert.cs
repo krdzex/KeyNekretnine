@@ -1,4 +1,5 @@
 ﻿using KeyNekretnine.Domain.Abstraction;
+using KeyNekretnine.Domain.AdvertFeatures;
 using KeyNekretnine.Domain.Adverts.Events;
 using KeyNekretnine.Domain.Agents;
 using KeyNekretnine.Domain.UserAdvertReports;
@@ -9,15 +10,65 @@ namespace KeyNekretnine.Domain.Adverts;
 public class Advert : Entity
 {
     private readonly List<UserAdvertReport> _reports = new();
+    private readonly List<AdvertFeature> _features = new();
 
-    public Advert()
-    : base()
+    public Advert(
+        Guid id,
+        double price,
+        AdvertDescription description,
+        int noOfBedrooms,
+        double floorSpace,
+        int noOfBathrooms,
+        bool hasTerrace,
+        bool hasGarage,
+        bool isFurnished,
+        bool hasWifi,
+        bool hasElevator,
+        int buildingFloor,
+        bool isUrgent,
+        bool isUnderConstruction,
+        bool isPremium,
+        int? yearOfBuildingCreated,
+        AdvertStatus status,
+        AdvertPurpose purpose,
+        AdvertType type,
+        int neighborhoodId,
+        Location location,
+        DateTime createdTime,
+        string? userId,
+        Guid? agentId,
+        string referenceId)
+    : base(id)
     {
+        Price = price;
+        Description = description;
+        NoOfBedrooms = noOfBedrooms;
+        FloorSpace = floorSpace;
+        NoOfBathrooms = noOfBathrooms;
+        HasTerrace = hasTerrace;
+        HasGarage = hasGarage;
+        IsFurnished = isFurnished;
+        HasWifi = hasWifi;
+        IsUrgent = isUrgent;
+        IsUnderConstruction = isUnderConstruction;
+        HasElevator = hasElevator;
+        BuildingFloor = buildingFloor;
+        IsPremium = isPremium;
+        YearOfBuildingCreated = yearOfBuildingCreated;
+        Status = status;
+        Purpose = purpose;
+        Type = type;
+        NeighborhoodId = neighborhoodId;
+        Location = location;
+        CreatedOnDate = createdTime;
+        UserId = userId;
+        AgentId = agentId;
+        ReferenceId = referenceId;
     }
 
-    //private Advert()
-    //{
-    //}
+    private Advert()
+    {
+    }
 
     public double Price { get; private set; }
 
@@ -75,6 +126,8 @@ public class Advert : Entity
     public DateTime? UpdatedOnDate { get; private set; }
 
     public IReadOnlyCollection<UserAdvertReport> UserAdvertReports => _reports;
+    public IReadOnlyCollection<AdvertFeature> AdvertFeatures => _features;
+
 
     //public List<TemporeryImageData> TemporeryImageDatas { get; set; }
     public string ReferenceId { get; private set; }
@@ -218,5 +271,113 @@ public class Advert : Entity
         UpdatedOnDate = updatedOnDate;
 
         return Result.Success();
+    }
+
+    public Result ApplyBasicUpdate(
+        DateTime updatedOnDate,
+        int price,
+        int floorSpace,
+        int noOfBedrooms,
+        int noOfBathrooms,
+        int type,
+        int purpose,
+        int yearOfBuildingCreated,
+        int buildingFloor,
+        bool hasGarage,
+        bool isFurnished,
+        bool hasWifi,
+        bool hasElevator,
+        bool isUrgent,
+        bool hasTerrace,
+        bool isUnderConstruction)
+    {
+        Price = price;
+        FloorSpace = floorSpace;
+        NoOfBedrooms = noOfBedrooms;
+        NoOfBathrooms = noOfBathrooms;
+        Type = (AdvertType)type;
+        Purpose = (AdvertPurpose)purpose;
+        YearOfBuildingCreated = yearOfBuildingCreated;
+        BuildingFloor = buildingFloor;
+        HasGarage = hasGarage;
+        HasElevator = hasElevator;
+        HasTerrace = hasTerrace;
+        HasWifi = hasWifi;
+        IsFurnished = isFurnished;
+        IsUrgent = isUrgent;
+        IsUnderConstruction = isUnderConstruction;
+        UpdatedOnDate = updatedOnDate;
+
+        return Result.Success();
+    }
+
+    public static Advert Create(
+        double price,
+        AdvertDescription description,
+        int noOfBedrooms,
+        double floorSpace,
+        int noOfBathrooms,
+        bool hasTerrace,
+        bool hasGarage,
+        bool isFurnished,
+        bool hasWifi,
+        bool hasElevator,
+        int buildingFloor,
+        bool isUrgent,
+        bool isUnderConstruction,
+        bool isPremium,
+        int? yearOfBuildingCreated,
+        AdvertStatus status,
+        AdvertPurpose purpose,
+        AdvertType type,
+        int neighborhoodId,
+        Location location,
+        DateTime createdTime,
+        string? userId,
+        Guid? agentId)
+    {
+        var referenceId = new Random().Next().ToString("x");
+
+        var advert = new Advert(
+            Guid.NewGuid(),
+            price,
+            description,
+            noOfBedrooms,
+            floorSpace,
+            noOfBathrooms,
+            hasTerrace,
+            hasGarage,
+            isFurnished,
+            hasWifi,
+            hasElevator,
+            buildingFloor,
+            isUrgent,
+            isUnderConstruction,
+            isPremium,
+            yearOfBuildingCreated,
+            status,
+            purpose,
+            type,
+            neighborhoodId,
+            location,
+            createdTime,
+            userId,
+            agentId,
+            referenceId);
+
+        return advert;
+    }
+
+    public void AddFeatures(List<string> features)
+    {
+        if (features.Count > 0)
+        {
+            var featuresForAdvert = features.Select(f => new AdvertFeature
+            {
+                Name = f,
+            });
+
+            _features.AddRange(featuresForAdvert);
+        }
     }
 }

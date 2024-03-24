@@ -1,6 +1,6 @@
+using KeyNekretnine.Api.Configuration;
 using KeyNekretnine.Api.Extensions;
 using KeyNekretnine.Application;
-using KeyNekretnine.Configuration;
 using KeyNekretnine.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
