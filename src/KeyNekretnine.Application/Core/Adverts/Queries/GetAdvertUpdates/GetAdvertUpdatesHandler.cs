@@ -44,7 +44,11 @@ internal sealed class GetAdvertUpdatesHandler : IQueryHandler<GetAdvertUpdatesQu
             	au.id,
                 au.type AS updateType,
                 a.reference_id AS referenceId,
-                au.created_on_date AS createdOnDate
+                au.created_on_date AS createdOnDate,
+                CASE
+                    WHEN au.approved_on_date IS NOT NULL OR au.rejected_on_date IS NOT NULL THEN TRUE
+                    ELSE FALSE
+                END AS isProcessed
             FROM advert_updates AS au
             INNER JOIN adverts AS a ON a.id = au.advert_id
             {whereClause}

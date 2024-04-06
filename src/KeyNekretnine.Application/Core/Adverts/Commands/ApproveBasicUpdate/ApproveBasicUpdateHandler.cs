@@ -2,7 +2,9 @@
 using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetBasicUpdate;
 using KeyNekretnine.Domain.Abstraction;
+using KeyNekretnine.Domain.Adverts;
 using KeyNekretnine.Domain.AdvertUpdates;
+using KeyNekretnine.Domain.ValueObjects;
 using Newtonsoft.Json;
 
 namespace KeyNekretnine.Application.Core.Adverts.Commands.ApproveBasicUpdate;
@@ -28,6 +30,7 @@ internal sealed class ApproveBasicUpdateHandler : ICommandHandler<ApproveBasicUp
 
         if (update is null)
         {
+            return Result.Failure(AdvertErrors.BasicUpdateNotFound);
         }
 
         var newValues = JsonConvert.DeserializeObject<BasicAdvertInformations>(update.Content)!;
@@ -48,11 +51,12 @@ internal sealed class ApproveBasicUpdateHandler : ICommandHandler<ApproveBasicUp
             newValues.HasElevator,
             newValues.IsUrgent,
             newValues.HasTerrace,
-            newValues.IsUnderConstruction);
+            newValues.IsUnderConstruction,
+            AdvertDescription.Create(newValues.DescriptionSr, newValues.DescriptionEn));
 
         if (approveResult.IsFailure)
         {
-
+            return approveResult;
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);

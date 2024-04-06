@@ -1,16 +1,22 @@
 ﻿using KeyNekretnine.Application.Core.Adverts.Commands.ActivateAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.ApproveAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.ApproveBasicUpdate;
+using KeyNekretnine.Application.Core.Adverts.Commands.ApproveFeaturesUpdate;
+using KeyNekretnine.Application.Core.Adverts.Commands.ApproveLocationUpdate;
 using KeyNekretnine.Application.Core.Adverts.Commands.CreateAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.MakeAdvertFavorite;
 using KeyNekretnine.Application.Core.Adverts.Commands.MakeAdvertPremium;
 using KeyNekretnine.Application.Core.Adverts.Commands.PauseAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.RejectAdvert;
+using KeyNekretnine.Application.Core.Adverts.Commands.RejectBasicUpdate;
+using KeyNekretnine.Application.Core.Adverts.Commands.RejectFeaturesUpdate;
+using KeyNekretnine.Application.Core.Adverts.Commands.RejectLocationUpdate;
 using KeyNekretnine.Application.Core.Adverts.Commands.RemoveAdvertFromFavorite;
 using KeyNekretnine.Application.Core.Adverts.Commands.RemoveAdvertPremium;
 using KeyNekretnine.Application.Core.Adverts.Commands.ReportAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.SendEmailToOwner;
 using KeyNekretnine.Application.Core.Adverts.Commands.UpdateAdvertBasic;
+using KeyNekretnine.Application.Core.Adverts.Commands.UpdateAdvertFeatures;
 using KeyNekretnine.Application.Core.Adverts.Commands.UpdateAdvertLocation;
 using KeyNekretnine.Application.Core.Adverts.Commands.UploadAdvertImage;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertByReferenceId;
@@ -21,8 +27,10 @@ using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertUpdates;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAllAdvertCoordinates;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetBasicUpdate;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetFavoriteAdverts;
+using KeyNekretnine.Application.Core.Adverts.Queries.GetFeaturesUpdate;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetFilteredAdvertCoordinates;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetIsAdvertFavorite;
+using KeyNekretnine.Application.Core.Adverts.Queries.GetLocationUpdate;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetMyAdvertByReferenceId;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetPagedAdvertReportsForAdmin;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetPagedAdverts;
@@ -276,28 +284,6 @@ public class AdvertController : ControllerBase
         return response.IsSuccess ? NoContent() : BadRequest(response.Error);
     }
 
-    [HttpPut("{referenceId}/location")]
-    [Authorize]
-    //[ServiceFilter(typeof(BanUserChack))]
-    public async Task<IActionResult> UpdateLocation([FromBody] UpdateAdvertLocationRequest request, string referenceId, CancellationToken cancellationToken)
-    {
-        var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
-        var isAgency = bool.Parse(User.Claims.FirstOrDefault(q => q.Type == "isAgency").Value);
-
-        var command = new UpdateAdvertLocationCommand(
-            referenceId,
-            userId,
-            request.Latitude,
-            request.Longitude,
-            request.Address,
-            request.NeighborhoodId,
-            isAgency);
-
-        var response = await _sender.Send(command, cancellationToken);
-
-        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
-    }
-
     [Authorize]
     [HttpPost("{referenceId}/report")]
     //[ServiceFilter(typeof(BanUserChack))]
@@ -430,6 +416,28 @@ public class AdvertController : ControllerBase
         return response.IsSuccess ? NoContent() : BadRequest(response.Error);
     }
 
+    [Authorize]
+    [HttpPut("{referenceId}/location")]
+    public async Task<IActionResult> UpdateLocation([FromBody] UpdateAdvertLocationRequest request, string referenceId, CancellationToken cancellationToken)
+    {
+        var command = new UpdateAdvertLocationCommand(referenceId, request);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
+    [Authorize]
+    [HttpPut("{referenceId}/features")]
+    public async Task<IActionResult> UpdateLocation([FromBody] UpdateAdvertFeaturesRequest request, string referenceId, CancellationToken cancellationToken)
+    {
+        var command = new UpdateAdvertFeaturesCommand(referenceId, request);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
     [Authorize(Roles = "Administrator")]
     [HttpGet("updates")]
     public async Task<IActionResult> GetAdvertUpdates([FromQuery] AdvertUpdatesPaginationParameters request, string referenceId, CancellationToken cancellationToken)
@@ -458,10 +466,87 @@ public class AdvertController : ControllerBase
     }
 
     [Authorize(Roles = "Administrator")]
+    [HttpGet("location/{updateId}")]
+    public async Task<IActionResult> GetLocationUpdate(Guid updateId, CancellationToken cancellationToken)
+    {
+        var query = new GetLocationUpdateQuery(updateId);
+
+        var response = await _sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
+    }
+
+    [Authorize(Roles = "Administrator")]
+    [HttpGet("features/{updateId}")]
+    public async Task<IActionResult> GetFeaturesUpdate(Guid updateId, CancellationToken cancellationToken)
+    {
+        var query = new GetFeaturesUpdateQuery(updateId);
+
+        var response = await _sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
+    }
+
+    [Authorize(Roles = "Administrator")]
     [HttpPut("basic-update/{updateId}/approve")]
     public async Task<IActionResult> ApproveBasicUpdate(Guid updateId, CancellationToken cancellationToken)
     {
         var command = new ApproveBasicUpdateCommand(updateId);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
+    [Authorize(Roles = "Administrator")]
+    [HttpPut("features/{updateId}/approve")]
+    public async Task<IActionResult> ApproveFeaturesUpdate(Guid updateId, CancellationToken cancellationToken)
+    {
+        var command = new ApproveFeaturesUpdateCommand(updateId);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
+    [Authorize(Roles = "Administrator")]
+    [HttpPut("features/{updateId}/reject")]
+    public async Task<IActionResult> RejectFeaturesUpdate(Guid updateId, CancellationToken cancellationToken)
+    {
+        var command = new RejectFeaturesUpdateCommand(updateId);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
+    [Authorize(Roles = "Administrator")]
+    [HttpPut("location/{updateId}/approve")]
+    public async Task<IActionResult> ApproveLocationUpdate(Guid updateId, CancellationToken cancellationToken)
+    {
+        var command = new ApproveLocationUpdateCommand(updateId);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
+    [Authorize(Roles = "Administrator")]
+    [HttpPut("basic-update/{updateId}/reject")]
+    public async Task<IActionResult> RejectBasicUpdate(Guid updateId, CancellationToken cancellationToken)
+    {
+        var command = new RejectBasicUpdateCommand(updateId);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
+    [Authorize(Roles = "Administrator")]
+    [HttpPut("location/{updateId}/reject")]
+    public async Task<IActionResult> RejectLocationUpdate(Guid updateId, CancellationToken cancellationToken)
+    {
+        var command = new RejectLocationUpdateCommand(updateId);
 
         var response = await _sender.Send(command, cancellationToken);
 

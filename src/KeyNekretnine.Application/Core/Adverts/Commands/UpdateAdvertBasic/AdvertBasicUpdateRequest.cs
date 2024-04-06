@@ -1,5 +1,7 @@
 ﻿namespace KeyNekretnine.Application.Core.Adverts.Commands.UpdateAdvertBasic;
 public record AdvertBasicUpdateRequest(
+    string DescriptionSr,
+    string DescriptionEn,
     int Price,
     int FloorSpace,
     int NoOfBedrooms,

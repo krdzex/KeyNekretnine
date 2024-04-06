@@ -3,6 +3,7 @@ using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Adverts;
+using KeyNekretnine.Domain.AdvertUpdates;
 using Newtonsoft.Json;
 
 namespace KeyNekretnine.Application.Core.Adverts.Queries.GetBasicUpdate;
@@ -19,10 +20,12 @@ internal sealed class GetBasicUpdateHandler : IQueryHandler<GetBasicUpdateQuery,
     public async Task<Result<BasicUpdateResponse>> Handle(GetBasicUpdateQuery request, CancellationToken cancellationToken)
     {
         using var connection = _sqlConnectionFactory.CreateConnection();
-
+        var updateType = (int)UpdateTypes.BasicInformations;
         const string sql = """
             SELECT
-                a.id,
+                au.id,
+                au.approved_on_date AS approvedOnDate,
+                au.rejected_on_date AS rejectedOnDate,
                 a.price AS price,
                 a.floor_space AS floorSpace,
                 a.no_of_bedrooms AS noOfBedrooms,
@@ -41,26 +44,26 @@ internal sealed class GetBasicUpdateHandler : IQueryHandler<GetBasicUpdateQuery,
                 au.content
             FROM advert_updates AS au
             INNER JOIN adverts AS a ON a.id = au.advert_id
-            WHERE au.id = @UpdateId
+            WHERE au.id = @UpdateId and au.type = @updateType
             """;
 
         var updateResult = await connection.QueryAsync<BasicUpdateResponse, BasicAdvertInformations, string, BasicUpdateResponse>(
             sql,
-            (update, test, newValue) =>
+            (update, currentValues, newValue) =>
             {
-                update.CurrentValues = test;
+                update.CurrentValues = currentValues;
                 update.NewValues = JsonConvert.DeserializeObject<BasicAdvertInformations>(newValue)!;
                 return update;
 
-            }, new { request.UpdateId }, splitOn: "price,content");
+            }, new { request.UpdateId, updateType }, splitOn: "price,content");
 
-        var singleUpdate = updateResult.FirstOrDefault();
+        var basicUpdate = updateResult.FirstOrDefault();
 
-        if (singleUpdate is null)
+        if (basicUpdate is null)
         {
             return Result.Failure<BasicUpdateResponse>(AdvertErrors.BasicUpdateNotFound);
         }
 
-        return singleUpdate;
+        return basicUpdate;
     }
 }

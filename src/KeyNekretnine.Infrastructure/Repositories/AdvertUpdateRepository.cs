@@ -12,27 +12,34 @@ internal sealed class AdvertUpdateRepository : Repository<AdvertUpdate>, IAdvert
     public async Task<AdvertUpdate?> GetByIdWithAdvert(Guid UpdateId, UpdateTypes UpdateType, CancellationToken cancellationToken)
     {
         return await DbContext.Set<AdvertUpdate>()
+            .Where(au => au.Id == UpdateId && au.Type == UpdateType)
             .Include(au => au.Advert)
-            .Where(au => au.Id == UpdateId && au.Type == UpdateType && au.ApprovedOnDate == null && au.RejectedOnDate == null)
             .FirstOrDefaultAsync(cancellationToken);
     }
 
     public async Task<bool> CanAddUpdate(Guid AdvertId, UpdateTypes UpdateType)
     {
-        var updatesForTypeAndReferenceId = await DbContext.Set<AdvertUpdate>().Where(au => au.AdvertId == AdvertId && au.Type == UpdateType).ToListAsync();
+        var update = await DbContext.Set<AdvertUpdate>()
+            .Where(au => au.AdvertId == AdvertId
+                && au.Type == UpdateType
+                && au.ApprovedOnDate == null
+                && au.RejectedOnDate == null)
+            .FirstOrDefaultAsync();
 
-        if (!updatesForTypeAndReferenceId.Any())
+        if (update is null)
         {
             return true;
         }
 
-        var updatesWithNullDates = updatesForTypeAndReferenceId.Where(au => au.ApprovedOnDate == null && au.RejectedOnDate == null);
+        return false;
+    }
 
-        if (updatesWithNullDates.Any())
-        {
-            return false;
-        }
-
-        return true;
+    public async Task<AdvertUpdate?> GetByIdWithAdvertAndFeatures(Guid UpdateId, UpdateTypes UpdateType, CancellationToken cancellationToken = default)
+    {
+        return await DbContext.Set<AdvertUpdate>()
+            .Where(au => au.Id == UpdateId && au.Type == UpdateType)
+            .Include(au => au.Advert)
+            .ThenInclude(a => a.AdvertFeatures)
+            .FirstOrDefaultAsync(cancellationToken);
     }
 }

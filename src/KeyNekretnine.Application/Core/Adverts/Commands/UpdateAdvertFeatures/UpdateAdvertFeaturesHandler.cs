@@ -7,9 +7,8 @@ using KeyNekretnine.Domain.AdvertUpdates;
 using KeyNekretnine.Domain.Agents;
 using Newtonsoft.Json;
 
-namespace KeyNekretnine.Application.Core.Adverts.Commands.UpdateAdvertBasic;
-
-internal sealed class UpdateAdvertBasicHandler : ICommandHandler<UpdateAdvertBasicCommand>
+namespace KeyNekretnine.Application.Core.Adverts.Commands.UpdateAdvertFeatures;
+internal sealed class UpdateAdvertFeaturesHandler : ICommandHandler<UpdateAdvertFeaturesCommand>
 {
     private readonly IAdvertRepository _advertRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
@@ -18,7 +17,7 @@ internal sealed class UpdateAdvertBasicHandler : ICommandHandler<UpdateAdvertBas
     private readonly IAdvertUpdateRepository _advertUpdateRepository;
     private readonly IUserContext _userContext;
 
-    public UpdateAdvertBasicHandler(
+    public UpdateAdvertFeaturesHandler(
         IAdvertRepository advertRepository,
         IDateTimeProvider dateTimeProvider,
         IUnitOfWork unitOfWork,
@@ -34,7 +33,7 @@ internal sealed class UpdateAdvertBasicHandler : ICommandHandler<UpdateAdvertBas
         _userContext = userContext;
     }
 
-    public async Task<Result> Handle(UpdateAdvertBasicCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(UpdateAdvertFeaturesCommand request, CancellationToken cancellationToken)
     {
         var advert = await _advertRepository.GetByReferenceIdAsync(request.ReferenceId, cancellationToken);
 
@@ -53,7 +52,7 @@ internal sealed class UpdateAdvertBasicHandler : ICommandHandler<UpdateAdvertBas
             return canUserEditResult;
         }
 
-        var canUserAddUpdate = await _advertUpdateRepository.CanAddUpdate(advert.Id, UpdateTypes.BasicInformations);
+        var canUserAddUpdate = await _advertUpdateRepository.CanAddUpdate(advert.Id, UpdateTypes.Features);
 
         if (!canUserAddUpdate)
         {
@@ -62,9 +61,9 @@ internal sealed class UpdateAdvertBasicHandler : ICommandHandler<UpdateAdvertBas
 
         var updateAdvert = AdvertUpdate.Create(
             advert.Id,
-            UpdateTypes.BasicInformations,
+            UpdateTypes.Features,
             _dateTimeProvider.Now,
-            JsonConvert.SerializeObject(request.BasicUpdateData));
+            JsonConvert.SerializeObject(request.FeaturesUpdateData));
 
         _advertUpdateRepository.Add(updateAdvert);
 

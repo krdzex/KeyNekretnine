@@ -5,4 +5,5 @@ public class AdvertForUpdateResponse
     public Guid Id { get; init; }
     public int UpdateType { get; init; }
     public DateTime CreatedOnDate { get; init; }
+    public bool IsProcessed { get; set; }
 }

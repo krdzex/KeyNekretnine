@@ -1,8 +1,11 @@
 ﻿namespace KeyNekretnine.Application.Core.Adverts.Queries.GetBasicUpdate;
 public class BasicUpdateResponse
 {
+    public Guid Id { get; set; }
     public BasicAdvertInformations CurrentValues { get; set; }
     public BasicAdvertInformations NewValues { get; set; }
+    public DateTime? ApprovedOnDate { get; set; }
+    public DateTime? RejectedOnDate { get; set; }
 }
 
 public class BasicAdvertInformations
@@ -22,4 +25,6 @@ public class BasicAdvertInformations
     public bool IsUrgent { get; set; }
     public bool HasTerrace { get; set; }
     public bool IsUnderConstruction { get; set; }
+    public string DescriptionEn { get; set; }
+    public string DescriptionSr { get; set; }
 }

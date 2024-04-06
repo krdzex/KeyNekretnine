@@ -1,9 +1,11 @@
-﻿using KeyNekretnine.Application.Abstraction.Clock;
+﻿using KeyNekretnine.Application.Abstraction.Authentication;
+using KeyNekretnine.Application.Abstraction.Clock;
 using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Adverts;
+using KeyNekretnine.Domain.AdvertUpdates;
 using KeyNekretnine.Domain.Agents;
-using KeyNekretnine.Domain.ValueObjects;
+using Newtonsoft.Json;
 
 namespace KeyNekretnine.Application.Core.Adverts.Commands.UpdateAdvertLocation;
 internal sealed class UpdateAdvertLocationHandler : ICommandHandler<UpdateAdvertLocationCommand>
@@ -12,17 +14,24 @@ internal sealed class UpdateAdvertLocationHandler : ICommandHandler<UpdateAdvert
     private readonly IUnitOfWork _unitOfWork;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IAgentRepository _agentRepository;
+    private readonly IUserContext _userContext;
+    private readonly IAdvertUpdateRepository _advertUpdateRepository;
+
 
     public UpdateAdvertLocationHandler(
         IAdvertRepository advertRepository,
         IUnitOfWork unitOfWork,
         IDateTimeProvider dateTimeProvider,
-        IAgentRepository agentRepository)
+        IAgentRepository agentRepository,
+        IUserContext userContext,
+        IAdvertUpdateRepository advertUpdateRepository)
     {
         _advertRepository = advertRepository;
         _unitOfWork = unitOfWork;
         _dateTimeProvider = dateTimeProvider;
         _agentRepository = agentRepository;
+        _userContext = userContext;
+        _advertUpdateRepository = advertUpdateRepository;
     }
 
     public async Task<Result> Handle(UpdateAdvertLocationCommand request, CancellationToken cancellationToken)
@@ -35,8 +44,8 @@ internal sealed class UpdateAdvertLocationHandler : ICommandHandler<UpdateAdvert
         }
 
         var canUserEditResult = await advert.CanCurrentUserUpdate(
-            request.IsAgency,
-            request.UserId,
+            _userContext.IsAgency,
+            _userContext.UserId,
             _agentRepository);
 
         if (canUserEditResult.IsFailure)
@@ -44,12 +53,20 @@ internal sealed class UpdateAdvertLocationHandler : ICommandHandler<UpdateAdvert
             return canUserEditResult;
         }
 
-        var location = Location.Create(request.Address, request.Latitude, request.Longitude);
+        var canUserAddUpdate = await _advertUpdateRepository.CanAddUpdate(advert.Id, UpdateTypes.Location);
 
-        advert.UpdateLocation(
+        if (!canUserAddUpdate)
+        {
+            return Result.Failure(AdvertErrors.LocationcUpdateAlredyExist);
+        }
+
+        var updateAdvert = AdvertUpdate.Create(
+            advert.Id,
+            UpdateTypes.Location,
             _dateTimeProvider.Now,
-            location,
-            request.NeighborhoodId ?? advert.NeighborhoodId);
+            JsonConvert.SerializeObject(request.LocationUpdateRequest));
+
+        _advertUpdateRepository.Add(updateAdvert);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

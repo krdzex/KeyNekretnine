@@ -48,6 +48,10 @@
     <Compile Include="Core\Adverts\Commands\ApproveAdvert\ApproveAdvertHandler.cs" />
     <Compile Include="Core\Adverts\Commands\ApproveBasicUpdate\ApproveBasicUpdateCommand.cs" />
     <Compile Include="Core\Adverts\Commands\ApproveBasicUpdate\ApproveBasicUpdateHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\ApproveFeaturesUpdate\ApproveFeaturesUpdateCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\ApproveFeaturesUpdate\ApproveFeaturesUpdateHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\ApproveLocationUpdate\ApproveLocationUpdateCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\ApproveLocationUpdate\ApproveLocationUpdateHandler.cs" />
     <Compile Include="Core\Adverts\Commands\CreateAdvert\CreateAdvertCommand.cs" />
     <Compile Include="Core\Adverts\Commands\CreateAdvert\CreateAdvertHandler.cs" />
     <Compile Include="Core\Adverts\Commands\CreateAdvert\CreateAdvertRequest.cs" />
@@ -60,6 +64,12 @@
     <Compile Include="Core\Adverts\Commands\RejectAdvert\AdvertRejectedDomainEventHandler.cs" />
     <Compile Include="Core\Adverts\Commands\RejectAdvert\RejectAdvertCommand.cs" />
     <Compile Include="Core\Adverts\Commands\RejectAdvert\RejectAdvertHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\RejectBasicUpdate\RejectBasicUpdateCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\RejectBasicUpdate\RejectBasicUpdateHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\RejectFeaturesUpdate\RejectFeaturesUpdateCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\RejectFeaturesUpdate\RejectFeaturesUpdateHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\RejectLocationUpdate\RejectLocationUpdateCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\RejectLocationUpdate\RejectLocationUpdateHandler.cs" />
     <Compile Include="Core\Adverts\Commands\RemoveAdvertFromFavorite\RemoveAdvertFromFavoriteCommand.cs" />
     <Compile Include="Core\Adverts\Commands\RemoveAdvertFromFavorite\RemoveAdvertFromFavoriteHandler.cs" />
     <Compile Include="Core\Adverts\Commands\RemoveAdvertPremium\RemoveAdvertPremiumCommand.cs" />
@@ -71,8 +81,12 @@
     <Compile Include="Core\Adverts\Commands\UpdateAdvertBasic\AdvertBasicUpdateRequest.cs" />
     <Compile Include="Core\Adverts\Commands\UpdateAdvertBasic\UpdateAdvertBasicCommand.cs" />
     <Compile Include="Core\Adverts\Commands\UpdateAdvertBasic\UpdateAdvertBasicHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\UpdateAdvertFeatures\UpdateAdvertFeaturesCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\UpdateAdvertFeatures\UpdateAdvertFeaturesHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\UpdateAdvertFeatures\UpdateAdvertFeaturesRequest.cs" />
     <Compile Include="Core\Adverts\Commands\UpdateAdvertLocation\UpdateAdvertLocationCommand.cs" />
     <Compile Include="Core\Adverts\Commands\UpdateAdvertLocation\UpdateAdvertLocationHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\UpdateAdvertLocation\UpdateAdvertLocationRequest.cs" />
     <Compile Include="Core\Adverts\Commands\UploadAdvertImage\CreateAdvertImageHandler.cs" />
     <Compile Include="Core\Adverts\Commands\UploadAdvertImage\CreateAdvertImageCommand.cs" />
     <Compile Include="Core\Adverts\Commands\UploadAdvertImage\CreateAdvertImageResponse.cs" />

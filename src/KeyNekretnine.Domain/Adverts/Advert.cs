@@ -190,17 +190,6 @@ public class Advert : Entity
         return Result.Success();
     }
 
-    public void UpdateLocation(
-        DateTime updatedOnDate,
-        Location location,
-        int neighborhoodId
-        )
-    {
-        UpdatedOnDate = updatedOnDate;
-        Location = location;
-        NeighborhoodId = neighborhoodId;
-    }
-
     public Result Report(string userId, int rejectReasonId, DateTime timeNow)
     {
         if (_reports.Any(report => report.UserId == userId && report.RejectReasonId == rejectReasonId))
@@ -289,7 +278,8 @@ public class Advert : Entity
         bool hasElevator,
         bool isUrgent,
         bool hasTerrace,
-        bool isUnderConstruction)
+        bool isUnderConstruction,
+        AdvertDescription description)
     {
         Price = price;
         FloorSpace = floorSpace;
@@ -307,6 +297,20 @@ public class Advert : Entity
         IsUrgent = isUrgent;
         IsUnderConstruction = isUnderConstruction;
         UpdatedOnDate = updatedOnDate;
+        Description = description;
+
+        return Result.Success();
+    }
+
+    public Result ApplyLocationUpdate(
+    DateTime updatedOnDate,
+    Location location,
+    int neighborhoodId
+    )
+    {
+        UpdatedOnDate = updatedOnDate;
+        Location = location;
+        NeighborhoodId = neighborhoodId;
 
         return Result.Success();
     }
@@ -379,5 +383,22 @@ public class Advert : Entity
 
             _features.AddRange(featuresForAdvert);
         }
+    }
+
+    public void ApplyFeaturesUpdate(DateTime updatedOnDate, List<string> features)
+    {
+        _features.Clear();
+
+        if (features.Count > 0)
+        {
+            var featuresForAdvert = features.Select(f => new AdvertFeature
+            {
+                Name = f,
+            });
+
+            _features.AddRange(featuresForAdvert);
+        }
+
+        UpdatedOnDate = updatedOnDate;
     }
 }

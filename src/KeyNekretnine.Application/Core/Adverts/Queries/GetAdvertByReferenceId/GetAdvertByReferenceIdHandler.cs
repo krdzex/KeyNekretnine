@@ -92,6 +92,7 @@ internal sealed class GetAdvertByReferenceIdHandler : IQueryHandler<GetAdvertByR
                 {
                     advertDictionary.Add(advert.ReferenceId, advert);
                 }
+
                 advert.Description = description;
                 advert.Location = location;
                 advert.Creator = creator;
@@ -101,12 +102,12 @@ internal sealed class GetAdvertByReferenceIdHandler : IQueryHandler<GetAdvertByR
                     advert.Images.Add(new AdvertImageResponse { Url = advert.CoverImageUrl });
                 }
 
-                if (image is not null)
+                if (image is not null && !advert.Images.Any(i => i.Url == image.Url))
                 {
                     advert.Images.Add(image);
                 }
 
-                if (feature is not null)
+                if (feature is not null && !advert.Features.Any(i => i.Id == feature.Id))
                 {
                     advert.Features.Add(feature);
                 }
