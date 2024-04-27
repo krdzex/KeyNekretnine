@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http;
 namespace KeyNekretnine.Application.Core.Agents.Commands.UpdateAgent;
 public sealed record UpdateAgentCommand(
     Guid AgentId,
-    string UserId,
     string FirstName,
     string LastName,
     string Description,

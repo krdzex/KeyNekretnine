@@ -17,6 +17,9 @@ public class RejectReasonController : ControllerBase
         _sender = sender;
     }
 
+    /// <summary>
+    /// Retrieves a list of reject reasons.
+    /// </summary>
     [HttpGet]
     [AllowAnonymous]
     [ResponseCache(Duration = 120)]

@@ -1,4 +1,5 @@
-﻿using KeyNekretnine.Application.Abstraction.Clock;
+﻿using KeyNekretnine.Application.Abstraction.Authentication;
+using KeyNekretnine.Application.Abstraction.Clock;
 using KeyNekretnine.Application.Abstraction.Image;
 using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Domain.Abstraction;
@@ -15,23 +16,27 @@ internal sealed class UpdateUserHandler : ICommandHandler<UpdateUserCommand>
     private readonly IImageToDeleteRepository _imageToDeleteRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IUserContext _userContext;
+
     public UpdateUserHandler(
         UserManager<User> userManager,
         IImageService imageService,
         IImageToDeleteRepository imageToDeleteRepository,
         IDateTimeProvider dateTimeProvider,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        IUserContext userContext)
     {
         _userManager = userManager;
         _imageService = imageService;
         _imageToDeleteRepository = imageToDeleteRepository;
         _dateTimeProvider = dateTimeProvider;
         _unitOfWork = unitOfWork;
+        _userContext = userContext;
     }
 
     public async Task<Result> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userManager.FindByIdAsync(request.UserId);
+        var user = await _userManager.FindByIdAsync(_userContext.UserId);
 
         if (user is null)
         {

@@ -44,7 +44,7 @@ internal sealed class UpdateAdvertBasicHandler : ICommandHandler<UpdateAdvertBas
         }
 
         var canUserEditResult = await advert.CanCurrentUserUpdate(
-            _userContext.IsAgency,
+            _userContext.AgencyId is not null,
             _userContext.UserId,
             _agentRepository);
 

@@ -18,10 +18,9 @@ internal sealed class UserContext : IUserContext
             .GetUserId() ??
         throw new ApplicationException("User context is unavailable");
 
-    public bool IsAgency =>
+    public Guid? AgencyId =>
         _httpContextAccessor
             .HttpContext?
             .User
-            .GetIsAgency() ??
-        throw new ApplicationException("User context is unavailable");
+            .GetAgencyId();
 }

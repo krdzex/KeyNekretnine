@@ -9,7 +9,6 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
-using System.Security.Claims;
 
 namespace KeyNekretnine.Api.Controllers.Agency;
 
@@ -24,9 +23,12 @@ public class AgencyController : ControllerBase
         _sender = sender;
     }
 
+    /// <summary>
+    /// Creates a new agency.
+    /// </summary>
     [AllowAnonymous]
     [HttpPost]
-    public async Task<IActionResult> CreateAgency([FromBody] CreateAgencyRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Create([FromBody] CreateAgencyRequest request, CancellationToken cancellationToken)
     {
         var command = new CreateAgencyCommand(
             request.Email,
@@ -38,16 +40,16 @@ public class AgencyController : ControllerBase
         return result.IsSuccess ? NoContent() : BadRequest(result.Error);
     }
 
+    /// <summary>
+    /// Updates an existing agency by its Id.
+    /// </summary>
     [Authorize]
     [HttpPut("{agencyId}")]
-    public async Task<IActionResult> UpdateAgency([FromForm] UpdateAgencyRequest request, Guid agencyId, CancellationToken cancellationToken)
+    public async Task<IActionResult> Update([FromForm] UpdateAgencyRequest request, Guid agencyId, CancellationToken cancellationToken)
     {
-        var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
-
         var command = new UpdateAgencyCommand(
             agencyId,
             request.AgencyName,
-            userId,
             request.Address,
             request.Description,
             request.Email,
@@ -70,9 +72,12 @@ public class AgencyController : ControllerBase
         return response.IsSuccess ? Accepted() : BadRequest(response.Error);
     }
 
+    /// <summary>
+    /// Retrieves an agency by its ID.
+    /// </summary>
     [AllowAnonymous]
     [HttpGet("{agencyId}")]
-    public async Task<IActionResult> GetAgencyById(Guid agencyId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetById(Guid agencyId, CancellationToken cancellationToken)
     {
         var query = new GetAgencyByIdQuery(agencyId);
 
@@ -81,9 +86,12 @@ public class AgencyController : ControllerBase
         return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
     }
 
+    /// <summary>
+    /// Retrieves a paginated list of agencies based on specified filtering and pagination parameters.
+    /// </summary>
     [AllowAnonymous]
     [HttpGet]
-    public async Task<IActionResult> GetAgencies([FromQuery] AgencyPaginationParameters request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Get([FromQuery] AgencyPaginationParameters request, CancellationToken cancellationToken)
     {
         var query = new GetPagedAgenciesQuery(
             request.OrderBy,
@@ -96,6 +104,9 @@ public class AgencyController : ControllerBase
         return Ok(response.Value);
     }
 
+    /// <summary>
+    /// Retrieves advertisements associated with a specific agency by its ID.
+    /// </summary>
     [AllowAnonymous]
     [HttpGet("{agencyId}/adverts")]
     public async Task<IActionResult> GetAgencyAdverts(Guid agencyId, CancellationToken cancellationToken)
@@ -107,6 +118,9 @@ public class AgencyController : ControllerBase
         return Ok(response.Value);
     }
 
+    /// <summary>
+    /// Retrieves agents associated with a specific agency by its ID.
+    /// </summary>
     [AllowAnonymous]
     [HttpGet("{agencyId}/agents")]
     public async Task<IActionResult> GetAgents(Guid agencyId, CancellationToken cancellationToken)
@@ -118,6 +132,9 @@ public class AgencyController : ControllerBase
         return Ok(response.Value);
     }
 
+    /// <summary>
+    /// Retrieves the location of a specific agency by its ID.
+    /// </summary>
     [AllowAnonymous]
     [HttpGet("{agencyId}/location")]
     public async Task<IActionResult> GetAgencyLocation(Guid agencyId, CancellationToken cancellationToken)

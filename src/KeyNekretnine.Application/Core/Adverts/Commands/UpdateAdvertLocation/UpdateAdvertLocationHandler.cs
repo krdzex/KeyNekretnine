@@ -44,7 +44,7 @@ internal sealed class UpdateAdvertLocationHandler : ICommandHandler<UpdateAdvert
         }
 
         var canUserEditResult = await advert.CanCurrentUserUpdate(
-            _userContext.IsAgency,
+            _userContext.AgencyId is not null,
             _userContext.UserId,
             _agentRepository);
 

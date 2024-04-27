@@ -51,16 +51,40 @@ internal sealed class GetAdvertForAdminByReferenceIdHandler : IQueryHandler<GetA
             	n.name AS neighborhoodName,
             	c.slug AS citySlug,
             	c.name as cityName,
-                u.first_name AS firstName,
-                u.last_name AS lastName,
-                u.profile_image_url AS profileImageUrl,
+                CASE 
+                    WHEN a.user_id IS NOT NULL THEN u.first_name
+                    ELSE ag.first_name 
+                END AS firstName,
+                CASE 
+                    WHEN a.user_id IS NOT NULL THEN u.last_name 
+                    ELSE ag.last_name 
+                END AS lastName,
+                CASE 
+                    WHEN a.user_id IS NOT NULL THEN u.profile_image_url 
+                    ELSE ag.image_url 
+                END AS lastName,
+                CASE 
+                    WHEN a.user_id IS NOT NULL THEN u.email 
+                    ELSE ag.email 
+                END AS email,
+                CASE 
+                    WHEN a.user_id IS NOT NULL THEN u.phone_number 
+                    ELSE ag.phone_number 
+                END AS phoneNumber,
+                u.id as userId,
+                ag.id AS agentId,
+                agy.name AS agencyName,
+                agy.id AS agencyId,
+                agy.image_url AS AgencyImageUrl,
                 i.url,
                 f.id,
                 f.name
             FROM adverts AS a
             INNER JOIN neighborhoods AS n ON a.neighborhood_id = n.id
             INNER JOIN cities AS c ON n.city_id = c.id
-            INNER JOIN asp_net_users AS u ON u.id = a.user_id
+            LEFT JOIN asp_net_users AS u ON u.id = a.user_id
+            LEFT JOIN agents ag ON a.agent_id = ag.id
+            LEFT JOIN agencies agy ON ag.agency_id = agy.id
             LEFT JOIN images AS i ON i.advert_id = a.id
             LEFT JOIN advert_features AS f ON f.advert_id = a.id
             WHERE a.reference_id = @ReferenceId

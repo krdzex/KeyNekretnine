@@ -5,7 +5,6 @@ namespace KeyNekretnine.Application.Core.Agencies.Commands.UpdateAgency;
 public sealed record UpdateAgencyCommand(
     Guid AgencyId,
     string Name,
-    string UserId,
     string Address,
     string Description,
     string Email,

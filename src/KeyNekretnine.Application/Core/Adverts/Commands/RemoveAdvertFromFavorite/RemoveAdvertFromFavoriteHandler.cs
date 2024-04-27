@@ -1,4 +1,5 @@
-﻿using KeyNekretnine.Application.Abstraction.Clock;
+﻿using KeyNekretnine.Application.Abstraction.Authentication;
+using KeyNekretnine.Application.Abstraction.Clock;
 using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Adverts;
@@ -11,17 +12,20 @@ internal sealed class RemoveAdvertFromFavoriteHandler : ICommandHandler<RemoveAd
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IDateTimeProvider _timeProvider;
+    private readonly IUserContext _userContext;
 
     public RemoveAdvertFromFavoriteHandler(
         IAdvertRepository advertRepository,
         IUserRepository userRepository,
         IUnitOfWork unitOfWork,
-        IDateTimeProvider timeProvider)
+        IDateTimeProvider timeProvider,
+        IUserContext userContext)
     {
         _advertRepository = advertRepository;
         _userRepository = userRepository;
         _unitOfWork = unitOfWork;
         _timeProvider = timeProvider;
+        _userContext = userContext;
     }
 
     public async Task<Result> Handle(RemoveAdvertFromFavoriteCommand request, CancellationToken cancellationToken)
@@ -33,7 +37,7 @@ internal sealed class RemoveAdvertFromFavoriteHandler : ICommandHandler<RemoveAd
             return Result.Failure(AdvertErrors.NotFound);
         }
 
-        var user = await _userRepository.GetByIdWithFavoriteAdvertsAsync(request.UserId, cancellationToken);
+        var user = await _userRepository.GetByIdWithFavoriteAdvertsAsync(_userContext.UserId, cancellationToken);
 
         if (user is null)
         {

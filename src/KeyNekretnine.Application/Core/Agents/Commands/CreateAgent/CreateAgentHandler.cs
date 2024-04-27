@@ -1,4 +1,5 @@
-﻿using KeyNekretnine.Application.Abstraction.Clock;
+﻿using KeyNekretnine.Application.Abstraction.Authentication;
+using KeyNekretnine.Application.Abstraction.Clock;
 using KeyNekretnine.Application.Abstraction.Image;
 using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Domain.Abstraction;
@@ -15,18 +16,22 @@ internal sealed class CreateAgentHandler : ICommandHandler<CreateAgentCommand>
     private readonly IUnitOfWork _unitOfWork;
     private readonly IAgentRepository _agentRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly IUserContext _userContext;
+
     public CreateAgentHandler(
         IAgencyRepository agencyRepository,
         IImageService imageService,
         IUnitOfWork unitOfWork,
         IAgentRepository agentRepository,
-        IDateTimeProvider dateTimeProvider)
+        IDateTimeProvider dateTimeProvider,
+        IUserContext userContext)
     {
         _agencyRepository = agencyRepository;
         _imageService = imageService;
         _unitOfWork = unitOfWork;
         _agentRepository = agentRepository;
         _dateTimeProvider = dateTimeProvider;
+        _userContext = userContext;
     }
 
     public async Task<Result> Handle(CreateAgentCommand request, CancellationToken cancellationToken)
@@ -38,7 +43,7 @@ internal sealed class CreateAgentHandler : ICommandHandler<CreateAgentCommand>
             return Result.Failure<Unit>(AgencyErrors.NotFound);
         }
 
-        if (agency.UserId != request.UserId)
+        if (agency.UserId != _userContext.UserId)
         {
             return Result.Failure<Unit>(AgencyErrors.NotOwner);
 

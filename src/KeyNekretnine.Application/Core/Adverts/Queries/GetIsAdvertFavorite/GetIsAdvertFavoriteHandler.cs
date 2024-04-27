@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using KeyNekretnine.Application.Abstraction.Authentication;
 using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Domain.Abstraction;
@@ -7,10 +8,12 @@ namespace KeyNekretnine.Application.Core.Adverts.Queries.GetIsAdvertFavorite;
 internal sealed class GetIsAdvertFavoriteHandler : IQueryHandler<GetIsAdvertFavoriteQuery, bool>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;
+    private readonly IUserContext _userContext;
 
-    public GetIsAdvertFavoriteHandler(ISqlConnectionFactory sqlConnectionFactory)
+    public GetIsAdvertFavoriteHandler(ISqlConnectionFactory sqlConnectionFactory, IUserContext userContext)
     {
         _sqlConnectionFactory = sqlConnectionFactory;
+        _userContext = userContext;
     }
 
     public async Task<Result<bool>> Handle(GetIsAdvertFavoriteQuery request, CancellationToken cancellationToken)
@@ -26,7 +29,7 @@ internal sealed class GetIsAdvertFavoriteHandler : IQueryHandler<GetIsAdvertFavo
             AND f.user_id = @UserId;
             """;
 
-        var cmd = new CommandDefinition(sql, new { request.ReferenceId, request.UserId }, cancellationToken: cancellationToken);
+        var cmd = new CommandDefinition(sql, new { request.ReferenceId, _userContext.UserId }, cancellationToken: cancellationToken);
 
         var isFavorite = await connection.QueryFirstAsync<bool>(cmd);
 

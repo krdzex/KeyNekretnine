@@ -1,4 +1,5 @@
-﻿using KeyNekretnine.Application.Abstraction.Clock;
+﻿using KeyNekretnine.Application.Abstraction.Authentication;
+using KeyNekretnine.Application.Abstraction.Clock;
 using KeyNekretnine.Application.Abstraction.Image;
 using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Domain.Abstraction;
@@ -13,18 +14,22 @@ internal sealed class UpdateAgencyHandler : ICommandHandler<UpdateAgencyCommand>
     private readonly IImageService _imageService;
     private readonly IImageToDeleteRepository _imageToDeleteRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly IUserContext _userContext;
+
     public UpdateAgencyHandler(
         IAgencyRepository agencyRepository,
         IUnitOfWork unitOfWork,
         IImageService imageService,
         IImageToDeleteRepository imageToDeleteRepository,
-        IDateTimeProvider dateTimeProvider)
+        IDateTimeProvider dateTimeProvider,
+        IUserContext userContext)
     {
         _agencyRepository = agencyRepository;
         _unitOfWork = unitOfWork;
         _imageService = imageService;
         _imageToDeleteRepository = imageToDeleteRepository;
         _dateTimeProvider = dateTimeProvider;
+        _userContext = userContext;
     }
 
     public async Task<Result> Handle(UpdateAgencyCommand request, CancellationToken cancellationToken)
@@ -36,7 +41,7 @@ internal sealed class UpdateAgencyHandler : ICommandHandler<UpdateAgencyCommand>
             return Result.Failure(AgencyErrors.NotFound);
         }
 
-        if (agency.UserId != request.UserId)
+        if (agency.UserId != _userContext.UserId)
         {
             return Result.Failure(AgencyErrors.NotOwner);
 

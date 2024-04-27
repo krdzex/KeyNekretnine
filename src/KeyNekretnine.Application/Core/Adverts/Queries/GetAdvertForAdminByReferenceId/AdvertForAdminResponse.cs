@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 namespace KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertForAdminByReferenceId;
 public class AdvertForAdminResponse
 {
+    public int Price { get; set; }
     public string ReferenceId { get; set; }
     public double FloorSpace { get; set; }
     public int NoOfBedrooms { get; set; }

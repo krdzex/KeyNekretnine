@@ -6,7 +6,6 @@ public sealed record GetPagedMyAdvertsQuery(
     string OrderBy,
     int PageNumber,
     int PageSize,
-    string UserId,
     int? Type,
     int? Purpose,
     int? Status) : IQuery<Pagination<PagedMyAdvertResponse>>;

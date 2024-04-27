@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 namespace KeyNekretnine.Application.Core.Adverts.Queries.GetMyAdvertByReferenceId;
 public class MyAdvertResponse
 {
+    public int Price { get; set; }
     public string ReferenceId { get; set; }
     public double FloorSpace { get; set; }
     public int NoOfBedrooms { get; set; }
@@ -20,6 +21,7 @@ public class MyAdvertResponse
     public int Type { get; set; }
     public int Purpose { get; set; }
     public int Status { get; set; }
+    public bool PendingUpdates { get; set; }
 
     [JsonIgnore]
     public string CoverImageUrl { get; set; }

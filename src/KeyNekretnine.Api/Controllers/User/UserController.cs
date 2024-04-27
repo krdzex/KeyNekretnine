@@ -14,7 +14,6 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
-using System.Security.Claims;
 
 namespace KeyNekretnine.Api.Controllers.User;
 
@@ -29,24 +28,27 @@ public sealed class UserController : ControllerBase
         _sender = sender;
     }
 
+    /// <summary>
+    /// Retrieves the current logged-in user information.
+    /// </summary>
     [Authorize]
     //[ServiceFilter(typeof(BanUserChack))]
     [HttpGet("current")]
-    public async Task<IActionResult> CurrentUser(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetCurrent(CancellationToken cancellationToken)
     {
-        var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
-
-        var query = new GetCurrentUserQuery(userId);
+        var query = new GetCurrentUserQuery();
 
         var response = await _sender.Send(query, cancellationToken);
 
         return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
     }
 
-
+    /// <summary>
+    /// Retrieves a paginated list of users based on specified pagination parameters.
+    /// </summary>
     [Authorize(Roles = "Administrator")]
     [HttpGet]
-    public async Task<IActionResult> GetUsers([FromQuery] UserPaginationParameters userPaginationParameters, CancellationToken cancellationToken)
+    public async Task<IActionResult> Get([FromQuery] UserPaginationParameters userPaginationParameters, CancellationToken cancellationToken)
     {
         var query = new GetUsersQuery(
             userPaginationParameters.OrderBy,
@@ -60,9 +62,12 @@ public sealed class UserController : ControllerBase
         return Ok(response.Value);
     }
 
+    /// <summary>
+    /// Retrieves a user by their ID for admin.
+    /// </summary>
     [Authorize(Roles = "Administrator")]
     [HttpGet("{userId}")]
-    public async Task<IActionResult> GetUser(string userId, CancellationToken cancellationToken)
+    public async Task<IActionResult> Get(string userId, CancellationToken cancellationToken)
     {
         var query = new GetUserByIdQuery(userId);
 
@@ -71,6 +76,9 @@ public sealed class UserController : ControllerBase
         return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
     }
 
+    /// <summary>
+    /// Bans a user for a specified number of days for admin.
+    /// </summary>
     [Authorize(Roles = "Administrator")]
     //[ServiceFilter(typeof(BanUserChack))]
     [HttpPut("ban")]
@@ -83,6 +91,9 @@ public sealed class UserController : ControllerBase
         return response.IsSuccess ? NoContent() : NotFound(response.Error);
     }
 
+    /// <summary>
+    /// Unbans a user for admin.
+    /// </summary>
     [Authorize(Roles = "Administrator")]
     //[ServiceFilter(typeof(BanUserChack))]
     [HttpPut("unban")]
@@ -95,16 +106,15 @@ public sealed class UserController : ControllerBase
         return response.IsSuccess ? NoContent() : NotFound(response.Error);
     }
 
-
+    /// <summary>
+    /// Updates the current authenticated user's information.
+    /// </summary>
     [Authorize]
     //[ServiceFilter(typeof(BanUserChack))]
     [HttpPut]
     public async Task<IActionResult> UpdateUser([FromForm] UpdateUserRequest updateUserRequest, CancellationToken cancellationToken)
     {
-        var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
-
         var query = new UpdateUserCommand(
-            userId,
             updateUserRequest.About,
             updateUserRequest.FirstName,
             updateUserRequest.LastName,
@@ -115,20 +125,25 @@ public sealed class UserController : ControllerBase
         return response.IsSuccess ? Accepted() : BadRequest(response.Error);
     }
 
+    /// <summary>
+    /// Requests email confirmation for the current authenticated user.
+    /// </summary>
     [Authorize]
     [EnableRateLimiting("low-rating")]
     [HttpPost("request-email-confirmation")]
     public async Task<IActionResult> RequestEmailConfirmation(CancellationToken cancellationToken)
     {
-        var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
-
-        var command = new RequestEmailConfirmationCommand(userId);
+        var command = new RequestEmailConfirmationCommand();
 
         var result = await _sender.Send(command, cancellationToken);
 
         return result.IsSuccess ? NoContent() : BadRequest(result.Error);
     }
 
+    /// <summary>
+    /// Confirms the email of a user using the provided token and email address.
+    /// </summary>
+    [AllowAnonymous]
     [HttpGet("confirm-email")]
     public async Task<IActionResult> ConfirmEmail([FromQuery] string token, string email, CancellationToken cancellationToken)
     {
@@ -139,19 +154,23 @@ public sealed class UserController : ControllerBase
         return response.IsSuccess ? RedirectToPage("https://testing-ui.keynekretnine.me") : BadRequest(response.Error);
     }
 
+    /// <summary>
+    /// Changes the password for the current authenticated user.
+    /// </summary>
     [Authorize]
     [HttpPost("change-password")]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request, CancellationToken cancellationToken)
     {
-        var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
-
-        var command = new ChangeUserPasswordCommand(userId, request.CurrentPassword, request.NewPassword);
+        var command = new ChangeUserPasswordCommand(request.CurrentPassword, request.NewPassword);
 
         var response = await _sender.Send(command, cancellationToken);
 
         return response.IsSuccess ? NoContent() : BadRequest(response.Error);
     }
 
+    /// <summary>
+    /// Requests a password reset link for the provided email address.
+    /// </summary>
     [EnableRateLimiting("low-rating")]
     [HttpPost("request-password-forgot")]
     public async Task<IActionResult> RequestPasswordForgot([FromBody] PasswordForgotLinkRequest request, CancellationToken cancellationToken)
@@ -163,6 +182,9 @@ public sealed class UserController : ControllerBase
         return response.IsSuccess ? NoContent() : BadRequest(response.Error);
     }
 
+    /// <summary>
+    /// Resets the password for the provided email address using the token and new password.
+    /// </summary>
     [HttpPost("password-forgot")]
     public async Task<IActionResult> ForgotPassword([FromBody] PasswordForgotRequest request, CancellationToken cancellationToken)
     {
@@ -173,13 +195,14 @@ public sealed class UserController : ControllerBase
         return response.IsSuccess ? NoContent() : BadRequest(response.Error);
     }
 
+    /// <summary>
+    /// Retrieves information about the current  authenticated user.
+    /// </summary>
     [Authorize]
     [HttpGet("about")]
     public async Task<IActionResult> AboutUser(CancellationToken cancellationToken)
     {
-        var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
-
-        var query = new GetAboutUserQuery(userId);
+        var query = new GetAboutUserQuery();
 
         var response = await _sender.Send(query, cancellationToken);
 

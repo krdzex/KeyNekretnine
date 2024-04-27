@@ -1,4 +1,5 @@
-﻿using KeyNekretnine.Application.Abstraction.Clock;
+﻿using KeyNekretnine.Application.Abstraction.Authentication;
+using KeyNekretnine.Application.Abstraction.Clock;
 using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Adverts;
@@ -11,17 +12,20 @@ internal sealed class ActivateAdvertHandler : ICommandHandler<ActivateAdvertComm
     private readonly IUnitOfWork _unitOfWork;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IAgentRepository _agentRepository;
+    private readonly IUserContext _userContext;
 
     public ActivateAdvertHandler(
         IAdvertRepository advertRepository,
         IUnitOfWork unitOfWork,
         IDateTimeProvider dateTimeProvider,
-        IAgentRepository agentRepository)
+        IAgentRepository agentRepository,
+        IUserContext userContext)
     {
         _advertRepository = advertRepository;
         _unitOfWork = unitOfWork;
         _dateTimeProvider = dateTimeProvider;
         _agentRepository = agentRepository;
+        _userContext = userContext;
     }
 
     public async Task<Result> Handle(ActivateAdvertCommand request, CancellationToken cancellationToken)
@@ -34,8 +38,8 @@ internal sealed class ActivateAdvertHandler : ICommandHandler<ActivateAdvertComm
         }
 
         var canUserEditResult = await advert.CanCurrentUserUpdate(
-            request.IsAgency,
-            request.UserId,
+            _userContext.AgencyId is not null,
+            _userContext.UserId,
             _agentRepository);
 
         if (canUserEditResult.IsFailure)

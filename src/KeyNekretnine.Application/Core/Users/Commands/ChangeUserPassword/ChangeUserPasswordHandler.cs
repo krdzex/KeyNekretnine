@@ -1,4 +1,5 @@
-﻿using KeyNekretnine.Application.Abstraction.Messaging;
+﻿using KeyNekretnine.Application.Abstraction.Authentication;
+using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Application.Exceptions;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Users;
@@ -9,15 +10,21 @@ internal sealed class ChangeUserPasswordHandler : ICommandHandler<ChangeUserPass
 {
     private readonly UserManager<User> _userManager;
     private readonly IUnitOfWork _unitOfWork;
-    public ChangeUserPasswordHandler(UserManager<User> userManager, IUnitOfWork unitOfWork)
+    private readonly IUserContext _userContext;
+
+    public ChangeUserPasswordHandler(
+        UserManager<User> userManager,
+        IUnitOfWork unitOfWork,
+        IUserContext userContext)
     {
         _userManager = userManager;
         _unitOfWork = unitOfWork;
+        _userContext = userContext;
     }
 
     public async Task<Result> Handle(ChangeUserPasswordCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userManager.FindByIdAsync(request.UserId);
+        var user = await _userManager.FindByIdAsync(_userContext.UserId);
 
         if (user is null)
         {

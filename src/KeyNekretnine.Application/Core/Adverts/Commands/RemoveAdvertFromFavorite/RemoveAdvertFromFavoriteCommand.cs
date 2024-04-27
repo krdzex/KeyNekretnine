@@ -1,4 +1,4 @@
 ﻿using KeyNekretnine.Application.Abstraction.Messaging;
 
 namespace KeyNekretnine.Application.Core.Adverts.Commands.RemoveAdvertFromFavorite;
-public sealed record RemoveAdvertFromFavoriteCommand(string ReferenceId, string UserId) : ICommand;
+public sealed record RemoveAdvertFromFavoriteCommand(string ReferenceId) : ICommand;

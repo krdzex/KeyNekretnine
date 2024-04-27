@@ -1,4 +1,4 @@
-﻿namespace KeyNekretnine.Application.Core.Neighborhoods.Queries.GetNeighborhoodsByCityId;
+﻿namespace KeyNekretnine.Application.Core.Neighborhoods.Queries.GetNeighborhoodsByCitySlug;
 public sealed class NeighborhoodResponse
 {
     public int Id { get; set; }

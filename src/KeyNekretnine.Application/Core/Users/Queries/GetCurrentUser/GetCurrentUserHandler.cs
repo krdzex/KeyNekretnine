@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using KeyNekretnine.Application.Abstraction.Authentication;
 using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Domain.Abstraction;
@@ -8,10 +9,12 @@ namespace KeyNekretnine.Application.Core.Users.Queries.GetCurrentUser;
 internal sealed class GetCurrentUserHandler : IQueryHandler<GetCurrentUserQuery, CurrentUserResponse>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;
+    private readonly IUserContext _userContext;
 
-    public GetCurrentUserHandler(ISqlConnectionFactory sqlConnectionFactory)
+    public GetCurrentUserHandler(ISqlConnectionFactory sqlConnectionFactory, IUserContext userContext)
     {
         _sqlConnectionFactory = sqlConnectionFactory;
+        _userContext = userContext;
     }
 
     public async Task<Result<CurrentUserResponse>> Handle(GetCurrentUserQuery request, CancellationToken cancellationToken)
@@ -54,7 +57,7 @@ internal sealed class GetCurrentUserHandler : IQueryHandler<GetCurrentUserQuery,
 
                 return currentUser;
             },
-            new { request.UserId },
+            new { _userContext.UserId },
             splitOn: "name"
         );
 

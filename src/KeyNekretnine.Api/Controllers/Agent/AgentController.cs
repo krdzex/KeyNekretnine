@@ -7,7 +7,6 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
-using System.Security.Claims;
 
 namespace KeyNekretnine.Api.Controllers.Agent;
 
@@ -22,16 +21,16 @@ public class AgentController : ControllerBase
         _sender = sender;
     }
 
+    /// <summary>
+    /// Creates a new agent.
+    /// </summary>
     [Authorize]
     //[ServiceFilter(typeof(BanUserChack))]
     [HttpPost]
     public async Task<IActionResult> Create([FromForm] CreateAgentRequest createAgentRequest, CancellationToken cancellationToken)
     {
-        var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
-
         var command = new CreateAgentCommand(
             createAgentRequest.AgencyId,
-            userId,
             createAgentRequest.FirstName,
             createAgentRequest.LastName,
             createAgentRequest.Description,
@@ -49,9 +48,12 @@ public class AgentController : ControllerBase
         return response.IsSuccess ? NoContent() : BadRequest(response.Error);
     }
 
+    /// <summary>
+    /// Retrieves a paginated list of agents based on specified pagination parameters.
+    /// </summary>
     [AllowAnonymous]
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] AgentPaginationParameters agentPaginationParameters, CancellationToken cancellationToken)
+    public async Task<IActionResult> Get([FromQuery] AgentPaginationParameters agentPaginationParameters, CancellationToken cancellationToken)
     {
 
         var command = new GetPagedAgentsQuery(
@@ -64,6 +66,9 @@ public class AgentController : ControllerBase
         return Ok(response.Value);
     }
 
+    /// <summary>
+    /// Retrieves an agent by its ID.
+    /// </summary>
     [AllowAnonymous]
     [HttpGet("{agentId}")]
     public async Task<IActionResult> GetById(Guid agentId, CancellationToken cancellationToken)
@@ -75,6 +80,9 @@ public class AgentController : ControllerBase
         return response.IsSuccess ? Ok(response.Value) : NotFound(response.Error);
     }
 
+    /// <summary>
+    /// Retrieves advertisements associated with a specific agent by their agent ID.
+    /// </summary>
     [AllowAnonymous]
     [HttpGet("{agentId}/adverts")]
     public async Task<IActionResult> GetAgentAdverts(Guid agentId, CancellationToken cancellationToken)
@@ -86,16 +94,16 @@ public class AgentController : ControllerBase
         return Ok(response.Value);
     }
 
+    /// <summary>
+    /// Updates an existing agent by its Id.
+    /// </summary>
     [Authorize]
     //[ServiceFilter(typeof(BanUserChack))]
     [HttpPut("{agentId}")]
-    public async Task<IActionResult> UpdateAgent([FromForm] UpdateAgentRequest updateAgentRequest, Guid agentId, CancellationToken cancellationToken)
+    public async Task<IActionResult> Update([FromForm] UpdateAgentRequest updateAgentRequest, Guid agentId, CancellationToken cancellationToken)
     {
-        var userId = User.Claims.FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier).Value;
-
         var command = new UpdateAgentCommand(
             agentId,
-            userId,
             updateAgentRequest.FirstName,
             updateAgentRequest.LastName,
             updateAgentRequest.Description,

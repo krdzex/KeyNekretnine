@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http;
 namespace KeyNekretnine.Application.Core.Agents.Commands.CreateAgent;
 public sealed record CreateAgentCommand(
     Guid AgencyId,
-    string UserId,
     string FirstName,
     string LastName,
     string Description,

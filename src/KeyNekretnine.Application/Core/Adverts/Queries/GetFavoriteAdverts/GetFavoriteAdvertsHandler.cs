@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using KeyNekretnine.Application.Abstraction.Authentication;
 using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Application.Core.Shared;
@@ -10,10 +11,12 @@ namespace KeyNekretnine.Application.Core.Adverts.Queries.GetFavoriteAdverts;
 internal sealed class GetFavoriteAdvertsHandler : IQueryHandler<GetFavoriteAdvertsQuery, Pagination<FavoriteAdvertResponse>>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;
+    private readonly IUserContext _userContext;
 
-    public GetFavoriteAdvertsHandler(ISqlConnectionFactory sqlConnectionFactory)
+    public GetFavoriteAdvertsHandler(ISqlConnectionFactory sqlConnectionFactory, IUserContext userContext)
     {
         _sqlConnectionFactory = sqlConnectionFactory;
+        _userContext = userContext;
     }
 
     public async Task<Result<Pagination<FavoriteAdvertResponse>>> Handle(GetFavoriteAdvertsQuery request, CancellationToken cancellationToken)
@@ -53,7 +56,7 @@ internal sealed class GetFavoriteAdvertsHandler : IQueryHandler<GetFavoriteAdver
         var param = new DynamicParameters();
         param.Add("skip", skip, DbType.Int32);
         param.Add("take", request.PageSize, DbType.Int32);
-        param.Add("UserId", request.UserId, DbType.String);
+        param.Add("UserId", _userContext.UserId, DbType.String);
 
         using var connection = _sqlConnectionFactory.CreateConnection();
         var cmd = new CommandDefinition(sql, param, cancellationToken: cancellationToken);

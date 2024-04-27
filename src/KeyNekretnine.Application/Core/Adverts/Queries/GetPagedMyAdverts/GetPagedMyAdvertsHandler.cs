@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using KeyNekretnine.Application.Abstraction.Authentication;
 using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Application.Core.Shared;
@@ -10,10 +11,12 @@ namespace KeyNekretnine.Application.Core.Adverts.Queries.GetPagedMyAdverts;
 internal sealed class GetPagedMyAdvertsHandler : IQueryHandler<GetPagedMyAdvertsQuery, Pagination<PagedMyAdvertResponse>>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;
+    private readonly IUserContext _userContext;
 
-    public GetPagedMyAdvertsHandler(ISqlConnectionFactory sqlConnectionFactory)
+    public GetPagedMyAdvertsHandler(ISqlConnectionFactory sqlConnectionFactory, IUserContext userContext)
     {
         _sqlConnectionFactory = sqlConnectionFactory;
+        _userContext = userContext;
     }
 
     public async Task<Result<Pagination<PagedMyAdvertResponse>>> Handle(GetPagedMyAdvertsQuery request, CancellationToken cancellationToken)
@@ -23,12 +26,15 @@ internal sealed class GetPagedMyAdvertsHandler : IQueryHandler<GetPagedMyAdverts
         var purposeFilter = request.Purpose is not null ? $" AND a.purpose = {request.Purpose}" : "";
         var typeFilter = request.Type is not null ? $" AND a.type = {request.Type}" : "";
         var statusFilter = request.Status is not null && request.Status != 4 ? $" AND a.status = {request.Status}" : " AND a.status != 4";
+        var agencyJoin = _userContext.AgencyId is not null ? "INNER JOIN agents ag on a.agent_id = ag.id" : "";
+        var agencyFilter = _userContext.AgencyId is not null ? "WHERE ag.agency_id = @agencyId" : "WHERE a.user_id = @UserId";
 
         var sql = $"""
             SELECT
                 COUNT(a.id)
             FROM adverts AS a
-            WHERE a.user_id = @UserId
+            {agencyJoin}
+            {agencyFilter}
             {purposeFilter}
             {typeFilter}
             {statusFilter};
@@ -47,7 +53,8 @@ internal sealed class GetPagedMyAdvertsHandler : IQueryHandler<GetPagedMyAdverts
             FROM adverts AS a
             INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
             INNER JOIN cities c ON n.city_id = c.id
-            WHERE a.user_id = @UserId
+            {agencyJoin}
+            {agencyFilter}
             {purposeFilter}
             {typeFilter}
             {statusFilter}
@@ -59,7 +66,8 @@ internal sealed class GetPagedMyAdvertsHandler : IQueryHandler<GetPagedMyAdverts
         var param = new DynamicParameters();
         param.Add("skip", skip, DbType.Int32);
         param.Add("take", request.PageSize, DbType.Int32);
-        param.Add("UserId", request.UserId, DbType.String);
+        param.Add("userId", _userContext.UserId, DbType.String);
+        param.Add("agencyId", _userContext.AgencyId, DbType.Guid);
 
         using var connection = _sqlConnectionFactory.CreateConnection();
         var cmd = new CommandDefinition(sql, param, cancellationToken: cancellationToken);

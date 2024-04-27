@@ -17,6 +17,9 @@ public class LanguageController : ControllerBase
         _sender = sender;
     }
 
+    /// <summary>
+    /// Retrieves a list of all languages.
+    /// </summary>
     [HttpGet]
     [AllowAnonymous]
     [ResponseCache(Duration = 120)]

@@ -2,5 +2,5 @@
 public interface IUserContext
 {
     string UserId { get; }
-    bool IsAgency { get; }
+    Guid? AgencyId { get; }
 }

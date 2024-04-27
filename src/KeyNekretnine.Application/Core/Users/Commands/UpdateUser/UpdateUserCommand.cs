@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 
 namespace KeyNekretnine.Application.Core.Users.Commands.UpdateUser;
 public sealed record UpdateUserCommand(
-    string UserId,
     string About,
     string FirstName,
     string LastName,

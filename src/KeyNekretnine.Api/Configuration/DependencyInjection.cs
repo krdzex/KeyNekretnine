@@ -1,4 +1,6 @@
-﻿using System.Threading.RateLimiting;
+﻿using Microsoft.OpenApi.Models;
+using System.Reflection;
+using System.Threading.RateLimiting;
 
 namespace KeyNekretnine.Api.Configuration;
 public static class DependencyInjection
@@ -36,6 +38,29 @@ public static class DependencyInjection
                         Window = TimeSpan.FromHours(1)
                     }));
         });
+
+        var info = new OpenApiInfo()
+        {
+            Title = "Key Nekretnine API",
+            Version = "v1",
+            Description = "Official API of Key Nekretnine",
+            Contact = new OpenApiContact()
+            {
+                Name = "Key Nekretine",
+                Email = "your@email.com",
+            }
+
+        };
+
+        services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", info);
+
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            c.IncludeXmlComments(xmlPath);
+        });
+
 
         services.AddCors(options =>
             options.AddPolicy("Dev", builder =>

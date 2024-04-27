@@ -1,4 +1,5 @@
-﻿using KeyNekretnine.Application.Abstraction.Email;
+﻿using KeyNekretnine.Application.Abstraction.Authentication;
+using KeyNekretnine.Application.Abstraction.Email;
 using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Users;
@@ -11,17 +12,21 @@ internal sealed class RequestEmailConfirmationHandler : ICommandHandler<RequestE
 {
     private readonly UserManager<User> _userManager;
     private readonly IEmailService _emailService;
+    private readonly IUserContext _userContext;
+
     public RequestEmailConfirmationHandler(
         UserManager<User> userManager,
-        IEmailService emailService)
+        IEmailService emailService,
+        IUserContext userContext)
     {
         _userManager = userManager;
         _emailService = emailService;
+        _userContext = userContext;
     }
 
     public async Task<Result> Handle(RequestEmailConfirmationCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userManager.FindByIdAsync(request.UserId);
+        var user = await _userManager.FindByIdAsync(_userContext.UserId);
 
         if (user is null)
         {

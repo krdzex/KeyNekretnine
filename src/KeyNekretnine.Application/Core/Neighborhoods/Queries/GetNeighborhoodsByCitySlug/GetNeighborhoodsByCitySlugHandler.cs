@@ -3,17 +3,17 @@ using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Domain.Abstraction;
 
-namespace KeyNekretnine.Application.Core.Neighborhoods.Queries.GetNeighborhoodsByCityId;
-internal sealed class GetNeighborhoodsByCityIdHandler : IQueryHandler<GetNeighborhoodsByCityIdQuery, IReadOnlyList<NeighborhoodResponse>>
+namespace KeyNekretnine.Application.Core.Neighborhoods.Queries.GetNeighborhoodsByCitySlug;
+internal sealed class GetNeighborhoodsByCitySlugHandler : IQueryHandler<GetNeighborhoodsByCitySlugQuery, IReadOnlyList<NeighborhoodResponse>>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-    public GetNeighborhoodsByCityIdHandler(ISqlConnectionFactory sqlConnectionFactory)
+    public GetNeighborhoodsByCitySlugHandler(ISqlConnectionFactory sqlConnectionFactory)
     {
         _sqlConnectionFactory = sqlConnectionFactory;
     }
 
-    public async Task<Result<IReadOnlyList<NeighborhoodResponse>>> Handle(GetNeighborhoodsByCityIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<IReadOnlyList<NeighborhoodResponse>>> Handle(GetNeighborhoodsByCitySlugQuery request, CancellationToken cancellationToken)
     {
         using var connection = _sqlConnectionFactory.CreateConnection();
 

@@ -1,6 +1,7 @@
 ﻿namespace KeyNekretnine.Application.Core.Shared;
 public class AdvertCreatorResponse
 {
+    public string UserId { get; set; }
     public string FirstName { get; init; }
     public string LastName { get; init; }
     public string ProfileImageUrl { get; init; }

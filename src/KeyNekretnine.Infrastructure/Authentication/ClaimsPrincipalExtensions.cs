@@ -9,11 +9,16 @@ internal static class ClaimsPrincipalExtensions
                throw new ApplicationException("User identity is unavailable");
     }
 
-    public static bool GetIsAgency(this ClaimsPrincipal? principal)
+    public static Guid? GetAgencyId(this ClaimsPrincipal? principal)
     {
-        var result = principal?.FindFirstValue("isAgency") ??
+        var agencyIdStrig = principal?.FindFirstValue("AgencyId") ??
                throw new ApplicationException("User identity is unavailable");
 
-        return bool.Parse(result);
+        if (string.IsNullOrWhiteSpace(agencyIdStrig))
+        {
+            return null;
+        }
+
+        return new Guid(agencyIdStrig);
     }
 }

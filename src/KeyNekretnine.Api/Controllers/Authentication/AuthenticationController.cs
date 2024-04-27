@@ -18,6 +18,9 @@ public class AuthenticationController : ControllerBase
         _sender = sender;
     }
 
+    /// <summary>
+    /// Registers a new user with the provided email and password.
+    /// </summary>
     [AllowAnonymous]
     [HttpPost("registration")]
     public async Task<IActionResult> Register([FromBody] RegisterUserRequest registerUserRequest, CancellationToken cancellationToken)
@@ -31,6 +34,9 @@ public class AuthenticationController : ControllerBase
         return response.IsSuccess ? StatusCode(201) : BadRequest(response.Error);
     }
 
+    /// <summary>
+    /// Logs in a user with the provided email and password.
+    /// </summary>
     [AllowAnonymous]
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LogInUserRequest request, CancellationToken cancellationToken)
@@ -67,6 +73,9 @@ public class AuthenticationController : ControllerBase
         return Accepted();
     }
 
+    /// <summary>
+    /// Refreshes the access token using the refresh token stored in cookies.
+    /// </summary>
     [HttpPost("refresh")]
     [AllowAnonymous]
     public async Task<IActionResult> Refresh(CancellationToken cancellationToken)
@@ -106,6 +115,9 @@ public class AuthenticationController : ControllerBase
         return response.IsSuccess ? NoContent() : BadRequest(response.Error);
     }
 
+    /// <summary>
+    /// Logs in a user using Google authentication.
+    /// </summary>
     [AllowAnonymous]
     [HttpPost("google-login")]
     public async Task<IActionResult> GoogleLogin([FromBody] GoogleAuthRequest request, CancellationToken cancellationToken)
@@ -143,6 +155,9 @@ public class AuthenticationController : ControllerBase
         return response.IsSuccess ? NoContent() : BadRequest(response.Error);
     }
 
+    /// <summary>
+    /// Logs out the currently authenticated user.
+    /// </summary>
     [HttpPost("logout")]
     [Authorize]
     public IActionResult Logout()

@@ -1,5 +1,6 @@
 ﻿using KeyNekretnine.Application.Abstraction.Authentication;
 using KeyNekretnine.Application.Core.Auth.Commands.RefreshTokens;
+using KeyNekretnine.Domain.Agencies;
 using KeyNekretnine.Domain.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -13,13 +14,16 @@ internal sealed class JwtService : IJwtService
 {
     private readonly UserManager<User> _userManager;
     private readonly IConfiguration _configuration;
+    private readonly IAgencyRepository _agencyRepository;
 
     public JwtService(
         UserManager<User> userManager,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        IAgencyRepository agencyRepository)
     {
         _userManager = userManager;
         _configuration = configuration;
+        _agencyRepository = agencyRepository;
     }
 
     public async Task<string> CreateAccessToken(User user)
@@ -45,10 +49,19 @@ internal sealed class JwtService : IJwtService
 
     private async Task<List<Claim>> GetClaims(User user)
     {
+        var agencyId = string.Empty;
+
+        if (user.IsAgency)
+        {
+            var agency = await _agencyRepository.GetByOwnerIdAsync(user.Id);
+
+            agencyId = agency.Id.ToString();
+        }
+
         var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim("isAgency", user.IsAgency.ToString())
+                new Claim("AgencyId", agencyId)
             };
 
         var roles = await _userManager.GetRolesAsync(user);

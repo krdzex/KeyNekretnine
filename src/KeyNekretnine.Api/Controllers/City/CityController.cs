@@ -18,6 +18,9 @@ public class CityController : ControllerBase
         _sender = sender;
     }
 
+    /// <summary>
+    /// Retrieves a list of cities.
+    /// </summary>
     [HttpGet]
     [AllowAnonymous]
     [ResponseCache(Duration = 120)]
@@ -30,6 +33,9 @@ public class CityController : ControllerBase
         return Ok(response.Value);
     }
 
+    /// <summary>
+    /// Retrieves the most popular cities.
+    /// </summary>
     [HttpGet("popular")]
     [AllowAnonymous]
     [ResponseCache(Duration = 120)]

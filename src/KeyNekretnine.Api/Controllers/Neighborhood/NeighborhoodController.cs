@@ -1,4 +1,4 @@
-﻿using KeyNekretnine.Application.Core.Neighborhoods.Queries.GetNeighborhoodsByCityId;
+﻿using KeyNekretnine.Application.Core.Neighborhoods.Queries.GetNeighborhoodsByCitySlug;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,12 +17,15 @@ public class NeighborhoodController : ControllerBase
         _sender = sender;
     }
 
+    /// <summary>
+    /// Retrieves neighborhoods for a specific city by its slug.
+    /// </summary>
     [HttpGet("{citySlug}")]
     [AllowAnonymous]
     [ResponseCache(Duration = 120)]
     public async Task<IActionResult> Get(string citySlug, CancellationToken cancellationToken)
     {
-        var query = new GetNeighborhoodsByCityIdQuery(citySlug);
+        var query = new GetNeighborhoodsByCitySlugQuery(citySlug);
 
         var response = await _sender.Send(query, cancellationToken);
 

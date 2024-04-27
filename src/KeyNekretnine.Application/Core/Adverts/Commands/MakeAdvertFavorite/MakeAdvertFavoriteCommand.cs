@@ -1,4 +1,4 @@
 ﻿using KeyNekretnine.Application.Abstraction.Messaging;
 
 namespace KeyNekretnine.Application.Core.Adverts.Commands.MakeAdvertFavorite;
-public sealed record MakeAdvertFavoriteCommand(string ReferenceId, string UserId) : ICommand;
+public sealed record MakeAdvertFavoriteCommand(string ReferenceId) : ICommand;

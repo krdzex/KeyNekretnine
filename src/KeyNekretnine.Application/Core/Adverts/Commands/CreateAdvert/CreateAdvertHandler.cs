@@ -59,8 +59,8 @@ internal sealed class CreateAdvertHandler : ICommandHandler<CreateAdvertCommand>
                 request.AdvertForCreating.Latitude,
                 request.AdvertForCreating.Longitude),
             _dateTimeProvider.Now,
-            !_userContext.IsAgency ? _userContext.UserId : null,
-            _userContext.IsAgency ? request.AdvertForCreating.AgentId : null);
+            _userContext.AgencyId is null ? _userContext.UserId : null,
+            _userContext.AgencyId is not null ? request.AdvertForCreating.AgentId : null);
 
         advert.AddFeatures(request.AdvertForCreating.Features);
 

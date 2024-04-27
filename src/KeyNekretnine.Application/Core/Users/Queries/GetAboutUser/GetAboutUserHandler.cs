@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using KeyNekretnine.Application.Abstraction.Authentication;
 using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Domain.Abstraction;
@@ -8,10 +9,14 @@ namespace KeyNekretnine.Application.Core.Users.Queries.GetAboutUser;
 internal sealed class GetAboutUserHandler : IQueryHandler<GetAboutUserQuery, AboutUserResponse>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory;
+    private readonly IUserContext _userContext;
 
-    public GetAboutUserHandler(ISqlConnectionFactory sqlConnectionFactory)
+    public GetAboutUserHandler(
+        ISqlConnectionFactory sqlConnectionFactory,
+        IUserContext userContext)
     {
         _sqlConnectionFactory = sqlConnectionFactory;
+        _userContext = userContext;
     }
 
     public async Task<Result<AboutUserResponse>> Handle(GetAboutUserQuery request, CancellationToken cancellationToken)
@@ -40,7 +45,7 @@ internal sealed class GetAboutUserHandler : IQueryHandler<GetAboutUserQuery, Abo
             WHERE u.id = @UserId
             """;
 
-        var cmd = new CommandDefinition(sql, new { request.UserId }, cancellationToken: cancellationToken);
+        var cmd = new CommandDefinition(sql, new { _userContext.UserId }, cancellationToken: cancellationToken);
 
         var user = await connection.QueryFirstOrDefaultAsync<AboutUserResponse>(cmd);
 
