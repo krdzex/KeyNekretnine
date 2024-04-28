@@ -30,7 +30,7 @@ internal sealed class GetPagedAgenciesHandler : IQueryHandler<GetPagedAgenciesQu
                 a.id,
                 a.name,
                 a.created_date AS createdDate,
-                COUNT(ad.id) AS numberOfAdverts,
+                COUNT(CASE WHEN ad.status = 1 THEN ad.id END) AS numberOfAdverts,
                 a.email,
                 a.image_url AS image,
                 a.location_address AS address,
