@@ -18,7 +18,7 @@ internal sealed class GetFilteredAdvertCoordinatesHandler : IQueryHandler<GetFil
     public async Task<Result<IReadOnlyList<AdvertCoordinateResponse>>> Handle(GetFilteredAdvertCoordinatesQuery request, CancellationToken cancellationToken)
     {
         var purposeFilter = request.Purposes is not null ? $" AND a.purpose = ANY(@Purposes)" : "";
-        var typeFilter = request.Types is not null ? $" AND a.purpose = ANY(@Types)" : "";
+        var typeFilter = request.Types is not null ? $" AND a.type = ANY(@Types)" : "";
         var bedroomsFilter = request.NoOfBedrooms is not null ? $" AND a.no_of_bedrooms = ANY(@NoOfBedrooms)" : "";
         var bathroomsFilter = request.NoOfBathrooms is not null ? $" AND a.no_of_bathrooms = ANY(@NoOfBathrooms)" : "";
         var neighborhoodFilter = request.Neighborhoods is not null ? $" AND a.neighborhood_id = ANY(@Neighborhoods)" : "";
@@ -57,7 +57,6 @@ internal sealed class GetFilteredAdvertCoordinatesHandler : IQueryHandler<GetFil
         param.Add("types", request.Types);
         param.Add("purposes", request.Purposes);
         param.Add("noOfBedrooms", request.NoOfBedrooms);
-        param.Add("noOfBathrooms", request.NoOfBathrooms);
         param.Add("noOfBathrooms", request.NoOfBathrooms);
         param.Add("neighborhoods", request.Neighborhoods);
         param.Add("isUrgent", request.IsUrgent);

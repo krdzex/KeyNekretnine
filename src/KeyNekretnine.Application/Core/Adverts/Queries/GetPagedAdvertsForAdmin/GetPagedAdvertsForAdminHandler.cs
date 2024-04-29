@@ -22,7 +22,7 @@ internal sealed class GetPagedAdvertsForAdminHandler : IQueryHandler<GetPagedAdv
 
         var purposeFilter = request.Purpose is not null ? $" AND a.purpose = {request.Purpose}" : "";
         var typeFilter = request.Type is not null ? $" AND a.type = {request.Type}" : "";
-        var statusFilter = request.Status is not null ? $" AND a.status = {request.Status}" : "";
+        var statusFilter = request.Status is not null ? $" AND a.status = {request.Status}" : " AND a.status = <> 4";
 
         var sql = $"""
             SELECT
