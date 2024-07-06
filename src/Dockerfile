@@ -27,6 +27,6 @@ RUN dotnet publish "KeyNekretnine.Api.csproj" -c Release -o /app/publish /p:UseA
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-EXPOSE 8080
-ENV ASPNETCORE_URLS=http://+:8080
+EXPOSE 8081
+ENV ASPNETCORE_URLS=http://+:8081
 ENTRYPOINT ["dotnet", "KeyNekretnine.Api.dll"]
