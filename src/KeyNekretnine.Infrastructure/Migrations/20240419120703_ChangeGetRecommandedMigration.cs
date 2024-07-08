@@ -68,7 +68,7 @@ namespace KeyNekretnine.Infrastructure.Migrations
 					FROM adverts a
 					INNER JOIN neighborhoods AS n ON a.neighborhood_id = n.id
 					INNER JOIN cities AS c ON n.city_id = c.id
-					WHERE a.status = 1
+					WHERE a.status = 1 AND a.reference_id != input_reference_id
 					ORDER BY 
 						matching_points DESC, 
 						price ASC

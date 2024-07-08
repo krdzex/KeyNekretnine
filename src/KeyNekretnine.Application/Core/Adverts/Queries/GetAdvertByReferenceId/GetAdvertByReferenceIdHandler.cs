@@ -61,7 +61,7 @@ internal sealed class GetAdvertByReferenceIdHandler : IQueryHandler<GetAdvertByR
                 CASE 
                     WHEN a.user_id IS NOT NULL THEN u.profile_image_url 
                     ELSE ag.image_url 
-                END AS lastName,
+                END AS profileImageUrl,
                 CASE 
                     WHEN a.user_id IS NOT NULL THEN u.email 
                     ELSE ag.email 
