@@ -17,8 +17,8 @@ internal sealed class GetFilteredAdvertCoordinatesHandler : IQueryHandler<GetFil
 
     public async Task<Result<IReadOnlyList<AdvertCoordinateResponse>>> Handle(GetFilteredAdvertCoordinatesQuery request, CancellationToken cancellationToken)
     {
-        var purposeFilter = request.Purposes is not null ? $" AND a.purpose = ANY(@Purposes)" : "";
-        var typeFilter = request.Types is not null ? $" AND a.type = ANY(@Types)" : "";
+        var purposeFilter = request.Purpose is not null ? $" AND a.purpose = @Purpose" : "";
+        var typeFilter = request.Type is not null ? $" AND a.type = @Type" : "";
         var bedroomsFilter = request.NoOfBedrooms is not null ? $" AND a.no_of_bedrooms = ANY(@NoOfBedrooms)" : "";
         var bathroomsFilter = request.NoOfBathrooms is not null ? $" AND a.no_of_bathrooms = ANY(@NoOfBathrooms)" : "";
         var neighborhoodFilter = request.Neighborhoods is not null ? $" AND a.neighborhood_id = ANY(@Neighborhoods)" : "";
@@ -54,8 +54,8 @@ internal sealed class GetFilteredAdvertCoordinatesHandler : IQueryHandler<GetFil
         param.Add("maxPrice", request.MaxPrice, DbType.Int32);
         param.Add("minFloorSpace", request.MinFloorSpace, DbType.Int32);
         param.Add("maxFloorSpace", request.MaxFloorSpace, DbType.Int32);
-        param.Add("types", request.Types);
-        param.Add("purposes", request.Purposes);
+        param.Add("type", request.Type);
+        param.Add("purpose", request.Purpose);
         param.Add("noOfBedrooms", request.NoOfBedrooms);
         param.Add("noOfBathrooms", request.NoOfBathrooms);
         param.Add("neighborhoods", request.Neighborhoods);
