@@ -36,7 +36,6 @@ internal sealed class GetAdvertsCompareHandler : IQueryHandler<GetAdvertsCompare
             	a.created_on_date AS createdOnDate,
             	a.year_of_building_created AS yearOfBuildingCreated,
             	a.cover_image_url AS coverImageUrl,
-            	CONCAT(u.first_name,' ', u.last_name) AS creator,
             	a.is_urgent,
             	a.is_under_construction,
                 a.type,
@@ -51,7 +50,6 @@ internal sealed class GetAdvertsCompareHandler : IQueryHandler<GetAdvertsCompare
             FROM adverts a
             INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
             INNER JOIN cities c on n.city_id = c.id
-            INNER JOIN asp_net_users u ON a.user_id = u.id
             WHERE a.reference_id = ANY(@referenceIds)
             AND a.status = 1;
             """;

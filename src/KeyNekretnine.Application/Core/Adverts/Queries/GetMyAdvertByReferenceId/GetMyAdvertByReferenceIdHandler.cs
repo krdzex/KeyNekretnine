@@ -45,15 +45,15 @@ internal sealed class GetMyAdvertByReferenceIdHandler : IQueryHandler<GetMyAdver
             	a.cover_image_url AS coverImageUrl,
             	a.is_urgent AS isUrgent,
             	a.is_under_construction as isUnderConstruction,
+                CASE
+                    WHEN au IS NULL THEN 'false'
+                    ELSE 'true'
+                END AS pendingUpdates,
                 a.type,
                 a.purpose,
                 a.status,
                 a.description_sr AS sr,
             	a.description_en AS en,
-                CASE
-                    WHEN au IS NULL THEN 'false'
-                    ELSE 'true'
-                END AS pendingUpdates,
                 a.location_address AS address,
             	a.location_latitude AS latitude,
             	a.location_longitude AS longitude,

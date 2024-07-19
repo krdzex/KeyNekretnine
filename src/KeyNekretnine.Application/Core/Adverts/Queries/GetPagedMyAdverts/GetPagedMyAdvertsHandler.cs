@@ -42,6 +42,10 @@ internal sealed class GetPagedMyAdvertsHandler : IQueryHandler<GetPagedMyAdverts
             SELECT 
             	a.reference_id AS referenceId,
             	a.created_on_date AS createdOnDate,
+                CASE
+                    WHEN au IS NULL THEN 'false'
+                    ELSE 'true'
+                END AS pendingUpdates,
             	a.cover_image_url AS coverImageUrl,
             	CONCAT(c.name, ', ', n.name) AS cityAndNeighborhood,
             	a.status,
@@ -53,6 +57,7 @@ internal sealed class GetPagedMyAdvertsHandler : IQueryHandler<GetPagedMyAdverts
             FROM adverts AS a
             INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
             INNER JOIN cities c ON n.city_id = c.id
+            LEFT JOIN advert_updates AS au ON a.id = au.advert_id AND au.approved_on_date IS NULL AND au.rejected_on_date IS NULL
             {agencyJoin}
             {agencyFilter}
             {purposeFilter}
