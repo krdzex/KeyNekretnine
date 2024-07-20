@@ -29,7 +29,7 @@ internal sealed class GetUsersHandler : IQueryHandler<GetUsersQuery, Pagination<
         var sql = $"""
             SELECT COUNT(u.id)
             FROM asp_net_users AS u
-            WHERE (@username = '' OR LOWER(u.User_name) LIKE '%' || LOWER(@username) || '%')
+            WHERE (@username = '' OR LOWER(u.User_name) LIKE '%' || LOWER(@username) || '%') AND u.is_agency = 'false'
             {banFilter};
 
             SELECT
@@ -45,7 +45,7 @@ internal sealed class GetUsersHandler : IQueryHandler<GetUsersQuery, Pagination<
                 COUNT(a.id) AS numberOfAdverts
             FROM asp_net_users AS u
             LEFT JOIN adverts a ON a.user_id = u.id
-            WHERE (@username = '' OR LOWER(u.User_name) LIKE '%' || LOWER(@username) || '%')
+            WHERE (@username = '' OR LOWER(u.User_name) LIKE '%' || LOWER(@username) || '%') AND u.is_agency = 'false'
             {banFilter}
             GROUP BY u.id
             ORDER BY {orderBy} OFFSET @Skip FETCH NEXT @Take ROWS ONLY;

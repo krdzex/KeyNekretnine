@@ -17,6 +17,8 @@ public class AdvertForAdminResponse
     public bool IsFurnished { get; set; }
     public int YearOfBuildingCreated { get; set; }
     public bool IsUrgent { get; set; }
+    public bool IsPremium { get; set; }
+    public bool PendingUpdates { get; set; }
     public bool IsUnderConstruction { get; set; }
     public int Type { get; set; }
     public int Status { get; set; }

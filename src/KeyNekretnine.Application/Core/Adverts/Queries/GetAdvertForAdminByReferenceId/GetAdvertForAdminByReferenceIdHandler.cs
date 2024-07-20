@@ -39,6 +39,11 @@ internal sealed class GetAdvertForAdminByReferenceIdHandler : IQueryHandler<GetA
             	a.cover_image_url AS coverImageUrl,
             	a.is_urgent AS isUrgent,
             	a.is_under_construction as isUnderConstruction,
+                a.is_premium as isPremium,
+                CASE
+                    WHEN au IS NULL THEN 'false'
+                    ELSE 'true'
+                END AS pendingUpdates,
                 a.type,
                 a.purpose,
                 a.status,
@@ -87,6 +92,7 @@ internal sealed class GetAdvertForAdminByReferenceIdHandler : IQueryHandler<GetA
             LEFT JOIN agencies agy ON ag.agency_id = agy.id
             LEFT JOIN images AS i ON i.advert_id = a.id
             LEFT JOIN advert_features AS f ON f.advert_id = a.id
+            LEFT JOIN advert_updates AS au ON a.id = au.advert_id AND au.approved_on_date IS NULL AND au.rejected_on_date IS NULL
             WHERE a.reference_id = @ReferenceId
             AND a.status != 4;
             """;
