@@ -60,14 +60,6 @@ internal class UpdateAgencyCommandValidator :
             .Must(BeAValidUrl).WithMessage("Invalid URL")
             .MaximumLength(200).WithMessage("Max number of characters is 200");
 
-        //RuleFor(c => c.WorkStartTime)
-        //    .Must(BeAValidTime)
-        //    .WithMessage("Invalid time");
-
-        //RuleFor(c => c.WorkEndTime)
-        //    .Must(BeAValidTime)
-        //    .WithMessage("Invalid time");
-
         RuleFor(c => c.Image)
             .Must(image => image.Length <= MaxImageSizeInBytes).WithMessage("The image must not exceed 0.5MB in size.")
             .When(u => u.Image is not null);

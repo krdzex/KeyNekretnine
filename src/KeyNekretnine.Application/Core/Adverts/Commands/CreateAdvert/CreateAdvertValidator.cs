@@ -1,60 +1,86 @@
 ﻿using FluentValidation;
-using KeyNekretnine.Application.Core.Adverts.Commands.CreateAdvert;
 
-namespace KeyNekretnine.Application.Validators;
-public sealed class CreateAdvertCommandValidator : AbstractValidator<CreateAdvertCommand>
+namespace KeyNekretnine.Application.Core.Adverts.Commands.CreateAdvert;
+internal class CreateAdvertValidator :
+    AbstractValidator<CreateAdvertCommand>
 {
-    public CreateAdvertCommandValidator()
+    public CreateAdvertValidator()
     {
         RuleFor(x => x.AdvertForCreating.Price)
             .NotEmpty()
-            .WithMessage("Price is required")
+                .WithMessage("Price is required")
             .GreaterThanOrEqualTo(1)
-            .WithMessage("Price cant be lower then 1");
+                .WithMessage("Price cant be lower then 1");
+
+        RuleFor(x => x.AdvertForCreating.DescriptionSr)
+            .NotEmpty()
+                .WithMessage("Description is required");
+
+        RuleFor(x => x.AdvertForCreating.DescriptionSr)
+            .NotEmpty()
+                .WithMessage("Description is required");
 
         RuleFor(x => x.AdvertForCreating.HasWifi)
             .NotEmpty()
-            .WithMessage("Required field");
+                .WithMessage("Required field");
 
         RuleFor(x => x.AdvertForCreating.HasGarage)
             .NotEmpty()
-            .WithMessage("Required field");
+                .WithMessage("Required field");
+
+        RuleFor(x => x.AdvertForCreating.IsUnderConstruction)
+            .NotEmpty()
+                .WithMessage("Required field");
+
+        RuleFor(x => x.AdvertForCreating.Address)
+            .NotEmpty()
+                .WithMessage("Required field");
+
+        RuleFor(x => x.AdvertForCreating.IsUrgent)
+            .NotEmpty()
+                .WithMessage("Required field");
 
         RuleFor(x => x.AdvertForCreating.HasTerrace)
             .NotEmpty()
-            .WithMessage("Required field");
+                .WithMessage("Required field");
 
         RuleFor(x => x.AdvertForCreating.HasElevator)
             .NotEmpty()
-            .WithMessage("Required field");
+                .WithMessage("Required field");
 
         RuleFor(x => x.AdvertForCreating.FloorSpace)
             .NotEmpty()
-            .WithMessage("Floor space is required")
+                .WithMessage("Floor space is required")
             .GreaterThanOrEqualTo(1)
-            .WithMessage("Floor space cant be lower then 1");
+                .WithMessage("Floor space cant be lower then 1");
 
         RuleFor(x => x.AdvertForCreating.IsFurnished)
            .NotEmpty()
-           .WithMessage("Required field");
+                .WithMessage("Required field");
 
-        RuleFor(x => x.AdvertForCreating.AdvertPurposeId)
+        RuleFor(x => x.AdvertForCreating.Purpose)
             .NotEmpty()
-            .WithMessage("Advert purpose is required")
+                .WithMessage("Advert purpose is required")
             .Must(x => x > 0 && x < 4)
-            .WithMessage("Invalid advert purpose");
+                .WithMessage("Invalid advert purpose");
 
-        RuleFor(x => x.AdvertForCreating.AdvertTypeId)
+        RuleFor(x => x.AdvertForCreating.NeighborhoodId)
             .NotEmpty()
-            .WithMessage("Advert type is required")
+                .WithMessage("Neighborhood is required")
+            .Must(x => x > 0 && x < 1310)
+                .WithMessage("Invalid neighborhood");
+
+        RuleFor(x => x.AdvertForCreating.Type)
+            .NotEmpty()
+                .WithMessage("Advert type is required")
             .Must(x => x > 0 && x < 4)
-            .WithMessage("Invalid advert type");
+                .WithMessage("Invalid advert type");
 
         RuleFor(x => x.AdvertForCreating.NoOfBathrooms)
             .NotEmpty()
-            .WithMessage("Number of bathrooms is required")
+                .WithMessage("Number of bathrooms is required")
             .GreaterThanOrEqualTo(1)
-            .WithMessage("Number of bathrooms cant be lower then 1");
+                .WithMessage("Number of bathrooms cant be lower then 1");
 
         RuleFor(x => x.AdvertForCreating.NoOfBedrooms)
             .NotEmpty()
@@ -68,25 +94,9 @@ public sealed class CreateAdvertCommandValidator : AbstractValidator<CreateAdver
             .GreaterThanOrEqualTo(1)
                 .WithMessage("Building floor cant be lower then 1");
 
-        RuleFor(x => x.AdvertForCreating.CoverImage)
+        RuleFor(x => x.AdvertForCreating.CoverImageUrl)
             .NotEmpty()
             .WithMessage("Cover Image is required");
-
-        RuleFor(x => x.AdvertForCreating.ImageFiles)
-            .Custom((images, context) =>
-            {
-                if (images != null)
-                {
-                    if (images.Count > 12)
-                    {
-                        context.AddFailure("No more then 12 images");
-                    }
-                }
-                else
-                {
-                    context.AddFailure("At least one image is required");
-                }
-            });
 
         RuleFor(u => u.AdvertForCreating.Longitude)
             .Custom((longitude, context) =>
@@ -132,5 +142,15 @@ public sealed class CreateAdvertCommandValidator : AbstractValidator<CreateAdver
                     }
                 }
             });
+
+        RuleFor(x => x.AdvertForCreating.Features)
+            .Must(features => features == null || !features.Any(feature => string.IsNullOrWhiteSpace(feature)))
+            .WithMessage("Features list cannot contain empty strings if it is not empty.");
+
+        RuleFor(x => x.AdvertForCreating.ImageIds)
+            .NotEmpty()
+                .WithMessage("ImageIds list must contain at least one GUID.")
+            .Must(imageIds => imageIds.Count > 0 && imageIds.Count < 12)
+                .WithMessage("ImageIds list must contain between 1 and 11 GUIDs.");
     }
 }

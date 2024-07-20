@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -10,19 +10,16 @@
     <Compile Remove="Core\Users\Commands\MultipleUsersBan\**" />
     <Compile Remove="Core\Users\Commands\MultipleUsersUnban\**" />
     <Compile Remove="Queries\**" />
-    <Compile Remove="Validators\**" />
     <EmbeddedResource Remove="Core\Adverts\Commands\**" />
     <EmbeddedResource Remove="Core\Email\**" />
     <EmbeddedResource Remove="Core\Users\Commands\MultipleUsersBan\**" />
     <EmbeddedResource Remove="Core\Users\Commands\MultipleUsersUnban\**" />
     <EmbeddedResource Remove="Queries\**" />
-    <EmbeddedResource Remove="Validators\**" />
     <None Remove="Core\Adverts\Commands\**" />
     <None Remove="Core\Email\**" />
     <None Remove="Core\Users\Commands\MultipleUsersBan\**" />
     <None Remove="Core\Users\Commands\MultipleUsersUnban\**" />
     <None Remove="Queries\**" />
-    <None Remove="Validators\**" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.28" />
@@ -55,6 +52,7 @@
     <Compile Include="Core\Adverts\Commands\CreateAdvert\CreateAdvertCommand.cs" />
     <Compile Include="Core\Adverts\Commands\CreateAdvert\CreateAdvertHandler.cs" />
     <Compile Include="Core\Adverts\Commands\CreateAdvert\CreateAdvertRequest.cs" />
+    <Compile Include="Core\Adverts\Commands\CreateAdvert\CreateAdvertValidator.cs" />
     <Compile Include="Core\Adverts\Commands\MakeAdvertFavorite\MakeAdvertFavoriteCommand.cs" />
     <Compile Include="Core\Adverts\Commands\MakeAdvertFavorite\MakeAdvertFavoriteHandler.cs" />
     <Compile Include="Core\Adverts\Commands\MakeAdvertPremium\MakeAdvertPremiumCommand.cs" />
@@ -78,23 +76,23 @@
     <Compile Include="Core\Adverts\Commands\ReportAdvert\ReportAdvertHandler.cs" />
     <Compile Include="Core\Adverts\Commands\SendEmailToOwner\SendEmailToOwnerCommand.cs" />
     <Compile Include="Core\Adverts\Commands\SendEmailToOwner\SendEmailToOwnerHandler.cs" />
-    <Compile Include="Core\Adverts\Commands\UpdateAdvertBasic\AdvertBasicUpdateRequest.cs" />
+    <Compile Include="Core\Adverts\Commands\UpdateAdvertBasic\UpdateAdvertBasicRequest.cs" />
     <Compile Include="Core\Adverts\Commands\UpdateAdvertBasic\UpdateAdvertBasicCommand.cs" />
     <Compile Include="Core\Adverts\Commands\UpdateAdvertBasic\UpdateAdvertBasicHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\UpdateAdvertBasic\UpdateAdvertBasicValidator.cs" />
     <Compile Include="Core\Adverts\Commands\UpdateAdvertFeatures\UpdateAdvertFeaturesCommand.cs" />
     <Compile Include="Core\Adverts\Commands\UpdateAdvertFeatures\UpdateAdvertFeaturesHandler.cs" />
     <Compile Include="Core\Adverts\Commands\UpdateAdvertFeatures\UpdateAdvertFeaturesRequest.cs" />
     <Compile Include="Core\Adverts\Commands\UpdateAdvertLocation\UpdateAdvertLocationCommand.cs" />
     <Compile Include="Core\Adverts\Commands\UpdateAdvertLocation\UpdateAdvertLocationHandler.cs" />
     <Compile Include="Core\Adverts\Commands\UpdateAdvertLocation\UpdateAdvertLocationRequest.cs" />
+    <Compile Include="Core\Adverts\Commands\UpdateAdvertLocation\UpdateAdvertLocationValidator.cs" />
     <Compile Include="Core\Adverts\Commands\UploadAdvertImage\CreateAdvertImageHandler.cs" />
     <Compile Include="Core\Adverts\Commands\UploadAdvertImage\CreateAdvertImageCommand.cs" />
     <Compile Include="Core\Adverts\Commands\UploadAdvertImage\CreateAdvertImageResponse.cs" />
+    <Compile Include="Core\Adverts\Commands\UploadAdvertImage\CreateAdvertImageValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Validators\" />
   </ItemGroup>
 </Project>

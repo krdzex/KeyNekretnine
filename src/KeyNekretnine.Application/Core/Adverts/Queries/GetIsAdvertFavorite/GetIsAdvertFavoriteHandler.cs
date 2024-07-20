@@ -25,8 +25,7 @@ internal sealed class GetIsAdvertFavoriteHandler : IQueryHandler<GetIsAdvertFavo
                 COUNT(f.user_id) > 0 AS isFavorite
             FROM adverts AS a
             LEFT JOIN user_advert_favorites f ON a.id = f.advert_id
-            WHERE a.reference_id = @ReferenceId
-            AND f.user_id = @UserId;
+            WHERE a.reference_id = @ReferenceId AND a.status = 1 AND f.user_id = @UserId;
             """;
 
         var cmd = new CommandDefinition(sql, new { request.ReferenceId, _userContext.UserId }, cancellationToken: cancellationToken);

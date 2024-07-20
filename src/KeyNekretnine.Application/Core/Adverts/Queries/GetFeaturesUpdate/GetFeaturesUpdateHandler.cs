@@ -31,7 +31,7 @@ internal sealed class GetFeaturesUpdateHandler : IQueryHandler<GetFeaturesUpdate
                 au.content
             FROM advert_updates AS au
             INNER JOIN adverts AS a ON a.id = au.advert_id
-            INNER JOIN advert_features AS f ON f.advert_id = a.id
+            LEFT JOIN advert_features AS f ON f.advert_id = a.id
             WHERE au.id = @UpdateId AND au.type = @updateType
             """;
 
@@ -41,7 +41,11 @@ internal sealed class GetFeaturesUpdateHandler : IQueryHandler<GetFeaturesUpdate
             sql,
             (update, currentValues, newValue) =>
             {
-                currentValuesArray.Add(currentValues);
+                if (!string.IsNullOrEmpty(currentValues))
+                {
+                    currentValuesArray.Add(currentValues);
+                }
+
                 update.NewValues = JsonConvert.DeserializeObject<FeaturesInformations>(newValue)!;
                 return update;
 
@@ -54,7 +58,7 @@ internal sealed class GetFeaturesUpdateHandler : IQueryHandler<GetFeaturesUpdate
             return Result.Failure<FeaturesUpdateResponse>(AdvertErrors.FeaturesUpdateNotFound);
         }
 
-        featuresUpdate.CurrentValues = currentValuesArray;
+        featuresUpdate.CurrentValues.Features = currentValuesArray;
         return featuresUpdate;
     }
 }

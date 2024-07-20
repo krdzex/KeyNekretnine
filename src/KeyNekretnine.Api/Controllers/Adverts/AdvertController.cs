@@ -459,7 +459,7 @@ public class AdvertController : ControllerBase
     /// </summary>
     [Authorize]
     [HttpPut("{referenceId}/basic-informations")]
-    public async Task<IActionResult> UpdateBasicInformations([FromBody] AdvertBasicUpdateRequest request, string referenceId, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateBasicInformations([FromBody] UpdateAdvertBasicRequest request, string referenceId, CancellationToken cancellationToken)
     {
         var command = new UpdateAdvertBasicCommand(referenceId, request);
 

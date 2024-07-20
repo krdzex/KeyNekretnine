@@ -17,7 +17,6 @@ public record CreateAdvertRequest(
     int Purpose,
     double? Latitude,
     double? Longitude,
-    string Street,
     int NeighborhoodId,
     List<string> Features,
     bool IsUrgent,

@@ -47,7 +47,7 @@ internal sealed class GetFavoriteAdvertsHandler : IQueryHandler<GetFavoriteAdver
             LEFT JOIN user_advert_favorites AS ua ON a.id = ua.advert_id
             INNER JOIN neighborhoods n ON a.neighborhood_id = n.id
             INNER JOIN cities c ON n.city_id = c.id
-            WHERE ua.user_id = @UserId
+            WHERE ua.user_id = @UserId AND a.status = 1
             ORDER BY {orderBy} OFFSET @skip FETCH NEXT @take ROWS ONLY;
             """;
 
