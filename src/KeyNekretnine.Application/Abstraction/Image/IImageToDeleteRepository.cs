@@ -1,5 +1,5 @@
 ﻿namespace KeyNekretnine.Application.Abstraction.Image;
 public interface IImageToDeleteRepository
 {
-    void Add(string imageUrl, DateTime addedOnTime);
+    Task AddAsync(string imageUrl, DateTime addedOnTime, CancellationToken cancellationToken = default);
 }

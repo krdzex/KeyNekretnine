@@ -82,4 +82,8 @@ public static class AdvertErrors
     public static Error LocationUpdateRejected => new(
         "Advert.LocationUpdateRejected",
         "Location update is rejected");
+
+    public static Error NoEnoughImages => new(
+        "Advert.NoEnoughImages",
+        "You need to have at least 2 images");
 }

@@ -11,10 +11,10 @@ internal sealed class ImageToDeleteRepository : IImageToDeleteRepository
         _context = context;
     }
 
-    public void Add(string imageUrl, DateTime addedOnTime)
+    public async Task AddAsync(string imageUrl, DateTime addedOnTime, CancellationToken cancellationToken)
     {
         var imagetoDelete = new ImageToDelete(Guid.NewGuid(), addedOnTime, imageUrl);
 
-        _context.Add(imagetoDelete);
+        await _context.AddAsync(imagetoDelete, cancellationToken);
     }
 }

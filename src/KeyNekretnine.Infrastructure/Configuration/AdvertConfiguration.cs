@@ -62,7 +62,6 @@ internal sealed class AdvertConfiguration : IEntityTypeConfiguration<Advert>
             .HasForeignKey(advert => advert.NeighborhoodId)
             .IsRequired();
 
-        //builder.HasMany(x => x.TemporeryImageDatas).WithOne(t => t.Advert).HasForeignKey(x => x.AdvertId);
         builder.Property(advert => advert.ReferenceId).HasMaxLength(10);
         builder.HasIndex(advert => advert.ReferenceId).IsUnique();
 

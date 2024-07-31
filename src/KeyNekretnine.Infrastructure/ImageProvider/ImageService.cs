@@ -43,6 +43,7 @@ internal sealed class ImageService : IImageService
                 Folder = folderName
             };
             var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+
             return uploadResult.Url.ToString();
         }
     }
@@ -67,9 +68,9 @@ internal sealed class ImageService : IImageService
 
     public async Task<string?> DeleteImageFromCloudinary(string publicId)
     {
-        var result = await _cloudinary.DestroyAsync(new DeletionParams(publicId));
+        var deleteResult = await _cloudinary.DestroyAsync(new DeletionParams(publicId));
 
-        return result.Error?.Message;
+        return deleteResult.Result;
     }
 
     public string GetPublicIdFromUrl(string url)

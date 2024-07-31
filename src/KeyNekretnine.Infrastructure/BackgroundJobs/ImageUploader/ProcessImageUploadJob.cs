@@ -39,7 +39,7 @@ internal sealed class ProcessImageUploadJob : IJob
 
         foreach (var image in imagesToUpload)
         {
-            var imageUploadUrl = await _imageService.UploadImageOnCloudinaryUsingDb(image.ImageData, "Test5");
+            var imageUploadUrl = await _imageService.UploadImageOnCloudinaryUsingDb(image.ImageData, advertId.ToString());
 
             if (image.IsCover)
             {

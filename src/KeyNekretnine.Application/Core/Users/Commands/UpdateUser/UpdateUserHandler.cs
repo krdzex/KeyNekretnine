@@ -55,7 +55,7 @@ internal sealed class UpdateUserHandler : ICommandHandler<UpdateUserCommand>
 
             if (oldImageUrl is not null)
             {
-                _imageToDeleteRepository.Add(oldImageUrl.Value, _dateTimeProvider.Now);
+                await _imageToDeleteRepository.AddAsync(oldImageUrl.Value, _dateTimeProvider.Now, cancellationToken);
             }
             user.UpdateImage(new ProfileImageUrl(imageUrl));
         }

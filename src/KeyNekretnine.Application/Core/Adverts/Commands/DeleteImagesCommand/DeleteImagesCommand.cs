@@ -1,5 +1,4 @@
 ﻿using KeyNekretnine.Application.Abstraction.Messaging;
-using MediatR;
 
 namespace KeyNekretnine.Application.Core.Adverts.Commands.DeleteImagesCommand;
-public sealed record DeleteImagesCommand(IEnumerable<string> ImageUrls, int AdvertId) : ICommand<Unit>;
+public sealed record DeleteImagesCommand(IEnumerable<string> ImageUrls, string ReferenceId) : ICommand;

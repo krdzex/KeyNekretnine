@@ -53,6 +53,8 @@
     <Compile Include="Core\Adverts\Commands\CreateAdvert\CreateAdvertHandler.cs" />
     <Compile Include="Core\Adverts\Commands\CreateAdvert\CreateAdvertRequest.cs" />
     <Compile Include="Core\Adverts\Commands\CreateAdvert\CreateAdvertValidator.cs" />
+    <Compile Include="Core\Adverts\Commands\DeleteImagesCommand\DeleteImagesCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\DeleteImagesCommand\DeleteImagesHandler.cs" />
     <Compile Include="Core\Adverts\Commands\MakeAdvertFavorite\MakeAdvertFavoriteCommand.cs" />
     <Compile Include="Core\Adverts\Commands\MakeAdvertFavorite\MakeAdvertFavoriteHandler.cs" />
     <Compile Include="Core\Adverts\Commands\MakeAdvertPremium\MakeAdvertPremiumCommand.cs" />

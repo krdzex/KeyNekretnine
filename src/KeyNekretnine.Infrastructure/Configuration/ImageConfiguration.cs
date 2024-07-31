@@ -15,7 +15,7 @@ public class ImageConfiguration : IEntityTypeConfiguration<Image>
         builder.Property(x => x.Url).IsRequired().HasMaxLength(200);
 
         builder.HasOne<Advert>()
-            .WithMany()
+            .WithMany(advert => advert.AdvertImages)
             .HasForeignKey(image => image.AdvertId);
     }
 }

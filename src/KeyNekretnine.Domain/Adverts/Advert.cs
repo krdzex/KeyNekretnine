@@ -2,6 +2,7 @@
 using KeyNekretnine.Domain.AdvertFeatures;
 using KeyNekretnine.Domain.Adverts.Events;
 using KeyNekretnine.Domain.Agents;
+using KeyNekretnine.Domain.Images;
 using KeyNekretnine.Domain.UserAdvertReports;
 using KeyNekretnine.Domain.Users;
 using KeyNekretnine.Domain.ValueObjects;
@@ -11,6 +12,7 @@ public class Advert : Entity
 {
     private readonly List<UserAdvertReport> _reports = new();
     private readonly List<AdvertFeature> _features = new();
+    private readonly List<Image> _images = new();
 
     public Advert(
         Guid id,
@@ -70,6 +72,8 @@ public class Advert : Entity
     {
     }
 
+    public string ReferenceId { get; private set; }
+
     public double Price { get; private set; }
 
     public AdvertDescription Description { get; private set; }
@@ -127,10 +131,8 @@ public class Advert : Entity
 
     public IReadOnlyCollection<UserAdvertReport> UserAdvertReports => _reports;
     public IReadOnlyCollection<AdvertFeature> AdvertFeatures => _features;
+    public IReadOnlyCollection<Image> AdvertImages => _images;
 
-
-    //public List<TemporeryImageData> TemporeryImageDatas { get; set; }
-    public string ReferenceId { get; private set; }
 
     public Result Approve(DateTime approvedDate)
     {
@@ -400,5 +402,19 @@ public class Advert : Entity
         }
 
         UpdatedOnDate = updatedOnDate;
+    }
+
+    public Result RemoveImage(Image image, DateTime timeNow)
+    {
+        if (_images.Count - 1 < 2)
+        {
+            return Result.Failure(AdvertErrors.NoEnoughImages);
+        }
+
+        _images.Remove(image);
+
+        UpdatedOnDate = timeNow;
+
+        return Result.Success();
     }
 }

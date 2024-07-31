@@ -4,6 +4,7 @@ using KeyNekretnine.Application.Core.Adverts.Commands.ApproveBasicUpdate;
 using KeyNekretnine.Application.Core.Adverts.Commands.ApproveFeaturesUpdate;
 using KeyNekretnine.Application.Core.Adverts.Commands.ApproveLocationUpdate;
 using KeyNekretnine.Application.Core.Adverts.Commands.CreateAdvert;
+using KeyNekretnine.Application.Core.Adverts.Commands.DeleteImagesCommand;
 using KeyNekretnine.Application.Core.Adverts.Commands.MakeAdvertFavorite;
 using KeyNekretnine.Application.Core.Adverts.Commands.MakeAdvertPremium;
 using KeyNekretnine.Application.Core.Adverts.Commands.PauseAdvert;
@@ -557,6 +558,9 @@ public class AdvertController : ControllerBase
         return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
     }
 
+    /// <summary>
+    /// Approves a basic update for an advertisement by its update ID for admin.
+    /// </summary>
     [Authorize(Roles = "Administrator")]
     [HttpPut("basic-update/{updateId}/approve")]
     public async Task<IActionResult> ApproveBasicUpdate(Guid updateId, CancellationToken cancellationToken)
@@ -569,7 +573,7 @@ public class AdvertController : ControllerBase
     }
 
     /// <summary>
-    /// Approves a basic update for an advertisement by its update ID for admin.
+    /// Approves a features update for an advertisement by its update ID for admin.
     /// </summary>
     [Authorize(Roles = "Administrator")]
     [HttpPut("features/{updateId}/approve")]
@@ -660,6 +664,20 @@ public class AdvertController : ControllerBase
     public async Task<IActionResult> Create(CreateAdvertRequest request, CancellationToken cancellationToken)
     {
         var command = new CreateAdvertCommand(request);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
+    /// <summary>
+    /// Delete images for advert by its reference ID
+    /// </summary>
+    [Authorize]
+    [HttpDelete("{referenceId}/images")]
+    public async Task<IActionResult> DeleteImages([FromBody] IEnumerable<string> imageUrls, string referenceId, CancellationToken cancellationToken)
+    {
+        var command = new DeleteImagesCommand(imageUrls, referenceId);
 
         var response = await _sender.Send(command, cancellationToken);
 

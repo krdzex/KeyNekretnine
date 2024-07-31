@@ -79,13 +79,13 @@ internal sealed class ProcessImageDeleteJob : IJob
             UPDATE images_to_delete
             SET deleted_on_time = @DeletedOnTime,
                 error = @Error
-            WHERE id = @Id";
+            WHERE id = @TestId";
 
         await connection.ExecuteAsync(
             sql,
             new
             {
-                outboxMessage.Id,
+                TestId = outboxMessage.Id,
                 DeletedOnTime = _dateTimeProvider.Now,
                 Error = errorMassage
             });
