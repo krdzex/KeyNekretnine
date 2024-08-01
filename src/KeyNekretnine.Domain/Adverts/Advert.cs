@@ -417,4 +417,11 @@ public class Advert : Entity
 
         return Result.Success();
     }
+
+    public void ChangeAgent(Guid newAgentId, DateTime timeNow)
+    {
+        AgentId = newAgentId;
+
+        UpdatedOnDate = timeNow;
+    }
 }

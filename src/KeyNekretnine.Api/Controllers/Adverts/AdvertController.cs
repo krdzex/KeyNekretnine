@@ -3,6 +3,7 @@ using KeyNekretnine.Application.Core.Adverts.Commands.ApproveAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.ApproveBasicUpdate;
 using KeyNekretnine.Application.Core.Adverts.Commands.ApproveFeaturesUpdate;
 using KeyNekretnine.Application.Core.Adverts.Commands.ApproveLocationUpdate;
+using KeyNekretnine.Application.Core.Adverts.Commands.ChangeAgentForAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.CreateAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.DeleteImagesCommand;
 using KeyNekretnine.Application.Core.Adverts.Commands.MakeAdvertFavorite;
@@ -678,6 +679,20 @@ public class AdvertController : ControllerBase
     public async Task<IActionResult> DeleteImages([FromBody] IEnumerable<string> imageUrls, string referenceId, CancellationToken cancellationToken)
     {
         var command = new DeleteImagesCommand(imageUrls, referenceId);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
+    /// <summary>
+    /// Change agent for advert by its reference ID
+    /// </summary>
+    [Authorize]
+    [HttpPut("{referenceId}/change-agent")]
+    public async Task<IActionResult> ChangeAgent([FromBody] Guid newAgentId, string referenceId, CancellationToken cancellationToken)
+    {
+        var command = new ChangeAgentForAdvertCommand(referenceId, newAgentId);
 
         var response = await _sender.Send(command, cancellationToken);
 

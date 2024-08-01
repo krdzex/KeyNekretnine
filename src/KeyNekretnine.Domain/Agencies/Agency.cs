@@ -1,11 +1,14 @@
 ﻿using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.AgencyLanguages;
+using KeyNekretnine.Domain.Agents;
 using KeyNekretnine.Domain.ValueObjects;
 
 namespace KeyNekretnine.Domain.Agencies;
 public class Agency : Entity
 {
     private readonly List<AgencyLanguage> _agencyLanguages = new();
+    private readonly List<Agent> _agents = new();
+
     public Agency(
     Guid id,
     AgencyName name,
@@ -36,6 +39,7 @@ public class Agency : Entity
 
     public string UserId { get; private set; }
     public IReadOnlyCollection<AgencyLanguage> AgencyLanguages => _agencyLanguages;
+    public IReadOnlyCollection<Agent> Agents => _agents;
 
     public static Agency Create(
         AgencyName agencyName,

@@ -25,4 +25,12 @@ internal sealed class AgencyRepository : Repository<Agency>, IAgencyRepository
             .Set<Agency>()
             .FirstOrDefaultAsync(agency => agency.UserId == ownerId, cancellationToken);
     }
+
+    public async Task<Agency?> GetByOwnerIdWithAgentsAsync(string ownerId, CancellationToken cancellationToken)
+    {
+        return await DbContext
+            .Set<Agency>()
+            .Include(agency => agency.Agents)
+            .FirstOrDefaultAsync(agency => agency.UserId == ownerId, cancellationToken);
+    }
 }

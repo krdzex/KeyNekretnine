@@ -1,4 +1,5 @@
-﻿using KeyNekretnine.Domain.Agents;
+﻿using KeyNekretnine.Domain.Agencies;
+using KeyNekretnine.Domain.Agents;
 using KeyNekretnine.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -42,9 +43,6 @@ public class AgentConfiguration : IEntityTypeConfiguration<Agent>
             .HasConversion(email => email.Value, value => AgentEmail.Create(value))
             .IsRequired();
 
-        builder.HasOne(agent => agent.Agency)
-            .WithMany()
-            .HasForeignKey(agent => agent.AgencyId);
 
         builder.OwnsOne(agent => agent.SocialMedia, socialMedia =>
         {
@@ -64,5 +62,9 @@ public class AgentConfiguration : IEntityTypeConfiguration<Agent>
                 .HasMaxLength(300)
                 .IsRequired(false);
         });
+
+        builder.HasOne<Agency>(agent => agent.Agency)
+            .WithMany(agency => agency.Agents)
+            .HasForeignKey(agent => agent.AgencyId);
     }
 }

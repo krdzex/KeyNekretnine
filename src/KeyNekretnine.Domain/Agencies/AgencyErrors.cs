@@ -10,4 +10,8 @@ public static class AgencyErrors
     public static Error NotOwner => new(
         "Agency.NotOwner",
         "Current user is not owner of agency");
+
+    public static Error AgentNotInAgency => new(
+        "Agency.AgentNotInAgency",
+        "Agent is not in agency");
 }
