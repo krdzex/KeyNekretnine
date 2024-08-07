@@ -28,6 +28,7 @@ using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertsCompare;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertUpdates;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAllAdvertCoordinates;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetBasicUpdate;
+using KeyNekretnine.Application.Core.Adverts.Queries.GetClosestAdverts;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetFavoriteAdverts;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetFeaturesUpdate;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetFilteredAdvertCoordinates;
@@ -440,6 +441,16 @@ public class AdvertController : ControllerBase
         return Ok(response.Value);
     }
 
+    [AllowAnonymous]
+    [HttpGet("{referenceId}/closest")]
+    public async Task<IActionResult> GetClosestAdverts(string referenceId, CancellationToken cancellationToken)
+    {
+        var query = new GetClosestAdvertsQuery(referenceId);
+
+        var response = await _sender.Send(query, cancellationToken);
+
+        return Ok(response.Value);
+    }
     /// <summary>
     /// Sends an email message to the owner of a specific advertisement.
     /// </summary>
