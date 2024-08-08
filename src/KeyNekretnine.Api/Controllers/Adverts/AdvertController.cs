@@ -27,6 +27,7 @@ using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertFromMapByReference
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertsCompare;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertUpdates;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAllAdvertCoordinates;
+using KeyNekretnine.Application.Core.Adverts.Queries.GetAvgPricePerSqftInRadius;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetBasicUpdate;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetClosestAdverts;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetFavoriteAdverts;
@@ -441,6 +442,9 @@ public class AdvertController : ControllerBase
         return Ok(response.Value);
     }
 
+    /// <summary>
+    /// Retrieves closest advertisements based on a reference ID.
+    /// </summary>
     [AllowAnonymous]
     [HttpGet("{referenceId}/closest")]
     public async Task<IActionResult> GetClosestAdverts(string referenceId, CancellationToken cancellationToken)
@@ -708,5 +712,19 @@ public class AdvertController : ControllerBase
         var response = await _sender.Send(command, cancellationToken);
 
         return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
+    /// <summary>
+    /// Calculate average price per squere feet in radius for certain advert found by id
+    /// </summary>
+    [AllowAnonymous]
+    [HttpGet("{referenceId}/average-price-per-square-foot-in-radius")]
+    public async Task<IActionResult> GetAveragePricePerSquareFootInRadius([FromQuery] double? radiusKilometers, string referenceId, CancellationToken cancellationToken)
+    {
+        var query = new GetAvgPricePerSqftInRadiusQuery(referenceId, radiusKilometers);
+
+        var response = await _sender.Send(query, cancellationToken);
+
+        return Ok(response.Value);
     }
 }
