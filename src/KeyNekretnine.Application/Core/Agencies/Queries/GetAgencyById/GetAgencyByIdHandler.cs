@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using KeyNekretnine.Application.Abstraction.Data;
 using KeyNekretnine.Application.Abstraction.Messaging;
+using KeyNekretnine.Application.Core.Agencies.Queries.GetAgencyLocation;
 using KeyNekretnine.Application.Core.Language.Queries.GetLanguages;
 using KeyNekretnine.Application.Core.Shared;
 using KeyNekretnine.Domain.Abstraction;
@@ -36,6 +37,9 @@ internal sealed class GetAgencyByIdHandler : IQueryHandler<GetAgencyByIdQuery, A
                 a.work_hour_end AS workEndTime,
                 a.email,
                 a.image_url AS image,
+                a.location_latitude AS latitude,
+                a.location_longitude AS longitude,
+                a.location_address AS address,
                 a.social_media_facebook AS facebook,
                 a.social_media_instagram AS instagram,
                 a.social_media_linkedin AS linkedin,
@@ -47,7 +51,7 @@ internal sealed class GetAgencyByIdHandler : IQueryHandler<GetAgencyByIdQuery, A
             WHERE a.id = @agencyId;
             """;
 
-        var agency = await connection.QueryAsync<AgencyResponse, SocialMediaResponse, LanguageResponse, AgencyResponse>(sql, (agency, socialMedia, language) =>
+        var agency = await connection.QueryAsync<AgencyResponse, AgencyLocationResponse, SocialMediaResponse, LanguageResponse, AgencyResponse>(sql, (agency, location, socialMedia, language) =>
         {
             if (agenciesDictionary.TryGetValue(agency.Id, out var existingAgency))
             {
@@ -59,6 +63,7 @@ internal sealed class GetAgencyByIdHandler : IQueryHandler<GetAgencyByIdQuery, A
             }
 
             agency.SocialMedia = socialMedia;
+            agency.Location = location;
 
             if (language is not null)
             {
@@ -66,7 +71,7 @@ internal sealed class GetAgencyByIdHandler : IQueryHandler<GetAgencyByIdQuery, A
             }
             return agency;
 
-        }, new { request.AgencyId }, splitOn: "facebook,name");
+        }, new { request.AgencyId }, splitOn: "latitude,facebook,name");
 
         var agencyResponse = agenciesDictionary.Values.FirstOrDefault();
 
