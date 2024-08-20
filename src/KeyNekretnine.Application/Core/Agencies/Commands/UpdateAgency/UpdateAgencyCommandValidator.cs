@@ -31,22 +31,22 @@ internal class UpdateAgencyCommandValidator :
         RuleFor(c => c.Facebook)
             .Must(BeAValidUrl).WithMessage("Invalid URL for facebook")
             .MaximumLength(300).WithMessage("Max number of characters for facebook url is 300")
-            .When(c => c.Facebook is not null);
+            .When(c => c.Facebook is not null && c.Facebook.Length > 1);
 
         RuleFor(c => c.Twitter)
             .Must(BeAValidUrl).WithMessage("Invalid URL for twitter")
             .MaximumLength(300).WithMessage("Max number of characters for twitter url is 300")
-            .When(c => c.Twitter is not null);
+            .When(c => c.Twitter is not null && c.Twitter.Length > 1);
 
         RuleFor(c => c.Instagram)
             .Must(BeAValidUrl).WithMessage("Invalid URL for instagram")
             .MaximumLength(300).WithMessage("Max number of characters for instagram url is 300")
-            .When(c => c.Instagram is not null);
+            .When(c => c.Instagram is not null && c.Instagram.Length > 1);
 
         RuleFor(c => c.Linkedin)
             .Must(BeAValidUrl).WithMessage("Invalid URL for linkedin")
             .MaximumLength(300).WithMessage("Max number of characters for linkedin url is 300")
-            .When(c => c.Linkedin is not null);
+            .When(c => c.Linkedin is not null && c.Linkedin.Length > 1);
 
         RuleFor(c => c.Longitude)
             .InclusiveBetween(-180, 180).WithMessage("Longitude need to be between -180 and 180")
@@ -58,7 +58,8 @@ internal class UpdateAgencyCommandValidator :
 
         RuleFor(c => c.WebsiteUrl)
             .Must(BeAValidUrl).WithMessage("Invalid URL")
-            .MaximumLength(200).WithMessage("Max number of characters is 200");
+            .MaximumLength(200).WithMessage("Max number of characters is 200")
+            .When(c => c.WebsiteUrl is not null && c.WebsiteUrl.Length > 1);
 
         RuleFor(c => c.Image)
             .Must(image => image.Length <= MaxImageSizeInBytes).WithMessage("The image must not exceed 0.5MB in size.")

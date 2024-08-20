@@ -75,10 +75,12 @@ public class User : UserEntity
     public void Update(
         UserFirstName firstName,
         UserLastName lastName,
+        string phoneNumber,
         About about)
     {
         FirstName = firstName;
         LastName = lastName;
+        PhoneNumber = phoneNumber;
         About = about;
     }
 

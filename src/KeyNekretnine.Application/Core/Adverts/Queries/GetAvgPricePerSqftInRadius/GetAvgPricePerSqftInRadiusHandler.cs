@@ -34,9 +34,9 @@ internal sealed class GetAvgPricePerSqftInRadiusHandler : IQueryHandler<GetAvgPr
             )
             SELECT
                 CASE 
-                    WHEN sa.purpose = 2 THEN 
+                    WHEN a.purpose = 2 THEN 
                         ROUND(AVG(a.price / NULLIF(a.floor_space, 0))::NUMERIC) 
-                    WHEN sa.purpose = 1 THEN 
+                    WHEN a.purpose = 1 THEN 
                         ROUND(AVG(a.price)::NUMERIC) 
                     ELSE NULL 
                 END AS pricePerSquareFoot
@@ -55,7 +55,8 @@ internal sealed class GetAvgPricePerSqftInRadiusHandler : IQueryHandler<GetAvgPr
                     ll_to_earth(a.location_latitude, a.location_longitude), 
                     ll_to_earth(sa.location_latitude, sa.location_longitude)
                 ) < @rediusInMeters
-                AND a.floor_space > 0;
+                AND a.floor_space > 0
+                GROUP BY a.purpose;
             """;
 
         var cmd = new CommandDefinition(sql, new { request.ReferenceId, rediusInMeters }, cancellationToken: cancellationToken);

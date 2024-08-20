@@ -46,6 +46,7 @@ internal sealed class UpdateUserHandler : ICommandHandler<UpdateUserCommand>
         user.Update(
             UserFirstName.Create(request.FirstName),
             UserLastName.Create(request.LastName),
+            request.PhoneNumber,
             new About(request.About));
 
         if (request.Image?.Length > 0)

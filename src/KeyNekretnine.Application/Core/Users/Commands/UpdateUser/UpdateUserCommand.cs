@@ -6,4 +6,5 @@ public sealed record UpdateUserCommand(
     string About,
     string FirstName,
     string LastName,
+    string PhoneNumber,
     IFormFile Image) : ICommand;

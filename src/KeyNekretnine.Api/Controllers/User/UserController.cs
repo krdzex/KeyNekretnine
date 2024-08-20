@@ -114,13 +114,14 @@ public sealed class UserController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> UpdateUser([FromForm] UpdateUserRequest updateUserRequest, CancellationToken cancellationToken)
     {
-        var query = new UpdateUserCommand(
+        var command = new UpdateUserCommand(
             updateUserRequest.About,
             updateUserRequest.FirstName,
             updateUserRequest.LastName,
+            updateUserRequest.PhoneNumber,
             updateUserRequest.Image);
 
-        var response = await _sender.Send(query, cancellationToken);
+        var response = await _sender.Send(command, cancellationToken);
 
         return response.IsSuccess ? Accepted() : BadRequest(response.Error);
     }
