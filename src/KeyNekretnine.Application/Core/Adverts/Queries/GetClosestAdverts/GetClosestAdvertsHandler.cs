@@ -20,7 +20,7 @@ internal sealed class GetClosestAdvertsHandler : IQueryHandler<GetClosestAdverts
 
         const string sql = """
             WITH selected_advert AS (
-                SELECT location_latitude, location_longitude 
+                SELECT location_latitude, location_longitude, type, purpose
                 FROM adverts 
                 WHERE reference_id = @referenceId
                 LIMIT 1
@@ -51,6 +51,8 @@ internal sealed class GetClosestAdvertsHandler : IQueryHandler<GetClosestAdverts
             WHERE
                 a.reference_id <> @referenceId
                 AND a.status = 1
+                AND a.purpose = sa.purpose
+                AND a.type = sa.type
                 AND earth_box(
                     ll_to_earth(sa.location_latitude, sa.location_longitude), 1000
                 ) @> ll_to_earth(a.location_latitude, a.location_longitude)
