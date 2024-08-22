@@ -71,7 +71,7 @@ internal sealed class CreateAgentHandler : ICommandHandler<CreateAgentCommand>
 
             var imageUrl = ImageUrl.Create(cloudinaryImgUrl);
 
-            agent.UpdateImage(imageUrl.Value);
+            agent.UpdateImage(imageUrl);
         }
 
         _agentRepository.Add(agent);

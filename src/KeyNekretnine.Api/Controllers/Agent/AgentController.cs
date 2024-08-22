@@ -1,4 +1,5 @@
 ﻿using KeyNekretnine.Application.Core.Agents.Commands.CreateAgent;
+using KeyNekretnine.Application.Core.Agents.Commands.RemoveAgentImage;
 using KeyNekretnine.Application.Core.Agents.Commands.UpdateAgent;
 using KeyNekretnine.Application.Core.Agents.Queries.GetAgentAdverts;
 using KeyNekretnine.Application.Core.Agents.Queries.GetAgentById;
@@ -115,6 +116,21 @@ public class AgentController : ControllerBase
             updateAgentRequest.PhoneNumber,
             updateAgentRequest.Image,
             updateAgentRequest.LanguageIds);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? Accepted() : BadRequest(response.Error);
+    }
+
+
+    /// <summary>
+    /// Remove image of a specific agent by its ID.
+    /// </summary>
+    [Authorize]
+    [HttpDelete("{agentId}/image")]
+    public async Task<IActionResult> RemoveAgencyImage(Guid agentId, CancellationToken cancellationToken)
+    {
+        var command = new RemoveAgentImageCommand(agentId);
 
         var response = await _sender.Send(command, cancellationToken);
 

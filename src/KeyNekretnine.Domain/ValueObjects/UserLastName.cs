@@ -11,15 +11,13 @@ public record UserLastName
 
     public static UserLastName Create(string lastName)
     {
-        if (string.IsNullOrWhiteSpace(lastName))
+        if (!string.IsNullOrEmpty(lastName))
         {
-            throw new ApplicationException("Last name cannot be null or whitespace.");
-        }
+            if (lastName.Length > MaxLength)
+            {
+                throw new ApplicationException($"Last name cannot exceed characters.");
 
-        if (lastName.Length > MaxLength)
-        {
-            throw new ApplicationException($"Last name cannot exceed characters.");
-
+            }
         }
 
         return new UserLastName

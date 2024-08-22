@@ -99,7 +99,7 @@ public class Agency : Entity
         }
     }
 
-    public void UpdateImage(ImageUrl imageUrl)
+    public void UpdateImage(ImageUrl? imageUrl)
     {
         ImageUrl = imageUrl;
     }

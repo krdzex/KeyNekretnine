@@ -11,16 +11,13 @@ public record UserFirstName
 
     public static UserFirstName? Create(string? firstName)
     {
-        if (string.IsNullOrWhiteSpace(firstName))
+        if (!string.IsNullOrEmpty(firstName))
         {
-            throw new ApplicationException("First name cannot be null or whitespace.");
+            if (firstName.Length > MaxLength)
+            {
+                throw new ApplicationException($"First name cannot exceed 50 characters.");
 
-        }
-
-        if (firstName.Length > MaxLength)
-        {
-            throw new ApplicationException($"First name cannot exceed 50 characters.");
-
+            }
         }
 
         return new UserFirstName

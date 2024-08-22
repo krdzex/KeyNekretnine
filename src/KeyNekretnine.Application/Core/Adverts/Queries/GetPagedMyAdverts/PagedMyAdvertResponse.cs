@@ -10,7 +10,7 @@ public class PagedMyAdvertResponse
     public AdvertDescriptionResponse Description { get; set; }
     public string CoverImageUrl { get; set; }
     public string CityAndNeighborhood { get; set; }
-    public Guid AgentId { get; set; }
+    public Guid? AgentId { get; set; }
     public bool PendingUpdates { get; set; }
     public DateTime CreatedOnDate { get; set; }
     public DateTime? UpdatedOnDate { get; set; }

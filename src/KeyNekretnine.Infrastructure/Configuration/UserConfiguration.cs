@@ -31,12 +31,12 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(user => user.ProfileImageUrl)
             .HasMaxLength(150)
-            .HasConversion(profileImageUrl => profileImageUrl.Value, value => new ProfileImageUrl(value))
+            .HasConversion(profileImageUrl => profileImageUrl.Value, value => ImageUrl.Create(value))
             .IsRequired(false);
 
         builder.Property(user => user.About)
-            .HasMaxLength(150)
-            .HasConversion(about => about.Value, value => new About(value))
+            .HasMaxLength(1000)
+            .HasConversion(about => about.Value, value => About.Create(value))
             .IsRequired(false);
     }
 }

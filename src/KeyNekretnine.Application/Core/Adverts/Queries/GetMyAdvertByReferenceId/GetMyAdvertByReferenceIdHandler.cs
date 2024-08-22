@@ -61,6 +61,7 @@ internal sealed class GetMyAdvertByReferenceIdHandler : IQueryHandler<GetMyAdver
             	n.name AS neighborhoodName,
             	c.slug AS citySlug,
             	c.name as cityName,
+                NULL AS Split,
                 CASE 
                     WHEN a.user_id IS NOT NULL THEN u.first_name
                     ELSE ag.first_name 
@@ -141,7 +142,7 @@ internal sealed class GetMyAdvertByReferenceIdHandler : IQueryHandler<GetMyAdver
 
                 return advert;
 
-            }, param, splitOn: "sr,address,firstName,url,id");
+            }, param, splitOn: "sr,address,split,url,id");
 
         var advertResponse = advertDictionary.Values.FirstOrDefault();
 

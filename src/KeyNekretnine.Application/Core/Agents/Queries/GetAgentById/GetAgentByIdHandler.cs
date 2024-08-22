@@ -31,6 +31,7 @@ internal sealed class GetAgentByIdHandler : IQueryHandler<GetAgentByIdQuery, Age
                 a.image_Url AS imageUrl,
                 a.description,
                 a.phone_number AS phoneNumber,
+                NULL split,
                 a.social_media_twitter AS twitter,
                 a.social_media_facebook AS facebook,
                 a.social_media_instagram AS instagram,
@@ -68,7 +69,7 @@ internal sealed class GetAgentByIdHandler : IQueryHandler<GetAgentByIdQuery, Age
             }
             return agent;
 
-        }, new { request.AgentId }, splitOn: "twitter,id,name");
+        }, new { request.AgentId }, splitOn: "split,id,name");
 
         var agentResponse = agentsDictionary.Values.FirstOrDefault();
 

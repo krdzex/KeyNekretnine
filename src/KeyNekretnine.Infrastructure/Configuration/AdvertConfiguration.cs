@@ -33,20 +33,20 @@ internal sealed class AdvertConfiguration : IEntityTypeConfiguration<Advert>
 
         builder.Property(advert => advert.CoverImageUrl)
             .HasMaxLength(150)
-            .HasConversion(imageUrl => imageUrl.Value, value => ImageUrl.Create(value).Value)
+            .HasConversion(imageUrl => imageUrl.Value, value => ImageUrl.Create(value))
             .IsRequired(false);
 
         builder.OwnsOne(advert => advert.Location, location =>
         {
             location.Property(location => location.Address)
                 .HasMaxLength(300)
-                .IsRequired(false);
+                .IsRequired(true);
 
             location.Property(location => location.Longitude)
-                .IsRequired(false);
+                .IsRequired(true);
 
             location.Property(location => location.Latitude)
-                .IsRequired(false);
+                .IsRequired(true);
         });
 
         builder.HasOne<User>(advert => advert.User)

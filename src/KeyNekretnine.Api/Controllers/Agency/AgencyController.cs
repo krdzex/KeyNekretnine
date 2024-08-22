@@ -1,4 +1,5 @@
 ﻿using KeyNekretnine.Application.Core.Agencies.Commands.CreateAgency;
+using KeyNekretnine.Application.Core.Agencies.Commands.RemoveAgenyImage;
 using KeyNekretnine.Application.Core.Agencies.Commands.UpdateAgency;
 using KeyNekretnine.Application.Core.Agencies.Queries.GetAgencyAdverts;
 using KeyNekretnine.Application.Core.Agencies.Queries.GetAgencyAgents;
@@ -144,5 +145,19 @@ public class AgencyController : ControllerBase
         var response = await _sender.Send(query, cancellationToken);
 
         return Ok(response.Value);
+    }
+
+    /// <summary>
+    /// Remove image of a specific agency by its ID.
+    /// </summary>
+    [Authorize]
+    [HttpDelete("{agencyId}/image")]
+    public async Task<IActionResult> RemoveAgencyImage(Guid agencyId, CancellationToken cancellationToken)
+    {
+        var command = new RemoveAgencyImageCommand(agencyId);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? Accepted() : BadRequest(response.Error);
     }
 }

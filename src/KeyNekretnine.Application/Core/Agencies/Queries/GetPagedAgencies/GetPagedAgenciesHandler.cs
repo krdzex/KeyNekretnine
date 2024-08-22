@@ -35,6 +35,7 @@ internal sealed class GetPagedAgenciesHandler : IQueryHandler<GetPagedAgenciesQu
                 a.image_url AS image,
                 a.location_address AS address,
                 a.phone_number AS phoneNumber,
+                NULL Split,
                 a.social_media_facebook AS facebook,
                 a.social_media_instagram AS instagram,
                 a.social_media_linkedin AS linkedin,
@@ -70,7 +71,7 @@ internal sealed class GetPagedAgenciesHandler : IQueryHandler<GetPagedAgenciesQu
             agency.SocialMedia = socialMedia;
 
             return agency;
-        }, splitOn: "facebook").ToList();
+        }, splitOn: "Split").ToList();
 
         var metadata = new PagedList<PagedAgencyResponse>(agencies, count, request.PageNumber, request.PageSize);
 

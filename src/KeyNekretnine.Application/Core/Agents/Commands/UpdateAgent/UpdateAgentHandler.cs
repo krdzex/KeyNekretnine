@@ -72,7 +72,7 @@ internal sealed class UpdateAgentHandler : ICommandHandler<UpdateAgentCommand>
 
             var imageUrl = ImageUrl.Create(cloudinaryImgUrl);
 
-            agent.UpdateImage(imageUrl.Value);
+            agent.UpdateImage(imageUrl);
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);

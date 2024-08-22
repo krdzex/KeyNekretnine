@@ -78,7 +78,7 @@ internal sealed class UpdateAgencyHandler : ICommandHandler<UpdateAgencyCommand>
                 await _imageToDeleteRepository.AddAsync(oldImageUrl.Value, _dateTimeProvider.Now, cancellationToken);
             }
             var imageUrl = ImageUrl.Create(cloudinaryImgUrl);
-            agency.UpdateImage(imageUrl.Value);
+            agency.UpdateImage(imageUrl);
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);

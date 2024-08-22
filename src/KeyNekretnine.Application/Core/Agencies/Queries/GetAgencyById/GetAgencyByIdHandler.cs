@@ -40,6 +40,7 @@ internal sealed class GetAgencyByIdHandler : IQueryHandler<GetAgencyByIdQuery, A
                 a.location_latitude AS latitude,
                 a.location_longitude AS longitude,
                 a.location_address AS address,
+                NULL Split,
                 a.social_media_facebook AS facebook,
                 a.social_media_instagram AS instagram,
                 a.social_media_linkedin AS linkedin,
@@ -71,7 +72,7 @@ internal sealed class GetAgencyByIdHandler : IQueryHandler<GetAgencyByIdQuery, A
             }
             return agency;
 
-        }, new { request.AgencyId }, splitOn: "latitude,facebook,name");
+        }, new { request.AgencyId }, splitOn: "latitude,Split,name");
 
         var agencyResponse = agenciesDictionary.Values.FirstOrDefault();
 

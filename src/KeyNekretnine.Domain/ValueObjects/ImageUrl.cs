@@ -10,7 +10,7 @@ public sealed class ImageUrl : ValueObject
     }
 
     public string Value { get; }
-    public static Result<ImageUrl> Create(string? imageUrl)
+    public static ImageUrl? Create(string? imageUrl)
     {
         if (imageUrl is null)
         {
@@ -19,7 +19,7 @@ public sealed class ImageUrl : ValueObject
 
         if (imageUrl.Length > MaxLength)
         {
-            return Result.Failure<ImageUrl>(new Error("", ""));
+            throw new ApplicationException($"Image url cannot exceed 200 characters.");
         }
 
         return new ImageUrl(imageUrl);

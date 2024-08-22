@@ -1,6 +1,7 @@
 ﻿using KeyNekretnine.Application.Core.Users.Commands.BanUser;
 using KeyNekretnine.Application.Core.Users.Commands.ChangeUserPassword;
 using KeyNekretnine.Application.Core.Users.Commands.ConfirmUserEmail;
+using KeyNekretnine.Application.Core.Users.Commands.DeleteUserImage;
 using KeyNekretnine.Application.Core.Users.Commands.PasswordForgot;
 using KeyNekretnine.Application.Core.Users.Commands.RequestEmailConfirmation;
 using KeyNekretnine.Application.Core.Users.Commands.RequestPasswordForgot;
@@ -197,7 +198,7 @@ public sealed class UserController : ControllerBase
     }
 
     /// <summary>
-    /// Retrieves information about the current  authenticated user.
+    /// Retrieves information about the current authenticated user.
     /// </summary>
     [Authorize]
     [HttpGet("about")]
@@ -208,5 +209,19 @@ public sealed class UserController : ControllerBase
         var response = await _sender.Send(query, cancellationToken);
 
         return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
+    }
+
+    /// <summary>
+    /// Remove image of current authenticated user.
+    /// </summary>
+    [Authorize]
+    [HttpDelete("image")]
+    public async Task<IActionResult> RemoveUserImage(CancellationToken cancellationToken)
+    {
+        var command = new RemoveUserImageCommand();
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? Accepted() : BadRequest(response.Error);
     }
 }

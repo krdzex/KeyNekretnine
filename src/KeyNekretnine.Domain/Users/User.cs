@@ -30,7 +30,7 @@ public class User : UserEntity
     public UserFirstName FirstName { get; private set; }
     public UserLastName LastName { get; private set; }
     public DateTime AccountCreatedDate { get; private set; }
-    public ProfileImageUrl ProfileImageUrl { get; private set; }
+    public ImageUrl ProfileImageUrl { get; private set; }
     public About About { get; private set; }
     public bool IsBanned { get; private set; }
     public DateTime? BanEnd { get; private set; }
@@ -84,7 +84,7 @@ public class User : UserEntity
         About = about;
     }
 
-    public void UpdateImage(ProfileImageUrl imageUrl)
+    public void UpdateImage(ImageUrl? imageUrl)
     {
         ProfileImageUrl = imageUrl;
     }

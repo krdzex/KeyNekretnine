@@ -34,26 +34,33 @@ internal class UpdateAgentCommandValidator :
             .MaximumLength(50).WithMessage("Max number of characters for phone number is 50")
             .When(c => c.PhoneNumber is not null);
 
-        RuleFor(u => u.Facebook)
-            .Must(BeAValidUrl).WithMessage("Invalid URL for facebook")
-            .MaximumLength(300).WithMessage("Max number of characters for facebook url is 300")
-            .When(c => c.Facebook is not null);
+        RuleFor(c => c.Facebook)
+            .Cascade(CascadeMode.Stop)
+            .NotEmpty().When(c => !string.IsNullOrEmpty(c.Facebook))
+            .Must(BeAValidUrl).WithMessage("Invalid URL for Facebook")
+            .MaximumLength(300).WithMessage("Max number of characters for Facebook URL is 300")
+            .When(c => !string.IsNullOrEmpty(c.Facebook));
 
-        RuleFor(u => u.Twitter)
-            .Must(BeAValidUrl).WithMessage("Invalid URL for twitter")
-            .MaximumLength(300).WithMessage("Max number of characters for twitter url is 300")
-            .When(c => c.Twitter is not null);
+        RuleFor(c => c.Twitter)
+            .Cascade(CascadeMode.Stop)
+            .NotEmpty().When(c => !string.IsNullOrEmpty(c.Twitter))
+            .Must(BeAValidUrl).WithMessage("Invalid URL for Twitter")
+            .MaximumLength(300).WithMessage("Max number of characters for Twitter URL is 300")
+            .When(c => !string.IsNullOrEmpty(c.Twitter));
 
-        RuleFor(u => u.Instagram)
-            .Must(BeAValidUrl).WithMessage("Invalid URL for instagram")
-            .MaximumLength(300).WithMessage("Max number of characters for instagram url is 300")
-            .When(c => c.Instagram is not null);
+        RuleFor(c => c.Instagram)
+            .Cascade(CascadeMode.Stop)
+            .NotEmpty().When(c => !string.IsNullOrEmpty(c.Instagram))
+            .Must(BeAValidUrl).WithMessage("Invalid URL for Instagram")
+            .MaximumLength(300).WithMessage("Max number of characters for Instagram URL is 300")
+            .When(c => !string.IsNullOrEmpty(c.Instagram));
 
-        RuleFor(u => u.Linkedin)
-            .Must(BeAValidUrl).WithMessage("Invalid URL for linkedin")
-            .MaximumLength(300).WithMessage("Max number of characters for linkedin url is 300")
-            .When(c => c.Linkedin is not null);
-
+        RuleFor(c => c.Linkedin)
+            .Cascade(CascadeMode.Stop)
+            .NotEmpty().When(c => !string.IsNullOrEmpty(c.Linkedin))
+            .Must(BeAValidUrl).WithMessage("Invalid URL for Linkedin")
+            .MaximumLength(300).WithMessage("Max number of characters for Linkedin URL is 300")
+            .When(c => !string.IsNullOrEmpty(c.Linkedin));
 
         RuleFor(u => u.Image)
             .Must(image => image.Length <= MaxImageSizeInBytes).WithMessage("The image must not exceed 0.5MB in size.")

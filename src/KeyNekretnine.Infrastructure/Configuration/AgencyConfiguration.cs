@@ -30,7 +30,7 @@ public class AgencyConfiguration : IEntityTypeConfiguration<Agency>
 
         builder.Property(agency => agency.ImageUrl)
             .HasMaxLength(200)
-            .HasConversion(imageUrl => imageUrl.Value, value => ImageUrl.Create(value).Value)
+            .HasConversion(imageUrl => imageUrl.Value, value => ImageUrl.Create(value))
             .IsRequired(false);
 
         builder.Property(agency => agency.Email)

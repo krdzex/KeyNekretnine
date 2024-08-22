@@ -20,6 +20,16 @@ internal sealed class AgentRepository : Repository<Agent>, IAgentRepository
             .FirstOrDefaultAsync(agent => agent.Id == id, cancellationToken);
     }
 
+    public async Task<Agent?> GetByIdWithAgencyAsync(
+    Guid id,
+    CancellationToken cancellationToken = default)
+    {
+        return await DbContext
+            .Set<Agent>()
+            .Include(agent => agent.Agency)
+            .FirstOrDefaultAsync(agent => agent.Id == id, cancellationToken);
+    }
+
     public async Task<bool> IsAgentInLoggedAgency(
     Guid? agentId,
     string agencyOwnerId,

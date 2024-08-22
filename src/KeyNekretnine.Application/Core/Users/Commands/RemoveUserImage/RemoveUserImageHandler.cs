@@ -4,37 +4,33 @@ using KeyNekretnine.Application.Abstraction.Image;
 using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Users;
-using KeyNekretnine.Domain.ValueObjects;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
-namespace KeyNekretnine.Application.Core.Users.Commands.UpdateUser;
-internal sealed class UpdateUserHandler : ICommandHandler<UpdateUserCommand>
+namespace KeyNekretnine.Application.Core.Users.Commands.DeleteUserImage;
+internal sealed class RemoveUserImageHandler : ICommandHandler<RemoveUserImageCommand>
 {
     private readonly UserManager<User> _userManager;
-    private readonly IImageService _imageService;
     private readonly IImageToDeleteRepository _imageToDeleteRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IUserContext _userContext;
 
-    public UpdateUserHandler(
+    public RemoveUserImageHandler(
         UserManager<User> userManager,
-        IImageService imageService,
         IImageToDeleteRepository imageToDeleteRepository,
         IDateTimeProvider dateTimeProvider,
         IUnitOfWork unitOfWork,
         IUserContext userContext)
     {
         _userManager = userManager;
-        _imageService = imageService;
         _imageToDeleteRepository = imageToDeleteRepository;
         _dateTimeProvider = dateTimeProvider;
         _unitOfWork = unitOfWork;
         _userContext = userContext;
     }
 
-    public async Task<Result> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(RemoveUserImageCommand request, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByIdAsync(_userContext.UserId);
 
@@ -43,22 +39,11 @@ internal sealed class UpdateUserHandler : ICommandHandler<UpdateUserCommand>
             return Result.Failure<Unit>(UserErrors.NotFound);
         }
 
-        user.Update(
-            UserFirstName.Create(request.FirstName),
-            UserLastName.Create(request.LastName),
-            request.PhoneNumber,
-            About.Create(request.About));
-
-        if (request.Image?.Length > 0)
+        if (user.ProfileImageUrl != null)
         {
-            var oldImageUrl = user.ProfileImageUrl;
-            var imageUrl = await _imageService.UploadImageOnCloudinary(request.Image);
+            await _imageToDeleteRepository.AddAsync(user.ProfileImageUrl.Value, _dateTimeProvider.Now, cancellationToken);
 
-            if (oldImageUrl is not null)
-            {
-                await _imageToDeleteRepository.AddAsync(oldImageUrl.Value, _dateTimeProvider.Now, cancellationToken);
-            }
-            user.UpdateImage(ImageUrl.Create(imageUrl));
+            user.UpdateImage(null);
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
