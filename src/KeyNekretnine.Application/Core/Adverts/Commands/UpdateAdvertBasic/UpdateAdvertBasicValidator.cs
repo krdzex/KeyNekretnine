@@ -21,27 +21,27 @@ internal class UpdateAdvertBasicValidator :
                 .WithMessage("Description is required");
 
         RuleFor(x => x.BasicUpdateData.HasWifi)
-            .NotEmpty()
+            .Must(value => value == true || value == false)
                 .WithMessage("Required field");
 
         RuleFor(x => x.BasicUpdateData.HasGarage)
-            .NotEmpty()
+            .Must(value => value == true || value == false)
                 .WithMessage("Required field");
 
         RuleFor(x => x.BasicUpdateData.IsUnderConstruction)
-            .NotEmpty()
+            .Must(value => value == true || value == false)
                 .WithMessage("Required field");
 
         RuleFor(x => x.BasicUpdateData.IsUrgent)
-            .NotEmpty()
+            .Must(value => value == true || value == false)
                 .WithMessage("Required field");
 
         RuleFor(x => x.BasicUpdateData.HasTerrace)
-            .NotEmpty()
+            .Must(value => value == true || value == false)
                 .WithMessage("Required field");
 
         RuleFor(x => x.BasicUpdateData.HasElevator)
-            .NotEmpty()
+            .Must(value => value == true || value == false)
                 .WithMessage("Required field");
 
         RuleFor(x => x.BasicUpdateData.FloorSpace)
@@ -51,7 +51,7 @@ internal class UpdateAdvertBasicValidator :
                 .WithMessage("Floor space cant be lower then 1");
 
         RuleFor(x => x.BasicUpdateData.IsFurnished)
-           .NotEmpty()
+            .Must(value => value == true || value == false)
                 .WithMessage("Required field");
 
         RuleFor(x => x.BasicUpdateData.Purpose)

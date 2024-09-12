@@ -21,15 +21,15 @@ internal class CreateAdvertValidator :
                 .WithMessage("Description is required");
 
         RuleFor(x => x.AdvertForCreating.HasWifi)
-            .NotEmpty()
+            .Must(value => value == true || value == false)
                 .WithMessage("Required field");
 
         RuleFor(x => x.AdvertForCreating.HasGarage)
-            .NotEmpty()
+            .Must(value => value == true || value == false)
                 .WithMessage("Required field");
 
         RuleFor(x => x.AdvertForCreating.IsUnderConstruction)
-            .NotEmpty()
+            .Must(value => value == true || value == false)
                 .WithMessage("Required field");
 
         RuleFor(x => x.AdvertForCreating.Address)
@@ -37,15 +37,15 @@ internal class CreateAdvertValidator :
                 .WithMessage("Required field");
 
         RuleFor(x => x.AdvertForCreating.IsUrgent)
-            .NotEmpty()
+            .Must(value => value == true || value == false)
                 .WithMessage("Required field");
 
         RuleFor(x => x.AdvertForCreating.HasTerrace)
-            .NotEmpty()
+            .Must(value => value == true || value == false)
                 .WithMessage("Required field");
 
         RuleFor(x => x.AdvertForCreating.HasElevator)
-            .NotEmpty()
+            .Must(value => value == true || value == false)
                 .WithMessage("Required field");
 
         RuleFor(x => x.AdvertForCreating.FloorSpace)
@@ -55,7 +55,7 @@ internal class CreateAdvertValidator :
                 .WithMessage("Floor space cant be lower then 1");
 
         RuleFor(x => x.AdvertForCreating.IsFurnished)
-           .NotEmpty()
+            .Must(value => value == true || value == false)
                 .WithMessage("Required field");
 
         RuleFor(x => x.AdvertForCreating.Purpose)
