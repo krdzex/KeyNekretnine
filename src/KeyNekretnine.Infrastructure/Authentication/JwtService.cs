@@ -97,6 +97,11 @@ internal sealed class JwtService : IJwtService
         var userId = tokenContent.Claims.ToList().FirstOrDefault(q => q.Type == ClaimTypes.NameIdentifier)?.Value;
         var user = await _userManager.FindByIdAsync(userId);
 
+        if (user is null)
+        {
+            return null;
+        }
+
         var isValid = await _userManager.VerifyUserTokenAsync(
             user,
             "KeyNekretnineAPI",
@@ -104,6 +109,12 @@ internal sealed class JwtService : IJwtService
             refreshToken);
 
         if (!isValid)
+        {
+            await _userManager.UpdateSecurityStampAsync(user);
+            return null;
+        }
+
+        if (user.IsBanned && (!user.BanEnd.HasValue || user.BanEnd >= DateTime.Now))
         {
             await _userManager.UpdateSecurityStampAsync(user);
             return null;

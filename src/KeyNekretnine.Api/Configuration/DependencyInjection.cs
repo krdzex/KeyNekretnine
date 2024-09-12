@@ -67,11 +67,10 @@ public static class DependencyInjection
             {
                 builder
                 .WithOrigins(
-                    "https://testing-ui.keynekretnine.me",
-                    "https://keynekretnine-dev.vercel.app",
                     "http://localhost:3000",
                     "https://localhost:4200",
-                    "https://key-nekretnine-admin.vercel.app"
+                    "https://key-nekretnine-admin.vercel.app",
+                    "https://key-nekretnine.vercel.app"
                     )
                 .AllowAnyMethod()
                 .AllowAnyHeader()

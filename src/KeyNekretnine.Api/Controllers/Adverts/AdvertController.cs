@@ -157,7 +157,6 @@ public class AdvertController : ControllerBase
     /// </summary>
     [Authorize]
     [HttpGet("/api/advert/my-adverts")]
-    //[ServiceFilter(typeof(BanUserChack))]
     public async Task<IActionResult> GetMyAdverts([FromQuery] MyAdvertsPaginationParameters request, CancellationToken cancellationToken)
     {
         var query = new GetPagedMyAdvertsQuery(
@@ -178,7 +177,6 @@ public class AdvertController : ControllerBase
     /// </summary>
     [Authorize]
     [HttpGet("{referenceId}/is-favorite")]
-    //[ServiceFilter(typeof(BanUserChack))]
     public async Task<IActionResult> GetIsAdvertFavorite(string referenceId, CancellationToken cancellationToken)
     {
         var query = new GetIsAdvertFavoriteQuery(referenceId);
@@ -193,7 +191,6 @@ public class AdvertController : ControllerBase
     /// </summary>
     [Authorize]
     [HttpGet("favorite")]
-    //[ServiceFilter(typeof(BanUserChack))]
     public async Task<IActionResult> GetFavoriteAdverts([FromQuery] FavoriteAdvertsPaginationParameters request, CancellationToken cancellationToken)
     {
         var query = new GetFavoriteAdvertsQuery(
@@ -211,7 +208,6 @@ public class AdvertController : ControllerBase
     /// </summary>
     [Authorize]
     [HttpGet("/api/advert/my-adverts/{referenceId}")]
-    //[ServiceFilter(typeof(BanUserChack))]
     public async Task<IActionResult> GetMyAdvertByReferenceId(string referenceId, CancellationToken cancellationToken)
     {
         var query = new GetMyAdvertByReferenceIdQuery(referenceId);
@@ -297,7 +293,6 @@ public class AdvertController : ControllerBase
     /// </summary>
     [Authorize(Roles = "Administrator")]
     [HttpPut("{referenceId}/approve")]
-    //[ServiceFilter(typeof(BanUserChack))]
     public async Task<IActionResult> ApproveAdvert(string referenceId, CancellationToken cancellationToken)
     {
         var command = new ApproveAdvertCommand(referenceId);
@@ -312,7 +307,6 @@ public class AdvertController : ControllerBase
     /// </summary>
     [Authorize(Roles = "Administrator")]
     [HttpPut("{referenceId}/reject")]
-    //[ServiceFilter(typeof(BanUserChack))]
     public async Task<IActionResult> RejectAdvert(string referenceId, CancellationToken cancellationToken)
     {
         var command = new RejectAdvertCommand(referenceId);
@@ -327,7 +321,6 @@ public class AdvertController : ControllerBase
     /// </summary>
     [Authorize]
     [HttpPost("{referenceId}/report")]
-    //[ServiceFilter(typeof(BanUserChack))]
     public async Task<IActionResult> ReportAdvert(string referenceId, [FromBody] ReportAdvertRequest request, CancellationToken cancellationToken)
     {
         var command = new ReportAdvertCommand(referenceId, request.RejectReasonId);
@@ -343,7 +336,6 @@ public class AdvertController : ControllerBase
     /// </summary>
     [Authorize]
     [HttpPost("{referenceId}/favorite")]
-    //[ServiceFilter(typeof(BanUserChack))]
     public async Task<IActionResult> MakeAdvertToFavorite(string referenceId, CancellationToken cancellationToken)
     {
         var command = new MakeAdvertFavoriteCommand(referenceId);
@@ -358,7 +350,6 @@ public class AdvertController : ControllerBase
     /// </summary>
     [Authorize]
     [HttpDelete("{referenceId}/favorite")]
-    //[ServiceFilter(typeof(BanUserChack))]
     public async Task<IActionResult> RemoveAdvertFromFavorite(string referenceId, CancellationToken cancellationToken)
     {
         var command = new RemoveAdvertFromFavoriteCommand(referenceId);
@@ -373,7 +364,6 @@ public class AdvertController : ControllerBase
     /// </summary>
     [Authorize(Roles = "Administrator")]
     [HttpPut("{referenceId}/make-premium")]
-    //[ServiceFilter(typeof(BanUserChack))]
     public async Task<IActionResult> MakeAdvertPremium(string referenceId, CancellationToken cancellationToken)
     {
         var command = new MakeAdvertPremiumCommand(referenceId);
@@ -388,7 +378,6 @@ public class AdvertController : ControllerBase
     /// </summary>
     [Authorize(Roles = "Administrator")]
     [HttpPut("{referenceId}/remove-premium")]
-    //[ServiceFilter(typeof(BanUserChack))]
     public async Task<IActionResult> RemoveAdvertPremium(string referenceId, CancellationToken cancellationToken)
     {
         var command = new RemoveAdvertPremiumCommand(referenceId);
@@ -403,7 +392,6 @@ public class AdvertController : ControllerBase
     /// </summary>
     [Authorize]
     [HttpPut("{referenceId}/pause")]
-    //[ServiceFilter(typeof(BanUserChack))]
     public async Task<IActionResult> PauseAdvert(string referenceId, CancellationToken cancellationToken)
     {
         var command = new PauseAdvertCommand(referenceId);
@@ -418,7 +406,6 @@ public class AdvertController : ControllerBase
     /// </summary>
     [Authorize]
     [HttpPut("{referenceId}/activate")]
-    //[ServiceFilter(typeof(BanUserChack))]
     public async Task<IActionResult> ActivateAdvert(string referenceId, CancellationToken cancellationToken)
     {
         var command = new ActivateAdvertCommand(referenceId);

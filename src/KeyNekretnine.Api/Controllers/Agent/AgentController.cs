@@ -26,7 +26,6 @@ public class AgentController : ControllerBase
     /// Creates a new agent.
     /// </summary>
     [Authorize]
-    //[ServiceFilter(typeof(BanUserChack))]
     [HttpPost]
     public async Task<IActionResult> Create([FromForm] CreateAgentRequest createAgentRequest, CancellationToken cancellationToken)
     {
@@ -99,7 +98,6 @@ public class AgentController : ControllerBase
     /// Updates an existing agent by its Id.
     /// </summary>
     [Authorize]
-    //[ServiceFilter(typeof(BanUserChack))]
     [HttpPut("{agentId}")]
     public async Task<IActionResult> Update([FromForm] UpdateAgentRequest updateAgentRequest, Guid agentId, CancellationToken cancellationToken)
     {
