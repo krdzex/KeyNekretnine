@@ -21,11 +21,12 @@ internal sealed class GetBasicUpdateHandler : IQueryHandler<GetBasicUpdateQuery,
     {
         using var connection = _sqlConnectionFactory.CreateConnection();
         var updateType = (int)UpdateTypes.BasicInformations;
+
         const string sql = """
-            SELECT
-                au.id,
-                au.approved_on_date AS approvedOnDate,
-                au.rejected_on_date AS rejectedOnDate,
+        SELECT
+            au.id,
+            au.approved_on_date AS approvedOnDate,
+            au.rejected_on_date AS rejectedOnDate,
                 a.price AS price,
                 a.floor_space AS floorSpace,
                 a.no_of_bedrooms AS noOfBedrooms,
@@ -44,20 +45,40 @@ internal sealed class GetBasicUpdateHandler : IQueryHandler<GetBasicUpdateQuery,
                 a.purpose,
                 a.is_urgent AS isUrgent,
                 au.content
-            FROM advert_updates AS au
-            INNER JOIN adverts AS a ON a.id = au.advert_id
-            WHERE au.id = @UpdateId and au.type = @updateType
-            """;
+        FROM advert_updates AS au
+        INNER JOIN adverts AS a ON a.id = au.advert_id
+        WHERE au.id = @UpdateId and au.type = @updateType
+        """;
 
         var updateResult = await connection.QueryAsync<BasicUpdateResponse, BasicAdvertInformations, string, BasicUpdateResponse>(
             sql,
-            (update, currentValues, newValue) =>
+            (update, currentValues, newContent) =>
             {
-                update.CurrentValues = currentValues;
-                update.NewValues = JsonConvert.DeserializeObject<BasicAdvertInformations>(newValue)!;
-                return update;
+                var newValues = JsonConvert.DeserializeObject<BasicAdvertInformations>(newContent)!;
 
-            }, new { request.UpdateId, updateType }, splitOn: "price,content");
+                update.AddChange("price", currentValues.Price, newValues.Price);
+                update.AddChange("floorSpace", currentValues.FloorSpace, newValues.FloorSpace);
+                update.AddChange("noOfBedrooms", currentValues.NoOfBedrooms, newValues.NoOfBedrooms);
+                update.AddChange("noOfBathrooms", currentValues.NoOfBathrooms, newValues.NoOfBathrooms);
+                update.AddChange("buildingFloor", currentValues.BuildingFloor, newValues.BuildingFloor);
+                update.AddChange("hasElevator", currentValues.HasElevator, newValues.HasElevator);
+                update.AddChange("hasGarage", currentValues.HasGarage, newValues.HasGarage);
+                update.AddChange("hasTerrace", currentValues.HasTerrace, newValues.HasTerrace);
+                update.AddChange("hasWifi", currentValues.HasWifi, newValues.HasWifi);
+                update.AddChange("isFurnished", currentValues.IsFurnished, newValues.IsFurnished);
+                update.AddChange("yearOfBuildingCreated", currentValues.YearOfBuildingCreated, newValues.YearOfBuildingCreated);
+                update.AddChange("isUnderConstruction", currentValues.IsUnderConstruction, newValues.IsUnderConstruction);
+                update.AddChange("type", currentValues.Type, newValues.Type);
+                update.AddChange("purpose", currentValues.Purpose, newValues.Purpose);
+                update.AddChange("isUrgent", currentValues.IsUrgent, newValues.IsUrgent);
+                update.AddChange("descriptionEn", currentValues.DescriptionEn, newValues.DescriptionEn);
+                update.AddChange("descriptionSr", currentValues.DescriptionSr, newValues.DescriptionSr);
+
+                return update;
+            },
+            new { request.UpdateId, updateType },
+            splitOn: "price,content"
+        );
 
         var basicUpdate = updateResult.FirstOrDefault();
 
@@ -66,6 +87,7 @@ internal sealed class GetBasicUpdateHandler : IQueryHandler<GetBasicUpdateQuery,
             return Result.Failure<BasicUpdateResponse>(AdvertErrors.BasicUpdateNotFound);
         }
 
-        return basicUpdate;
+        return Result.Success(basicUpdate);
     }
+
 }

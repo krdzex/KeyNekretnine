@@ -2,10 +2,30 @@
 public class BasicUpdateResponse
 {
     public Guid Id { get; set; }
-    public BasicAdvertInformations CurrentValues { get; set; }
-    public BasicAdvertInformations NewValues { get; set; }
     public DateTime? ApprovedOnDate { get; set; }
     public DateTime? RejectedOnDate { get; set; }
+    public List<PropertyChange> Changes { get; set; } = new();
+
+
+    public void AddChange<T>(string prop, T oldValue, T newValue)
+    {
+        if (!EqualityComparer<T>.Default.Equals(oldValue, newValue))
+        {
+            Changes.Add(new PropertyChange
+            {
+                Prop = prop,
+                Old = oldValue,
+                New = newValue
+            });
+        }
+    }
+}
+
+public class PropertyChange
+{
+    public string Prop { get; set; }
+    public object Old { get; set; }
+    public object New { get; set; }
 }
 
 public class BasicAdvertInformations

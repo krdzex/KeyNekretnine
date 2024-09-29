@@ -38,11 +38,16 @@ internal sealed class LocationUpdateHandler : IQueryHandler<GetLocationUpdateQue
             """;
 
         var updateResult = await connection.QueryAsync<LocationUpdateResponse, LocationAdvertInformations, string, LocationUpdateResponse>(
-            sql,
-            (update, currentValues, newValue) =>
+        sql,
+        (update, currentValues, newValue) =>
             {
-                update.CurrentValues = currentValues;
-                update.NewValues = JsonConvert.DeserializeObject<LocationAdvertInformations>(newValue)!;
+                var newValues = JsonConvert.DeserializeObject<LocationAdvertInformations>(newValue)!;
+
+                update.AddChange("address", currentValues.Address, newValues.Address);
+                update.AddChange("latitude", currentValues.Latitude, newValues.Latitude);
+                update.AddChange("longitude", currentValues.Longitude, newValues.Longitude);
+                update.AddChange("neighborhoodId", currentValues.NeighborhoodId, newValues.NeighborhoodId);
+
                 return update;
 
             }, new { request.UpdateId, updateType }, splitOn: "address,content");

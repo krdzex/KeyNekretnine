@@ -36,6 +36,7 @@ internal sealed class GetFeaturesUpdateHandler : IQueryHandler<GetFeaturesUpdate
             """;
 
         var currentValuesArray = new List<string>();
+        var newValues = new List<string>();
 
         var updateResult = await connection.QueryAsync<FeaturesUpdateResponse, string, string, FeaturesUpdateResponse>(
             sql,
@@ -46,7 +47,7 @@ internal sealed class GetFeaturesUpdateHandler : IQueryHandler<GetFeaturesUpdate
                     currentValuesArray.Add(currentValues);
                 }
 
-                update.NewValues = JsonConvert.DeserializeObject<FeaturesInformations>(newValue)!;
+                newValues = JsonConvert.DeserializeObject<FeaturesInformations>(newValue)!.Features;
                 return update;
 
             }, new { request.UpdateId, updateType }, splitOn: "name,content");
@@ -58,7 +59,12 @@ internal sealed class GetFeaturesUpdateHandler : IQueryHandler<GetFeaturesUpdate
             return Result.Failure<FeaturesUpdateResponse>(AdvertErrors.FeaturesUpdateNotFound);
         }
 
-        featuresUpdate.CurrentValues.Features = currentValuesArray;
+        var currentFeatures = string.Join(", ", currentValuesArray);
+
+        var newFeatures = string.Join(", ", newValues);
+
+        featuresUpdate.AddChange("features", currentFeatures, newFeatures);
+
         return featuresUpdate;
     }
 }
