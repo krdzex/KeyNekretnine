@@ -86,4 +86,8 @@ public static class AdvertErrors
     public static Error NoEnoughImages => new(
         "Advert.NoEnoughImages",
         "You need to have at least 2 images");
+
+    public static Error ImageNotFound => new(
+        "Advert.ImageNotFound",
+        "Image not found");
 }

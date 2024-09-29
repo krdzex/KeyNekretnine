@@ -4,6 +4,7 @@ using KeyNekretnine.Application.Core.Adverts.Commands.ApproveBasicUpdate;
 using KeyNekretnine.Application.Core.Adverts.Commands.ApproveFeaturesUpdate;
 using KeyNekretnine.Application.Core.Adverts.Commands.ApproveLocationUpdate;
 using KeyNekretnine.Application.Core.Adverts.Commands.ChangeAgentForAdvert;
+using KeyNekretnine.Application.Core.Adverts.Commands.ChangeCoverImage;
 using KeyNekretnine.Application.Core.Adverts.Commands.CreateAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.DeleteImagesCommand;
 using KeyNekretnine.Application.Core.Adverts.Commands.MakeAdvertFavorite;
@@ -713,5 +714,19 @@ public class AdvertController : ControllerBase
         var response = await _sender.Send(query, cancellationToken);
 
         return Ok(response.Value);
+    }
+
+    /// <summary>
+    /// Change cover image for advert by reference ID
+    /// </summary>
+    [Authorize]
+    [HttpPut("{referenceId}/change-cover-image")]
+    public async Task<IActionResult> ChangeCoverImage([FromBody] string newCoverImageUrl, string referenceId, CancellationToken cancellationToken)
+    {
+        var command = new ChangeCoverImageCommand(referenceId, newCoverImageUrl);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
     }
 }

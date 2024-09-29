@@ -424,4 +424,25 @@ public class Advert : Entity
 
         UpdatedOnDate = timeNow;
     }
+
+
+    public Result ChangeCoverImage(string imageUrl, DateTime timeNow)
+    {
+        var imageToBecomeCover = _images.FirstOrDefault(img => img.Url == imageUrl);
+
+        if (imageToBecomeCover is null)
+        {
+            return Result.Failure(AdvertErrors.ImageNotFound);
+        }
+
+        var tempUrl = CoverImageUrl;
+
+        CoverImageUrl = ImageUrl.Create(imageToBecomeCover.Url);
+
+        imageToBecomeCover.UpdateUrl(tempUrl.Value);
+
+        UpdatedOnDate = timeNow;
+
+        return Result.Success();
+    }
 }

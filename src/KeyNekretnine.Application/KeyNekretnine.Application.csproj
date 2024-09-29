@@ -51,6 +51,8 @@
     <Compile Include="Core\Adverts\Commands\ApproveLocationUpdate\ApproveLocationUpdateHandler.cs" />
     <Compile Include="Core\Adverts\Commands\ChangeAgentForAdvert\ChangeAgentForAdvertCommand.cs" />
     <Compile Include="Core\Adverts\Commands\ChangeAgentForAdvert\ChangeAgentForAdvertHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\ChangeCoverImage\ChangeCoverImageCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\ChangeCoverImage\ChangeCoverImageHandler.cs" />
     <Compile Include="Core\Adverts\Commands\CreateAdvert\CreateAdvertCommand.cs" />
     <Compile Include="Core\Adverts\Commands\CreateAdvert\CreateAdvertHandler.cs" />
     <Compile Include="Core\Adverts\Commands\CreateAdvert\CreateAdvertRequest.cs" />
