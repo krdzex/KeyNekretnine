@@ -14,6 +14,8 @@ public class AdvertResponse
     public bool HasTerrace { get; set; }
     public bool HasWifi { get; set; }
     public bool IsFurnished { get; set; }
+    public bool IsPremium { get; set; }
+
     public int YearOfBuildingCreated { get; set; }
     public bool IsUrgent { get; set; }
     public bool IsUnderConstruction { get; set; }

@@ -35,32 +35,35 @@ internal sealed class ProcessImageUploadJob : IJob
 
         var advertId = await GetAdvertToUploadImages(connection, transaction);
 
-        var imagesToUpload = await GetImagesForAdvert(connection, advertId, transaction);
-
-        foreach (var image in imagesToUpload)
+        if (advertId is not null)
         {
-            var imageUploadUrl = await _imageService.UploadImageOnCloudinaryUsingDb(image.ImageData, advertId.ToString());
+            var imagesToUpload = await GetImagesForAdvert(connection, advertId.Value, transaction);
 
-            if (image.IsCover)
+            foreach (var image in imagesToUpload)
             {
-                await AddCoverImgForAdvert(connection, advertId, imageUploadUrl, transaction);
+                var imageUploadUrl = await _imageService.UploadImageOnCloudinaryUsingDb(image.ImageData, advertId.Value.ToString());
+
+                if (image.IsCover)
+                {
+                    await AddCoverImgForAdvert(connection, advertId.Value, imageUploadUrl, transaction);
+                }
+                else
+                {
+                    await AddImgForAdvert(connection, advertId.Value, imageUploadUrl, transaction);
+                }
             }
-            else
-            {
-                await AddImgForAdvert(connection, advertId, imageUploadUrl, transaction);
-            }
+
+            await DeleteTemporaryImageForAdvert(connection, advertId.Value, transaction);
+
+            await UpdateAdvertStatus(connection, advertId.Value, transaction);
         }
-
-        await DeleteTemporaryImageForAdvert(connection, advertId, transaction);
-
-        await UpdateAdvertStatus(connection, advertId, transaction);
 
         transaction.Commit();
 
         _logger.LogInformation("Completed uploading images");
     }
 
-    private async Task<Guid> GetAdvertToUploadImages(
+    private async Task<Guid?> GetAdvertToUploadImages(
         IDbConnection connection,
         IDbTransaction transaction)
     {

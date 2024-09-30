@@ -7,4 +7,5 @@ public class TemporeryImageData : Entity
     public byte[] ImageData { get; set; }
     public bool IsCover { get; set; }
     public DateTime CreatedDate { get; set; }
+    public bool IsForUpdate { get; set; }
 }
