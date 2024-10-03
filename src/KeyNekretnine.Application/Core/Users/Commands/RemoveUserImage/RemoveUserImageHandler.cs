@@ -7,7 +7,7 @@ using KeyNekretnine.Domain.Users;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
-namespace KeyNekretnine.Application.Core.Users.Commands.DeleteUserImage;
+namespace KeyNekretnine.Application.Core.Users.Commands.RemoveUserImage;
 internal sealed class RemoveUserImageHandler : ICommandHandler<RemoveUserImageCommand>
 {
     private readonly UserManager<User> _userManager;

@@ -5,7 +5,7 @@ using KeyNekretnine.Application.Abstraction.Messaging;
 using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Agencies;
 
-namespace KeyNekretnine.Application.Core.Agencies.Commands.RemoveAgenyImage;
+namespace KeyNekretnine.Application.Core.Agencies.Commands.RemoveAgencyImage;
 internal sealed class RemoveAgencyImageHandler : ICommandHandler<RemoveAgencyImageCommand>
 {
     private readonly IAgencyRepository _agencyRepository;

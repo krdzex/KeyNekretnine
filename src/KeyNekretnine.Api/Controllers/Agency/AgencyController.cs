@@ -1,5 +1,5 @@
 ﻿using KeyNekretnine.Application.Core.Agencies.Commands.CreateAgency;
-using KeyNekretnine.Application.Core.Agencies.Commands.RemoveAgenyImage;
+using KeyNekretnine.Application.Core.Agencies.Commands.RemoveAgencyImage;
 using KeyNekretnine.Application.Core.Agencies.Commands.UpdateAgency;
 using KeyNekretnine.Application.Core.Agencies.Queries.GetAgencyAdverts;
 using KeyNekretnine.Application.Core.Agencies.Queries.GetAgencyAgents;

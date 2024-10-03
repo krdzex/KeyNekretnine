@@ -1,8 +1,8 @@
 ﻿using KeyNekretnine.Application.Core.Users.Commands.BanUser;
 using KeyNekretnine.Application.Core.Users.Commands.ChangeUserPassword;
 using KeyNekretnine.Application.Core.Users.Commands.ConfirmUserEmail;
-using KeyNekretnine.Application.Core.Users.Commands.DeleteUserImage;
 using KeyNekretnine.Application.Core.Users.Commands.PasswordForgot;
+using KeyNekretnine.Application.Core.Users.Commands.RemoveUserImage;
 using KeyNekretnine.Application.Core.Users.Commands.RequestEmailConfirmation;
 using KeyNekretnine.Application.Core.Users.Commands.RequestPasswordForgot;
 using KeyNekretnine.Application.Core.Users.Commands.UnbanUser;
