@@ -75,31 +75,6 @@ internal sealed class GetTopSectionAnalyticForAdvertHandler : IQueryHandler<GetT
                     }
                 }
             },
-
-            new RunReportRequest
-            {
-                Dimensions = { new Dimension { Name = "city" } },
-                Metrics = { new Metric { Name = "screenPageViews" } },
-                DateRanges = { new DateRange { StartDate = "2024-01-01", EndDate = "2024-12-31" } },
-                DimensionFilter = new FilterExpression
-                {
-                    Filter = new Filter
-                    {
-                        FieldName = "pagePath",
-                        StringFilter = new Filter.Types.StringFilter
-                        {
-                            MatchType = Filter.Types.StringFilter.Types.MatchType.Exact,
-                            Value = $"/oglasi/{request.ReferenceId}"
-                        }
-                    }
-                },
-                OrderBys = { new OrderBy
-                {
-                    Metric = new OrderBy.Types.MetricOrderBy { MetricName = "screenPageViews" },
-                    Desc = true
-                }}
-            },
-
             new RunReportRequest
             {
                 Dimensions = { new Dimension { Name = "pagePath" } },
@@ -117,25 +92,25 @@ internal sealed class GetTopSectionAnalyticForAdvertHandler : IQueryHandler<GetT
                         }
                     }
                 }
+            },
+            new RunReportRequest
+            {
+                Dimensions = { new Dimension { Name = "pagePath" } },
+                Metrics = { new Metric { Name = "sessionKeyEventRate" } },
+                DateRanges = { new DateRange { StartDate = "2024-01-01", EndDate = "2024-12-31" } },
+                DimensionFilter = new FilterExpression
+                {
+                    Filter = new Filter
+                    {
+                        FieldName = "pagePath",
+                        StringFilter = new Filter.Types.StringFilter
+                        {
+                            MatchType = Filter.Types.StringFilter.Types.MatchType.Exact,
+                            Value = $"/oglasi/{request.ReferenceId}"
+                        }
+                    }
+                }
             }
-            //new RunReportRequest
-            //{
-            //    Dimensions = { new Dimension { Name = "pagePath" } },
-            //    Metrics = { new Metric { Name = "sessionKeyEventRate" } },
-            //    DateRanges = { new DateRange { StartDate = "2024-01-01", EndDate = "2024-12-31" } },
-            //    DimensionFilter = new FilterExpression
-            //    {
-            //        Filter = new Filter
-            //        {
-            //            FieldName = "pagePath",
-            //            StringFilter = new Filter.Types.StringFilter
-            //            {
-            //                MatchType = Filter.Types.StringFilter.Types.MatchType.Exact,
-            //                Value = $"/oglasi/{request.ReferenceId}"
-            //            }
-            //        }
-            //    }
-            //}
         }
         };
 
@@ -147,10 +122,9 @@ internal sealed class GetTopSectionAnalyticForAdvertHandler : IQueryHandler<GetT
             AvgTimeOnPage = ga4response.Reports[1].Rows.Any()
                 ? FormatTime(double.Parse(ga4response.Reports[1].Rows[0].MetricValues[0].Value))
                 : "0m 0s",
-            BounceRate = ga4response.Reports[2].Rows.Any() ? double.Parse(ga4response.Reports[2].Rows[0].MetricValues[0].Value) : 0,
-            TopUserLocation = ga4response.Reports[3].Rows.Any() ? ga4response.Reports[3].Rows[0].DimensionValues[0].Value : "Unknown",
-            LeadsCount = ga4response.Reports[4].Rows.Any() ? int.Parse(ga4response.Reports[4].Rows[0].MetricValues[0].Value) : 0,
-            //LeadPressProcentage = ga4response.Reports[5].Rows.Any() ? Double.Round(double.Parse(ga4response.Reports[5].Rows[0].DimensionValues[0].Value), 2) * 100 + "%" : "0%",
+            BounceRate = ga4response.Reports[2].Rows.Any() ? Double.Round(double.Parse(ga4response.Reports[2].Rows[0].MetricValues[0].Value), 2) * 100 + "%" : "0%",
+            LeadsCount = ga4response.Reports[3].Rows.Any() ? int.Parse(ga4response.Reports[3].Rows[0].MetricValues[0].Value) : 0,
+            LeadPressProcentage = ga4response.Reports[4].Rows.Any() ? Double.Round(double.Parse(ga4response.Reports[4].Rows[0].MetricValues[0].Value), 2) * 100 + "%" : "0%",
         };
 
         return Result.Success(response);
