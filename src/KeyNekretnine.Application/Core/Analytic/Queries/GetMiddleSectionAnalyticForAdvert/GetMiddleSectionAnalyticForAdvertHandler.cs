@@ -14,6 +14,9 @@ internal sealed class GetMiddleSectionAnalyticForAdvertHandler : IQueryHandler<G
 
     public async Task<Result<MiddleSectionAnalyticForAdvertResponse>> Handle(GetMiddleSectionAnalyticForAdvertQuery request, CancellationToken cancellationToken)
     {
+        var endDate = DateTime.Now.ToString("yyyy-MM-dd");
+        var startDate = DateTime.Now.AddMonths(-3).ToString("yyyy-MM-dd");
+
         var ga4request = new BatchRunReportsRequest
         {
             Property = "properties/379624338",
@@ -21,9 +24,9 @@ internal sealed class GetMiddleSectionAnalyticForAdvertHandler : IQueryHandler<G
         {
             new RunReportRequest
             {
-                Dimensions = { new Dimension { Name = "month" } },
+                Dimensions = { new Dimension { Name = "date" } },
                 Metrics = { new Metric { Name = "screenPageViews" } },
-                DateRanges = { new DateRange { StartDate = "2024-01-01", EndDate = "2024-12-31" } },
+                DateRanges = { new DateRange { StartDate = startDate, EndDate = endDate } },
                 DimensionFilter = new FilterExpression
                 {
                     Filter = new Filter
@@ -39,9 +42,9 @@ internal sealed class GetMiddleSectionAnalyticForAdvertHandler : IQueryHandler<G
             },
             new RunReportRequest
             {
-                Dimensions = { new Dimension { Name = "month" } },
+                Dimensions = { new Dimension { Name = "date" } },
                 Metrics = { new Metric { Name = "keyEvents" } },
-                DateRanges = { new DateRange { StartDate = "2024-01-01", EndDate = "2024-12-31" } },
+                DateRanges = { new DateRange { StartDate = startDate, EndDate = endDate } },
                 DimensionFilter = new FilterExpression
                 {
                     Filter = new Filter
@@ -60,71 +63,36 @@ internal sealed class GetMiddleSectionAnalyticForAdvertHandler : IQueryHandler<G
 
         var ga4response = await _analyticsDataClient.BatchRunReportsAsync(ga4request, cancellationToken);
 
-        var viewsOverTime = InitializeMonthDictionaryWithZeroValues();
-        var keyEventsOverTime = InitializeMonthDictionaryDoubleWithZeroValues();
+        var response = new MiddleSectionAnalyticForAdvertResponse();
 
         foreach (var row in ga4response.Reports[0].Rows)
         {
-            var month = int.Parse(row.DimensionValues[0].Value); // "01", "02", etc.
+            var date = row.DimensionValues[0].Value;
+            var formattedDate = DateTime.ParseExact(date, "yyyyMMdd", null).ToString("yyyy-MM-dd");
+
             var views = int.Parse(row.MetricValues[0].Value);
-            viewsOverTime[month] = views; // Replace the default 0 if data exists
+
+            response.ViewsOverTime.Add(new MiddleSectionAnalyticForAdvertItem
+            {
+                Date = formattedDate,
+                Views = views
+            });
         }
 
-        // Parse the response for key events
         foreach (var row in ga4response.Reports[1].Rows)
         {
-            var month = int.Parse(row.DimensionValues[0].Value);
-            var keyEvents = double.Parse(row.MetricValues[0].Value);
-            keyEventsOverTime[month] = keyEvents; // Replace the default 0 if data exists
+            var date = row.DimensionValues[0].Value;
+            var formattedDate = DateTime.ParseExact(date, "yyyyMMdd", null).ToString("yyyy-MM-dd");
+
+            var views = int.Parse(row.MetricValues[0].Value);
+
+            response.KeyEventsOverTime.Add(new MiddleSectionAnalyticForAdvertItem
+            {
+                Date = formattedDate,
+                Views = views
+            });
         }
 
-        var monthNames = GetMonthNames();
-
-        var orderedViewsOverTime = viewsOverTime
-            .OrderByDescending(x => x.Key)
-            .ToDictionary(x => monthNames[x.Key], x => x.Value); // Use month names
-
-        var orderedKeyEventsOverTime = keyEventsOverTime
-            .OrderByDescending(x => x.Key)
-            .ToDictionary(x => monthNames[x.Key], x => x.Value); // Use month names
-
-        // Create the response object and return the ordered dictionaries
-        var response = new MiddleSectionAnalyticForAdvertResponse
-        {
-            ViewsOverTime = orderedViewsOverTime,
-            KeyEventsOverTime = orderedKeyEventsOverTime
-        };
-
         return Result.Success(response);
-    }
-
-    private Dictionary<int, int> InitializeMonthDictionaryWithZeroValues()
-    {
-        return Enumerable.Range(1, 12).ToDictionary(month => month, month => 0);
-    }
-
-    private Dictionary<int, double> InitializeMonthDictionaryDoubleWithZeroValues()
-    {
-        return Enumerable.Range(1, 12).ToDictionary(month => month, month => 0.0);
-    }
-
-    // Helper method to map month numbers to their names
-    private Dictionary<int, string> GetMonthNames()
-    {
-        return new Dictionary<int, string>
-        {
-            { 1, "January" },
-            { 2, "February" },
-            { 3, "March" },
-            { 4, "April" },
-            { 5, "May" },
-            { 6, "June" },
-            { 7, "July" },
-            { 8, "August" },
-            { 9, "September" },
-            { 10, "October" },
-            { 11, "November" },
-            { 12, "December" }
-        };
     }
 }
