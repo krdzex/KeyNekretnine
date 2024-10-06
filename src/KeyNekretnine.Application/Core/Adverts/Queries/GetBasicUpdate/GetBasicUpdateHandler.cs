@@ -16,7 +16,6 @@ internal sealed class GetBasicUpdateHandler : IQueryHandler<GetBasicUpdateQuery,
         _sqlConnectionFactory = sqlConnectionFactory;
     }
 
-
     public async Task<Result<BasicUpdateResponse>> Handle(GetBasicUpdateQuery request, CancellationToken cancellationToken)
     {
         using var connection = _sqlConnectionFactory.CreateConnection();
@@ -26,59 +25,40 @@ internal sealed class GetBasicUpdateHandler : IQueryHandler<GetBasicUpdateQuery,
         SELECT
             au.id,
             au.approved_on_date AS approvedOnDate,
-            au.rejected_on_date AS rejectedOnDate,
-                a.price AS price,
-                a.floor_space AS floorSpace,
-                a.no_of_bedrooms AS noOfBedrooms,
-                a.no_of_bathrooms AS noOfBathrooms,
-                a.building_floor AS buildingFloor,
-                a.has_elevator AS hasElevator,
-                a.has_garage AS hasGarage,
-                a.has_terrace AS hasTerrace,
-                a.has_wifi AS hasWifi,
-                a.description_sr AS descriptionSr,
-            	a.description_en AS descriptionEn,
-                a.is_furnished AS isFurnished,
-                a.year_of_building_created AS yearOfBuildingCreated,
-                a.is_under_construction as isUnderConstruction,
-                a.type,
-                a.purpose,
-                a.is_urgent AS isUrgent,
-                au.content
+            au.old_content as oldContent,
+            au.new_content as newContent
         FROM advert_updates AS au
-        INNER JOIN adverts AS a ON a.id = au.advert_id
         WHERE au.id = @UpdateId and au.type = @updateType
         """;
 
-        var updateResult = await connection.QueryAsync<BasicUpdateResponse, BasicAdvertInformations, string, BasicUpdateResponse>(
+        var updateResult = await connection.QueryAsync<BasicUpdateResponse, string, string, BasicUpdateResponse>(
             sql,
-            (update, currentValues, newContent) =>
+            (update, oldValues, newValues) =>
             {
-                var newValues = JsonConvert.DeserializeObject<BasicAdvertInformations>(newContent)!;
+                var oldValuesObj = JsonConvert.DeserializeObject<BasicAdvertInformations>(oldValues)!;
+                var newValuesObj = JsonConvert.DeserializeObject<BasicAdvertInformations>(newValues)!;
 
-                update.AddChange("price", currentValues.Price, newValues.Price);
-                update.AddChange("floorSpace", currentValues.FloorSpace, newValues.FloorSpace);
-                update.AddChange("noOfBedrooms", currentValues.NoOfBedrooms, newValues.NoOfBedrooms);
-                update.AddChange("noOfBathrooms", currentValues.NoOfBathrooms, newValues.NoOfBathrooms);
-                update.AddChange("buildingFloor", currentValues.BuildingFloor, newValues.BuildingFloor);
-                update.AddChange("hasElevator", currentValues.HasElevator, newValues.HasElevator);
-                update.AddChange("hasGarage", currentValues.HasGarage, newValues.HasGarage);
-                update.AddChange("hasTerrace", currentValues.HasTerrace, newValues.HasTerrace);
-                update.AddChange("hasWifi", currentValues.HasWifi, newValues.HasWifi);
-                update.AddChange("isFurnished", currentValues.IsFurnished, newValues.IsFurnished);
-                update.AddChange("yearOfBuildingCreated", currentValues.YearOfBuildingCreated, newValues.YearOfBuildingCreated);
-                update.AddChange("isUnderConstruction", currentValues.IsUnderConstruction, newValues.IsUnderConstruction);
-                update.AddChange("type", currentValues.Type, newValues.Type);
-                update.AddChange("purpose", currentValues.Purpose, newValues.Purpose);
-                update.AddChange("isUrgent", currentValues.IsUrgent, newValues.IsUrgent);
-                update.AddChange("descriptionEn", currentValues.DescriptionEn, newValues.DescriptionEn);
-                update.AddChange("descriptionSr", currentValues.DescriptionSr, newValues.DescriptionSr);
+                update.AddChange("price", oldValuesObj.Price, newValuesObj.Price);
+                update.AddChange("floorSpace", oldValuesObj.FloorSpace, newValuesObj.FloorSpace);
+                update.AddChange("noOfBedrooms", oldValuesObj.NoOfBedrooms, newValuesObj.NoOfBedrooms);
+                update.AddChange("noOfBathrooms", oldValuesObj.NoOfBathrooms, newValuesObj.NoOfBathrooms);
+                update.AddChange("buildingFloor", oldValuesObj.BuildingFloor, newValuesObj.BuildingFloor);
+                update.AddChange("hasElevator", oldValuesObj.HasElevator, newValuesObj.HasElevator);
+                update.AddChange("hasGarage", oldValuesObj.HasGarage, newValuesObj.HasGarage);
+                update.AddChange("hasTerrace", oldValuesObj.HasTerrace, newValuesObj.HasTerrace);
+                update.AddChange("hasWifi", oldValuesObj.HasWifi, newValuesObj.HasWifi);
+                update.AddChange("isFurnished", oldValuesObj.IsFurnished, newValuesObj.IsFurnished);
+                update.AddChange("yearOfBuildingCreated", oldValuesObj.YearOfBuildingCreated, newValuesObj.YearOfBuildingCreated);
+                update.AddChange("isUnderConstruction", oldValuesObj.IsUnderConstruction, newValuesObj.IsUnderConstruction);
+                update.AddChange("type", oldValuesObj.Type, newValuesObj.Type);
+                update.AddChange("purpose", oldValuesObj.Purpose, newValuesObj.Purpose);
+                update.AddChange("isUrgent", oldValuesObj.IsUrgent, newValuesObj.IsUrgent);
+                update.AddChange("descriptionEn", oldValuesObj.DescriptionEn, newValuesObj.DescriptionEn);
+                update.AddChange("descriptionSr", oldValuesObj.DescriptionSr, newValuesObj.DescriptionSr);
 
                 return update;
             },
-            new { request.UpdateId, updateType },
-            splitOn: "price,content"
-        );
+            new { request.UpdateId, updateType }, splitOn: "oldContent,newContent");
 
         var basicUpdate = updateResult.FirstOrDefault();
 

@@ -38,6 +38,16 @@ internal sealed class AdvertRepository : Repository<Advert>, IAdvertRepository
             .FirstOrDefaultAsync(advert => advert.ReferenceId == referenceId && advert.Status == AdvertStatus.Accepted, cancellationToken);
     }
 
+    public async Task<Advert?> GetByReferenceIdWithFeaturesAsync(
+    string referenceId,
+    CancellationToken cancellationToken = default)
+    {
+        return await DbContext
+            .Set<Advert>()
+            .Include(advert => advert.AdvertFeatures)
+            .FirstOrDefaultAsync(advert => advert.ReferenceId == referenceId && advert.Status == AdvertStatus.Accepted, cancellationToken);
+    }
+
     public async Task<Advert?> GetByReferenceIdWithImagesAsync(
     string referenceId,
     CancellationToken cancellationToken = default)

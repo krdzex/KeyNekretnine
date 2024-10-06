@@ -60,11 +60,16 @@ internal sealed class UpdateAdvertLocationHandler : ICommandHandler<UpdateAdvert
             return Result.Failure(AdvertErrors.LocationcUpdateAlredyExist);
         }
 
+        var oldContent = new UpdateAdvertLocationRequest(
+            advert.Location.Latitude, advert.Location.Longitude,
+            advert.Location.Address, advert.NeighborhoodId);
+
         var updateAdvert = AdvertUpdate.Create(
             advert.Id,
             UpdateTypes.Location,
             _dateTimeProvider.Now,
-            JsonConvert.SerializeObject(request.LocationUpdateRequest));
+            JsonConvert.SerializeObject(request.LocationUpdateRequest),
+            JsonConvert.SerializeObject(oldContent));
 
         _advertUpdateRepository.Add(updateAdvert);
 

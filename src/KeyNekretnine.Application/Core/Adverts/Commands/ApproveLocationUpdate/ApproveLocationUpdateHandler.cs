@@ -33,7 +33,7 @@ internal sealed class ApproveLocationUpdateHandler : ICommandHandler<ApproveLoca
             return Result.Failure(AdvertErrors.LocationUpdateNotFound);
         }
 
-        var newValues = JsonConvert.DeserializeObject<LocationAdvertInformations>(update.Content)!;
+        var newValues = JsonConvert.DeserializeObject<LocationAdvertInformations>(update.NewContent)!;
 
         var approveResult = update.ApproveLocationUpdate(
             _dateTimeProvider.Now,

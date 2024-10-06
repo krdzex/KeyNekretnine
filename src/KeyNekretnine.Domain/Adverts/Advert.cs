@@ -266,8 +266,8 @@ public class Advert : Entity
 
     public Result ApplyBasicUpdate(
         DateTime updatedOnDate,
-        int price,
-        int floorSpace,
+        double price,
+        double floorSpace,
         int noOfBedrooms,
         int noOfBathrooms,
         int type,

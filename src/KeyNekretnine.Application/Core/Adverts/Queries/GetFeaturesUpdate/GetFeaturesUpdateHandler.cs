@@ -27,11 +27,9 @@ internal sealed class GetFeaturesUpdateHandler : IQueryHandler<GetFeaturesUpdate
                 au.id,
                 au.approved_on_date AS approvedOnDate,
                 au.rejected_on_date AS rejectedOnDate,
-                f.name,
-                au.content
+                au.old_content as oldContent,
+                au.new_content as newContent
             FROM advert_updates AS au
-            INNER JOIN adverts AS a ON a.id = au.advert_id
-            LEFT JOIN advert_features AS f ON f.advert_id = a.id
             WHERE au.id = @UpdateId AND au.type = @updateType
             """;
 
@@ -40,17 +38,18 @@ internal sealed class GetFeaturesUpdateHandler : IQueryHandler<GetFeaturesUpdate
 
         var updateResult = await connection.QueryAsync<FeaturesUpdateResponse, string, string, FeaturesUpdateResponse>(
             sql,
-            (update, currentValues, newValue) =>
-            {
-                if (!string.IsNullOrEmpty(currentValues))
-                {
-                    currentValuesArray.Add(currentValues);
-                }
+        (update, oldValues, newValues) =>
+        {
+            var oldValuesObj = JsonConvert.DeserializeObject<FeaturesInformations>(oldValues)!;
+            var newValuesObj = JsonConvert.DeserializeObject<FeaturesInformations>(newValues)!;
 
-                newValues = JsonConvert.DeserializeObject<FeaturesInformations>(newValue)!.Features;
-                return update;
+            var oldValuesString = string.Join(", ", oldValuesObj.Features);
+            var newValuesString = string.Join(", ", newValuesObj.Features);
 
-            }, new { request.UpdateId, updateType }, splitOn: "name,content");
+            update.AddChange("features", oldValuesString, newValuesString);
+
+            return update;
+        }, new { request.UpdateId, updateType }, splitOn: "oldContent,newContent");
 
         var featuresUpdate = updateResult.FirstOrDefault();
 
@@ -58,12 +57,6 @@ internal sealed class GetFeaturesUpdateHandler : IQueryHandler<GetFeaturesUpdate
         {
             return Result.Failure<FeaturesUpdateResponse>(AdvertErrors.FeaturesUpdateNotFound);
         }
-
-        var currentFeatures = string.Join(", ", currentValuesArray);
-
-        var newFeatures = string.Join(", ", newValues);
-
-        featuresUpdate.AddChange("features", currentFeatures, newFeatures);
 
         return featuresUpdate;
     }

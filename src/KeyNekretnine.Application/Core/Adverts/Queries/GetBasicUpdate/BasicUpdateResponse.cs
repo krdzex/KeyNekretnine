@@ -30,8 +30,8 @@ public class PropertyChange
 
 public class BasicAdvertInformations
 {
-    public int Price { get; set; }
-    public int FloorSpace { get; set; }
+    public double Price { get; set; }
+    public double FloorSpace { get; set; }
     public int NoOfBedrooms { get; set; }
     public int NoOfBathrooms { get; set; }
     public int Type { get; set; }

@@ -32,7 +32,7 @@ internal sealed class ApproveFeaturesUpdateHandler : ICommandHandler<ApproveFeat
             return Result.Failure(AdvertErrors.FeaturesUpdateNotFound);
         }
 
-        var newValues = JsonConvert.DeserializeObject<FeaturesInformations>(update.Content)!;
+        var newValues = JsonConvert.DeserializeObject<FeaturesInformations>(update.NewContent)!;
 
         var approveResult = update.ApproveFeaturesUpdate(_dateTimeProvider.Now, newValues.Features);
 

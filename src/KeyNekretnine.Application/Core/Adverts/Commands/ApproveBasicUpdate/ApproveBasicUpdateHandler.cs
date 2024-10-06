@@ -33,7 +33,7 @@ internal sealed class ApproveBasicUpdateHandler : ICommandHandler<ApproveBasicUp
             return Result.Failure(AdvertErrors.BasicUpdateNotFound);
         }
 
-        var newValues = JsonConvert.DeserializeObject<BasicAdvertInformations>(update.Content)!;
+        var newValues = JsonConvert.DeserializeObject<BasicAdvertInformations>(update.NewContent)!;
 
         var approveResult = update.ApproveBasicUpdate(
             _dateTimeProvider.Now,

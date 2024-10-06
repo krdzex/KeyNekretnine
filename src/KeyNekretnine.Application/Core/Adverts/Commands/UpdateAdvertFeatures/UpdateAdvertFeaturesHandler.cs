@@ -35,7 +35,7 @@ internal sealed class UpdateAdvertFeaturesHandler : ICommandHandler<UpdateAdvert
 
     public async Task<Result> Handle(UpdateAdvertFeaturesCommand request, CancellationToken cancellationToken)
     {
-        var advert = await _advertRepository.GetByReferenceIdAsync(request.ReferenceId, cancellationToken);
+        var advert = await _advertRepository.GetByReferenceIdWithFeaturesAsync(request.ReferenceId, cancellationToken);
 
         if (advert is null)
         {
@@ -59,11 +59,14 @@ internal sealed class UpdateAdvertFeaturesHandler : ICommandHandler<UpdateAdvert
             return Result.Failure(AdvertErrors.BasicUpdateAlredyExist);
         }
 
+        var oldContent = new UpdateAdvertFeaturesRequest(advert.AdvertFeatures.Select(x => x.Name).ToList());
+
         var updateAdvert = AdvertUpdate.Create(
             advert.Id,
             UpdateTypes.Features,
             _dateTimeProvider.Now,
-            JsonConvert.SerializeObject(request.FeaturesUpdateData));
+            JsonConvert.SerializeObject(request.FeaturesUpdateData),
+            JsonConvert.SerializeObject(oldContent));
 
         _advertUpdateRepository.Add(updateAdvert);
 

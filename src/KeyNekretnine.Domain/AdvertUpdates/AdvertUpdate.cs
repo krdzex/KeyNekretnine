@@ -5,13 +5,14 @@ using KeyNekretnine.Domain.ValueObjects;
 namespace KeyNekretnine.Domain.AdvertUpdates;
 public class AdvertUpdate : Entity
 {
-    public AdvertUpdate(Guid id, Guid advertId, UpdateTypes type, DateTime createdOnDate, string content)
+    public AdvertUpdate(Guid id, Guid advertId, UpdateTypes type, DateTime createdOnDate, string newContent, string oldContent)
         : base(id)
     {
         AdvertId = advertId;
         Type = type;
         CreatedOnDate = createdOnDate;
-        Content = content;
+        NewContent = newContent;
+        OldContent = oldContent;
     }
 
     private AdvertUpdate() { }
@@ -22,28 +23,31 @@ public class AdvertUpdate : Entity
     public UpdateTypes Type { get; private set; }
     public DateTime? RejectedOnDate { get; private set; }
     public DateTime? CreatedOnDate { get; private set; }
-    public string Content { get; private set; }
+    public string NewContent { get; private set; }
+    public string OldContent { get; private set; }
 
     public static AdvertUpdate Create(
     Guid advertId,
     UpdateTypes type,
     DateTime createdOnDate,
-    string content)
+    string newContent,
+    string oldContent)
     {
         var updateAgencyBasic = new AdvertUpdate(
             Guid.NewGuid(),
             advertId,
             type,
             createdOnDate,
-            content
+            newContent,
+            oldContent
         );
 
         return updateAgencyBasic;
     }
     public Result ApproveBasicUpdate(
         DateTime approvedOnDate,
-        int price,
-        int floorSpace,
+        double price,
+        double floorSpace,
         int noOfBedrooms,
         int noOfBathrooms,
         int type,

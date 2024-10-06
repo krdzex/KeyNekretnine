@@ -60,11 +60,19 @@ internal sealed class UpdateAdvertBasicHandler : ICommandHandler<UpdateAdvertBas
             return Result.Failure(AdvertErrors.BasicUpdateAlredyExist);
         }
 
+        var oldContent = new UpdateAdvertBasicRequest(
+            advert.Description.Sr, advert.Description.En, advert.Price,
+            advert.FloorSpace, advert.NoOfBedrooms, advert.NoOfBathrooms,
+            (int)advert.Type, (int)advert.Purpose, advert.YearOfBuildingCreated, advert.BuildingFloor,
+            advert.HasGarage, advert.IsFurnished, advert.HasWifi, advert.HasElevator,
+            advert.IsUrgent, advert.HasTerrace, advert.IsUnderConstruction);
+
         var updateAdvert = AdvertUpdate.Create(
             advert.Id,
             UpdateTypes.BasicInformations,
             _dateTimeProvider.Now,
-            JsonConvert.SerializeObject(request.BasicUpdateData));
+            JsonConvert.SerializeObject(request.BasicUpdateData),
+            JsonConvert.SerializeObject(oldContent));
 
         _advertUpdateRepository.Add(updateAdvert);
 

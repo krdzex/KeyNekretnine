@@ -16,7 +16,6 @@ internal sealed class LocationUpdateHandler : IQueryHandler<GetLocationUpdateQue
         _sqlConnectionFactory = sqlConnectionFactory;
     }
 
-
     public async Task<Result<LocationUpdateResponse>> Handle(GetLocationUpdateQuery request, CancellationToken cancellationToken)
     {
         using var connection = _sqlConnectionFactory.CreateConnection();
@@ -27,30 +26,27 @@ internal sealed class LocationUpdateHandler : IQueryHandler<GetLocationUpdateQue
                 au.id,
                 au.approved_on_date AS approvedOnDate,
                 au.rejected_on_date AS rejectedOnDate,
-                a.location_address AS address,
-                a.location_latitude AS latitude,
-                a.location_longitude AS longitude,
-                a.neighborhood_id AS neighborhoodId,
-                au.content
+                au.old_content as oldContent,
+                au.new_content as newContent
             FROM advert_updates AS au
-            INNER JOIN adverts AS a ON a.id = au.advert_id
             WHERE au.id = @UpdateId and au.type = @updateType
             """;
 
-        var updateResult = await connection.QueryAsync<LocationUpdateResponse, LocationAdvertInformations, string, LocationUpdateResponse>(
+        var updateResult = await connection.QueryAsync<LocationUpdateResponse, string, string, LocationUpdateResponse>(
         sql,
-        (update, currentValues, newValue) =>
-            {
-                var newValues = JsonConvert.DeserializeObject<LocationAdvertInformations>(newValue)!;
+        (update, oldValues, newValues) =>
+        {
+            var oldValuesObj = JsonConvert.DeserializeObject<LocationAdvertInformations>(oldValues)!;
+            var newValuesObj = JsonConvert.DeserializeObject<LocationAdvertInformations>(newValues)!;
 
-                update.AddChange("address", currentValues.Address, newValues.Address);
-                update.AddChange("latitude", currentValues.Latitude, newValues.Latitude);
-                update.AddChange("longitude", currentValues.Longitude, newValues.Longitude);
-                update.AddChange("neighborhoodId", currentValues.NeighborhoodId, newValues.NeighborhoodId);
+            update.AddChange("address", oldValuesObj.Address, newValuesObj.Address);
+            update.AddChange("latitude", oldValuesObj.Latitude, newValuesObj.Latitude);
+            update.AddChange("longitude", oldValuesObj.Longitude, newValuesObj.Longitude);
+            update.AddChange("neighborhoodId", oldValuesObj.NeighborhoodId, newValuesObj.NeighborhoodId);
 
-                return update;
+            return update;
 
-            }, new { request.UpdateId, updateType }, splitOn: "address,content");
+        }, new { request.UpdateId, updateType }, splitOn: "oldContent,newContent");
 
         var locationUpdate = updateResult.FirstOrDefault();
 
