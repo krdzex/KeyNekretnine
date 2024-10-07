@@ -3,6 +3,7 @@ using System;
 using KeyNekretnine.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace KeyNekretnine.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241006233738_AddUpdateIdInUpdates")]
+    partial class AddUpdateIdInUpdates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,10 +71,12 @@ namespace KeyNekretnine.Infrastructure.Migrations
                         .HasColumnName("created_on_date");
 
                     b.Property<string>("NewContent")
+                        .IsRequired()
                         .HasColumnType("json")
                         .HasColumnName("new_content");
 
                     b.Property<string>("OldContent")
+                        .IsRequired()
                         .HasColumnType("json")
                         .HasColumnName("old_content");
 

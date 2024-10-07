@@ -20,7 +20,7 @@ internal sealed class GetFeaturesUpdateHandler : IQueryHandler<GetFeaturesUpdate
     public async Task<Result<FeaturesUpdateResponse>> Handle(GetFeaturesUpdateQuery request, CancellationToken cancellationToken)
     {
         using var connection = _sqlConnectionFactory.CreateConnection();
-        var updateType = (int)UpdateTypes.Features;
+        var updateType = (int)UpdateTypes.Feature;
 
         const string sql = """
             SELECT

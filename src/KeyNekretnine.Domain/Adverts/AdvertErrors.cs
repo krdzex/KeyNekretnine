@@ -43,6 +43,10 @@ public static class AdvertErrors
         "Advert.BasicUpdateAlredyExist",
         "Basic update already exist, wait untill admin approve or reject your update");
 
+    public static Error ImageUpdateAlredyExist => new(
+        "Advert.ImageUpdateAlredyExist",
+        "Image update already exist, wait untill admin approve or reject your update");
+
     public static Error LocationcUpdateAlredyExist => new(
         "Advert.LocationcUpdateAlredyExist",
         "Location update already exist, wait untill admin approve or reject your update");

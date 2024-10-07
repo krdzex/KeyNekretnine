@@ -19,7 +19,7 @@ internal sealed class GetBasicUpdateHandler : IQueryHandler<GetBasicUpdateQuery,
     public async Task<Result<BasicUpdateResponse>> Handle(GetBasicUpdateQuery request, CancellationToken cancellationToken)
     {
         using var connection = _sqlConnectionFactory.CreateConnection();
-        var updateType = (int)UpdateTypes.BasicInformations;
+        var updateType = (int)UpdateTypes.BasicInformation;
 
         const string sql = """
         SELECT

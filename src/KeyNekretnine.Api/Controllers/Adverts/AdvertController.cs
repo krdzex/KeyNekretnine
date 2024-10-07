@@ -20,6 +20,7 @@ using KeyNekretnine.Application.Core.Adverts.Commands.ReportAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.SendEmailToOwner;
 using KeyNekretnine.Application.Core.Adverts.Commands.UpdateAdvertBasic;
 using KeyNekretnine.Application.Core.Adverts.Commands.UpdateAdvertFeatures;
+using KeyNekretnine.Application.Core.Adverts.Commands.UpdateAdvertImages;
 using KeyNekretnine.Application.Core.Adverts.Commands.UpdateAdvertLocation;
 using KeyNekretnine.Application.Core.Adverts.Commands.UploadAdvertImage;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertByReferenceId;
@@ -501,6 +502,16 @@ public class AdvertController : ControllerBase
         return response.IsSuccess ? NoContent() : BadRequest(response.Error);
     }
 
+    [Authorize]
+    [HttpPut("{referenceId}/images")]
+    public async Task<IActionResult> UpdateImages([FromBody] UpdateAdvertImagesRequest request, string referenceId, CancellationToken cancellationToken)
+    {
+        var command = new UpdateAdvertImagesCommand(referenceId, request);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
     /// <summary>
     /// Retrieves updates for advertisements for admin.
     /// </summary>

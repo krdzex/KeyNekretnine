@@ -1,7 +1,8 @@
 ﻿namespace KeyNekretnine.Domain.AdvertUpdates;
 public enum UpdateTypes
 {
-    BasicInformations = 1,
+    BasicInformation = 1,
     Location = 2,
-    Features = 3
+    Feature = 3,
+    Image = 4
 }

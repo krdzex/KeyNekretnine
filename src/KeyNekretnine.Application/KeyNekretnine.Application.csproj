@@ -90,6 +90,9 @@
     <Compile Include="Core\Adverts\Commands\UpdateAdvertFeatures\UpdateAdvertFeaturesCommand.cs" />
     <Compile Include="Core\Adverts\Commands\UpdateAdvertFeatures\UpdateAdvertFeaturesHandler.cs" />
     <Compile Include="Core\Adverts\Commands\UpdateAdvertFeatures\UpdateAdvertFeaturesRequest.cs" />
+    <Compile Include="Core\Adverts\Commands\UpdateAdvertImages\UpdateAdvertImagesCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\UpdateAdvertImages\UpdateAdvertImagesHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\UpdateAdvertImages\UpdateAdvertImagesRequest.cs" />
     <Compile Include="Core\Adverts\Commands\UpdateAdvertLocation\UpdateAdvertLocationCommand.cs" />
     <Compile Include="Core\Adverts\Commands\UpdateAdvertLocation\UpdateAdvertLocationHandler.cs" />
     <Compile Include="Core\Adverts\Commands\UpdateAdvertLocation\UpdateAdvertLocationRequest.cs" />

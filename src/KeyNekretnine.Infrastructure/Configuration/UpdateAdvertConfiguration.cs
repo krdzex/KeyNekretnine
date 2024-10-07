@@ -12,9 +12,9 @@ internal sealed class UpdateAdvertConfiguration : IEntityTypeConfiguration<Adver
 
         builder.HasKey(updateAdvert => updateAdvert.Id);
 
-        builder.Property(updateAdvert => updateAdvert.NewContent).HasColumnType("json");
+        builder.Property(updateAdvert => updateAdvert.NewContent).IsRequired(false).HasColumnType("json");
 
-        builder.Property(updateAdvert => updateAdvert.OldContent).HasColumnType("json");
+        builder.Property(updateAdvert => updateAdvert.OldContent).IsRequired(false).HasColumnType("json");
 
         builder.HasOne<Advert>(u => u.Advert)
             .WithMany()

@@ -23,7 +23,7 @@ internal sealed class RejectBasicUpdateHandler : ICommandHandler<RejectBasicUpda
 
     public async Task<Result> Handle(RejectBasicUpdateCommand request, CancellationToken cancellationToken)
     {
-        var update = await _advertUpdateRepository.GetByIdWithAdvert(request.UpdateId, UpdateTypes.BasicInformations, cancellationToken);
+        var update = await _advertUpdateRepository.GetByIdWithAdvert(request.UpdateId, UpdateTypes.BasicInformation, cancellationToken);
 
         if (update is null)
         {

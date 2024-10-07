@@ -23,7 +23,7 @@ internal sealed class RejectFeaturesUpdateHandler : ICommandHandler<RejectFeatur
 
     public async Task<Result> Handle(RejectFeaturesUpdateCommand request, CancellationToken cancellationToken)
     {
-        var update = await _advertUpdateRepository.GetByIdWithAdvert(request.UpdateId, UpdateTypes.Features, cancellationToken);
+        var update = await _advertUpdateRepository.GetByIdWithAdvert(request.UpdateId, UpdateTypes.Feature, cancellationToken);
 
         if (update is null)
         {

@@ -26,7 +26,7 @@ internal sealed class ApproveBasicUpdateHandler : ICommandHandler<ApproveBasicUp
 
     public async Task<Result> Handle(ApproveBasicUpdateCommand request, CancellationToken cancellationToken)
     {
-        var update = await _advertUpdateRepository.GetByIdWithAdvert(request.UpdateId, UpdateTypes.BasicInformations, cancellationToken);
+        var update = await _advertUpdateRepository.GetByIdWithAdvert(request.UpdateId, UpdateTypes.BasicInformation, cancellationToken);
 
         if (update is null)
         {

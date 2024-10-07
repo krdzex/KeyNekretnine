@@ -5,10 +5,10 @@ using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Adverts;
 using KeyNekretnine.Domain.AdvertUpdates;
 using KeyNekretnine.Domain.Agents;
-using Newtonsoft.Json;
+using KeyNekretnine.Domain.TemporeryImageDatas;
 
-namespace KeyNekretnine.Application.Core.Adverts.Commands.UpdateAdvertFeatures;
-internal sealed class UpdateAdvertFeaturesHandler : ICommandHandler<UpdateAdvertFeaturesCommand>
+namespace KeyNekretnine.Application.Core.Adverts.Commands.UpdateAdvertImages;
+internal sealed class UpdateAdvertImagesHandler : ICommandHandler<UpdateAdvertImagesCommand>
 {
     private readonly IAdvertRepository _advertRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
@@ -16,14 +16,15 @@ internal sealed class UpdateAdvertFeaturesHandler : ICommandHandler<UpdateAdvert
     private readonly IAgentRepository _agentRepository;
     private readonly IAdvertUpdateRepository _advertUpdateRepository;
     private readonly IUserContext _userContext;
-
-    public UpdateAdvertFeaturesHandler(
+    private readonly ITemporeryImageDataRepository _temporeryImageDataRepository;
+    public UpdateAdvertImagesHandler(
         IAdvertRepository advertRepository,
         IDateTimeProvider dateTimeProvider,
         IUnitOfWork unitOfWork,
         IAgentRepository agentRepository,
         IAdvertUpdateRepository advertUpdateRepository,
-        IUserContext userContext)
+        IUserContext userContext,
+        ITemporeryImageDataRepository temporeryImageDataRepository)
     {
         _advertRepository = advertRepository;
         _dateTimeProvider = dateTimeProvider;
@@ -31,11 +32,12 @@ internal sealed class UpdateAdvertFeaturesHandler : ICommandHandler<UpdateAdvert
         _agentRepository = agentRepository;
         _advertUpdateRepository = advertUpdateRepository;
         _userContext = userContext;
+        _temporeryImageDataRepository = temporeryImageDataRepository;
     }
 
-    public async Task<Result> Handle(UpdateAdvertFeaturesCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(UpdateAdvertImagesCommand request, CancellationToken cancellationToken)
     {
-        var advert = await _advertRepository.GetByReferenceIdWithFeaturesAsync(request.ReferenceId, cancellationToken);
+        var advert = await _advertRepository.GetByReferenceIdAsync(request.ReferenceId, cancellationToken);
 
         if (advert is null)
         {
@@ -52,25 +54,25 @@ internal sealed class UpdateAdvertFeaturesHandler : ICommandHandler<UpdateAdvert
             return canUserEditResult;
         }
 
-        var canUserAddUpdate = await _advertUpdateRepository.CanAddUpdate(advert.Id, UpdateTypes.Feature);
+        var canUserAddUpdate = await _advertUpdateRepository.CanAddUpdate(advert.Id, UpdateTypes.Image);
 
         if (!canUserAddUpdate)
         {
-            return Result.Failure(AdvertErrors.BasicUpdateAlredyExist);
+            return Result.Failure(AdvertErrors.ImageUpdateAlredyExist);
         }
-
-        var oldContent = new UpdateAdvertFeaturesRequest(advert.AdvertFeatures.Select(x => x.Name).ToList());
 
         var updateAdvert = AdvertUpdate.Create(
             advert.Id,
-            UpdateTypes.Feature,
+            UpdateTypes.Image,
             _dateTimeProvider.Now,
-            JsonConvert.SerializeObject(request.FeaturesUpdateData),
-            JsonConvert.SerializeObject(oldContent));
+            null,
+            null);
 
         _advertUpdateRepository.Add(updateAdvert);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        await _temporeryImageDataRepository.BulkUpdateForUpdatingAdvert(request.ImageUpdateData.ImageIds, updateAdvert.Id, cancellationToken);
 
         return Result.Success();
     }

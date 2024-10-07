@@ -26,6 +26,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.IO;
 using Npgsql;
 using Quartz;
 using System.Text;
@@ -121,6 +122,19 @@ public static class DependencyInjection
                 }
             };
         });
+
+        services.AddSingleton<RecyclableMemoryStreamManager>(provider =>
+            new RecyclableMemoryStreamManager(new RecyclableMemoryStreamManager.Options()
+            {
+                BlockSize = 4 * 1024,
+                LargeBufferMultiple = 512 * 1024,
+                MaximumBufferSize = 5 * 1024 * 1024,
+                GenerateCallStacks = false,
+                AggressiveBufferReturn = true,
+                MaximumLargePoolFreeBytes = 2 * (512 * 1024),
+                MaximumSmallPoolFreeBytes = 100 * 1024,
+            })
+        );
 
         services.AddScoped<IJwtService, JwtService>();
 

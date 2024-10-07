@@ -53,7 +53,7 @@ internal sealed class UpdateAdvertBasicHandler : ICommandHandler<UpdateAdvertBas
             return canUserEditResult;
         }
 
-        var canUserAddUpdate = await _advertUpdateRepository.CanAddUpdate(advert.Id, UpdateTypes.BasicInformations);
+        var canUserAddUpdate = await _advertUpdateRepository.CanAddUpdate(advert.Id, UpdateTypes.BasicInformation);
 
         if (!canUserAddUpdate)
         {
@@ -69,7 +69,7 @@ internal sealed class UpdateAdvertBasicHandler : ICommandHandler<UpdateAdvertBas
 
         var updateAdvert = AdvertUpdate.Create(
             advert.Id,
-            UpdateTypes.BasicInformations,
+            UpdateTypes.BasicInformation,
             _dateTimeProvider.Now,
             JsonConvert.SerializeObject(request.BasicUpdateData),
             JsonConvert.SerializeObject(oldContent));

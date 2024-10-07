@@ -25,7 +25,7 @@ internal sealed class ApproveFeaturesUpdateHandler : ICommandHandler<ApproveFeat
 
     public async Task<Result> Handle(ApproveFeaturesUpdateCommand request, CancellationToken cancellationToken)
     {
-        var update = await _advertUpdateRepository.GetByIdWithAdvertAndFeatures(request.UpdateId, UpdateTypes.Features, cancellationToken);
+        var update = await _advertUpdateRepository.GetByIdWithAdvertAndFeatures(request.UpdateId, UpdateTypes.Feature, cancellationToken);
 
         if (update is null)
         {

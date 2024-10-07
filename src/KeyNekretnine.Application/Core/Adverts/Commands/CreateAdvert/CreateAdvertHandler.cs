@@ -76,7 +76,7 @@ internal sealed class CreateAdvertHandler : ICommandHandler<CreateAdvertCommand>
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        await _temporeryImageDataRepository.BulkUpdate(request.AdvertForCreating.ImageIds, advert.Id, cancellationToken);
+        await _temporeryImageDataRepository.BulkUpdateForCreatingAdvert(request.AdvertForCreating.ImageIds, advert.Id, cancellationToken);
 
         return Result.Success();
     }
