@@ -35,6 +35,7 @@ using KeyNekretnine.Application.Core.Adverts.Queries.GetClosestAdverts;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetFavoriteAdverts;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetFeaturesUpdate;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetFilteredAdvertCoordinates;
+using KeyNekretnine.Application.Core.Adverts.Queries.GetImageUpdate;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetIsAdvertFavorite;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetLocationUpdate;
 using KeyNekretnine.Application.Core.Adverts.Queries.GetMyAdvertByReferenceId;
@@ -573,6 +574,19 @@ public class AdvertController : ControllerBase
         return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
     }
 
+    /// <summary>
+    /// Retrieves a features update for an advertisement by its update ID for admin.
+    /// </summary>
+    [Authorize(Roles = "Administrator")]
+    [HttpGet("images/{updateId}")]
+    public async Task<IActionResult> GetImagesUpdate(Guid updateId, CancellationToken cancellationToken)
+    {
+        var query = new GetImageUpdateQuery(updateId);
+
+        var response = await _sender.Send(query, cancellationToken);
+
+        return response.IsSuccess ? Ok(response.Value) : BadRequest(response.Error);
+    }
     /// <summary>
     /// Approves a basic update for an advertisement by its update ID for admin.
     /// </summary>

@@ -4,6 +4,7 @@ using KeyNekretnine.Application.Abstraction.Image;
 using KeyNekretnine.Domain.Adverts;
 using KeyNekretnine.Domain.TemporeryImageDatas;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Quartz;
 using System.Data;
 
@@ -58,6 +59,26 @@ internal sealed class ProcessImageUploadJob : IJob
             await UpdateAdvertStatus(connection, advertId.Value, transaction);
         }
 
+        var updateId = await GetUpdateToUploadImages(connection, transaction);
+
+        if (updateId is not null)
+        {
+            var imagesToUpload = await GetImagesForUpdate(connection, updateId.Value, transaction);
+            var imageUrls = new List<string>();
+
+            foreach (var image in imagesToUpload)
+            {
+                var imageUploadUrl = await _imageService.UploadImageOnCloudinaryUsingDb(image.ImageData, updateId.Value.ToString());
+
+                imageUrls.Add(imageUploadUrl);
+            }
+
+            var imgObj = new { Images = imageUrls };
+
+            await UpdateAdvertUpdate(connection, updateId.Value, JsonConvert.SerializeObject(imgObj), transaction);
+            await DeleteTemporaryImageForUpdate(connection, updateId.Value, transaction);
+        }
+
         transaction.Commit();
 
         _logger.LogInformation("Completed uploading images");
@@ -74,9 +95,25 @@ internal sealed class ProcessImageUploadJob : IJob
             ORDER BY created_date
             """;
 
-        var advertId = await connection.QueryFirstOrDefaultAsync<Guid>(sql, transaction: transaction);
+        var advertId = await connection.QueryFirstOrDefaultAsync<Guid?>(sql, transaction: transaction);
 
         return advertId;
+    }
+
+    private async Task<Guid?> GetUpdateToUploadImages(
+    IDbConnection connection,
+    IDbTransaction transaction)
+    {
+        var sql = $"""                
+            SELECT update_id
+            FROM temporery_images_data
+            WHERE update_id IS NOT NULL
+            ORDER BY created_date
+            """;
+
+        var updateId = await connection.QueryFirstOrDefaultAsync<Guid?>(sql, transaction: transaction);
+
+        return updateId;
     }
 
     private async Task<IReadOnlyList<TemporeryImageData>> GetImagesForAdvert(
@@ -99,6 +136,27 @@ internal sealed class ProcessImageUploadJob : IJob
         var imagesToUpload = await connection.QueryAsync<TemporeryImageData>(sql, new { advertId }, transaction: transaction);
 
         return imagesToUpload.ToList();
+    }
+
+    private async Task<IReadOnlyList<TemporeryImageData>> GetImagesForUpdate(
+    IDbConnection connection,
+    Guid updateId,
+    IDbTransaction transaction)
+    {
+        var sql = $"""                
+            SELECT 
+                id,
+                update_id AS updateId,
+                image_data AS imageData,
+                created_date AS createdDate
+            FROM temporery_images_data 
+            WHERE update_id = @updateId
+            ORDER BY createdDate
+            """;
+
+        var imagesForUpdate = await connection.QueryAsync<TemporeryImageData>(sql, new { updateId }, transaction: transaction);
+
+        return imagesForUpdate.ToList();
     }
 
     private async Task AddCoverImgForAdvert(
@@ -143,6 +201,19 @@ internal sealed class ProcessImageUploadJob : IJob
         await connection.ExecuteAsync(sql, new { advertId }, transaction: transaction);
     }
 
+    private async Task DeleteTemporaryImageForUpdate(
+    IDbConnection connection,
+    Guid updateId,
+    IDbTransaction transaction)
+    {
+        var sql = $"""                
+            DELETE FROM temporery_images_data
+            WHERE update_id = @updateId
+            """;
+
+        await connection.ExecuteAsync(sql, new { updateId }, transaction: transaction);
+    }
+
     private async Task UpdateAdvertStatus(
         IDbConnection connection,
         Guid advertId,
@@ -158,5 +229,21 @@ internal sealed class ProcessImageUploadJob : IJob
         ;
 
         await connection.ExecuteAsync(sql, new { pandingStatus, advertId }, transaction: transaction);
+    }
+
+    private async Task UpdateAdvertUpdate(
+    IDbConnection connection,
+    Guid updateId,
+    string newContent,
+    IDbTransaction transaction)
+    {
+        var sql = $$"""                
+            UPDATE advert_updates
+            SET new_content = @newContent::json
+            WHERE id = @updateId
+            """
+        ;
+
+        await connection.ExecuteAsync(sql, new { newContent, updateId }, transaction: transaction);
     }
 }

@@ -33,9 +33,6 @@ internal sealed class GetFeaturesUpdateHandler : IQueryHandler<GetFeaturesUpdate
             WHERE au.id = @UpdateId AND au.type = @updateType
             """;
 
-        var currentValuesArray = new List<string>();
-        var newValues = new List<string>();
-
         var updateResult = await connection.QueryAsync<FeaturesUpdateResponse, string, string, FeaturesUpdateResponse>(
             sql,
         (update, oldValues, newValues) =>
