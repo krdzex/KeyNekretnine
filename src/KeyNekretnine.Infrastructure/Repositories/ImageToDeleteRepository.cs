@@ -17,4 +17,14 @@ internal sealed class ImageToDeleteRepository : IImageToDeleteRepository
 
         await _context.AddAsync(imagetoDelete, cancellationToken);
     }
+
+    public async Task AddMultipleAsync(List<string> imageUrls, DateTime addedOnTime, CancellationToken cancellationToken)
+    {
+        var imagesToDelete = imageUrls
+            .Select(url => new ImageToDelete(Guid.NewGuid(), addedOnTime, url))
+            .ToList();
+
+        await _context.AddRangeAsync(imagesToDelete, cancellationToken);
+    }
+
 }

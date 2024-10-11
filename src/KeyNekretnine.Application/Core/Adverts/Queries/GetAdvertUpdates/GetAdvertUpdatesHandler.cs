@@ -20,24 +20,16 @@ internal sealed class GetAdvertUpdatesHandler : IQueryHandler<GetAdvertUpdatesQu
     {
         var orderBy = OrderQueryBuilder.CreateOrderQuery<AdvertForUpdateResponse>(request.OrderBy);
 
-
-        var updateTypeFilter = request.UpdateType is not null ? " au.type = @UpdateType" : "";
-        var referenceIdFilter = request.ReferenceId is not null ? " a.reference_id = @ReferenceId" : "";
-
-        var whereClause = "";
-        if (!string.IsNullOrEmpty(updateTypeFilter) || !string.IsNullOrEmpty(referenceIdFilter))
-        {
-            whereClause = " WHERE ";
-        }
+        var updateTypeFilter = request.UpdateType is not null ? " AND au.type = @UpdateType" : "";
+        var referenceIdFilter = request.ReferenceId is not null ? " AND a.reference_id = @ReferenceId" : "";
 
         var sql = $"""
             SELECT
                 COUNT(au.id)
             FROM advert_updates AS au
             INNER JOIN adverts AS a ON a.id = au.advert_id
-            {whereClause}
+            WHERE au.new_content IS NOT NULL
             {updateTypeFilter}
-            {(string.IsNullOrEmpty(updateTypeFilter) || string.IsNullOrEmpty(referenceIdFilter) ? "" : " AND ")}
             {referenceIdFilter};
 
             SELECT 
@@ -51,9 +43,8 @@ internal sealed class GetAdvertUpdatesHandler : IQueryHandler<GetAdvertUpdatesQu
                 END AS isProcessed
             FROM advert_updates AS au
             INNER JOIN adverts AS a ON a.id = au.advert_id
-            {whereClause}
+            WHERE au.new_content IS NOT NULL
             {updateTypeFilter}
-            {(string.IsNullOrEmpty(updateTypeFilter) || string.IsNullOrEmpty(referenceIdFilter) ? "" : " AND ")}
             {referenceIdFilter}
             ORDER BY {orderBy} OFFSET @Skip FETCH NEXT @Take ROWS ONLY;
             """;

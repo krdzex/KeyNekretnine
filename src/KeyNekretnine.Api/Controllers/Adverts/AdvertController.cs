@@ -2,6 +2,7 @@
 using KeyNekretnine.Application.Core.Adverts.Commands.ApproveAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.ApproveBasicUpdate;
 using KeyNekretnine.Application.Core.Adverts.Commands.ApproveFeaturesUpdate;
+using KeyNekretnine.Application.Core.Adverts.Commands.ApproveImageUpdate;
 using KeyNekretnine.Application.Core.Adverts.Commands.ApproveLocationUpdate;
 using KeyNekretnine.Application.Core.Adverts.Commands.ChangeAgentForAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.ChangeCoverImage;
@@ -13,6 +14,7 @@ using KeyNekretnine.Application.Core.Adverts.Commands.PauseAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.RejectAdvert;
 using KeyNekretnine.Application.Core.Adverts.Commands.RejectBasicUpdate;
 using KeyNekretnine.Application.Core.Adverts.Commands.RejectFeaturesUpdate;
+using KeyNekretnine.Application.Core.Adverts.Commands.RejectImageUpdate;
 using KeyNekretnine.Application.Core.Adverts.Commands.RejectLocationUpdate;
 using KeyNekretnine.Application.Core.Adverts.Commands.RemoveAdvertFromFavorite;
 using KeyNekretnine.Application.Core.Adverts.Commands.RemoveAdvertPremium;
@@ -518,7 +520,7 @@ public class AdvertController : ControllerBase
     /// </summary>
     [Authorize(Roles = "Administrator")]
     [HttpGet("updates")]
-    public async Task<IActionResult> GetAdvertUpdates([FromQuery] AdvertUpdatesPaginationParameters request, string referenceId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAdvertUpdates([FromQuery] AdvertUpdatesPaginationParameters request, CancellationToken cancellationToken)
     {
         var query = new GetAdvertUpdatesQuery(
             request.OrderBy,
@@ -630,6 +632,20 @@ public class AdvertController : ControllerBase
     }
 
     /// <summary>
+    /// Approves a location update for an advertisement by its update ID for admin.
+    /// </summary>
+    [Authorize(Roles = "Administrator")]
+    [HttpPut("image/{updateId}/approve")]
+    public async Task<IActionResult> ApproveImageUpdate(Guid updateId, CancellationToken cancellationToken)
+    {
+        var command = new ApproveImageUpdateCommand(updateId);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
+
+    /// <summary>
     /// Reject a basic update for an advertisement by its update ID for admin.
     /// </summary>
     [Authorize(Roles = "Administrator")]
@@ -671,6 +687,19 @@ public class AdvertController : ControllerBase
         return response.IsSuccess ? NoContent() : BadRequest(response.Error);
     }
 
+    /// <summary>
+    /// Reject a image update for an advertisement by its update ID for admin.
+    /// </summary>
+    [Authorize(Roles = "Administrator")]
+    [HttpPut("images/{updateId}/reject")]
+    public async Task<IActionResult> RejectImagesUpdate(Guid updateId, CancellationToken cancellationToken)
+    {
+        var command = new RejectImageUpdateCommand(updateId);
+
+        var response = await _sender.Send(command, cancellationToken);
+
+        return response.IsSuccess ? NoContent() : BadRequest(response.Error);
+    }
     /// <summary>
     /// Uploads an image for an advertisement.
     /// </summary>

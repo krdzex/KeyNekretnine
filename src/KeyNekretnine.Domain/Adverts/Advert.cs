@@ -445,4 +445,18 @@ public class Advert : Entity
 
         return Result.Success();
     }
+
+    public Result ApplyImageUpdate(List<Image> images, DateTime timeNow)
+    {
+        if (_images.Count + images.Count > 12)
+        {
+            return Result.Failure(AdvertErrors.TooManyImages);
+        }
+
+        _images.AddRange(images);
+
+        UpdatedOnDate = timeNow;
+
+        return Result.Success();
+    }
 }

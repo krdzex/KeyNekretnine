@@ -1,5 +1,6 @@
 ﻿using KeyNekretnine.Domain.Abstraction;
 using KeyNekretnine.Domain.Adverts;
+using KeyNekretnine.Domain.Images;
 using KeyNekretnine.Domain.ValueObjects;
 
 namespace KeyNekretnine.Domain.AdvertUpdates;
@@ -192,5 +193,25 @@ public class AdvertUpdate : Entity
         RejectedOnDate = rejectedOnDate;
 
         return Result.Success();
+    }
+
+
+    public Result ApproveImageUpdate(DateTime approvedOnDate, List<Image> images)
+    {
+        if (ApprovedOnDate is not null)
+        {
+            return Result.Failure(AdvertErrors.LocationUpdateApproved);
+        }
+
+        if (RejectedOnDate is not null)
+        {
+            return Result.Failure(AdvertErrors.LocationUpdateRejected);
+        }
+
+        ApprovedOnDate = approvedOnDate;
+
+        var updateResult = Advert.ApplyImageUpdate(images, approvedOnDate);
+
+        return updateResult;
     }
 }

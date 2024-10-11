@@ -48,6 +48,8 @@
     <Compile Include="Core\Adverts\Commands\ApproveBasicUpdate\ApproveBasicUpdateHandler.cs" />
     <Compile Include="Core\Adverts\Commands\ApproveFeaturesUpdate\ApproveFeaturesUpdateCommand.cs" />
     <Compile Include="Core\Adverts\Commands\ApproveFeaturesUpdate\ApproveFeaturesUpdateHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\ApproveImageUpdate\ApproveImageUpdateCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\ApproveImageUpdate\ApproveImageUpdateHandler.cs" />
     <Compile Include="Core\Adverts\Commands\ApproveLocationUpdate\ApproveLocationUpdateCommand.cs" />
     <Compile Include="Core\Adverts\Commands\ApproveLocationUpdate\ApproveLocationUpdateHandler.cs" />
     <Compile Include="Core\Adverts\Commands\ChangeAgentForAdvert\ChangeAgentForAdvertCommand.cs" />
@@ -73,6 +75,8 @@
     <Compile Include="Core\Adverts\Commands\RejectBasicUpdate\RejectBasicUpdateHandler.cs" />
     <Compile Include="Core\Adverts\Commands\RejectFeaturesUpdate\RejectFeaturesUpdateCommand.cs" />
     <Compile Include="Core\Adverts\Commands\RejectFeaturesUpdate\RejectFeaturesUpdateHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\RejectImageUpdate\RejectImageUpdateCommand.cs" />
+    <Compile Include="Core\Adverts\Commands\RejectImageUpdate\RejectImageUpdateHandler.cs" />
     <Compile Include="Core\Adverts\Commands\RejectLocationUpdate\RejectLocationUpdateCommand.cs" />
     <Compile Include="Core\Adverts\Commands\RejectLocationUpdate\RejectLocationUpdateHandler.cs" />
     <Compile Include="Core\Adverts\Commands\RemoveAdvertFromFavorite\RemoveAdvertFromFavoriteCommand.cs" />

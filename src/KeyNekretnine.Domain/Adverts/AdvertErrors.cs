@@ -91,7 +91,19 @@ public static class AdvertErrors
         "Advert.NoEnoughImages",
         "You need to have at least 2 images");
 
+    public static Error TooManyImages => new(
+        "Advert.TooManyImages",
+        "You cant have more then 12 images");
+
     public static Error ImageNotFound => new(
         "Advert.ImageNotFound",
         "Image not found");
+
+    public static Error ImageUpdateApproved => new(
+    "Advert.ImageUpdateApproved",
+    "Image update is approved");
+
+    public static Error ImageUpdateRejected => new(
+        "Advert.ImageUpdateRejected",
+        "Image update is rejected");
 }
