@@ -18,12 +18,14 @@ internal sealed class EmailService : IEmailService
     public async Task<bool> SendEmailConfrim(string email, string token, CancellationToken cancellationToken)
     {
         var sendGridConfigSection = _configuration.GetSection("SendGridEmailSettings");
+        var backendConfigSection = _configuration.GetSection("Backend");
 
         var fromEmail = sendGridConfigSection.GetSection("FromEmail").Value;
         var fromName = sendGridConfigSection.GetSection("FromName").Value;
         var templateId = sendGridConfigSection.GetSection("ConfirmEmailTemplateId").Value;
+        var backendUrl = backendConfigSection.GetSection("Url").Value;
 
-        var confirmationlink = "https://keynekretnineapi-latest.onrender.com/api/user/confirm-email?token=" + token + "&email=" + email;
+        var confirmationlink = $"{backendUrl}/api/user/confirm-email?token={token}&email={email}";
 
         var msg = new SendGridMessage
         {
@@ -217,18 +219,24 @@ internal sealed class EmailService : IEmailService
     public async Task<bool> SendResetPasswordLink(string email, string token, CancellationToken cancellationToken)
     {
         var sendGridConfigSection = _configuration.GetSection("SendGridEmailSettings");
+        var frontendConfigSection = _configuration.GetSection("Frontend");
 
         var fromEmail = sendGridConfigSection.GetSection("FromEmail").Value;
         var fromName = sendGridConfigSection.GetSection("FromName").Value;
+        var templateId = sendGridConfigSection.GetSection("PasswordReset").Value;
+        var frontendUrl = frontendConfigSection.GetSection("Url").Value;
 
-        var resetPasswordLink = "http://localhost:3000/forgot-password?token=" + token + "&email=" + email;
+        var resetPasswordLink = $"{frontendUrl}/forgot-password?token={token}&email={email}";
 
         var msg = new SendGridMessage
         {
             From = new EmailAddress(fromEmail, fromName),
-            Subject = "Reset your password",
-            PlainTextContent = resetPasswordLink
         };
+
+        msg.SetTemplateData(new
+        {
+            resetPassworkUrl = resetPasswordLink,
+        });
 
         msg.AddTo(email);
 
