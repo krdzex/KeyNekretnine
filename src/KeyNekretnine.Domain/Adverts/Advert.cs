@@ -158,7 +158,7 @@ public class Advert : Entity
         Status = AdvertStatus.Rejected;
         RejectedOnDate = rejectedDate;
 
-        RaiseDomainEvent(new AdvertRejectedDomainEvent(Id, UserId));
+        RaiseDomainEvent(new AdvertRejectedDomainEvent(Id));
         return Result.Success();
     }
 

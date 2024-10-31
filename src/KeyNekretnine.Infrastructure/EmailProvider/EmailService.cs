@@ -90,19 +90,83 @@ internal sealed class EmailService : IEmailService
         return response.IsSuccessStatusCode;
     }
 
-    public async Task<bool> SendDeclineAdvertEmail(string email, string referenceId, CancellationToken cancellationToken)
+    public async Task<bool> SendRentApproveAdvertEmail(ApproveSendEmailInfo emailSendInfo, CancellationToken cancellationToken)
     {
         var sendGridConfigSection = _configuration.GetSection("SendGridEmailSettings");
 
         var fromEmail = sendGridConfigSection.GetSection("FromEmail").Value;
         var fromName = sendGridConfigSection.GetSection("FromName").Value;
+        var templateId = sendGridConfigSection.GetSection("RentAdvertApprovedTemplateId").Value;
 
         var msg = new SendGridMessage
         {
             From = new EmailAddress(fromEmail, fromName),
-            Subject = $"Rejected advert {referenceId}",
-            PlainTextContent = $"Your advert with reference id {referenceId} is rejected from admin"
         };
+
+        msg.SetTemplateId(templateId);
+
+        msg.SetTemplateData(new
+        {
+            cityNeigh = emailSendInfo.CityAndNeighborhood,
+            address = emailSendInfo.Address,
+            noOfBedrooms = emailSendInfo.NoOfBedrooms,
+            noOfBathrooms = emailSendInfo.NoOfBathrooms,
+            sqft = emailSendInfo.FloorSpace + "㎡",
+            advertCoverImg = emailSendInfo.CoverImageUrl,
+            referenceId = emailSendInfo.ReferenceId,
+        });
+
+        msg.AddTo(emailSendInfo.CreatorEmail);
+
+        var response = await _sendGridClient.SendEmailAsync(msg, cancellationToken);
+        return response.IsSuccessStatusCode;
+    }
+
+    public async Task<bool> SendDailyRentApproveAdvertEmail(ApproveSendEmailInfo emailSendInfo, CancellationToken cancellationToken)
+    {
+        var sendGridConfigSection = _configuration.GetSection("SendGridEmailSettings");
+
+        var fromEmail = sendGridConfigSection.GetSection("FromEmail").Value;
+        var fromName = sendGridConfigSection.GetSection("FromName").Value;
+        var templateId = sendGridConfigSection.GetSection("DailyRentalAdvertApprovedTemplateId").Value;
+
+        var msg = new SendGridMessage
+        {
+            From = new EmailAddress(fromEmail, fromName),
+        };
+
+        msg.SetTemplateId(templateId);
+
+        msg.SetTemplateData(new
+        {
+            cityNeigh = emailSendInfo.CityAndNeighborhood,
+            address = emailSendInfo.Address,
+            noOfBedrooms = emailSendInfo.NoOfBedrooms,
+            noOfBathrooms = emailSendInfo.NoOfBathrooms,
+            sqft = emailSendInfo.FloorSpace + "㎡",
+            advertCoverImg = emailSendInfo.CoverImageUrl,
+            referenceId = emailSendInfo.ReferenceId,
+        });
+
+        msg.AddTo(emailSendInfo.CreatorEmail);
+
+        var response = await _sendGridClient.SendEmailAsync(msg, cancellationToken);
+        return response.IsSuccessStatusCode;
+    }
+    public async Task<bool> SendRejectAdvertEmail(string email, CancellationToken cancellationToken)
+    {
+        var sendGridConfigSection = _configuration.GetSection("SendGridEmailSettings");
+
+        var fromEmail = sendGridConfigSection.GetSection("FromEmail").Value;
+        var fromName = sendGridConfigSection.GetSection("FromName").Value;
+        var templateId = sendGridConfigSection.GetSection("AdvertRejected").Value;
+
+        var msg = new SendGridMessage
+        {
+            From = new EmailAddress(fromEmail, fromName),
+        };
+
+        msg.SetTemplateId(templateId);
 
         msg.AddTo(email);
 

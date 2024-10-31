@@ -1,43 +1,45 @@
-﻿using KeyNekretnine.Application.Abstraction.Email;
-using KeyNekretnine.Domain.Adverts;
+﻿using Dapper;
+using KeyNekretnine.Application.Abstraction.Data;
+using KeyNekretnine.Application.Abstraction.Email;
 using KeyNekretnine.Domain.Adverts.Events;
-using KeyNekretnine.Domain.Users;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 
 namespace KeyNekretnine.Application.Core.Adverts.Commands.RejectAdvert;
 internal sealed class AdvertRejectedDomainEventHandler : INotificationHandler<AdvertRejectedDomainEvent>
 {
-    private readonly UserManager<User> _userManager;
     private readonly IEmailService _emailService;
-    private readonly IAdvertRepository _advertRepository;
+    private readonly ISqlConnectionFactory _sqlConnectionFactory;
+
     public AdvertRejectedDomainEventHandler(
-        UserManager<User> userManager,
         IEmailService emailService,
-        IAdvertRepository advertRepository)
+        ISqlConnectionFactory sqlConnectionFactory)
     {
-        _userManager = userManager;
         _emailService = emailService;
-        _advertRepository = advertRepository;
+        _sqlConnectionFactory = sqlConnectionFactory;
     }
 
     public async Task Handle(AdvertRejectedDomainEvent notification, CancellationToken cancellationToken)
     {
 
-        var user = await _userManager.FindByIdAsync(notification.UserId);
+        using var connection = _sqlConnectionFactory.CreateConnection();
 
-        if (user is null)
+        var sql = $"""                
+            SELECT 
+                u.email
+            FROM adverts AS a
+            LEFT JOIN asp_net_users AS u ON u.id = a.user_id
+            WHERE a.id = @advertId
+            """
+        ;
+
+        var email = await connection.QueryFirstOrDefaultAsync<string>(sql, new { notification.AdvertId });
+
+        if (string.IsNullOrEmpty(email))
         {
             return;
         }
-        var advert = await _advertRepository.GetByIdAsync(notification.AdvertId, cancellationToken);
 
-        if (advert is null)
-        {
-            return;
-        }
-
-        var sendStatus = await _emailService.SendDeclineAdvertEmail(user.Email, advert.ReferenceId, cancellationToken);
+        var sendStatus = await _emailService.SendRejectAdvertEmail(email, cancellationToken);
 
         if (!sendStatus)
         {

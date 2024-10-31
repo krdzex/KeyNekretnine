@@ -50,7 +50,12 @@ internal sealed class AdvertApprovedDomainEventHandler : INotificationHandler<Ad
             return;
         }
 
-        var sendStatus = await _emailService.SendSaleApproveAdvertEmail(advertInfo, cancellationToken);
+        var sendStatus = advertInfo.Purpose switch
+        {
+            1 => await _emailService.SendRentApproveAdvertEmail(advertInfo, cancellationToken),
+            2 => await _emailService.SendSaleApproveAdvertEmail(advertInfo, cancellationToken),
+            _ => await _emailService.SendDailyRentApproveAdvertEmail(advertInfo, cancellationToken)
+        };
 
         if (!sendStatus)
         {
