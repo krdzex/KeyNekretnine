@@ -44,6 +44,7 @@
     <Compile Include="Core\Adverts\Commands\ApproveAdvert\AdvertApprovedDomainEventHandler.cs" />
     <Compile Include="Core\Adverts\Commands\ApproveAdvert\ApproveAdvertCommand.cs" />
     <Compile Include="Core\Adverts\Commands\ApproveAdvert\ApproveAdvertHandler.cs" />
+    <Compile Include="Core\Adverts\Commands\ApproveAdvert\ApproveSendEmailInfo.cs" />
     <Compile Include="Core\Adverts\Commands\ApproveBasicUpdate\ApproveBasicUpdateCommand.cs" />
     <Compile Include="Core\Adverts\Commands\ApproveBasicUpdate\ApproveBasicUpdateHandler.cs" />
     <Compile Include="Core\Adverts\Commands\ApproveFeaturesUpdate\ApproveFeaturesUpdateCommand.cs" />

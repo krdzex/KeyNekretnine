@@ -29,6 +29,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.IO;
 using Npgsql;
 using Quartz;
+using SendGrid.Extensions.DependencyInjection;
 using System.Text;
 
 namespace KeyNekretnine.Infrastructure;
@@ -142,6 +143,10 @@ public static class DependencyInjection
 
         services.AddScoped<IUserContext, UserContext>();
 
+        services.AddSendGrid(options =>
+        {
+            options.ApiKey = Environment.GetEnvironmentVariable("SEND_GRID_API_KEY");
+        });
     }
 
     private static void AddBackgroundJobs(IServiceCollection services, IConfiguration configuration)

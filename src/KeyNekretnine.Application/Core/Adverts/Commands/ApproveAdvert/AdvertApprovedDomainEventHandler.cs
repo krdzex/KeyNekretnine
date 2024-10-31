@@ -1,43 +1,56 @@
-﻿using KeyNekretnine.Application.Abstraction.Email;
-using KeyNekretnine.Domain.Adverts;
+﻿using Dapper;
+using KeyNekretnine.Application.Abstraction.Data;
+using KeyNekretnine.Application.Abstraction.Email;
 using KeyNekretnine.Domain.Adverts.Events;
-using KeyNekretnine.Domain.Users;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 
 namespace KeyNekretnine.Application.Core.Adverts.Commands.ApproveAdvert;
 internal sealed class AdvertApprovedDomainEventHandler : INotificationHandler<AdvertApprovedDomainEvent>
 {
-    private readonly UserManager<User> _userManager;
     private readonly IEmailService _emailService;
-    private readonly IAdvertRepository _advertRepository;
+    private readonly ISqlConnectionFactory _sqlConnectionFactory;
+
     public AdvertApprovedDomainEventHandler(
-        UserManager<User> userManager,
         IEmailService emailService,
-        IAdvertRepository advertRepository)
+        ISqlConnectionFactory sqlConnectionFactory)
     {
-        _userManager = userManager;
         _emailService = emailService;
-        _advertRepository = advertRepository;
+        _sqlConnectionFactory = sqlConnectionFactory;
     }
 
     public async Task Handle(AdvertApprovedDomainEvent notification, CancellationToken cancellationToken)
     {
 
-        var user = await _userManager.FindByIdAsync(notification.UserId);
+        using var connection = _sqlConnectionFactory.CreateConnection();
 
-        if (user is null)
+        var sql = $"""                
+            SELECT 
+                a.id,
+                a.price,
+                a.floor_space AS floorSpace,
+            	a.no_of_bedrooms AS noOfBedrooms,
+            	a.no_of_bathrooms AS noOfBathrooms,
+                a.cover_image_url AS coverImageUrl,
+                a.location_address AS address,
+                CONCAT(c.name, ', ', n.name) AS cityAndNeighborhood,
+                u.email as creatorEmail,
+                a.reference_id as referenceId
+            FROM adverts AS a
+            INNER JOIN neighborhoods AS n ON a.neighborhood_id = n.id
+            INNER JOIN cities AS c ON n.city_id = c.id
+            LEFT JOIN asp_net_users AS u ON u.id = a.user_id
+            WHERE a.id = @advertId
+            """
+        ;
+
+        var advertInfo = await connection.QueryFirstOrDefaultAsync<ApproveSendEmailInfo>(sql, new { notification.AdvertId });
+
+        if (advertInfo is null)
         {
             return;
         }
-        var advert = await _advertRepository.GetByIdAsync(notification.AdvertId, cancellationToken);
 
-        if (advert is null)
-        {
-            return;
-        }
-
-        var sendStatus = await _emailService.SendApproveAdvertEmail(user.Email, advert.ReferenceId, cancellationToken);
+        var sendStatus = await _emailService.SendSaleApproveAdvertEmail(advertInfo, cancellationToken);
 
         if (!sendStatus)
         {

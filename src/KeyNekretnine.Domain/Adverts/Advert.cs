@@ -144,7 +144,7 @@ public class Advert : Entity
         Status = AdvertStatus.Accepted;
         ApprovedOnDate = approvedDate;
 
-        RaiseDomainEvent(new AdvertApprovedDomainEvent(Id, UserId));
+        RaiseDomainEvent(new AdvertApprovedDomainEvent(Id));
         return Result.Success();
     }
 
