@@ -4,7 +4,7 @@ namespace KeyNekretnine.Application.Core.Adverts.Queries.GetAdvertsCompare;
 public class CompareAdvertResponse
 {
     public string ReferenceId { get; set; }
-    public double Price { get; set; }
+    public double? Price { get; set; }
     public string CoverImageUrl { get; set; }
     public int NoOfBathrooms { get; set; }
     public int NoOfBedrooms { get; set; }

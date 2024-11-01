@@ -1,7 +1,7 @@
 ﻿namespace KeyNekretnine.Application.Core.Adverts.Commands.ApproveAdvert;
 public class ApproveSendEmailInfo
 {
-    public double Price { get; set; }
+    public double? Price { get; set; }
     public double FloorSpace { get; set; }
     public int NoOfBedrooms { get; set; }
     public int NoOfBathrooms { get; set; }

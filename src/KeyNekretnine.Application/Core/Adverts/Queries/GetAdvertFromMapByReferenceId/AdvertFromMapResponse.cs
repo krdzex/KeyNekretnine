@@ -2,7 +2,7 @@
 public class AdvertFromMapResponse
 {
     public string CityAndNeighborhood { get; set; }
-    public double Price { get; set; }
+    public double? Price { get; set; }
     public string CoverImageUrl { get; set; }
     public int NoOfBathrooms { get; set; }
     public int NoOfBedrooms { get; set; }

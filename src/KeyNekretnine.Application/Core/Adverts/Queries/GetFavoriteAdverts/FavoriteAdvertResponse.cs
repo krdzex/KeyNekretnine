@@ -2,7 +2,7 @@
 public class FavoriteAdvertResponse
 {
     public string ReferenceId { get; set; }
-    public double Price { get; set; }
+    public double? Price { get; set; }
     public double FloorSpace { get; set; }
     public int NoOfBedrooms { get; set; }
     public int NoOfBathrooms { get; set; }

@@ -2,7 +2,7 @@
 public class ClosestAdvertsResponse
 {
     public string ReferenceId { get; init; }
-    public double Price { get; init; }
+    public double? Price { get; init; }
     public double FloorSpace { get; init; }
     public int NoOfBedrooms { get; init; }
     public int NoOfBathrooms { get; init; }

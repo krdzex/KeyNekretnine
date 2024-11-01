@@ -15,7 +15,7 @@ internal sealed class AdvertConfiguration : IEntityTypeConfiguration<Advert>
 
         builder.HasKey(advert => advert.Id);
 
-        builder.Property(advert => advert.Price).IsRequired();
+        builder.Property(advert => advert.Price).IsRequired(false);
 
         builder.OwnsOne(advert => advert.Description, description =>
         {

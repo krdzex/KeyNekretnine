@@ -1,6 +1,6 @@
 ﻿namespace KeyNekretnine.Application.Core.Adverts.Commands.CreateAdvert;
 public record CreateAdvertRequest(
-    double Price,
+    double? Price,
     string DescriptionSr,
     string DescriptionEn,
     int NoOfBedrooms,

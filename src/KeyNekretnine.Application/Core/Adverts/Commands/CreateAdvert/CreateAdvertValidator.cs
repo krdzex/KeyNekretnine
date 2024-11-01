@@ -7,10 +7,8 @@ internal class CreateAdvertValidator :
     public CreateAdvertValidator()
     {
         RuleFor(x => x.AdvertForCreating.Price)
-            .NotEmpty()
-                .WithMessage("Price is required")
-            .GreaterThanOrEqualTo(1)
-                .WithMessage("Price cant be lower then 1");
+            .Must(price => price == null || price >= 1)
+                .WithMessage("Price must be at least 1 if provided.");
 
         RuleFor(x => x.AdvertForCreating.DescriptionSr)
             .NotEmpty()

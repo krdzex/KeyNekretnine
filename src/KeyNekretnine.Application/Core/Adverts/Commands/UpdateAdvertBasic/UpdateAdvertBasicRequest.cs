@@ -2,7 +2,7 @@
 public record UpdateAdvertBasicRequest(
     string DescriptionSr,
     string DescriptionEn,
-    double Price,
+    double? Price,
     double FloorSpace,
     int NoOfBedrooms,
     int NoOfBathrooms,

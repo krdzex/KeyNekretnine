@@ -47,7 +47,7 @@ public class AdvertUpdate : Entity
     }
     public Result ApproveBasicUpdate(
         DateTime approvedOnDate,
-        double price,
+        double? price,
         double floorSpace,
         int noOfBedrooms,
         int noOfBathrooms,

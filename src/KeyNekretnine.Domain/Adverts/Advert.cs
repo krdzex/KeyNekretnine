@@ -16,7 +16,7 @@ public class Advert : Entity
 
     public Advert(
         Guid id,
-        double price,
+        double? price,
         AdvertDescription description,
         int noOfBedrooms,
         double floorSpace,
@@ -74,7 +74,7 @@ public class Advert : Entity
 
     public string ReferenceId { get; private set; }
 
-    public double Price { get; private set; }
+    public double? Price { get; private set; }
 
     public AdvertDescription Description { get; private set; }
 
@@ -266,7 +266,7 @@ public class Advert : Entity
 
     public Result ApplyBasicUpdate(
         DateTime updatedOnDate,
-        double price,
+        double? price,
         double floorSpace,
         int noOfBedrooms,
         int noOfBathrooms,
@@ -318,7 +318,7 @@ public class Advert : Entity
     }
 
     public static Advert Create(
-        double price,
+        double? price,
         AdvertDescription description,
         int noOfBedrooms,
         double floorSpace,

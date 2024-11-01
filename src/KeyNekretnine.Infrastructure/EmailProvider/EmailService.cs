@@ -233,6 +233,8 @@ internal sealed class EmailService : IEmailService
             From = new EmailAddress(fromEmail, fromName),
         };
 
+        msg.SetTemplateId(templateId);
+
         msg.SetTemplateData(new
         {
             resetPassworkUrl = resetPasswordLink,
