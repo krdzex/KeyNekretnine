@@ -85,6 +85,7 @@ public static class DependencyInjection
             o.Password.RequireLowercase = true;
             o.Password.RequireUppercase = true;
             o.User.RequireUniqueEmail = true;
+            //o.Tokens.PasswordResetTokenProvider = "KeyNekretnineAPI";
         })
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddTokenProvider("KeyNekretnineAPI", typeof(DataProtectorTokenProvider<User>))

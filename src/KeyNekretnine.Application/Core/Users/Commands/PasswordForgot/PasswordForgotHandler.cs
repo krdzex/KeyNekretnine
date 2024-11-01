@@ -24,9 +24,7 @@ internal sealed class PasswordForgotHandler : ICommandHandler<PasswordForgotComm
             return Result.Failure(UserErrors.NotFound);
         }
 
-        var decodedToken = HttpUtility.UrlDecode(request.Token);
-
-        var resetPasswordResult = await _userManager.ResetPasswordAsync(user, decodedToken, request.NewPassword);
+        var resetPasswordResult = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
 
         if (!resetPasswordResult.Succeeded)
         {
